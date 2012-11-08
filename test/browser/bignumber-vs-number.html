@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8' />
+  <meta name="Author" content="M Mclaughlin">
+  <title>Testing BigNumber against Number</title>
+  <style>
+    body, ul, form, h1, div {margin: 0; padding: 0;}
+    body, pre {font-family: Calibri, Arial, Sans-Serif;}
+    form {width: 48em; margin: 1.6em auto; border: 2px solid rgb(200, 200, 200);}
+    h1 {text-align: center; font-size: 1.2em; padding: 0.6em 0;
+        background-color: rgb(200, 200, 200)}
+    ul {list-style-type: none; color: rgb(85, 85, 85); padding: 1em 1em 0 2em;}
+    .input, ul {background-color: rgb(245, 245, 245);}
+    .input, .output {padding: 0 1em 1em 2em;}
+    .output, .methods {background-color: rgb(225, 225, 225);}
+    .methods {padding-bottom: 1em;}
+    .output {padding-bottom: 2em;}
+    .size {width: 80%;}
+    label {width: 10em; color: rgb(0, 0, 0); margin-left: 0.6em;}
+    label {display: inline-block;}
+    span, .exLabel, pre {font-size: 0.9em;}
+	pre {display: inline;}
+    .exLabel {display: inline; margin-left: 0; width: 2em;}
+    .arg, .result, .dp {width: 5em; margin-right: 0.8em; margin-top: 1.2em;}
+    .dp {width: auto;}
+    .exInput {margin-left: 1em;}
+    .code {width: 60em; margin: 0 auto; font-family: Courier New, Courier,
+        monospace; font-size: 0.8em;}
+  </style>
+  <script src='../../bignumber.js'></script>
+</head>
+<body>
+  <form>
+    <h1>Testing BigNumber against Number</h1>
+    <ul class='methods'>
+      <li>
+        <input type='radio' id='toExponential' name=1/>
+        <label for='toExponential'>toExponential</label>
+        <span>[ decimal places ]</span>
+      </li>
+      <li>
+        <input type='radio' id='toFixed' name=1/>
+        <label for='toFixed'>toFixed</label>
+        <span>[ decimal places ]</span>
+      </li>
+      <li>
+        <input type='radio' id='toPrecision' name=1/>
+        <label for='toPrecision'>toPrecision</label>
+        <span>[ significant digits ]</span>
+      </li>
+      <li>
+        <input type='radio' id='round' name=1/>
+        <label for='round'>round</label>
+        <span>[ decimal places [ , rounding mode ] ]</span>
+      </li>
+      <li>
+        <input type='radio' id='toFraction' name=1/>
+        <label for='toFraction'>toFraction</label>
+        <span>[ maximum denominator ]</span>
+      </li>
+      <li>
+        <input type='radio' id='sqrt' name=1/>
+        <label for='sqrt'>sqrt</label>
+      </li>
+    </ul>
+    <ul id='roundings'>
+      <li>
+        <input type='radio' id=0 name=2/>
+        <label for=0 >UP</label>
+        <span>Rounds away from zero</span>
+      </li>
+      <li>
+        <input type='radio' id=1 name=2/>
+        <label for=1 >DOWN</label>
+        <span>Rounds towards zero</span>
+      </li>
+      <li>
+        <input type='radio' id=2 name=2/>
+        <label for=2 >CEIL</label>
+        <span>Rounds towards +Infinity</span>
+      </li>
+      <li>
+        <input type='radio' id=3 name=2/>
+        <label for=3 >FLOOR</label>
+        <span>Rounds towards -Infinity</span>
+      </li>
+      <li>
+        <input type='radio' id=4 name=2/>
+        <label for=4 >HALF_UP</label>
+        <span>Rounds towards nearest neighbour. If equidistant, rounds up</span>
+      </li>
+      <li>
+        <input type='radio' id=5 name=2/>
+        <label for=5 >HALF_DOWN</label>
+        <span>Rounds towards nearest neighbour. If equidistant, rounds down</span>
+      </li>
+      <li>
+        <input type='radio' id=6 name=2/>
+        <label for=6 >HALF_EVEN</label>
+        <span>Rounds towards nearest neighbour. If equidistant, rounds towards even neighbour</span>
+      </li>
+      <li>
+        <input type='radio' id=7 name=2/>
+        <label for=7 >HALF_CEIL</label>
+        <span>Rounds towards nearest neighbour. If equidistant, rounds towards +Infinity</span>
+      </li>
+      <li>
+        <input type='radio' id=8 name=2/>
+        <label for=8 >HALF_FLOOR</label>
+        <span>Rounds towards nearest neighbour. If equidistant, rounds towards -Infinity</span>
+      </li>
+    </ul>
+
+    <div class='input'>
+      <div class='dpDiv'>
+      <label class='dp' id='dpLabel' for='dp'>Decimal places:</label>
+      <input type='text' id='dp' name='dp' size=20 />
+      <pre>             BigNumber ERRORS:</pre>
+      <input class='exInput' type='radio' id='exTrue' name=3/>
+      <label class='exLabel' for='exTrue'>true</label>
+      <input class='exInput' type='radio' id='exFalse' name=3/>
+      <label class='exLabel' for='exFalse'>false</label>
+      </div>
+      <label class='arg' for='input'>Input:</label>
+      <input class='size' type='text' id='input' name='input' />
+    </div>
+
+    <div class='output'>
+      <label class='result' for='bignumber'>BigNumber:</label>
+      <input class='size' type='text' id='bignumber' name='bignumber' readonly />
+      <div id='number'>
+        <label class='result' for='num'>Number:</label>
+        <input class='size' type='text' id='num' name='num' readonly />
+      </div>
+    </div>
+  </form>
+  <div class= 'code' id='code'></div>
+  <script>
+(function () {
+    var i, toFraction, lastFocus,
+        d = document,
+        $ = function (id) {return d.getElementById(id)},
+        $input = $('input'),
+        $dp = $('dp'),
+        $dpLabel = $('dpLabel'),
+        $num = $('num'),
+        $bignumber = $('bignumber'),
+        $number = $('number'),
+        $roundings = $('roundings'),
+        $exceptionsTrue = $('exTrue'),
+        $exceptionsFalse = $('exFalse'),
+        $code = $('code'),
+        $inputs = d.getElementsByTagName('input');
+
+    function round() {
+        var i, rb, method, mode, includeNumber, numVal, bignumberVal, isSqrt,
+            dp = ($dp.value = $dp.value.replace(/\s+/g, '')),
+            dpEmpty = dp === '',
+            input = ($input.value = $input.value.replace(/\s+/g, '')),
+            exceptions = $exceptionsTrue.checked,
+            code = 'BigNumber.config({ERRORS : ' + exceptions;
+
+        BigNumber.config({ERRORS : exceptions});
+
+        if (input) {
+            for (i = 0; i < 15; i++) {
+                rb = $inputs[i];
+                if (rb.checked) {
+                    if (i < 6) method = rb.id;
+                    else mode = rb.id;
+                }
+            }
+
+            $num.value = $bignumber.value = $code.innerHTML = '';
+            isSqrt = method == 'sqrt';
+
+            if (includeNumber = method != 'toFraction' && method != 'round') {
+                try {
+                    numVal = isSqrt
+                        ? Math.sqrt(input)
+                        : dpEmpty
+                            ? Number(input)[method]()
+                            : Number(input)[method](dp);
+                } catch(e) {
+                    numVal = e;
+                }
+
+                if (isSqrt && !dpEmpty) {
+                    try {
+                        BigNumber.config(dp);
+                    } catch(e) {
+                        $bignumber.value = e;
+                        return;
+                    }
+                    code += ', DECIMAL_PLACES : ' + dp;
+                }
+                BigNumber.config({ROUNDING_MODE : mode});
+                code += ', ROUNDING_MODE : ' + mode;
+            }
+
+            code += "})<br>BigNumber('" + input + "')." + method + "(";
+
+            if (!isSqrt) {
+                if (method == 'round') {
+                    if (dpEmpty) {
+                        dp = undefined;
+                        dpEmpty = false;
+                    }
+                    code += "'" + dp + "', " + mode;
+
+                } else if (!dpEmpty) code += "'" + dp + "'";
+            }
+
+            code += ')<br><br>';
+
+            if (includeNumber) {
+                if (isSqrt) {
+                    code += "Math.sqrt('" + input + "')";
+                } else {
+                    code += "Number('" + input + "')." + method + "(";
+                    if (!dpEmpty) code += "'" + dp + "'";
+                    code += ")";
+                }
+            }
+
+            try {
+                bignumberVal = dpEmpty
+                    ? new BigNumber(input)[method]()
+                    : new BigNumber(input)[method](dp, mode);
+            } catch(e) {
+                bignumberVal = e;
+            }
+
+            setTimeout(function () {
+                $bignumber.value = bignumberVal;
+                if (includeNumber) $num.value = numVal;
+                $code.innerHTML = code;
+            }, 100);
+
+            if (window.console && console.log) {
+                input = new BigNumber(input);
+                console.log('\nc: ' + input.c +
+                            '\ne: ' + input.e +
+                            '\ns: ' + input.s);
+            }
+        }
+        lastFocus.focus();
+    }
+
+    BigNumber.config({
+        DECIMAL_PLACES : 20,
+        ROUNDING_MODE : 4,
+        ERRORS : false,
+        EXPONENTIAL_AT : 1E9,
+        RANGE : 1E9
+    });
+
+    $input.value = $dp.value = $num.value = $bignumber.value = '';
+    setTimeout(function () {$input.focus()}, 0);
+
+    for (i = 0; i < 15; i++) {
+        $inputs[i].checked = false;
+
+        $inputs[i].onclick = function () {
+            if (this.id >= 0) {
+                round();
+            } else {
+                if (this.id == 'toFraction') {
+                    toFraction = true;
+                    $dpLabel.innerHTML = 'Maximum denominator:';
+                    $number.style.display = $roundings.style.display = 'none';
+                } else {
+                    $dpLabel.innerHTML = this.id == 'toPrecision'
+                        ? 'Significant digits:'
+                        : 'Decimal places:';
+                    $number.style.display = this.id == 'round'
+                        ? 'none'
+                        : 'block';
+                    $roundings.style.display = 'block';
+                    if (toFraction) toFraction = false;
+                }
+                $dp.value = $bignumber.value = $num.value = $code.innerHTML = '';
+                lastFocus.focus();
+            }
+        };
+    }
+
+    $exceptionsTrue.onclick = $exceptionsFalse.onclick = round;
+
+    $input.onfocus = $dp.onfocus = function () {
+        lastFocus = this;
+    };
+
+    $inputs[1].checked = $inputs[10].checked = $exceptionsTrue.checked = true;
+
+    document.onkeypress = function (e) {
+        if ((e || window.event).keyCode == 13) {
+            round();
+            return false;
+        } else $num.value = $bignumber.value = '';
+    };
+})();
+  </script>
+</body>
+</html>

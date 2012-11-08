@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BigNumber Errors</title>
+  <script src='../../bignumber.js'></script>
+</head>
+<body>
+  <script>
+
+    var n;
+
+    document.body.innerHTML = 'BigNumber Errors written to console.';
+
+    try {
+        n = new BigNumber(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+         n = new BigNumber(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        BigNumber.config({ DECIMAL_PLACES : 10.3});
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        BigNumber.config({ DECIMAL_PLACES : -1});
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        BigNumber.config({ ROUNDING_MODE : 4.3});
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        BigNumber.config({ ROUNDING_MODE : 10});
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        BigNumber.config({ EXPONENTIAL_AT : 10.3});
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        BigNumber.config({ EXPONENTIAL_AT : 1e99});
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        BigNumber.config({ RANGE : 1.999});
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        BigNumber.config({ RANGE : 1e99});
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        BigNumber.config({ ERRORS : 'ertg'});
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).pow(10.3);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).pow(1e99);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).round(300.3);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).round(1e99);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+       n = new BigNumber(2).round(null, 3.3);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).round(null, 9);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).toE(300.3);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).toE(1e99);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).toF(300.3);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).toF(1e99);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).toFr(300.3);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).toFr(-1);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).toP(300.3);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+       n = new BigNumber(2).toP(0);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).toS(3.3);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).toS(1);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+
+   /*
+    * cmp, div, eq, gt, gte, lt, lte, minus, mod, plus, pow, times.
+    */
+
+
+    try {
+        n = new BigNumber(2).cmp(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).cmp(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).cmp(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).cmp(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).cmp('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).cmp(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).div(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).div(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).div(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).div(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).div('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).div(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).eq(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).eq(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).eq(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).eq(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).eq('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).eq(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).gt(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gt(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gt(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gt(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gt('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gt(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).gte(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gte(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gte(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gte(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gte('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).gte(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).lt(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lt(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lt(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lt(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lt('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lt(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).lte(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lte(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lte(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lte(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lte('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).lte(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).minus(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).minus(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).minus(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).minus(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).minus('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).minus(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).mod(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).mod(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).mod(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).mod(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).mod('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).mod(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).plus(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).plus(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).plus(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).plus(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).plus('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).plus(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).pow(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).pow(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).pow(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).pow(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).pow('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).pow(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+    try {
+        n = new BigNumber(2).times(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).times(333, 2);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+         n = new BigNumber(2).times(123, 5.6);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).times(123, 37);
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).times('hello');
+    } catch (e) {
+        console.error(e + '')
+    } try {
+        n = new BigNumber(2).times(8475698473265965);
+    } catch (e) {
+        console.error(e + '')
+    }
+
+  </script>
+</body>
+</html>
