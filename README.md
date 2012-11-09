@@ -199,5 +199,5 @@ See LICENCE.
 ## Change Log
 
 ####1.0.0
-* 8/11/2012
-* Initial release
+* 8/11/2012 Initial release
+* 9/11/12 Added package.json for npm
