@@ -112,7 +112,8 @@ The maximum number of decimal places and the rounding mode for division, square 
     z.sqrt()                     // "0.8164965809"
     z.pow(-3)                    // "3.3749999995"
     z.toString(2)                // "0.1010101011"
-    x.times(y)                   // "1.15470053845773502692"
+    z.times(z)                   // "0.44444444448888888889"
+    z.times(z).round(10)         // "0.4444444445"
 
 There is a `toFraction` method with an optional *maximum denominator* argument
 
