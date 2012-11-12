@@ -937,6 +937,7 @@
           : divide( xc, yc, xe - ye, s, 10 )
     };
 
+
     /*
      * Return true if the value of this BigNumber is equal to the value of
      * BigNumber(n, b), otherwise returns false.
@@ -965,6 +966,7 @@
         return this['cmp']( n, b ) > 0
     };
 
+
     /*
      * Return true if the value of this BigNumber is greater than or equal to
      * the value of BigNumber(n, b), otherwise returns false.
@@ -973,6 +975,7 @@
         id = 5;
         return ( b = this['cmp']( n, b ) ) == 1 || b === 0
     };
+
 
     /*
      * Return true if the value of this BigNumber is a finite number, otherwise
@@ -990,6 +993,7 @@
     P['isNaN'] = function () {
         return !this['s']
     };
+
 
     /*
      * Return true if the value of this BigNumber is negative, otherwise
@@ -1017,6 +1021,7 @@
         id = 6;
         return this['cmp']( n, b ) < 0
     };
+
 
     /*
      * Return true if the value of this BigNumber is less than or equal to the
