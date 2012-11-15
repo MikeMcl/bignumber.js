@@ -1,11 +1,11 @@
 
 # bignumber.js #
 
-A Javascript library for arbitrary-precision arithmetic.  
+A Javascript library for arbitrary-precision arithmetic with decimal and non-decimal numbers.  
      
 ## Features
 
-  - Faster, smaller, and perhaps easier-to-use than Javascript versions of Java's BigDecimal
+  - Faster, smaller, and perhaps easier to use than Javascript versions of Java's BigDecimal
   - 5 KB minified and gzipped
   - Simple API but full-featured
   - Works with numbers with fraction digits in bases from 2 to 36 inclusive
