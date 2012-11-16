@@ -211,3 +211,5 @@ See LICENCE.
 
 ####1.0.0
 * 8/11/2012 Initial release   
+
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/50b85fd919b406ef9312551092a95fb7 "githalytics.com")](http://githalytics.com/MikeMcl/bignumber.js)
