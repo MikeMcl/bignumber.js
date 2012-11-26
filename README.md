@@ -1,7 +1,7 @@
 
 # bignumber.js #
 
-A Javascript library for arbitrary-precision arithmetic with decimal and non-decimal numbers.  
+A Javascript library for arbitrary-precision decimal and non-decimal arithmetic.  
      
 ## Features
 
@@ -14,6 +14,8 @@ A Javascript library for arbitrary-precision arithmetic with decimal and non-dec
   - Stores values in an accessible decimal floating point format
   - No dependencies
   - Comprehensive documentation and test set 
+
+To see the library in action see [radix](http://mikemcl.github.com/radix/)
 
 If an even smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).   
 It's half the size with half the methods and only works with decimal numbers; it also does not allow `NaN` or `Infinity`, or have the configuration options of this library. 
@@ -33,19 +35,14 @@ For Node, put the *bignumber.js* file into the same directory as the file that i
 
     var BigNumber = require('./bignumber'); 
 
-or put it in a *node_modules* directory within the directory and use
-
-    var BigNumber = require('bignumber'); 
+or put it in a *node_modules* directory within the directory and use `require('bignumber')`. 
 
 The library is also available from the [npm](https://npmjs.org/) registry, so
 
     $ npm install bignumber.js
 
-will install this entire directory in a *node_modules* directory within the current directory.
-
-It can then be loaded with  
-
-    var BigNumber = require('bignumber.js'); 
+will install this entire directory in a *node_modules* directory within the current directory.  
+It can then be loaded with `require('bignumber.js')`. 
  
 To load with AMD loader libraries such as [requireJS](http://requirejs.org/):
 
@@ -202,6 +199,10 @@ Bugs/issues/comments to:
 
 Michael Mclaughlin  
 <a href="mailto:M8ch88l@gmail.com">M8ch88l@gmail.com</a>
+
+Bitcoin donations to:  
+**1GMiXasawxpBxj5ggcNRP8zyAsJmoyeWQi**  
+Thank you!
 
 ## Licence
 
