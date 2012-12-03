@@ -15,7 +15,7 @@ A Javascript library for arbitrary-precision decimal and non-decimal arithmetic.
   - No dependencies
   - Comprehensive documentation and test set 
 
-To see the library in action see [RADIX](http://mikemcl.github.com/RADIX/)
+To see the library in action see [RADIX](http://mikemcl.github.com/RADIX/).
 
 If an even smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).   
 It's half the size with half the methods and only works with decimal numbers; it also does not allow `NaN` or `Infinity`, or have the configuration options of this library. 
