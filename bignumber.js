@@ -279,13 +279,16 @@
 
     /*
      * Configure infrequently-changing library-wide settings.
+     *
      * Accept an object or an argument list, with one or many of the following
      * properties or parameters respectively:
      * [ DECIMAL_PLACES [, ROUNDING_MODE [, EXPONENTIAL_AT [, RANGE [, ERRORS ]]]]]
+     *
      * E.g.
      * BigNumber.config(20, 4) is equivalent to
      * BigNumber.config({ DECIMAL_PLACES : 20, ROUNDING_MODE : 4 })
      * Ignore properties/parameters set to null or undefined.
+     *
      * Return an object with the properties current values.
      */
     BigNumber['config'] = function () {
@@ -427,14 +430,14 @@
 
 
     /*
-     * Convert a numeric string of a specified base to a numeric string of a
-     * specified other base.
+     * Convert a numeric string of baseIn to a numeric string of baseOut.
      */
     function convert( nStr, baseOut, baseIn, sign ) {
         var e, dvs, dvd, nArr, fracArr, fracBN;
 
         // Convert string of base bIn to an array of numbers of baseOut.
-        // Eg. strToArr('255', 16) where baseOut is 10, returns [15, 15].
+        // Eg. strToArr('255', 10) where baseOut is 16, returns [15, 15].
+        // Eg. strToArr('ff', 16)  where baseOut is 10, returns [2, 5, 5].
         function strToArr( str, bIn ) {
             var j,
                 i = 0,
