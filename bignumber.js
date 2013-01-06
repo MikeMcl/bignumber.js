@@ -102,6 +102,7 @@
 
         // Duplicate.
         if ( n instanceof BigNumber ) {
+            id = 0;
 
             // i is undefined.
             if ( b !== i) {
@@ -138,9 +139,9 @@
              * Follow Javascript numbers in allowing numbers with fraction digits
              * to omit a leading zero and allowing a leading plus sign e.g. '+.5' for '0.5'.
              */
-            n = trim.call(n).replace( /^\+([^-])/, '$1' ).replace( /^(-?)\./, '$10.' );
+            n = trim.call(n).replace( /^\+(?!-)/, '' ).replace( /^(-?)\./, '$10.' );
 
-            x['s'] = n.charAt(0) == '-' ? ( n = n.replace( /^-([^-])/, '$1' ), -1 ) : 1;
+            x['s'] = n.charAt(0) == '-' ? ( n = n.replace( /^-(?!-)/, '' ), -1 ) : 1;
 
             if ( b != null ) {
 
@@ -199,6 +200,7 @@
                     }
                     x['s'] = null
                 }
+                id = 0;
 
                 return
             }
@@ -233,7 +235,7 @@
         }
 
         // Determine leading zeros.
-        for ( j = 0; n.charAt(j) == '0'; j++ ) {
+        for ( id = j = 0; n.charAt(j) == '0'; j++ ) {
         }
 
         // Overflow?
@@ -419,7 +421,6 @@
                       : '' ) ) ) + ': ' + arg;
 
             outOfRange = id = 0;
-
             throw {
                 name : 'BigNumber Error',
                 message : error,
@@ -707,7 +708,7 @@
     }
 
 
-    // Round if necessary. Modifying the BigNumber directly.
+    // Round if necessary.
     // Called by divide, format, setMode and sqrt.
     function rnd( x, dp, base, isOdd, r) {
         var xc = x['c'],
@@ -1156,7 +1157,7 @@
         for ( ; xc[--j] == 0; xc.pop() ) {
         }
 
-        // Remove leading zeros and adbust exponent accordingly.
+        // Remove leading zeros and adjust exponent accordingly.
         for ( ; xc[0] == 0; xc.shift(), --ye ) {
         }
 
@@ -1220,7 +1221,7 @@
 
     /*
      * Return a new BigNumber whose value is the value of this BigNumber
-     * negated, i.e. multplied by -1.
+     * negated, i.e. multiplied by -1.
      */
     P['negated'] = P['neg'] = function () {
         var x = new BigNumber(this);
@@ -1348,10 +1349,9 @@
      * e {number} Integer, -MAX_POWER to MAX_POWER inclusive.
      */
     P['toPower'] = P['pow'] = function ( e ) {
-        var y,
 
-            // To integer, avoiding NaN or Infinity becoming 0.
-            i = e * 0 == 0 ? e | 0 : e,
+        // e to integer, avoiding NaN or Infinity becoming 0.
+        var i = e * 0 == 0 ? e | 0 : e,
             x = new BigNumber(this),
             y = new BigNumber(ONE);
 
@@ -1877,7 +1877,7 @@
     };
 
 
-    // Alias BigDecimal methods.
+    // Add aliases for BigDecimal methods.
     //P['add'] = P['plus'];
     //P['subtract'] = P['minus'];
     //P['multiply'] = P['times'];
