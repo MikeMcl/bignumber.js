@@ -8,17 +8,16 @@ A Javascript library for arbitrary-precision decimal and non-decimal arithmetic.
   - Faster, smaller, and perhaps easier to use than Javascript versions of Java's BigDecimal
   - 5 KB minified and gzipped
   - Simple API but full-featured
-  - Works with numbers with fraction digits in bases from 2 to 36 inclusive
+  - Works with numbers with or without fraction digits in bases from 2 to 36 inclusive
   - Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of Javascript's Number type
   - Includes a `toFraction` and a `squareRoot` method
   - Stores values in an accessible decimal floating point format
   - No dependencies
   - Comprehensive documentation and test set 
 
-To see the library in action see [RADIX](http://mikemcl.github.com/RADIX/).
-
 If an even smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).   
-It's half the size with half the methods and only works with decimal numbers; it also does not allow `NaN` or `Infinity`, or have the configuration options of this library. 
+It's half the size but only works with decimal numbers and only has half the methods.   
+It also does not allow `NaN` or `Infinity`, or have the configuration options of this library. 
 
 ## Load
 
@@ -56,7 +55,7 @@ To load with AMD loader libraries such as [requireJS](http://requirejs.org/):
 If a commented-out value is in quotes it means `toString` has been called on the preceding expression.*
 
 The library exports a single function: BigNumber, the constructor of BigNumber instances.    
-It accepts a value of type Number, String or Object,   
+It accepts a value of type Number, String or BigNumber Object,   
 
     x = new BigNumber(123.4567)
     y = BigNumber('123456.7e-3')                     // 'new' is optional
@@ -98,7 +97,7 @@ Like Javascript's Number type, there are `toExponential`, `toFixed` and `toPreci
     x.toString(16)        // "ff.8"
 
 The maximum number of decimal places and the rounding mode for division, square root, base conversion, and negative power operations is set by a configuration object passed to the `config` method of the `BigNumber` constructor.       
- The other arithmetic operations always give the exact result.
+The other arithmetic operations always give the exact result.
 
     BigNumber.config({ DECIMAL_PLACES : 10, ROUNDING_MODE : 4 })
     // Alternatively, BigNumber.config( 10, 4 );
@@ -152,7 +151,8 @@ To test all the methods in more depth
 
     $ node every-test
 
-For the browser, see *quick-test.html*, *single-test.html* and *every-test.html* in the *test/browser* directory.   
+For the browser, see *quick-test.html*, *single-test.html* and *every-test.html* in the *test/browser* directory.  
+ 
 *bignumber-vs-number.html* enables some of the methods of bignumber.js to be compared with those of Javascript's Number type.  
 
 ## Performance
@@ -195,7 +195,8 @@ will create *bignumber.min.js*.
 
 ## Feedback
 
-Bugs/issues/comments to:
+Bugs: surely not! Open an issue, please.  
+Other feedback to:
 
 Michael Mclaughlin  
 <a href="mailto:M8ch88l@gmail.com">M8ch88l@gmail.com</a>
@@ -209,6 +210,11 @@ Thank you
 See LICENCE.
 
 ## Change Log
+
+####1.0.1
+* Bugfix: error messages with incorrect method name 
+* Corrected a couple of spelling mistakes in comments
+* Very minor regex tweaks
 
 ####1.0.0
 * 8/11/2012 Initial release   
