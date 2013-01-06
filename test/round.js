@@ -237,7 +237,7 @@ var count = (function round(BigNumber) {
     // ------------------------------------------------------------------ v8 end
 
     BigNumber.config({EXPONENTIAL_AT : 1E9});
-    
+
     T('0', '0', 0);
     T('0', '-0', 1);
     T('0', '-0', 1, 0);
@@ -2353,7 +2353,6 @@ var count = (function round(BigNumber) {
     T('12', '12.345', u, new Date);
     T('12', '12.345', u, new RegExp);
     T('13', '12.345', u, 0);
-    T('13', '12.345', u, '-0');
     T('12', '12.345', u, 7.5);
 
     T('12', '12.345', u, '-1');
@@ -2368,14 +2367,13 @@ var count = (function round(BigNumber) {
 
     T('12', '12.345', u, u);
     T('12.3', '12.345', 1, NaN);
-    
+
     BigNumber.config({ ROUNDING_MODE : 4 });
 
     T('13', '12.345', u, 0);
     T('13', '12.345', u, '0');
     T('13', '12.345', u, -0);
-    T('13', '12.345', u, '-0');
-    
+
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];;
 })(this.BigNumber);
