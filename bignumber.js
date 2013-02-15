@@ -301,7 +301,7 @@
     BigNumber['ROUND_HALF_EVEN'] = 6;
     BigNumber['ROUND_HALF_CEIL'] = 7;
     BigNumber['ROUND_HALF_FLOOR'] = 8;
-    BigNumber['EUCLID'] = 9;
+    BigNumber['ROUND_EUCLID'] = 9;
 
 
     /*
