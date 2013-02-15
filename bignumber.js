@@ -42,8 +42,32 @@
          * HALF_EVEN  6 Towards nearest neighbour. If equidistant, towards even neighbour.
          * HALF_CEIL  7 Towards nearest neighbour. If equidistant, towards +Infinity.
          * HALF_FLOOR 8 Towards nearest neighbour. If equidistant, towards -Infinity.
+         * EUCLID     9 Euclidian division. q = sign(n) * (a / abs(n)). This mode is only useful for modulo operations.
          */
         ROUNDING_MODE = 4,                           // 0 to 8
+
+        /*
+         * The modulo mode used when calculating the modulus: a mod n
+         * The quotient (q) is calculated according to the corresponding ROUNDING_MODE.
+         * The remainder (r) is calculated as: r = a - n * q
+         *
+         * UP         0 The remainder ...
+         * DOWN       1 The remainder has the same sign as the dividend.
+         *              This modulo mode is commonly known as "truncated division" and matches,
+         *              as closely as possible, the behaviour of JavaScript's remainder operator (a % n)
+         * CEIL       2 The remainder ...
+         * FLOOR      3 The remainder has the same sign as the divisor.
+         * HALF_UP    4 The remainder ...
+         * HALF_DOWN  5 The remainder ...
+         * HALF_EVEN  6 The remainder ...
+         * HALF_CEIL  7 The remainder ...
+         * HALF_FLOOR 8 The remainder ...
+         * EUCLID     9 The remainder is always positive.
+         *
+         * The modes that are most commonly used for modulus are
+         * truncated division, floored division and Euclidian division.
+         */
+        MODULO_MODE = 1,
 
         // EXPONENTIAL_AT : [TO_EXP_NEG , TO_EXP_POS]
 
@@ -1205,14 +1229,13 @@
             return new BigNumber( b ? NaN : x )
         }
 
-        x['s'] = y['s'] = 1;
-        b = y['cmp'](x) == 1;
-        x['s'] = i, y['s'] = j;
+        // Is y Infinity?
+        b = y['c'] === null
 
         return b
           ? new BigNumber(x)
           : ( i = DECIMAL_PLACES, j = ROUNDING_MODE,
-            DECIMAL_PLACES = 0, ROUNDING_MODE = 1,
+            DECIMAL_PLACES = 0, ROUNDING_MODE = MODULO_MODE,
               x = x['div'](y),
                 DECIMAL_PLACES = i, ROUNDING_MODE = j,
                   this['minus']( x['times'](y) ) )
