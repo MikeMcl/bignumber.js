@@ -42,7 +42,6 @@
          * HALF_EVEN  6 Towards nearest neighbour. If equidistant, towards even neighbour.
          * HALF_CEIL  7 Towards nearest neighbour. If equidistant, towards +Infinity.
          * HALF_FLOOR 8 Towards nearest neighbour. If equidistant, towards -Infinity.
-         * EUCLID     9 Euclidian division. q = sign(n) * (a / abs(n)). This mode is only useful for modulo operations.
          */
         ROUNDING_MODE = 4,                           // 0 to 8
 
@@ -51,7 +50,7 @@
          * The quotient (q) is calculated according to the corresponding ROUNDING_MODE.
          * The remainder (r) is calculated as: r = a - n * q
          *
-         * UP         0 The remainder ...
+         * UP         0 The remainder is positive if the dividend is negative, negative otherwise.
          * DOWN       1 The remainder has the same sign as the dividend.
          *              This modulo mode is commonly known as "truncated division" and matches,
          *              as closely as possible, the behaviour of JavaScript's remainder operator (a % n)
@@ -62,10 +61,12 @@
          * HALF_EVEN  6 The remainder ...
          * HALF_CEIL  7 The remainder ...
          * HALF_FLOOR 8 The remainder ...
-         * EUCLID     9 The remainder is always positive.
+         * EUCLID     9 Euclidian division. q = sign(n) * floor(a / abs(n)).
+         *              The remainder is always positive.
          *
          * The modes that are most commonly used for modulus are
          * truncated division, floored division and Euclidian division.
+         * Although other modes are possible, they may not give useful results.
          */
         MODULO_MODE = 1,
 
@@ -301,7 +302,7 @@
     BigNumber['ROUND_HALF_EVEN'] = 6;
     BigNumber['ROUND_HALF_CEIL'] = 7;
     BigNumber['ROUND_HALF_FLOOR'] = 8;
-    BigNumber['ROUND_EUCLID'] = 9;
+    BigNumber['ROUND_EUCLID'] = 9; // For MODULO_MODE only
 
 
     /*
@@ -1220,11 +1221,14 @@
         var x = this,
             xc = x['c'],
             yc = ( id = 9, y = new BigNumber( y, b ) )['c'],
-            i = x['s'],
-            j = y['s'];
+            xs = x['s'],
+            ys = y['s'],
+            i = DECIMAL_PLACES,
+            j = ROUNDING_MODE,
+            q = null; // quotient
 
-        // Is x or y NaN, or y zero?
-        b = !i || !j || yc && !yc[0];
+        // Is x or xs NaN, or y zero?
+        b = !xs || !ys || yc && !yc[0];
 
         if ( b || xc && !xc[0] ) {
             return new BigNumber( b ? NaN : x )
@@ -1233,13 +1237,27 @@
         // Is y Infinity?
         b = y['c'] === null
 
-        return b
-          ? new BigNumber(x)
-          : ( i = DECIMAL_PLACES, j = ROUNDING_MODE,
-            DECIMAL_PLACES = 0, ROUNDING_MODE = MODULO_MODE,
-              x = x['div'](y),
-                DECIMAL_PLACES = i, ROUNDING_MODE = j,
-                  this['minus']( x['times'](y) ) )
+
+        if (b) {
+            return new BigNumber(x)
+        } else {
+            if (MODULO_MODE === 9) {
+                // Euclidian division: sign(y) * floor(x / abs(y))
+                ROUNDING_MODE = BigNumber['ROUND_FLOOR'];
+                y['s'] = 1;
+            } else {
+                ROUNDING_MODE = MODULO_MODE;
+            }
+
+            DECIMAL_PLACES = 0;
+            var q = x['div'](y);
+
+            q['s'] *= (y['s'] = ys);
+            DECIMAL_PLACES = i;
+            ROUNDING_MODE = j;
+
+            return this['minus'](q['times'](y));
+        }
     };
 
 
