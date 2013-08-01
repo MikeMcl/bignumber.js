@@ -1,10 +1,10 @@
-/* bignumber.js v1.0.1 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/* bignumber.js v1.1.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
 ;(function ( global ) {
     'use strict';
 
     /*
-      bignumber.js v1.0.1
-      A Javascript library for arbitrary-precision arithmetic.
+      bignumber.js v1.1.0
+      A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2012 Michael Mclaughlin <M8ch88l@gmail.com>
       MIT Expat Licence
@@ -76,7 +76,7 @@
         DIGITS = '0123456789abcdefghijklmnopqrstuvwxyz',
         outOfRange,
         id = 0,
-        isValid = /^-?\d+(?:\.\d+)?(?:e[+-]?\d+)?$/i,
+        isValid = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
         trim = String.prototype.trim || function () {return this.replace(/^\s+|\s+$/g, '')},
         ONE = BigNumber(1);
 
@@ -92,7 +92,7 @@
      * [b] {number} The base of n. Integer, 2 to 36 inclusive.
      */
     function BigNumber( n, b ) {
-        var isNum, i, j,
+        var e, i, isNum, digits, valid,
             x = this;
 
         // Enable constructor usage without new.
@@ -104,9 +104,9 @@
         if ( n instanceof BigNumber ) {
             id = 0;
 
-            // i is undefined.
-            if ( b !== i) {
-                n = n['toS']()
+            // e is undefined.
+            if ( b !== e ) {
+                n += ''
             } else {
                 x['s'] = n['s'];
                 x['e'] = n['e'];
@@ -115,13 +115,14 @@
             }
         }
 
-        // Check if number and if minus zero. Convert to string.
+        // If number, check if minus zero.
         if ( typeof n != 'string' ) {
-            n = ( isNum = Object.prototype.toString.call(n) == '[object Number]' ) &&
-              n === 0 && 1 / n < 0 ? '-0' : n + ''
+            n = ( isNum = typeof n == 'number' ||
+                Object.prototype.toString.call(n) == '[object Number]' ) &&
+                    n === 0 && 1 / n < 0 ? '-0' : n + ''
         }
 
-        if ( b === i && isValid.test(n) ) {
+        if ( b === e && isValid.test(n) ) {
 
             // Determine sign.
             x['s'] = n.charAt(0) == '-' ? ( n = n.slice(1), -1 ) : 1
@@ -132,14 +133,11 @@
             // Enable exponential notation to be used with base 10 argument.
             // Ensure return value is rounded to DECIMAL_PLACES as with other bases.
             if ( b == 10 ) {
-                return new BigNumber(n)['div'](ONE)
+
+                return setMode( n, DECIMAL_PLACES, ROUNDING_MODE )
             }
 
-            /*
-             * Follow Javascript numbers in allowing numbers with fraction digits
-             * to omit a leading zero and allowing a leading plus sign e.g. '+.5' for '0.5'.
-             */
-            n = trim.call(n).replace( /^\+(?!-)/, '' ).replace( /^(-?)\./, '$10.' );
+            n = trim.call(n).replace( /^\+(?!-)/, '' );
 
             x['s'] = n.charAt(0) == '-' ? ( n = n.replace( /^-(?!-)/, '' ), -1 ) : 1;
 
@@ -148,14 +146,19 @@
                 if ( ( b == (b | 0) || !ERRORS ) &&
                   !( outOfRange = !( b >= 2 && b <= 36 ) ) ) {
 
-                    i = '[' + DIGITS.slice( 0, b = b | 0 ) + ']+';
+                    digits = '[' + DIGITS.slice( 0, b = b | 0 ) + ']+';
 
-                    // Test non-decimal number validity.
+                    // Before non-decimal number validity test and base conversion
+                    // remove the `.` from e.g. '1.', and replace e.g. '.1' with '0.1'.
+                    n = n.replace( /\.$/, '' ).replace( /^\./, '0.' );
+
                     // Any number in exponential form will fail due to the e+/-.
-                    if ( j = new RegExp( '^' + i + '(?:\\.' + i + ')?$', 'i' ).test(n) ) {
+                    if ( valid = new RegExp(
+                      '^' + digits + '(?:\\.' + digits + ')?$', 'i' ).test(n) ) {
 
                         if ( isNum ) {
-                            if ( n.replace('.', '').length > 15 ) {
+
+                            if ( n.replace( '.', '' ).length > 15 ) {
 
                                 // 'new BigNumber() number type has more than 15 significant digits: {n}'
                                 ifExceptionsThrow( n, 0 )
@@ -165,6 +168,7 @@
                             isNum = !isNum
                         }
                         n = convert( n, 10, b, x['s'] )
+
                     } else if ( n != 'Infinity' && n != 'NaN' ) {
 
                         // 'new BigNumber() not a base {b} number: {n}'
@@ -178,13 +182,13 @@
                     ifExceptionsThrow( b, 2 );
 
                     // Ignore base.
-                    j = isValid.test(n)
+                    valid = isValid.test(n)
                 }
             } else {
-                j = isValid.test(n)
+                valid = isValid.test(n)
             }
 
-            if ( !j ) {
+            if ( !valid ) {
 
                 // Infinity/NaN
                 x['c'] = x['e'] = null;
@@ -207,24 +211,24 @@
         }
 
         // Decimal point?
-        if ( ( i = n.indexOf('.') ) > -1 ) {
+        if ( ( e = n.indexOf('.') ) > -1 ) {
             n = n.replace( '.', '' )
         }
 
         // Exponential form?
-        if ( ( j = n.search(/e/i) ) > 0 ) {
+        if ( ( i = n.search(/e/i) ) > 0 ) {
 
             // Determine exponent.
-            if ( i < 0 ) {
-                i = j
+            if ( e < 0 ) {
+                e = i
             }
-            i += +n.slice( j + 1 );
-            n = n.substring( 0, j )
+            e += +n.slice( i + 1 );
+            n = n.substring( 0, i )
 
-        } else if ( i < 0 ) {
+        } else if ( e < 0 ) {
 
             // Integer.
-            i = n.length
+            e = n.length
         }
 
         // Disallow numbers over 15 digits if number type.
@@ -235,17 +239,17 @@
         }
 
         // Determine leading zeros.
-        for ( id = j = 0; n.charAt(j) == '0'; j++ ) {
+        for ( i = id = 0; n.charAt(i) == '0'; i++ ) {
         }
 
         // Overflow?
-        if ( ( i -= j + 1 ) > MAX_EXP ) {
+        if ( ( e -= i + 1 ) > MAX_EXP ) {
 
             // Infinity.
             x['c'] = x['e'] = null
 
         // Zero or underflow?
-        } else if ( j == b || i < MIN_EXP ) {
+        } else if ( i == b || e < MIN_EXP ) {
 
             // Zero.
             x['c'] = [ x['e'] = 0 ]
@@ -255,11 +259,11 @@
             for ( ; n.charAt(--b) == '0'; ) {
             }
 
-            x['e'] = i;
+            x['e'] = e;
             x['c'] = [];
 
             // Convert string to array of digits (without leading and trailing zeros).
-            for ( i = 0; j <= b; x['c'][i++] = +n.charAt(j++) ) {
+            for ( e = 0; i <= b; x['c'][e++] = +n.charAt(i++) ) {
             }
         }
     }
@@ -511,7 +515,6 @@
 
             // Result will be a BigNumber with a value less than 1.
             fracBN = divide( dvd, dvs, dvd.length - dvs.length, sign, baseOut,
-
               // Is least significant digit of integer part an odd number?
               nArr[nArr.length - 1] & 1 );
 
@@ -630,7 +633,7 @@
         } while ( ( dvdI++ < dvdL || rem[0] != null ) && s-- );
 
         // Leading zero? Do not remove if result is simply zero (qi == 1).
-        if ( !qc[0] && qi != 1) {
+        if ( !qc[0] && qi != 1 ) {
 
             // There can't be more than one zero.
             --quo['e'];
@@ -710,7 +713,7 @@
 
     // Round if necessary.
     // Called by divide, format, setMode and sqrt.
-    function rnd( x, dp, base, isOdd, r) {
+    function rnd( x, dp, base, isOdd, r ) {
         var xc = x['c'],
             isNeg = x['s'] < 0,
             half = base / 2,
@@ -1399,7 +1402,7 @@
     /*
      * Return a new BigNumber whose value is the value of this BigNumber
      * rounded to a maximum of dp decimal places using rounding mode rm, or to
-     * DECIMAL_PLACES and ROUNDING_MODE respectively if omitted.
+     * 0 and ROUNDING_MODE respectively if omitted.
      *
      * [dp] {number} Integer, 0 to MAX inclusive.
      * [rm] {number} Integer, 0 to 8 inclusive.
@@ -1626,7 +1629,7 @@
      * notation to dp fixed decimal places and rounded using ROUNDING_MODE if
      * necessary.
      *
-     * Note: as with Javascript's number type, (-0).toFixed(0) is '0',
+     * Note: as with JavaScript's number type, (-0).toFixed(0) is '0',
      * but e.g. (-0.00001).toFixed(0) is '-0'.
      *
      * [dp] {number} Integer, 0 to MAX inclusive.
@@ -1847,12 +1850,12 @@
 
             if ( b != null ) {
 
-                if ( !( outOfRange = !( b >= 2 && b <= 36) ) &&
+                if ( !( outOfRange = !( b >= 2 && b <= 36 ) ) &&
                   ( b == (b | 0) || !ERRORS ) ) {
                     str = convert( str, b | 0, 10, x['s'] );
 
                     // Avoid '-0'
-                    if ( str == '0') {
+                    if ( str == '0' ) {
                         return str
                     }
                 } else {
