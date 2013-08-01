@@ -1,15 +1,15 @@
 
 # bignumber.js #
 
-A Javascript library for arbitrary-precision decimal and non-decimal arithmetic.  
+A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.  
      
 ## Features
 
-  - Faster, smaller, and perhaps easier to use than Javascript versions of Java's BigDecimal
+  - Faster, smaller, and perhaps easier to use than JavaScript versions of Java's BigDecimal
   - 5 KB minified and gzipped
   - Simple API but full-featured
   - Works with numbers with or without fraction digits in bases from 2 to 36 inclusive
-  - Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of Javascript's Number type
+  - Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of JavaScript's Number type
   - Includes a `toFraction` and a `squareRoot` method
   - Stores values in an accessible decimal floating point format
   - No dependencies
@@ -21,8 +21,7 @@ It also does not allow `NaN` or `Infinity`, or have the configuration options of
 
 ## Load
 
-The library is the single Javascript file *bignumber.js*   
-(or *bignumber.min.js*, which is *bignumber.js* minified using uglify-js).   
+The library is the single JavaScript file *bignumber.js* (or minified, *bignumber.min.js*).   
 
 It can be loaded via a script tag in an HTML document for the browser
 
@@ -41,7 +40,6 @@ The library is also available from the [npm](https://npmjs.org/) registry, so
     $ npm install bignumber.js
 
 will install this entire directory in a *node_modules* directory within the current directory.  
-It can then be loaded with `require('bignumber.js')`. 
  
 To load with AMD loader libraries such as [requireJS](http://requirejs.org/):
 
@@ -85,7 +83,7 @@ Method names over 5 letters in length have a shorter alias.
     x.squareRoot().dividedBy(y).toPower(3).equals(x.sqrt().div(y).pow(3))         // true
     x.cmp(y.mod(z).neg()) == 1 && x.comparedTo(y.modulo(z).negated()) == 1        // true
 
-Like Javascript's Number type, there are `toExponential`, `toFixed` and `toPrecision` methods
+Like JavaScript's Number type, there are `toExponential`, `toFixed` and `toPrecision` methods
 
     x = new BigNumber(255.5)        
     x.toExponential(5)              // "2.55500e+2"
@@ -153,13 +151,13 @@ To test all the methods in more depth
 
 For the browser, see *quick-test.html*, *single-test.html* and *every-test.html* in the *test/browser* directory.  
  
-*bignumber-vs-number.html* enables some of the methods of bignumber.js to be compared with those of Javascript's Number type.  
+*bignumber-vs-number.html* enables some of the methods of bignumber.js to be compared with those of JavaScript's Number type.  
 
 ## Performance
 
 The *perf* directory contains two applications and a *lib* directory containing the BigDecimal libraries used by both.   
  
-*bignumber-vs-bigdecimal.html* tests the performance of bignumber.js against the Javascript translations of two versions of BigDecimal, its use should be more or less self-explanatory.
+*bignumber-vs-bigdecimal.html* tests the performance of bignumber.js against the JavaScript translations of two versions of BigDecimal, its use should be more or less self-explanatory.
 (The GWT version doesn't work in IE 6.)  
 
 * GWT: java.math.BigDecimal   
@@ -198,7 +196,7 @@ will create *bignumber.min.js*.
 Bugs: surely not! Open an issue, please.  
 Other feedback to:
 
-Michael Mclaughlin  
+Michael   
 <a href="mailto:M8ch88l@gmail.com">M8ch88l@gmail.com</a>
 
 Bitcoin donation to:  
@@ -211,12 +209,13 @@ See LICENCE.
 
 ## Change Log
 
+####1.1.0
+* 1/8/2013  Allow numbers with trailing radix point.  
+
 ####1.0.1
 * Bugfix: error messages with incorrect method name 
-* Corrected a couple of spelling mistakes in comments
-* Very minor regex tweaks
 
 ####1.0.0
-* 8/11/2012 Initial release   
+* 8/11/2012  Initial release   
 
 [![githalytics.com alpha](https://cruel-carlota.pagodabox.com/50b85fd919b406ef9312551092a95fb7 "githalytics.com")](http://githalytics.com/MikeMcl/bignumber.js)

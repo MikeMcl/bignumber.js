@@ -145,7 +145,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
 
     <h1>bignumber.js</h1>
 
-    <p>A Javascript library for arbitrary-precision arithmetic.</p>
+    <p>A JavaScript library for arbitrary-precision arithmetic.</p>
 
     <p>
       <a href="https://github.com/MikeMcl/bignumber.js">Hosted on GitHub</a>.
@@ -190,7 +190,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
       </dd>
       <dd>
         There is no limit to the number of digits of a value of type
-        <em>string</em> (other than that of Javascript's maximum array size).
+        <em>string</em> (other than that of JavaScript's maximum array size).
       </dd>
       <dd>
         Decimal string values may be in exponential, as well as normal
@@ -351,7 +351,7 @@ BigNumber.config(null, BigNumber.ROUND_UP)    // equivalent</pre>
             above which the same.
           </dd>
           <dd>
-            For example, to emulate Javascript numbers in terms of the exponent
+            For example, to emulate JavaScript numbers in terms of the exponent
             values at which they begin to use exponential notation, use
             <code>[-7, 20]</code>.
           </dd>
@@ -408,7 +408,7 @@ BigNumber.config({ EXPONENTIAL_AT : 0 })</pre>
             exponent limit.
           </dd>
           <dd>
-            For example, to emulate Javascript numbers in terms of the exponent
+            For example, to emulate JavaScript numbers in terms of the exponent
             values at which they become zero and Infinity, use
             <code>[-324, 308]</code>.
           </dd>
@@ -575,7 +575,7 @@ BigNumber.config({ ROUNDING_MODE : 2 })     // equivalent</pre>
     </p>
     <p>
       The treatment of &plusmn;<code>0</code>, &plusmn;<code>Infinity</code> and
-      <code>NaN</code> is consistent with how Javascript treats these values.
+      <code>NaN</code> is consistent with how JavaScript treats these values.
     </p>
     <p>
       Method names over 5 letters in length have a shorter alias (except
@@ -850,7 +850,7 @@ x.minus(0.6, 20)           // '0'</pre>
     </p>
     <p>
       The result will have the same sign as this BigNumber, and it will match
-      that of Javascript's % operator (within the limits of its precision) and
+      that of JavaScript's % operator (within the limits of its precision) and
       BigDecimal's remainder method.
     </p>
     <pre>
@@ -961,7 +961,7 @@ new BigNumber(2).pow(1e+6)   // Time taken (Node.js): 9 minutes 34 secs.</pre>
     <p>
       Returns <code>true</code> if the value of this BigNumber equals the value
       of <code>n</code>, otherwise returns <code>false</code>.<br />
-      As with Javascript, NaN does not equal NaN.
+      As with JavaScript, NaN does not equal NaN.
       <br />Note : This method uses the <code>comparedTo</code> method
       internally.
     </p>
@@ -1383,7 +1383,7 @@ y                                         // '1234.56'</pre>
       (left-most) digit of the coefficient.
     </p>
     <p>
-      Note that, as with Javascript numbers, the original exponent and
+      Note that, as with JavaScript numbers, the original exponent and
       fractional trailing zeros are not preserved.
     </p>
     <pre>x = new BigNumber(0.123)              // '0.123'
@@ -1691,7 +1691,7 @@ z = x.multiply(y)                 // 4.1400000</pre>
       misleading.
     </p>
     <p>
-      This library, like Javascript and most calculators, does not
+      This library, like binary floating point and most calculators, does not
       retain trailing fractional zeros. Instead, the <code>toExponential</code>,
       <code>toFixed</code> and <code>toPrecision</code> methods enable trailing
       zeros to be added if and when required. 

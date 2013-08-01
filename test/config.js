@@ -478,6 +478,10 @@ var count = (function config(BigNumber) {
 
     assert('0', new BigNumber(0).toS());
     assert('0', new BigNumber(-0).toS());
+    assert('0', new BigNumber('.0').toS());
+    assert('0', new BigNumber('0.').toS());
+    assert('0', new BigNumber('-0.').toS());
+    assert('0', new BigNumber('+0.').toS());
     assert('0', new BigNumber('+0').toS());
     assert('0', new BigNumber('-0').toS());
     assert('0', new BigNumber(' +0').toS());
@@ -497,6 +501,7 @@ var count = (function config(BigNumber) {
     assertException(function () {new BigNumber('++0')}, "++0");
     assertException(function () {new BigNumber('.-0')}, ".-0");
     assertException(function () {new BigNumber('.+0')}, ".+0");
+    assertException(function () {new BigNumber('0 .')}, "0 .");
     assertException(function () {new BigNumber('. 0')}, ". 0");
     assertException(function () {new BigNumber('..0')}, "..0");
     assertException(function () {new BigNumber('+.-0')}, "+.-0");
@@ -510,6 +515,10 @@ var count = (function config(BigNumber) {
     assert('-2', new BigNumber(' -2').toS());
     assert('2', new BigNumber(' +2 ').toS());
     assert('-2', new BigNumber(' -2 ').toS());
+    assert('0.2', new BigNumber('.2').toS());
+    assert('2', new BigNumber('2.').toS());
+    assert('-2', new BigNumber('-2.').toS());
+    assert('2', new BigNumber('+2.').toS());
     assert('0.2', new BigNumber('+.2').toS());
     assert('-0.2', new BigNumber('-.2').toS());
     assert('0.2', new BigNumber(' +.2').toS());
@@ -523,6 +532,7 @@ var count = (function config(BigNumber) {
     assertException(function () {new BigNumber('++2')}, "++2");
     assertException(function () {new BigNumber('.-2')}, ".-2");
     assertException(function () {new BigNumber('.+2')}, ".+2");
+    assertException(function () {new BigNumber('2 .')}, "2 .");
     assertException(function () {new BigNumber('. 2')}, ". 2");
     assertException(function () {new BigNumber('..2')}, "..2");
     assertException(function () {new BigNumber('+.-2')}, "+.-2");
