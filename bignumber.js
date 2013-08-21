@@ -3,7 +3,7 @@
     'use strict';
 
     /*
-      bignumber.js v1.1.0
+      bignumber.js v1.1.1
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2012 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -92,7 +92,7 @@
      * [b] {number} The base of n. Integer, 2 to 36 inclusive.
      */
     function BigNumber( n, b ) {
-        var e, i, isNum, digits, valid,
+        var e, i, isNum, digits, valid, orig,
             x = this;
 
         // Enable constructor usage without new.
@@ -121,6 +121,8 @@
                 Object.prototype.toString.call(n) == '[object Number]' ) &&
                     n === 0 && 1 / n < 0 ? '-0' : n + ''
         }
+
+        orig = n;
 
         if ( b === e && isValid.test(n) ) {
 
@@ -158,10 +160,10 @@
 
                         if ( isNum ) {
 
-                            if ( n.replace( '.', '' ).length > 15 ) {
+                            if ( n.replace( /^0\.0*|\./, '' ).length > 15 ) {
 
                                 // 'new BigNumber() number type has more than 15 significant digits: {n}'
-                                ifExceptionsThrow( n, 0 )
+                                ifExceptionsThrow( orig, 0 )
                             }
 
                             // Prevent later check for length on converted number.
@@ -172,7 +174,7 @@
                     } else if ( n != 'Infinity' && n != 'NaN' ) {
 
                         // 'new BigNumber() not a base {b} number: {n}'
-                        ifExceptionsThrow( n, 1, b );
+                        ifExceptionsThrow( orig, 1, b );
                         n = 'NaN'
                     }
                 } else {
@@ -200,7 +202,7 @@
                     if ( n != 'NaN' ) {
 
                         // 'new BigNumber() not a number: {n}'
-                        ifExceptionsThrow( n, 3 )
+                        ifExceptionsThrow( orig, 3 )
                     }
                     x['s'] = null
                 }
@@ -216,7 +218,7 @@
         }
 
         // Exponential form?
-        if ( ( i = n.search(/e/i) ) > 0 ) {
+        if ( ( i = n.search( /e/i ) ) > 0 ) {
 
             // Determine exponent.
             if ( e < 0 ) {
@@ -231,16 +233,19 @@
             e = n.length
         }
 
-        // Disallow numbers over 15 digits if number type.
-        if ( b = n.length, isNum && b > 15 ) {
+        // Determine leading zeros.
+        for ( i = 0; n.charAt(i) == '0'; i++ ) {
+        }
+
+        b = n.length;
+
+        // Disallow numbers with over 15 significant digits if number type.
+        if ( isNum && b > 15 && n.slice(i).length > 15 ) {
 
             // 'new BigNumber() number type has more than 15 significant digits: {n}'
-            ifExceptionsThrow( n, 0 )
+            ifExceptionsThrow( orig, 0 )
         }
-
-        // Determine leading zeros.
-        for ( i = id = 0; n.charAt(i) == '0'; i++ ) {
-        }
+        id = 0;
 
         // Overflow?
         if ( ( e -= i + 1 ) > MAX_EXP ) {
