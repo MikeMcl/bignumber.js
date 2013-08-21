@@ -53,7 +53,7 @@ To load with AMD loader libraries such as [requireJS](http://requirejs.org/):
 If a commented-out value is in quotes it means `toString` has been called on the preceding expression.*
 
 The library exports a single function: BigNumber, the constructor of BigNumber instances.    
-It accepts a value of type Number, String or BigNumber Object,   
+It accepts a value of type Number *(up to 15 significant digits only)*, String or BigNumber Object,   
 
     x = new BigNumber(123.4567)
     y = BigNumber('123456.7e-3')                     // 'new' is optional
@@ -94,10 +94,10 @@ Like JavaScript's Number type, there are `toExponential`, `toFixed` and `toPreci
 
     x.toString(16)        // "ff.8"
 
-The maximum number of decimal places and the rounding mode for division, square root, base conversion, and negative power operations is set by a configuration object passed to the `config` method of the `BigNumber` constructor.       
+The maximum number of decimal places of, and the rounding mode applied to, the results of operations involving division (i.e. division, square root, base conversion, and negative power operations) is set by a configuration object passed to the `config` method of the `BigNumber` constructor.       
 The other arithmetic operations always give the exact result.
 
-    BigNumber.config({ DECIMAL_PLACES : 10, ROUNDING_MODE : 4 })
+    BigNumber.config({ DECIMAL_PLACES: 10, ROUNDING_MODE: 4 })
     // Alternatively, BigNumber.config( 10, 4 );
 
     x = new BigNumber(2);
@@ -205,9 +205,14 @@ Thank you
 
 ## Licence
 
+MIT.
+
 See LICENCE.
 
 ## Change Log
+
+####1.1.1
+* 22/8/2013 Show original value in constructor error message.
 
 ####1.1.0
 * 1/8/2013  Allow numbers with trailing radix point.  

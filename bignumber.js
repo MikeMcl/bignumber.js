@@ -1,4 +1,4 @@
-/* bignumber.js v1.1.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/* bignumber.js v1.1.1 https://github.com/MikeMcl/bignumber.js/LICENCE */
 ;(function ( global ) {
     'use strict';
 
