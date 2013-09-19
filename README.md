@@ -211,6 +211,9 @@ See LICENCE.
 
 ## Change Log
 
+####1.2.0
+* 19/9/2013 Throw Error objects for stack.
+
 ####1.1.1
 * 22/8/2013 Show original value in constructor error message.
 
@@ -222,5 +225,3 @@ See LICENCE.
 
 ####1.0.0
 * 8/11/2012  Initial release   
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/50b85fd919b406ef9312551092a95fb7 "githalytics.com")](http://githalytics.com/MikeMcl/bignumber.js)

@@ -1,9 +1,9 @@
-/* bignumber.js v1.1.1 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/* bignumber.js v1.2.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
 ;(function ( global ) {
     'use strict';
 
     /*
-      bignumber.js v1.1.1
+      bignumber.js v1.2.0
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2012 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -409,32 +409,33 @@
 
     // Assemble error messages. Throw BigNumber Errors.
     function ifExceptionsThrow( arg, i, j, isArray, isRange, isErrors) {
+
         if ( ERRORS ) {
-            var method = ['new BigNumber', 'cmp', 'div', 'eq', 'gt', 'gte', 'lt',
+            var error,
+                method = ['new BigNumber', 'cmp', 'div', 'eq', 'gt', 'gte', 'lt',
                      'lte', 'minus', 'mod', 'plus', 'times', 'toFr'
                     ][ id ? id < 0 ? -id : id : 1 / id < 0 ? 1 : 0 ] + '()',
-                error = outOfRange ? ' out of range' : ' not a' +
+                message = outOfRange ? ' out of range' : ' not a' +
                   ( isRange ? ' non-zero' : 'n' ) + ' integer';
 
-            error = ( [
+            message = ( [
                 method + ' number type has more than 15 significant digits',
                 method + ' not a base ' + j + ' number',
-                method + ' base' + error,
+                method + ' base' + message,
                 method + ' not a number' ][i] ||
                   j + '() ' + i + ( isErrors
                     ? ' not a boolean or binary digit'
-                    : error + ( isArray
+                    : message + ( isArray
                       ? ' or not [' + ( outOfRange
                         ? ' negative, positive'
                         : ' integer, integer' ) + ' ]'
                       : '' ) ) ) + ': ' + arg;
 
             outOfRange = id = 0;
-            throw {
-                name : 'BigNumber Error',
-                message : error,
-                toString : function () {return this.name + ': ' + this.message}
-            }
+            error = new Error(message);
+            error['name'] = 'BigNumber Error';
+
+            throw error
         }
     }
 
