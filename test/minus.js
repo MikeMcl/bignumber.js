@@ -67,10 +67,31 @@ var count = (function minus(BigNumber) {
     T(0, -1, 1);
     T(-0, 1, -1);
     T(-0, -1, 1);
-    assert(false, isMinusZero(new BigNumber(0).minus(0)));
-    assert(false, isMinusZero(new BigNumber(0).minus(-0)));
-    assert(true, isMinusZero(new BigNumber(-0).minus(0)));
-    assert(false, isMinusZero(new BigNumber(-0).minus(-0)));
+
+    /*
+      IEEE 754 - 2008 section 6.3
+      When the difference of two operands with like signs is exactly zero, the
+      sign of that difference shall be +0 in all rounding-direction attributes
+      except roundTowardNegative; under that attribute, the sign of an exact
+      difference shall be −0.
+      However, x + x = x −(−x) retains the same sign as x even when x is zero.
+    */
+    BigNumber.config( {ROUNDING_MODE : 3} );
+    assert(false, isMinusZero(new BigNumber(0).minus(-0)));     //   0 - -0 =  0
+    assert(true, isMinusZero(new BigNumber(-0).minus(0)));      //  -0 -  0 = -0
+    assert(true, isMinusZero(new BigNumber(0).minus(0)));       //   0 -  0 = -0
+    assert(true, isMinusZero(new BigNumber(-0).minus(-0)));     //  -0 - -0 = -0
+    assert(true, isMinusZero(new BigNumber(1).minus(1)));       //   1 -  1 = -0
+    assert(true, isMinusZero(new BigNumber(-1).minus(-1)));     //  -1 - -1 = -0
+
+    BigNumber.config( {ROUNDING_MODE : 4} );
+    assert(false, isMinusZero(new BigNumber(0).minus(-0)));     //   0 - -0 =  0
+    assert(true, isMinusZero(new BigNumber(-0).minus(0)));      //  -0 -  0 = -0
+    assert(false, isMinusZero(new BigNumber(0).minus(0)));      //   0 -  0 =  0
+    assert(false, isMinusZero(new BigNumber(-0).minus(-0)));    //  -0 - -0 =  0
+    assert(false, isMinusZero(new BigNumber(1).minus(1)));      //   1 -  1 =  0
+    assert(false, isMinusZero(new BigNumber(-1).minus(-1)));    //  -1 - -1 =  0
+
     T(0, N, N);
     T(-0, N, N);
     T(0, I, -I);
