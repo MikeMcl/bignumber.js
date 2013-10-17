@@ -211,6 +211,9 @@ See LICENCE.
 
 ## Change Log
 
+####1.2.1
+* 17/10/2013 Bugfix: sign of zero when x < 0 and x + (-x) = 0.
+
 ####1.2.0
 * 19/9/2013 Throw Error objects for stack.
 
@@ -218,10 +221,10 @@ See LICENCE.
 * 22/8/2013 Show original value in constructor error message.
 
 ####1.1.0
-* 1/8/2013  Allow numbers with trailing radix point.  
+* 1/8/2013 Allow numbers with trailing radix point.  
 
 ####1.0.1
 * Bugfix: error messages with incorrect method name 
 
 ####1.0.0
-* 8/11/2012  Initial release   
+* 8/11/2012 Initial release   
