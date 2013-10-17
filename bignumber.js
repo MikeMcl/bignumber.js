@@ -1107,7 +1107,8 @@
                     ? x
 
                     // Both are zero.
-                    : 0 )
+                    // IEEE 754 (2008) 6.3: n - n = -0 when rounding to -Infinity
+                    : ROUNDING_MODE == 3 ? -0 : 0 )
             }
         }
 
@@ -1178,7 +1179,15 @@
         // Underflow?
         if ( ye < MIN_EXP || !xc[0] ) {
 
-            // Result must be zero.
+            /*
+             * Following IEEE 754 (2008) 6.3,
+             * n - n = +0  but  n - n = -0 when rounding towards -Infinity.
+             */
+            if ( !xc[0] ) {
+                y['s'] = ROUNDING_MODE == 3 ? -1 : 1
+            }
+
+            // Result is zero.
             xc = [ye = 0]
         }
 
@@ -1296,9 +1305,9 @@
                 // y is non-zero?
                 return yc[0]
                   ? y
-                  : new BigNumber( xc[0]
 
-                    // x is non-zero?
+                  // x is non-zero?
+                  : new BigNumber( xc[0]
                     ? x
 
                     // Both are zero. Return zero.
