@@ -8,9 +8,9 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
   - Faster, smaller, and perhaps easier to use than JavaScript versions of Java's BigDecimal
   - 5 KB minified and gzipped
   - Simple API but full-featured
-  - Works with numbers with or without fraction digits in bases from 2 to 36 inclusive
+  - Works with numbers with or without fraction digits in bases from 2 to 64 inclusive
   - Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of JavaScript's Number type
-  - Includes a `toFraction` and a `squareRoot` method
+  - Includes a `toFraction` and a correctly-rounded `squareRoot` method
   - Stores values in an accessible decimal floating point format
   - No dependencies
   - Comprehensive documentation and test set 
@@ -193,14 +193,13 @@ will create *bignumber.min.js*.
 
 ## Feedback
 
-Bugs: surely not! Open an issue, please.  
-Other feedback to:
+Open an issue, or email  
 
 Michael   
 <a href="mailto:M8ch88l@gmail.com">M8ch88l@gmail.com</a>
 
 Bitcoin donation to:  
-**1KdnpLRSkWJs4FXPzj7pQ39H4Ur6Urydti**  
+**1CauoGYrEoJFhcyxGVaiLTE6f3WCaSUjnm**  
 Thank you
 
 ## Licence
@@ -211,8 +210,12 @@ See LICENCE.
 
 ## Change Log
 
+####1.3.0
+* 08/11/2013 Ensure correct rounding of `sqrt` in all, rather than almost all, cases.
+* Maximum radix to 64.
+
 ####1.2.1
-* 17/10/2013 Bugfix: sign of zero when x < 0 and x + (-x) = 0.
+* 17/10/2013 Sign of zero when x < 0 and x + (-x) = 0.
 
 ####1.2.0
 * 19/9/2013 Throw Error objects for stack.
