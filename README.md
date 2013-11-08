@@ -129,7 +129,7 @@ The value of a BigNumber is stored in a decimal floating point format in terms o
     x.e                                 // 2                exponent 
     x.s                                 // -1               sign
 
-For futher information see the API reference in the *doc* folder.
+For futher information see the [API](http://mikemcl.github.io/bignumber.js/) reference from the *doc* folder.
 
 ## Test
 
