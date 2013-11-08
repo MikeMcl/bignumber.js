@@ -1460,50 +1460,125 @@
      * this BigNumber, rounded according to DECIMAL_PLACES and ROUNDING_MODE.
      */
     P['squareRoot'] = P['sqrt'] = function () {
-        var estimate, r, approx,
+        var i, n, r, re, t,
             x = this,
-            xc = x['c'],
-            i = x['s'],
+            c = x['c'],
+            s = x['s'],
             e = x['e'],
+            dp = DECIMAL_PLACES,
+            rm = ROUNDING_MODE,
             half = new BigNumber('0.5');
 
         // Negative/NaN/Infinity/zero?
-        if ( i !== 1 || !xc || !xc[0] ) {
-            return new BigNumber( !i || i < 0 && ( !xc || xc[0] )
+        if ( s !== 1 || !c || !c[0] ) {
+
+            return new BigNumber( !s || s < 0 && ( !c || c[0] )
               ? NaN
-              : xc ? x : 1 / 0 )
+              : c ? x : 1 / 0 )
         }
 
-        // Estimate.
-        i = Math.sqrt( x['toS']() );
+        // Initial estimate.
+        s = Math.sqrt( x['toS']() );
+        ROUNDING_MODE = 1;
 
-        // Math.sqrt underflow/overflow?
-        // Pass x to Math.sqrt as integer, then adjust the exponent of the result.
-        if ( i == 0 || i == 1 / 0 ) {
-            estimate = xc.join('');
+        /*
+          Math.sqrt underflow/overflow?
+          Pass x to Math.sqrt as integer, then adjust the exponent of the result.
+         */
+        if ( s == 0 || s == 1 / 0 ) {
+            n = c.join('');
 
-            if ( !( estimate.length + e & 1 ) ) {
-                estimate += '0'
+            if ( !( n.length + e & 1 ) ) {
+                n += '0'
             }
+            r = new BigNumber( Math.sqrt(n) + '' );
 
-            r = new BigNumber( Math.sqrt(estimate).toString() );
+            // r may still not be finite.
+            if ( !r['c'] ) {
+                r['c'] = [1]
+            }
             r['e'] = ( ( ( e + 1 ) / 2 ) | 0 ) - ( e < 0 || e & 1 )
         } else {
-            r = new BigNumber( i.toString() )
+            r = new BigNumber( n = s.toString() )
         }
+        re = r['e'];
+        s = re + ( DECIMAL_PLACES += 4 );
 
-        i = r['e'] + ( DECIMAL_PLACES += 4 );
+        if ( s < 3 ) {
+            s = 0
+        }
+        e = s;
 
-        // Newton-Raphson loop.
-        do {
-            approx = r;
-            r = half['times']( approx['plus']( x['div'](approx) ) )
-        } while ( approx['c'].slice( 0, i ).join('') !==
-                       r['c'].slice( 0, i ).join('') );
+        // Newton-Raphson iteration.
+        for ( ; ; ) {
+            t = r;
+            r = half['times']( t['plus']( x['div'](t) ) );
 
-        rnd( r, DECIMAL_PLACES -= 4, 10 );
+            if ( t['c'].slice( 0, s ).join('') === r['c'].slice( 0, s ).join('') ) {
+                c = r['c'];
 
-        return r
+                /*
+                  The exponent of r may here be one less than the final result
+                  exponent (re), e.g 0.0009999 (e-4) --> 0.001 (e-3), so adjust
+                  s so the rounding digits are indexed correctly.
+                 */
+                s = s - ( n && r['e'] < re );
+
+                /*
+                  The 4th rounding digit may be in error by -1 so if the 4 rounding
+                  digits are 9999 or 4999 (i.e. approaching a rounding boundary)
+                  continue the iteration.
+                 */
+                if ( c[s] == 9 && c[s - 1] == 9 && c[s - 2] == 9 &&
+                        ( c[s - 3] == 9 || n && c[s - 3] == 4 ) ) {
+
+                    /*
+                      If 9999 on first run through, check to see if rounding up
+                      gives the exact result as the nines may infinitely repeat.
+                     */
+                    if ( n && c[s - 3] == 9 ) {
+                        t = r['round']( dp, 0 );
+
+                        if ( t['times'](t)['eq'](x) ) {
+                            ROUNDING_MODE = rm;
+                            DECIMAL_PLACES = dp;
+
+                            return t
+                        }
+                    }
+                    DECIMAL_PLACES += 4;
+                    s += 4;
+                    n = ''
+                } else {
+
+                    /*
+                      If the rounding digits are null, 0000 or 5000, check for an
+                      exact result. If not, then there are further digits so
+                      increment the 1st rounding digit to ensure correct rounding.
+                     */
+                    if ( !c[e] && !c[e - 1] && !c[e - 2] &&
+                            ( !c[e - 3] || c[e - 3] == 5 ) ) {
+
+                        // Truncate to the first rounding digit.
+                        if ( c.length > e - 2 ) {
+                            c.length = e - 2
+                        }
+
+                        if ( !r['times'](r)['eq'](x) ) {
+
+                            while ( c.length < e - 3 ) {
+                                c.push(0)
+                            }
+                            c[e - 3]++
+                        }
+                    }
+                    ROUNDING_MODE = rm;
+                    rnd( r, DECIMAL_PLACES = dp, 10 );
+
+                    return r
+                }
+            }
+        }
     };
 
 
