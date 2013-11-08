@@ -198,14 +198,18 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
         notation.
       </dd>
       <dd>
-        String values in hexadecimal literal form, e.g. '0xff', are invalid, and
-        string values in octal literal form will be interpreted as decimals,
-        e.g. '011' is 11, not 9.
+        String values in hexadecimal literal form, e.g. <code>'0xff'</code>, are
+        invalid, and string values in octal literal form will be interpreted as
+        decimals, e.g. <code>'011'</code> is interpreted as 11, not 9.
       </dd>
       <dd>Values in any base may have fraction digits.</dd>
       <dd>
-        In bases above 10, numerals above 9 are represented by lower-case
-        letters.
+        For bases from 10 to 36, lower and/or upper case letters can be used to
+        represent values from 10 to 35. For bases above 36, <code>a-z</code>
+        represents values from 10 to 35, <code>A-Z</code> from 36 to 61, and
+        <code>$</code> and <code>_</code> represent 62 and 63 respectively <i>
+        (this can be changed by ediiting the DIGITS variable near the top of the 
+        source file).</i>
       </dd>
     </dl>
     <dl>
@@ -650,7 +654,7 @@ y.neg()                       // '1.3'</pre>
     </h5>
     <p>
       Returns a BigNumber whose value is the square root of this BigNumber,
-      rounded according to the current
+      correctly rounded according to the current
       <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
     </p>
@@ -1208,9 +1212,10 @@ y.toP(5)                  // '45.600'</pre>
     </p>
     <p>
       Returns a string representing the value of this BigNumber in the specified
-      base, or base 10 if <code>base</code> is omitted. Like
-      <code>Number.toString</code>, in bases above 10, numerals above 9 are
-      represented by lower-case letters.
+      base, or base 10 if <code>base</code> is omitted. For bases above 10,
+      values from 10 to 35 are represented by <code>a-z</code> (as with
+      <code>Number.toString</code>), 36 to 61 by <code>A-Z</code>, and 62 and 63
+      by <code>$</code> and <code>_</code> respectively.
     </p>
     <p>
       If a base is specified the value is rounded according to the current
