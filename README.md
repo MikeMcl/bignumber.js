@@ -13,7 +13,7 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
   - Includes a `toFraction` and a correctly-rounded `squareRoot` method
   - Stores values in an accessible decimal floating point format
   - No dependencies
-  - Comprehensive documentation and test set 
+  - Comprehensive [documentation](http://mikemcl.github.io/bignumber.js/) and test set 
 
 If an even smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).   
 It's half the size but only works with decimal numbers and only has half the methods.   
