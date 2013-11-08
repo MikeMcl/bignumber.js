@@ -377,7 +377,7 @@ var count = (function baseIn(BigNumber) {
     assertException(function () {new BigNumber('453.43', 4).toString()}, "('453.43', 4)");
     assertException(function () {new BigNumber('1', 1).toString()}, "('1', 1)");
     assertException(function () {new BigNumber('1.23', 36.01).toString()}, "('1.23', 36.01)");
-    assertException(function () {new BigNumber('1.23', 37).toString()}, "('1.23', 37)");
+    assertException(function () {new BigNumber('1.23', 65).toString()}, "('1.23', 65)");
 
     assertException(function () {new BigNumber(12.345, NaN).toString()}, "(12.345, NaN)");
     assertException(function () {new BigNumber(12.345, 'NaN').toString()}, "(12.345, 'NaN')");
@@ -417,8 +417,7 @@ var count = (function baseIn(BigNumber) {
     T('NaN', '0.000g', 16);
     T('NaN', '453.43', 4);
     T('1', '1', 1);
-    T('1.23', '1.23', 36.01);
-    T('1.23', '1.23', 37);
+    T('1.23', '1.23', 65);
 
     T('NaN', 'NaN', 'NaN');
     T('NaN', 'NaN', undefined);

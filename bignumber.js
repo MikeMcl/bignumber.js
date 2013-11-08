@@ -14,7 +14,7 @@
 
     /*
      * The default values below must be integers within the stated ranges (inclusive).
-     * Most of these values can be changed programmatically using BigNumber.config().
+     * Most of these values can be changed during run-time using BigNumber.config().
      */
 
     /*
@@ -73,7 +73,7 @@
     /***********************************************************************************/
 
         P = BigNumber.prototype,
-        DIGITS = '0123456789abcdefghijklmnopqrstuvwxyz',
+        DIGITS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_',
         outOfRange,
         id = 0,
         isValid = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
@@ -89,7 +89,7 @@
      * Create and return a new instance of a BigNumber object.
      *
      * n {number|string|BigNumber} A numeric value.
-     * [b] {number} The base of n. Integer, 2 to 36 inclusive.
+     * [b] {number} The base of n. Integer, 2 to 64 inclusive.
      */
     function BigNumber( n, b ) {
         var e, i, isNum, digits, valid, orig,
@@ -146,7 +146,7 @@
             if ( b != null ) {
 
                 if ( ( b == (b | 0) || !ERRORS ) &&
-                  !( outOfRange = !( b >= 2 && b <= 36 ) ) ) {
+                  !( outOfRange = !( b >= 2 && b < 65 ) ) ) {
 
                     digits = '[' + DIGITS.slice( 0, b = b | 0 ) + ']+';
 
@@ -156,7 +156,7 @@
 
                     // Any number in exponential form will fail due to the e+/-.
                     if ( valid = new RegExp(
-                      '^' + digits + '(?:\\.' + digits + ')?$', 'i' ).test(n) ) {
+                      '^' + digits + '(?:\\.' + digits + ')?$', b < 37 ? 'i' : '' ).test(n) ) {
 
                         if ( isNum ) {
 
@@ -492,7 +492,9 @@
             return str
         }
 
-        nStr = nStr.toLowerCase();
+        if ( baseIn < 37 ) {
+            nStr = nStr.toLowerCase()
+        }
 
         /*
          * If non-integer convert integer part and fraction part separately.
@@ -1890,7 +1892,7 @@
      * that is equal to or greater than TO_EXP_POS, or a negative exponent equal
      * to or less than TO_EXP_NEG, return exponential notation.
      *
-     * [b] {number} Integer, 2 to 36 inclusive.
+     * [b] {number} Integer, 2 to 64 inclusive.
      */
     P['toString'] = P['toS'] = function ( b ) {
         var u, str, strL,
@@ -1940,7 +1942,7 @@
 
             if ( b != null ) {
 
-                if ( !( outOfRange = !( b >= 2 && b <= 36 ) ) &&
+                if ( !( outOfRange = !( b >= 2 && b < 65 ) ) &&
                   ( b == (b | 0) || !ERRORS ) ) {
                     str = convert( str, b | 0, 10, x['s'] );
 

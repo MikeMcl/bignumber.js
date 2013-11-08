@@ -10738,7 +10738,7 @@ var count = (function baseOut(BigNumber) {
     assertException(function () {new BigNumber('1').toString('-2')}, "('1').toString('-2')");
     assertException(function () {new BigNumber('1').toString('1.9')}, "('1').toString('1.9')");
     assertException(function () {new BigNumber('1.23').toString(36.01)}, "('1.23').toString(36.01)");
-    assertException(function () {new BigNumber('1.23').toString(37)}, "('1.23').toString(37)");
+    assertException(function () {new BigNumber('1.23').toString(65)}, "('1.23').toString(65)");
 
     assertException(function () {new BigNumber('1.23').toString(NaN)}, "('1.23').toString(NaN)");
     assertException(function () {new BigNumber('1.23').toString('NaN')}, "('1.23').toString('NaN')");
@@ -10779,8 +10779,7 @@ var count = (function baseOut(BigNumber) {
     T('2', '2', 1);
     T('2', '2', '-2');
     T('2', '2', 1.9);
-    T('1.23', '1.23', 36.01);
-    T('1.23', '1.23', 37);
+    T('1.23', '1.23', 65);
 
     T('NaN', 'NaN', 'NaN');
     T('NaN', 'NaN', undefined);
