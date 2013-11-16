@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/MikeMcl/bignumber.js.png)](https://travis-ci.org/MikeMcl/bignumber.js)
 
 # bignumber.js #
 
@@ -60,7 +61,7 @@ It accepts a value of type Number *(up to 15 significant digits only)*, String o
     z = new BigNumber(x)
     x.equals(y) && y.equals(z) && x.equals(z)        // true
 
-and a base from 2 to 36 inclusive can be specified.
+and a base from 2 to 64 inclusive can be specified.
 
     x = new BigNumber(1011, 2)           // "11" 
     y = new BigNumber('zz.9', 36)        // "1295.25"
