@@ -80,7 +80,7 @@
         DIGITS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_',
         outOfRange,
         id = 0,
-        isValid = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
+        isValid = /^-?(\d+(\.\d*)?|\.\d+)(e[+\-]?\d+)?$/i,
         trim = String.prototype.trim || function () {return this.replace(/^\s+|\s+$/g, '')},
         ONE = BigNumber(1);
 
