@@ -37,3 +37,7 @@ console.log( '\n STARTING TESTS...\n' );
 
 console.log( '\n IN TOTAL: ' + passed + ' of ' + total + ' tests passed in ' +
     ( (+new Date() - start) / 1000 ) + ' secs.\n' );
+
+if ( passed !== total ) {
+    throw new Error('Failed testing');
+}
