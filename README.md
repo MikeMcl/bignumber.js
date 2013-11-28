@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/MikeMcl/bignumber.js.png)](https://travis-ci.org/MikeMcl/bignumber.js)
-
 # bignumber.js #
 
 A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.  
