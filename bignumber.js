@@ -1,13 +1,10 @@
-/* bignumber.js v1.3.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
-
-/*jslint ass: true, bitwise: true, eqeq: true, plusplus: true, sub: true, white: true, maxerr: 500 */
-/*global module, define */
+/*! bignumber.js v1.4.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function ( global ) {
     'use strict';
 
     /*
-      bignumber.js v1.3.0
+      bignumber.js v1.4.0
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2012 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -1966,6 +1963,18 @@
         }
 
         return x['s'] < 0 ? '-' + str : str;
+    };
+
+
+    /*
+     * Return the value of this BigNumber converted to a number primitive.
+     *
+     */
+    P['toNumber'] = P['toN'] = function () {
+        var x = this;
+
+        // Ensure zero has correct sign.
+        return +x || ( x['s'] ? 0 * x['s'] : NaN );
     };
 
 

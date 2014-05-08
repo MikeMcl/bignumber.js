@@ -26,6 +26,7 @@ console.log( '\n STARTING TESTS...\n' );
   'toExponential',
   'toFixed',
   'toFraction',
+  'toNumber',
   'toPrecision',
   'toString'
 ]

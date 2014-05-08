@@ -18,7 +18,8 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 If an even smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).   
 It's half the size but only works with decimal numbers and only has half the methods.   
-It also does not allow `NaN` or `Infinity`, or have the configuration options of this library. 
+It also does not allow `NaN` or `Infinity`, or have the configuration options of this library.  
+See also [decimal.js](https://github.com/MikeMcl/decimal.js/).
 
 ## Load
 
@@ -40,11 +41,11 @@ The library is also available from the [npm](https://npmjs.org/) registry, so
 
     $ npm install bignumber.js
 
-will install this entire directory in a *node_modules* directory within the current directory.  
+will install this directory in a *node_modules* directory within the current directory.  
  
 To load with AMD loader libraries such as [requireJS](http://requirejs.org/):
 
-    require(['bignumber'], function(BigNumber) {  
+    require(['path/to/bignumber'], function(BigNumber) {  
         // Use BigNumber here in local scope. No global BigNumber. 
     });
 
@@ -90,6 +91,7 @@ Like JavaScript's Number type, there are `toExponential`, `toFixed` and `toPreci
     x.toExponential(5)              // "2.55500e+2"
     x.toFixed(5)                    // "255.50000"
     x.toPrecision(5)                // "255.50"
+    x.toNumber()                    // 255.5
 
  and a base can be specified for `toString`.
 
@@ -188,7 +190,7 @@ I.e. minify.
 
 For Node, if uglify-js is installed globally ( `npm install uglify-js -g` ) then 
 
-    uglifyjs -o ./bignumber.min.js ./bignumber.js
+    npm run build
 
 will create *bignumber.min.js*.   
 
@@ -210,6 +212,9 @@ MIT.
 See LICENCE.
 
 ## Change Log
+
+####1.4.0
+* 08/05/2014 Added `toNumber`.
 
 ####1.3.0
 * 08/11/2013 Ensure correct rounding of `sqrt` in all, rather than almost all, cases.

@@ -119,6 +119,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
       <li><a href="#lte"    >lessThanOrEqualTo</a></li>
       <li><a href="#toE"    >toExponential</a></li>
       <li><a href="#toF"    >toFixed</a></li>
+      <li><a href="#toN"    >toNumber</a></li>
       <li><a href="#toP"    >toPrecision</a></li>
       <li><a href="#toS"    >toString</a></li>
       <li><a href="#valueOf">valueOf</a></li>
@@ -208,7 +209,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
         represent values from 10 to 35. For bases above 36, <code>a-z</code>
         represents values from 10 to 35, <code>A-Z</code> from 36 to 61, and
         <code>$</code> and <code>_</code> represent 62 and 63 respectively <i>
-        (this can be changed by ediiting the DIGITS variable near the top of the 
+        (this can be changed by ediiting the DIGITS variable near the top of the
         source file).</i>
       </dd>
     </dl>
@@ -1162,6 +1163,26 @@ y.toFixed()              // '45.6'
 y.toF(0)                 // '46'
 x.toFixed(3)             // '45.600'
 y.toF(3)                 // '45.600'</pre>
+
+
+
+    <h5 id="toN">toNumber<code class='inset'>.toN() &rArr; <i>number</i></code></h5>
+    <p>Returns the value of this BigNumber as a number primitive.</p>
+    <p>
+      Type coercion with, for example, JavaScript's unary plus operator can alternatively be used,
+      but then a BigNumber with the value minus zero will convert to positive zero.
+    </p>
+    <pre>
+x = new BigNumber(456.789)
+x.toNumber()                   // 456.789
++x                             // 456.789
+
+y = new BigNumber('45987349857634085409857349856430985')
+y.toNumber()                   // 4.598734985763409e+34
+
+z = new BigNumber(-0)
+1 / +z                         // Infinity
+1 / z.toNumber()               // -Infinity</pre>
 
 
 
