@@ -35,7 +35,7 @@ For Node, put the *bignumber.js* file into the same directory as the file that i
 
     var BigNumber = require('./bignumber'); 
 
-or put it in a *node_modules* directory within the directory and use `require('bignumber')`. 
+or put it in a *node_modules* directory within the directory and use `require('bignumber.js')`. 
 
 The library is also available from the [npm](https://npmjs.org/) registry, so
 
