@@ -33,7 +33,7 @@ or as a CommonJS, [Node.js](http://nodejs.org) or AMD module using `require`.
 
 For Node, put the *bignumber.js* file into the same directory as the file that is requiring it and use
 
-    var BigNumber = require('./bignumber'); 
+    var BigNumber = require('./bignumber.js'); 
 
 or put it in a *node_modules* directory within the directory and use `require('bignumber.js')`. 
 
