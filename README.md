@@ -213,6 +213,9 @@ See LICENCE.
 
 ## Change Log
 
+####1.4.1
+* 08/06/2014 Amend README.
+
 ####1.4.0
 * 08/05/2014 Added `toNumber`.
 
