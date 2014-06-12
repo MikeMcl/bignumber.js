@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/MikeMcl/bignumber.js.png)](https://travis-ci.org/MikeMcl/bignumber.js)
+[![Build Status](https://travis-ci.org/MikeMcl/bignumber.js.svg)](https://travis-ci.org/MikeMcl/bignumber.js)
 
 # bignumber.js #
 
