@@ -1,0 +1,14 @@
+{
+  "name": "bignumber.js",
+  "authors": ["Michael <M8ch88l@gmail.com>"],
+  "homepage": "https://github.com/MikeMcl/bignumber.js",
+  "version": "1.4.0",
+  "main": "bignumber.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "perf",
+    "test",
+    "package.json"
+  ]
+}
