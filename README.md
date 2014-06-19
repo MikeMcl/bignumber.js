@@ -12,7 +12,6 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
   - Works with numbers with or without fraction digits in bases from 2 to 64 inclusive
   - Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of JavaScript's Number type
   - Includes a `toFraction` and a correctly-rounded `squareRoot` method
-  - Stores values in an accessible decimal floating point format
   - No dependencies
   - Comprehensive [documentation](http://mikemcl.github.io/bignumber.js/) and test set 
 
