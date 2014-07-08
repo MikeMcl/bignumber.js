@@ -115,8 +115,8 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
       <li><a href="#eq"     >equals</a></li>
       <li><a href="#gt"     >greaterThan</a></li>
       <li><a href="#gte"    >greaterThanOrEqualTo</a></li>
-      <li><a href="#lt"     >lessThan</a></li>
-      <li><a href="#lte"    >lessThanOrEqualTo</a></li>
+      <li><a href="#lt"     >lowerThan</a></li>
+      <li><a href="#lte"    >lowerThanOrEqualTo</a></li>
       <li><a href="#toE"    >toExponential</a></li>
       <li><a href="#toF"    >toFixed</a></li>
       <li><a href="#toN"    >toNumber</a></li>
@@ -1032,7 +1032,7 @@ BigNumber(10, 18).gte('i', 36)       // true</pre>
 
 
     <h5 id="lt">
-      lessThan<code class='inset'>.lt(n [, base]) &rArr; <i>boolean</i></code>
+      lowerThan<code class='inset'>.lt(n [, base]) &rArr; <i>boolean</i></code>
      </h5>
     <p>
       <code>n</code> : <i>number|string|BigNumber</i><br />
@@ -1048,14 +1048,14 @@ BigNumber(10, 18).gte('i', 36)       // true</pre>
     <pre>
 (0.3 - 0.2) &lt; 0.1                    // true
 x = new BigNumber(0.3).minus(0.2)
-x.lessThan(0.1)                      // false
+x.lowerThan(0.1)                      // false
 BigNumber(0).lt(x)                   // true
 BigNumber(11.1, 2).lt(11, 3)         // true</pre>
 
 
 
     <h5 id="lte">
-      lessThanOrEqualTo<code class='inset'>.lte(n [, base]) &rArr;
+      lowerThanOrEqualTo<code class='inset'>.lte(n [, base]) &rArr;
       <i>boolean</i></code>
     </h5>
     <p>
@@ -1073,7 +1073,7 @@ BigNumber(11.1, 2).lt(11, 3)         // true</pre>
     <pre>
 0.1 &lt;= (0.3 - 0.2)                                // false
 x = new BigNumber(0.1)
-x.lessThanOrEqualTo(BigNumber(0.3).minus(0.2))    // true
+x.lowerThanOrEqualTo(BigNumber(0.3).minus(0.2))    // true
 BigNumber(-1).lte(x)                              // true
 BigNumber(10, 18).lte('i', 36)                    // true</pre>
 
@@ -1510,8 +1510,8 @@ y.s                     // -1</pre>
         equals<br />
         greaterThan<br />
         greaterThanOrEqualTo<br />
-        lessThan<br />
-        lessThanOrEqualTo<br />
+        lowerThan<br />
+        lowerThanOrEqualTo<br />
         minus<br />
         mod<br />
         plus<br />

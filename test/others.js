@@ -42,8 +42,8 @@ var count = (function others(BigNumber) {
      * equals
      * greaterThan
      * greaterThanOrEqualTo
-     * lessThan
-     * lessThanOrEqualTo
+     * lowerThan
+     * lowerThanOrEqualTo
      * valueOf
      *
      */
@@ -99,8 +99,8 @@ var count = (function others(BigNumber) {
     assert(true, n.equals(1, 36));
     assert(true, n.greaterThan(0.99999));
     assert(false, n.greaterThanOrEqualTo(1.1));
-    assert(true, n.lessThan(1.001));
-    assert(true, n.lessThanOrEqualTo(2));
+    assert(true, n.lowerThan(1.001));
+    assert(true, n.lowerThanOrEqualTo(2));
     assert(n.toString(), n.valueOf());
 
      n = new BigNumber('-0.1');
@@ -111,8 +111,8 @@ var count = (function others(BigNumber) {
     assert(false, n.equals(0.1));
     assert(false, n.greaterThan(-0.1));
     assert(true, n.greaterThanOrEqualTo(-1));
-    assert(true, n.lessThan(-0.01));
-    assert(false, n.lessThanOrEqualTo(-1));
+    assert(true, n.lowerThan(-0.01));
+    assert(false, n.lowerThanOrEqualTo(-1));
     assert(n.toString(), n.valueOf());
 
     n = new BigNumber(Infinity);
@@ -137,8 +137,8 @@ var count = (function others(BigNumber) {
     assert(true, n.equals(-1/0));
     assert(false, n.greaterThan(-Infinity));
     assert(true, n.greaterThanOrEqualTo('-Infinity', 8));
-    assert(true, n.lessThan(0));
-    assert(true, n.lessThanOrEqualTo(Infinity));
+    assert(true, n.lowerThan(0));
+    assert(true, n.lowerThanOrEqualTo(Infinity));
     assert(n.toString(), n.valueOf());
 
     n = new BigNumber('0.0000000');
@@ -161,10 +161,10 @@ var count = (function others(BigNumber) {
     assert(true, n.equals('0.000'));
     assert(true, n.greaterThan(-1));
     assert(false, n.greaterThanOrEqualTo(0.1));
-    assert(false, n.lessThan(0));
-    assert(false, n.lessThan(0, 36));
-    assert(true, n.lessThan(0.1));
-    assert(true, n.lessThanOrEqualTo(0));
+    assert(false, n.lowerThan(0));
+    assert(false, n.lowerThan(0, 36));
+    assert(true, n.lowerThan(0.1));
+    assert(true, n.lowerThanOrEqualTo(0));
     assert(n.toString(), n.valueOf());
 
     n = new BigNumber('NaN');
@@ -191,8 +191,8 @@ var count = (function others(BigNumber) {
     assert(false, n.equals(0));
     assert(false, n.greaterThan(0));
     assert(false, n.greaterThanOrEqualTo(-Infinity));
-    assert(false, n.lessThan(Infinity));
-    assert(false, n.lessThanOrEqualTo(0));
+    assert(false, n.lowerThan(Infinity));
+    assert(false, n.lowerThanOrEqualTo(0));
     assert(n.toString(), n.valueOf());
 
     BigNumber.config({ ERRORS : true });
@@ -217,8 +217,8 @@ var count = (function others(BigNumber) {
     assert(true, n.equals(5e-200));
     assert(true, n.greaterThan(5e-201));
     assert(false, n.greaterThanOrEqualTo(1));
-    assert(true, n.lessThan(6e-200));
-    assert(true, n.lessThanOrEqualTo(5.1e-200));
+    assert(true, n.lowerThan(6e-200));
+    assert(true, n.lowerThanOrEqualTo(5.1e-200));
     assert(n.toString(), n.valueOf());
 
     n = new BigNumber('1');
@@ -256,8 +256,8 @@ var count = (function others(BigNumber) {
     assert(false, new BigNumber(NaN).equals('efffe'));
 
     assert(false, new BigNumber('b').greaterThan('a'));
-    assert(false, new BigNumber('a').lessThan('b', 10));
-    assert(true, new BigNumber('a', 16).lessThanOrEqualTo('ff', 16));
+    assert(false, new BigNumber('a').lowerThan('b', 10));
+    assert(true, new BigNumber('a', 16).lowerThanOrEqualTo('ff', 16));
     assert(true, new BigNumber('b', 16).greaterThanOrEqualTo(9, 16));
 
     BigNumber.config({ ERRORS : true });
@@ -274,25 +274,25 @@ var count = (function others(BigNumber) {
     assert(false, new BigNumber(10).greaterThan(10, 11));
     assert(false, new BigNumber(10).greaterThan(10, 12));
     assert(false, new BigNumber(10).greaterThan(10, 13));
-    assert(true, new BigNumber(10).lessThan(10, 11));
-    assert(true, new BigNumber(10).lessThan(10, 12));
-    assert(true, new BigNumber(10).lessThan(10, 13));
-    assert(true, new BigNumber(10).lessThan(10, 14));
-    assert(true, new BigNumber(10).lessThan(10, 15));
-    assert(true, new BigNumber(10).lessThan(10, 16));
-    assert(true, new BigNumber(10).lessThan(10, 17));
-    assert(true, new BigNumber(10).lessThan(10, 18));
-    assert(true, new BigNumber(10).lessThan(10, 19));
-    assert(true, new BigNumber(10).lessThan(10, 20));
-    assert(true, new BigNumber(10).lessThan(10, 21));
-    assert(true, new BigNumber(10).lessThan(10, 22));
-    assert(true, new BigNumber(10).lessThan(10, 34));
-    assert(true, new BigNumber(10).lessThan(10, 35));
-    assert(true, new BigNumber(10).lessThan(10, 36));
-    assert(false, new BigNumber(NaN).lessThan(NaN));
-    assert(false, new BigNumber(Infinity).lessThan(-Infinity));
-    assert(false, new BigNumber(Infinity).lessThan(Infinity));
-    assert(true, new BigNumber(Infinity, 10).lessThanOrEqualTo(Infinity, 2));
+    assert(true, new BigNumber(10).lowerThan(10, 11));
+    assert(true, new BigNumber(10).lowerThan(10, 12));
+    assert(true, new BigNumber(10).lowerThan(10, 13));
+    assert(true, new BigNumber(10).lowerThan(10, 14));
+    assert(true, new BigNumber(10).lowerThan(10, 15));
+    assert(true, new BigNumber(10).lowerThan(10, 16));
+    assert(true, new BigNumber(10).lowerThan(10, 17));
+    assert(true, new BigNumber(10).lowerThan(10, 18));
+    assert(true, new BigNumber(10).lowerThan(10, 19));
+    assert(true, new BigNumber(10).lowerThan(10, 20));
+    assert(true, new BigNumber(10).lowerThan(10, 21));
+    assert(true, new BigNumber(10).lowerThan(10, 22));
+    assert(true, new BigNumber(10).lowerThan(10, 34));
+    assert(true, new BigNumber(10).lowerThan(10, 35));
+    assert(true, new BigNumber(10).lowerThan(10, 36));
+    assert(false, new BigNumber(NaN).lowerThan(NaN));
+    assert(false, new BigNumber(Infinity).lowerThan(-Infinity));
+    assert(false, new BigNumber(Infinity).lowerThan(Infinity));
+    assert(true, new BigNumber(Infinity, 10).lowerThanOrEqualTo(Infinity, 2));
     assert(false, new BigNumber(NaN).greaterThanOrEqualTo(NaN));
     assert(true, new BigNumber(Infinity).greaterThanOrEqualTo(Infinity));
     assert(true, new BigNumber(Infinity).greaterThanOrEqualTo(-Infinity));
@@ -300,39 +300,39 @@ var count = (function others(BigNumber) {
     assert(true, new BigNumber(-Infinity).greaterThanOrEqualTo(-Infinity));
 
     assert(false, new BigNumber(2, 10).greaterThan(10, 2));
-    assert(false, new BigNumber(10, 2).lessThan(2, 10));
-    assert(true, new BigNumber(255).lessThanOrEqualTo('ff', 16));
+    assert(false, new BigNumber(10, 2).lowerThan(2, 10));
+    assert(true, new BigNumber(255).lowerThanOrEqualTo('ff', 16));
     assert(true, new BigNumber('a', 16).greaterThanOrEqualTo(9, 16));
-    assert(false, new BigNumber(0).lessThanOrEqualTo('NaN'));
+    assert(false, new BigNumber(0).lowerThanOrEqualTo('NaN'));
     assert(false, new BigNumber(0).greaterThanOrEqualTo(NaN));
-    assert(false, new BigNumber(NaN, 2).lessThanOrEqualTo('NaN', 36));
+    assert(false, new BigNumber(NaN, 2).lowerThanOrEqualTo('NaN', 36));
     assert(false, new BigNumber(NaN, 36).greaterThanOrEqualTo(NaN, 2));
-    assert(false, new BigNumber(0).lessThanOrEqualTo(-Infinity));
+    assert(false, new BigNumber(0).lowerThanOrEqualTo(-Infinity));
     assert(true, new BigNumber(0).greaterThanOrEqualTo(-Infinity));
-    assert(true, new BigNumber(0).lessThanOrEqualTo('Infinity', 36));
+    assert(true, new BigNumber(0).lowerThanOrEqualTo('Infinity', 36));
     assert(false, new BigNumber(0).greaterThanOrEqualTo('Infinity', 36));
-    assert(false, new BigNumber(10).lessThanOrEqualTo(20, 4));
-    assert(true, new BigNumber(10).lessThanOrEqualTo(20, 5));
+    assert(false, new BigNumber(10).lowerThanOrEqualTo(20, 4));
+    assert(true, new BigNumber(10).lowerThanOrEqualTo(20, 5));
     assert(false, new BigNumber(10).greaterThanOrEqualTo(20, 6));
 
-    assert(false, new BigNumber(1.23001e-2).lessThan(1.23e-2));
+    assert(false, new BigNumber(1.23001e-2).lowerThan(1.23e-2));
     assert(true, new BigNumber(1.23e-2).lt(1.23001e-2));
-    assert(false, new BigNumber(1e-2).lessThan(9.999999e-3));
+    assert(false, new BigNumber(1e-2).lowerThan(9.999999e-3));
     assert(true, new BigNumber(9.999999e-3).lt(1e-2));
 
-    assert(false, new BigNumber(1.23001e+2).lessThan(1.23e+2));
+    assert(false, new BigNumber(1.23001e+2).lowerThan(1.23e+2));
     assert(true, new BigNumber(1.23e+2).lt(1.23001e+2));
-    assert(true, new BigNumber(9.999999e+2).lessThan(1e+3));
+    assert(true, new BigNumber(9.999999e+2).lowerThan(1e+3));
     assert(false, new BigNumber(1e+3).lt(9.9999999e+2));
 
-    assert(false, new BigNumber(1.23001e-2).lessThanOrEqualTo(1.23e-2));
+    assert(false, new BigNumber(1.23001e-2).lowerThanOrEqualTo(1.23e-2));
     assert(true, new BigNumber(1.23e-2).lte(1.23001e-2));
-    assert(false, new BigNumber(1e-2).lessThanOrEqualTo(9.999999e-3));
+    assert(false, new BigNumber(1e-2).lowerThanOrEqualTo(9.999999e-3));
     assert(true, new BigNumber(9.999999e-3).lte(1e-2));
 
-    assert(false, new BigNumber(1.23001e+2).lessThanOrEqualTo(1.23e+2));
+    assert(false, new BigNumber(1.23001e+2).lowerThanOrEqualTo(1.23e+2));
     assert(true, new BigNumber(1.23e+2).lte(1.23001e+2));
-    assert(true, new BigNumber(9.999999e+2).lessThanOrEqualTo(1e+3));
+    assert(true, new BigNumber(9.999999e+2).lowerThanOrEqualTo(1e+3));
     assert(false, new BigNumber(1e+3).lte(9.9999999e+2));
 
     assert(true, new BigNumber(1.23001e-2).greaterThan(1.23e-2));

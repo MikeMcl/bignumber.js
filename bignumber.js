@@ -1034,7 +1034,7 @@
      * Return true if the value of this BigNumber is less than the value of
      * BigNumber(n, b), otherwise returns false.
      */
-    P['lessThan'] = P['lt'] = function ( n, b ) {
+    P['lowerThan'] = P['lt'] = P['lessThan'] = function ( n, b ) {
         id = 6;
         return this['cmp']( n, b ) < 0;
     };
@@ -1044,7 +1044,7 @@
      * Return true if the value of this BigNumber is less than or equal to the
      * value of BigNumber(n, b), otherwise returns false.
      */
-    P['lessThanOrEqualTo'] = P['lte'] = function ( n, b ) {
+    P['lowerThanOrEqualTo'] = P['lte'] = P['lessThanOrEqualTo']= function ( n, b ) {
         id = 7;
         return ( b = this['cmp']( n, b ) ) == -1 || b === 0;
     };
