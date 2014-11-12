@@ -100,7 +100,12 @@
         if ( !(x instanceof BigNumber) ) {
             return new BigNumber( n, b )
         }
-
+        
+        // WebStorm debugger data view support
+        if (!this.hasOwnProperty('id')) {
+            Object.defineProperty(this, 'id', {get: function () {return this.valueOf()}});
+        }
+        
         // Duplicate.
         if ( n instanceof BigNumber ) {
             id = 0;
