@@ -1981,7 +1981,7 @@
     /*
      * Return as toString, but do not accept a base argument.
      */
-    P['valueOf'] = function () {
+    P['valueOf'] = P['toJSON'] = function () {
         return this['toS']();
     };
 
