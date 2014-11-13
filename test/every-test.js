@@ -12,6 +12,7 @@ console.log( '\n STARTING TESTS...\n' );
   'ceil',
   'cmp',
   'config',
+  'dp',
   'div',
   'floor',
   'minus',
