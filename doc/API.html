@@ -98,6 +98,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
     <ul>
       <li><a href="#abs"    >absoluteValue</a></li>
       <li><a href="#ceil"   >ceil</a></li>
+      <li><a href="#dp"     >decimalPlaces</a></li>
       <li><a href="#floor"  >floor</a></li>
       <li><a href="#neg"    >negated</a></li>
       <li><a href="#sqrt"   >squareRoot</a></li>
@@ -618,7 +619,22 @@ y = new BigNumber(-1.8)
 y.ceil()                      // '-1'</pre>
 
 
+    
+    <h5 id="dp">
+      decimalPlaces<code class='inset'>.dp() &rArr; <i>number</i></code>
+    </h5>
+    <p>
+      Return the number of decimal places of the value of this BigNumber, or <code>null</code>
+      if the value of this BigNumber is <code>&plusmn;Infinity</code> or <code>NaN</code>.
+    </p>
+    <pre>
+x = new BigNumber(123.45)
+x.decimalPlaces()             // 2
+y = new BigNumber('9.9e-101')
+y.dp()                        // 102</pre>
 
+
+    
     <h5 id="floor">
       floor<code class='inset'>.floor() &rArr;
       <i>BigNumber</i></code>
