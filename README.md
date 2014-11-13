@@ -13,6 +13,7 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
   - Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of JavaScript's Number type
   - Includes a `toFraction` and a correctly-rounded `squareRoot` method
   - No dependencies
+  - ECMAScript 3 compliant
   - Comprehensive [documentation](http://mikemcl.github.io/bignumber.js/) and test set 
 
 If an even smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).   
@@ -211,6 +212,9 @@ MIT.
 See LICENCE.
 
 ## Change Log
+
+####1.5.0
+* 13/11/2014 Added `toJSON` and `decimalPlaces` methods.
 
 ####1.4.1
 * 08/06/2014 Amend README.

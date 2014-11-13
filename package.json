@@ -1,7 +1,7 @@
 {
   "name": "bignumber.js",
   "description": "A library for arbitrary-precision decimal and non-decimal arithmetic",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "keywords": [
     "arbitrary",
     "precision",
@@ -31,6 +31,6 @@
   "license": "MIT",
   "scripts": {
     "test": "node ./test/every-test.js",
-    "build": "uglifyjs bignumber.js -c -m -o bignumber.min.js --preamble '/* bignumber.js v1.4.1 https://github.com/MikeMcl/bignumber.js/LICENCE */'"
+    "build": "uglifyjs bignumber.js -c -m -o bignumber.min.js --preamble '/* bignumber.js v1.5.0 https://github.com/MikeMcl/bignumber.js/LICENCE */'"
   }
 }
