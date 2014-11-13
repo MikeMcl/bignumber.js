@@ -901,6 +901,21 @@
 
 
     /*
+     * Return the number of decimal places of the value of this BigNumber,
+     * or null if the value of this BigNumber is +-Infinity or NaN.
+     */
+    P['decimalPlaces'] = P['dp'] = function () {
+        var dp;
+
+        if ( this['c'] ) {
+            dp = this['c'].length - this['e'] - 1;
+            return dp < 0 ? 0 : dp;
+        }
+        return null;
+    };
+
+
+    /*
      *  n / 0 = I
      *  n / N = N
      *  n / I = 0
