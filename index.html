@@ -75,6 +75,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
           <li><a href="#exponential-at">EXPONENTIAL_AT</a></li>
           <li><a href="#range"         >RANGE</a></li>
           <li><a href="#errors"        >ERRORS</a></li>
+          <li><a href="#format"        >FORMAT</a></li>
         </ul>
       </li>
     </ul>
@@ -98,34 +99,38 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
     <ul>
       <li><a href="#abs"    >absoluteValue</a></li>
       <li><a href="#ceil"   >ceil</a></li>
+      <li><a href="#cmp"    >comparedTo</a></li>
       <li><a href="#dp"     >decimalPlaces</a></li>
+      <li><a href="#div"    >dividedBy</a></li>
+      <li><a href="#divInt" >dividedToIntegerBy</a></li>
+      <li><a href="#eq"     >equals</a></li>
       <li><a href="#floor"  >floor</a></li>
-      <li><a href="#neg"    >negated</a></li>
-      <li><a href="#sqrt"   >squareRoot</a></li>
+      <li><a href="#gt"     >greaterThan</a></li>
+      <li><a href="#gte"    >greaterThanOrEqualTo</a></li>
       <li><a href="#isF"    >isFinite</a></li>
+      <li><a href="#isInt"  >isInteger</a></li>
       <li><a href="#isNaN"  >isNaN</a></li>
       <li><a href="#isNeg"  >isNegative</a></li>
       <li><a href="#isZ"    >isZero</a></li>
-      <li><a href="#cmp"    >comparedTo</a></li>
-      <li><a href="#div"    >dividedBy</a></li>
-      <li><a href="#minus"  >minus</a></li>
-      <li><a href="#mod"    >modulo</a></li>
-      <li><a href="#plus"   >plus</a></li>
-      <li><a href="#times"  >times</a></li>
-      <li><a href="#pow"    >toPower</a></li>
-      <li><a href="#eq"     >equals</a></li>
-      <li><a href="#gt"     >greaterThan</a></li>
-      <li><a href="#gte"    >greaterThanOrEqualTo</a></li>
       <li><a href="#lt"     >lessThan</a></li>
       <li><a href="#lte"    >lessThanOrEqualTo</a></li>
+      <li><a href="#minus"  >minus</a></li>
+      <li><a href="#mod"    >modulo</a></li>
+      <li><a href="#neg"    >negated</a></li>
+      <li><a href="#plus"   >plus</a></li>
+      <li><a href="#round"  >round</a></li>
+      <li><a href="#sqrt"   >squareRoot</a></li>
+      <li><a href="#times"  >times</a></li>
       <li><a href="#toE"    >toExponential</a></li>
       <li><a href="#toF"    >toFixed</a></li>
+      <li><a href="#toFo"   >toFormat</a></li>
+      <li><a href="#toFr"   >toFraction</a></li>
+      <li><a href="#toJSON" >toJSON</a></li>
       <li><a href="#toN"    >toNumber</a></li>
+      <li><a href="#pow"    >toPower</a></li>
       <li><a href="#toP"    >toPrecision</a></li>
       <li><a href="#toS"    >toString</a></li>
       <li><a href="#valueOf">valueOf</a></li>
-      <li><a href="#toFr"   >toFraction</a></li>
-      <li><a href="#round"  >round</a></li>
     </ul>
 
     <a href="#instance-properties">Properties</a>
@@ -152,6 +157,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
     <p>
       <a href="https://github.com/MikeMcl/bignumber.js">Hosted on GitHub</a>.
     </p>
+
     <p>
       <i>
         The library is incorporated into this page, so it should be available
@@ -194,6 +200,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
         considered invalid as calling <code>toString</code> or
         <code>valueOf</code> on such numbers may not result in the intended
         value.
+        <pre>console.log( 823456789123456.3 );    // 823456789123456.2</pre>
       </dd>
       <dd>
         There is no limit to the number of digits of a value of type
@@ -201,7 +208,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
       </dd>
       <dd>
         Decimal string values may be in exponential, as well as normal
-        (non-exponential) notation. Non-decimal values must be in normal
+        (fixed-point) notation. Non-decimal values must be in normal
         notation.
       </dd>
       <dd>
@@ -265,7 +272,7 @@ new BigNumber(96517860459076817.4395)
 new BigNumber('blurgh')
 // Throws 'not a number' if ERRORS is true, otherwise 'NaN'
 
-BigNumber.config({DECIMAL_PLACES : 5})
+BigNumber.config({DECIMAL_PLACES: 5})
 new BigNumber(1.23456789)                  // '1.23456789'
 new BigNumber(1.23456789, 10)              // '1.23457'</pre>
 
@@ -281,8 +288,7 @@ new BigNumber(1.23456789, 10)              // '1.23457'</pre>
       config<code class='inset'>config([settings]) &rArr; <i>object</i></code>
     </h5>
     <i>
-      Note: the settings can also be supplied as an argument list,
-      see below.
+      Note: the settings can also be supplied as an argument list, see below.
     </i>
     <dl>
       <dt><code>settings</code></dt>
@@ -291,8 +297,6 @@ new BigNumber(1.23456789, 10)              // '1.23457'</pre>
       <dd>
         An object that contains some or all of the following properties:
         <dl>
-
-
 
           <dt id="decimal-places"><code><b>DECIMAL_PLACES</b></code></dt>
           <dd>
@@ -310,7 +314,7 @@ new BigNumber(1.23456789, 10)              // '1.23457'</pre>
             <code>toPower</code> methods.
           </dd>
           <dd>
-            <pre>BigNumber.config({ DECIMAL_PLACES : 5 })
+            <pre>BigNumber.config({ DECIMAL_PLACES: 5 })
 BigNumber.config(5)    // equivalent</pre>
           </dd>
 
@@ -327,7 +331,8 @@ BigNumber.config(5)    // equivalent</pre>
             The rounding mode used in the above operations and by
             <a href='#round'><code>round</code></a>,
             <a href='#toE'><code>toExponential</code></a>,
-            <a href='#toF'><code>toFixed</code></a> and
+            <a href='#toF'><code>toFixed</code></a>,
+            <a href='#toFo'><code>toFormat</code></a> and
             <a href='#toP'><code>toPrecision</code></a>.
           </dd>
           <dd>
@@ -335,7 +340,7 @@ BigNumber.config(5)    // equivalent</pre>
              constructor.
           </dd>
            <dd>
-            <pre>BigNumber.config({ ROUNDING_MODE : 0 })
+            <pre>BigNumber.config({ ROUNDING_MODE: 0 })
 BigNumber.config(null, BigNumber.ROUND_UP)    // equivalent</pre>
           </dd>
 
@@ -367,21 +372,21 @@ BigNumber.config(null, BigNumber.ROUND_UP)    // equivalent</pre>
             <code>[-7, 20]</code>.
           </dd>
           <dd>
-            <pre>BigNumber.config({ EXPONENTIAL_AT : 2 })
+            <pre>BigNumber.config({ EXPONENTIAL_AT: 2 })
 new BigNumber(12.3)         // '12.3'        e is only 1
 new BigNumber(123)          // '1.23e+2'
 new BigNumber(0.123)        // '0.123'       e is only -1
 new BigNumber(0.0123)       // '1.23e-2'
 
-BigNumber.config({ EXPONENTIAL_AT : [-7, 20] })
+BigNumber.config({ EXPONENTIAL_AT: [-7, 20] })
 new BigNumber(123456789)    // '123456789'   e is only 8
 new BigNumber(0.000000123)  // '1.23e-7'
 
 // Almost never return exponential notation:
-BigNumber.config({ EXPONENTIAL_AT : 1e+9 })
+BigNumber.config({ EXPONENTIAL_AT: 1e+9 })
 
 // Always return exponential notation:
-BigNumber.config({ EXPONENTIAL_AT : 0 })</pre>
+BigNumber.config({ EXPONENTIAL_AT: 0 })</pre>
           </dd>
           <dd>
             Regardless of the value of <code>EXPONENTIAL_AT</code>, the
@@ -424,14 +429,14 @@ BigNumber.config({ EXPONENTIAL_AT : 0 })</pre>
             <code>[-324, 308]</code>.
           </dd>
           <dd>
-            <pre>BigNumber.config({ RANGE : 500 })
+            <pre>BigNumber.config({ RANGE: 500 })
 BigNumber.config().RANGE     // [ -500, 500 ]
 new BigNumber('9.999e499')   // '9.999e+499'
 new BigNumber('1e500')       // 'Infinity'
 new BigNumber('1e-499')      // '1e-499'
 new BigNumber('1e-500')      // '0'
 
-BigNumber.config({ RANGE : [-3, 4] })
+BigNumber.config({ RANGE: [-3, 4] })
 new BigNumber(99999)         // '99999'      e is only 4
 new BigNumber(100000)        // 'Infinity'   e is 5
 new BigNumber(0.001)         // '0.01'       e is only -3
@@ -459,8 +464,49 @@ new BigNumber(0.0001)        // '0'          e is -4</pre>
             See <a href='#Errors'>Errors</a>.
           </dd>
            <dd>
-            <pre>BigNumber.config({ ERRORS : false })</pre>
+            <pre>BigNumber.config({ ERRORS: false })</pre>
           </dd>
+
+
+
+          <dt id="format"><code><b>FORMAT</b></code></dt>
+          <dd><i>object</i></dd>
+          <dd>
+            The <code>FORMAT</code> object configures the format of the string
+            returned by the <a href='#toFo'><code>toFormat</code></a> method.
+          </dd>
+          <dd>
+            The example below shows the properties of the <code>FORMAT</code>
+            object that are recognised, and their default values.
+          </dd>
+          <dd>
+             Unlike when changing other settings, the values of the properties
+             of the <code>FORMAT</code> object will not be checked for validity.
+             The existing <code>FORMAT</code> object will simply be replaced by
+             the object that is passed in. Note that all the properties shown
+             below do not have to be included.
+          </dd>
+          <dd>
+            See <a href='#toFo'><code>toFormat</code></a> for examples of usage.
+          </dd>
+          <dd><pre>
+BigNumber.config({
+    FORMAT: {
+        // the decimal separator
+        decimalSeparator : '.',
+        // the grouping separator of the integer part
+        groupSeparator : ',',
+        // the primary grouping size of the integer part
+        groupSize : 3,
+        // the secondary grouping size of the integer part
+        secondaryGroupSize : 0,
+        // the grouping separator of the fraction part
+        fractionGroupSeparator : ' ',
+        // the grouping size of the fraction part
+        fractionGroupSize : 0
+    }
+});</pre></dd>
+
         </dl>
       </dd>
     </dl>
@@ -475,11 +521,11 @@ new BigNumber(0.0001)        // '0'          e is -4</pre>
     </p>
     <pre>
 BigNumber.config({
-    DECIMAL_PLACES : 40,
-    ROUNDING_MODE : BigNumber.ROUND_HALF_CEIL,
-    EXPONENTIAL_AT : [-10, 20],
-    RANGE : [-500, 500],
-    ERRORS : true
+    DECIMAL_PLACES: 40,
+    ROUNDING_MODE: BigNumber.ROUND_HALF_CEIL,
+    EXPONENTIAL_AT: [-10, 20],
+    RANGE: [-500, 500],
+    ERRORS: true
 });
 
 // Alternatively but equivalently:
@@ -503,74 +549,74 @@ obj.RANGE        // [-500, 500]</pre>
     </p>
     <table>
       <tr>
-      	<th>Property</th>
-      	<th>Value</th>
-      	<th>Description</th>
+        <th>Property</th>
+        <th>Value</th>
+        <th>Description</th>
       </tr>
       <tr>
-      	<td id="round-up"><b>ROUND_UP</b></td>
-      	<td class='centre'>0</td>
-      	<td>Rounds away from zero</td>
+        <td id="round-up"><b>ROUND_UP</b></td>
+        <td class='centre'>0</td>
+        <td>Rounds away from zero</td>
       </tr>
       <tr>
-      	<td id="round-down"><b>ROUND_DOWN</b></td>
-      	<td class='centre'>1</td>
-      	<td>Rounds towards zero</td>
+        <td id="round-down"><b>ROUND_DOWN</b></td>
+        <td class='centre'>1</td>
+        <td>Rounds towards zero</td>
       </tr>
       <tr>
-      	<td id="round-ceil"><b>ROUND_CEIL</b></td>
-      	<td class='centre'>2</td>
-      	<td>Rounds towards Infinity</td>
+        <td id="round-ceil"><b>ROUND_CEIL</b></td>
+        <td class='centre'>2</td>
+        <td>Rounds towards Infinity</td>
       </tr>
       <tr>
-      	<td id="round-floor"><b>ROUND_FLOOR</b></td>
-      	<td class='centre'>3</td>
-      	<td>Rounds towards -Infinity</td>
+        <td id="round-floor"><b>ROUND_FLOOR</b></td>
+        <td class='centre'>3</td>
+        <td>Rounds towards -Infinity</td>
       </tr>
       <tr>
-      	<td id="round-half-up"><b>ROUND_HALF_UP</b></td>
-      	<td class='centre'>4</td>
-      	<td>
+        <td id="round-half-up"><b>ROUND_HALF_UP</b></td>
+        <td class='centre'>4</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds away from zero
         </td>
       </tr>
       <tr>
-      	<td id="round-half-down"><b>ROUND_HALF_DOWN</b></td>
-      	<td class='centre'>5</td>
-      	<td>
+        <td id="round-half-down"><b>ROUND_HALF_DOWN</b></td>
+        <td class='centre'>5</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds towards zero
         </td>
       </tr>
       <tr>
-      	<td id="round-half-even"><b>ROUND_HALF_EVEN</b></td>
-      	<td class='centre'>6</td>
-      	<td>
+        <td id="round-half-even"><b>ROUND_HALF_EVEN</b></td>
+        <td class='centre'>6</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds towards even neighbour
         </td>
       </tr>
       <tr>
-      	<td id="round-half-ceil"><b>ROUND_HALF_CEIL</b></td>
-      	<td class='centre'>7</td>
-      	<td>
+        <td id="round-half-ceil"><b>ROUND_HALF_CEIL</b></td>
+        <td class='centre'>7</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds towards Infinity
         </td>
       </tr>
       <tr>
-      	<td id="round-half-floor"><b>ROUND_HALF_FLOOR</b></td>
-      	<td class='centre'>8</td>
-      	<td>
+        <td id="round-half-floor"><b>ROUND_HALF_FLOOR</b></td>
+        <td class='centre'>8</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds towards -Infinity
         </td>
       </tr>
     </table>
     <pre>
-BigNumber.config({ ROUNDING_MODE : BigNumber.ROUND_CEIL })
-BigNumber.config({ ROUNDING_MODE : 2 })     // equivalent</pre>
+BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_CEIL })
+BigNumber.config({ ROUNDING_MODE: 2 })     // equivalent</pre>
 
 
     <h3>INSTANCE</h3>
@@ -589,8 +635,7 @@ BigNumber.config({ ROUNDING_MODE : 2 })     // equivalent</pre>
       <code>NaN</code> is consistent with how JavaScript treats these values.
     </p>
     <p>
-      Method names over 5 letters in length have a shorter alias (except
-      <code>valueOf</code>).<br />
+      Many method names have a shorter alias.<br />
       Internally, the library always uses the shorter method names.
     </p>
 
@@ -625,18 +670,149 @@ y.ceil()                      // '-1'</pre>
 
 
 
+    <h5 id="cmp">
+      comparedTo<code class='inset'>.cmp(n [, base]) &rArr; <i>number</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <table>
+      <tr>
+        <th>Returns</th>
+        <th colspan=2>&nbsp;</th>
+      </tr>
+      <tr>
+        <td class='centre'>1</td>
+        <td>
+          If the value of this BigNumber is greater than the value of
+          <code>n</code>
+        </td>
+      </tr>
+      <tr>
+        <td class='centre'>-1</td>
+        <td>
+          If the value of this BigNumber is less than the value of
+          <code>n</code>
+        </td>
+      </tr>
+      <tr>
+        <td class='centre'>0</td>
+        <td>If this BigNumber and <code>n</code> have the same value</td>
+      </tr>
+       <tr>
+        <td class='centre'>null</td>
+        <td>
+          if the value of either this BigNumber or <code>n</code> is
+          <code>NaN</code>
+        </td>
+      </tr>
+    </table>
+    <pre>
+x = new BigNumber(Infinity)
+y = new BigNumber(5)
+x.comparedTo(y)                // 1
+x.comparedTo(x.minus(1))       // 0
+y.cmp(NaN)                     // null
+y.cmp('110', 2)                // -1</pre>
+
+
+
     <h5 id="dp">
       decimalPlaces<code class='inset'>.dp() &rArr; <i>number</i></code>
     </h5>
     <p>
-      Return the number of decimal places of the value of this BigNumber, or <code>null</code>
-      if the value of this BigNumber is <code>&plusmn;Infinity</code> or <code>NaN</code>.
+      Return the number of decimal places of the value of this BigNumber, or
+      <code>null</code> if the value of this BigNumber is
+      <code>&plusmn;Infinity</code> or <code>NaN</code>.
     </p>
     <pre>
 x = new BigNumber(123.45)
 x.decimalPlaces()             // 2
 y = new BigNumber('9.9e-101')
 y.dp()                        // 102</pre>
+
+
+
+    <h5 id="div">
+      dividedBy<code class='inset'>.div(n [, base]) &rArr;
+      <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber divided by
+      <code>n</code>, rounded according to the current
+      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+    </p>
+    <pre>
+x = new BigNumber(355)
+y = new BigNumber(113)
+x.dividedBy(y)             // '3.14159292035398230088'
+x.div(5)                   // '71'
+x.div(47, 16)              // '5'</pre>
+
+
+
+    <h5 id="divInt">
+      dividedToIntegerBy<code class='inset'>.divToInt(n [, base]) &rArr;
+      <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Return a BigNumber whose value is the integer part (truncating towards
+      zero) of dividing the value of this BigNumber by <code>n</code>.
+    </p>
+    <pre>
+x = new BigNumber(5)
+y = new BigNumber(3)
+x.dividedToIntegerBy(y)         // '1'
+x.divToInt(0.7)                 // '7'
+x.divToInt('0.f', 16)           // '5'</pre>
+
+
+
+    <h5 id="eq">
+      equals<code class='inset'>.eq(n [, base]) &rArr; <i>boolean</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber equals the value
+      of <code>n</code>, otherwise returns <code>false</code>.<br />
+      As with JavaScript, NaN does not equal NaN.
+      <br />Note : This method uses the <code>comparedTo</code> method
+      internally.
+    </p>
+    <pre>
+0 === 1e-324                    // true
+x = new BigNumber(0)
+x.equals('1e-324')              // false
+BigNumber(-0).eq(x)             // true  ( -0 === 0 )
+BigNumber(255).eq('ff', 16)     // true
+
+y = new BigNumber(NaN)
+y.equals(NaN)                   // false</pre>
 
 
 
@@ -656,40 +832,59 @@ y.floor()                     // '-2'</pre>
 
 
 
-    <h5 id="neg">
-      negated<code class='inset'>.neg() &rArr; <i>BigNumber</i></code>
+    <h5 id="gt">
+      greaterThan<code class='inset'>.gt(n [, base]) &rArr;
+      <i>boolean</i></code>
     </h5>
     <p>
-      Returns a BigNumber whose value is the value of this BigNumber negated,
-      i.e. multiplied by -1.
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber is greater than
+      the value of <code>n</code>, otherwise returns <code>false</code>.<br />
+      Note : This method uses the <code>comparedTo</code> method internally.
     </p>
     <pre>
-x = new BigNumber(1.8)
-x.negated()                   // '-1.8'
-y = new BigNumber(-1.3)
-y.neg()                       // '1.3'</pre>
+0.1 &gt; (0.3 - 0.2)                           // true
+x = new BigNumber(0.1)
+x.greaterThan(BigNumber(0.3).minus(0.2))    // false
+BigNumber(0).gt(x)                          // false
+BigNumber(11, 3).gt(11.1, 2)                // true</pre>
 
 
 
-    <h5 id="sqrt">
-      squareRoot<code class='inset'>.sqrt() &rArr; <i>BigNumber</i></code>
+    <h5 id="gte">
+      greaterThanOrEqualTo<code class='inset'>.gte(n [, base]) &rArr;
+      <i>boolean</i></code>
     </h5>
     <p>
-      Returns a BigNumber whose value is the square root of this BigNumber,
-      correctly rounded according to the current
-      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber is greater than
+      or equal to the value of <code>n</code>, otherwise returns
+      <code>false</code>.<br />
+      Note : This method uses the <code>comparedTo</code> method internally.
     </p>
     <pre>
-x = new BigNumber(16)
-x.squareRoot()                // '4'
-y = new BigNumber(3)
-y.sqrt()                      // '1.73205080756887729353'</pre>
+(0.3 - 0.2) &gt;= 0.1                   // false
+x = new BigNumber(0.3).minus(0.2)
+x.greaterThanOrEqualTo(0.1)          // true
+BigNumber(1).gte(x)                  // true
+BigNumber(10, 18).gte('i', 36)       // true</pre>
 
 
 
     <h5 id="isF">
-      isFinite<code class='inset'>.isF() &rArr; <i>boolean</i></code>
+      isFinite<code class='inset'>.isFinite() &rArr; <i>boolean</i></code>
     </h5>
     <p>
       Returns <code>true</code> if the value of this BigNumber is a finite
@@ -701,11 +896,26 @@ y.sqrt()                      // '1.73205080756887729353'</pre>
 x = new BigNumber(1)
 x.isFinite()                  // true
 y = new BigNumber(Infinity)
-y.isF()                       // false</pre>
+y.isFinite()                  // false</pre>
     <p>
       Note: The native method <code>isFinite()</code> can be used if
       <code>n &lt;= Number.MAX_VALUE</code>.
     </p>
+
+
+
+    <h5 id="isInt">
+      isInteger<code class='inset'>.isInt() &rArr; <i>boolean</i></code>
+    </h5>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber is a whole
+      number, otherwise returns <code>false</code>.
+    </p>
+    <pre>
+x = new BigNumber(1)
+x.isInteger()                 // true
+y = new BigNumber(123.456)
+y.isInt()                     // false</pre>
 
 
 
@@ -747,7 +957,7 @@ y.isNeg                       // false</pre>
 
 
     <h5 id="isZ">
-      isZero<code class='inset'>.isZ() &rArr; <i>boolean</i></code>
+      isZero<code class='inset'>.isZero() &rArr; <i>boolean</i></code>
     </h5>
     <p>
       Returns <code>true</code> if the value of this BigNumber is zero or minus
@@ -757,298 +967,11 @@ y.isNeg                       // false</pre>
 x = new BigNumber(-0)
 x.isZero() && x.isNeg()        // true
 y = new BigNumber(Infinity)
-y.isZ()                        // false</pre>
+y.isZero()                     // false</pre>
     <p>
       Note: <code>n == 0</code> can be used if
       <code>n &gt;= Number.MIN_VALUE</code>.
     </p>
-
-
-
-    <h5 id="cmp">
-      comparedTo<code class='inset'>.cmp(n [, base]) &rArr; <i>number</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>
-        See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <table>
-      <tr>
-      	<th>Returns</th>
-      	<th colspan=2>&nbsp;</th>
-      </tr>
-      <tr>
-      	<td class='centre'>1</td>
-      	<td>
-          If the value of this BigNumber is greater than the value of <code>n</code>
-        </td>
-      </tr>
-      <tr>
-      	<td class='centre'>-1</td>
-      	<td>
-          If the value of this BigNumber is less than the value of <code>n</code>
-        </td>
-      </tr>
-      <tr>
-      	<td class='centre'>0</td>
-      	<td>If this BigNumber and <code>n</code> have the same value</td>
-      </tr>
-       <tr>
-      	<td class='centre'>null</td>
-      	<td>
-          if the value of either this BigNumber or <code>n</code> is
-          <code>NaN</code>
-        </td>
-      </tr>
-    </table>
-    <pre>
-x = new BigNumber(Infinity)
-y = new BigNumber(5)
-x.comparedTo(y)                // 1
-x.comparedTo(x.minus(1))       // 0
-y.cmp(NaN)                     // null
-y.cmp('110', 2)                // -1</pre>
-
-
-
-    <h5 id="div">
-      dividedBy<code class='inset'>.div(n [, base]) &rArr;
-      <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber divided by
-      <code>n</code>, rounded according to the current
-      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
-    </p>
-    <pre>
-x = new BigNumber(355)
-y = new BigNumber(113)
-x.dividedBy(y)             // '3.14159292035398230088'
-x.div(5)                   // '71'
-x.div(47, 16)              // '5'</pre>
-
-
-
-    <h5 id="minus">
-      minus<code class='inset'>.minus(n [, base]) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber minus
-      <code>n</code>.
-    </p>
-    <pre>
-0.3 - 0.1                  // 0.19999999999999998
-x = new BigNumber(0.3)
-x.minus(0.1)               // '0.2'
-x.minus(0.6, 20)           // '0'</pre>
-
-
-
-    <h5 id="mod">
-      modulo<code class='inset'>.mod(n [, base]) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber modulo
-      <code>n</code>, i.e. the integer remainder of dividing this BigNumber by
-      <code>n</code>.
-    </p>
-    <p>
-      The result will have the same sign as this BigNumber, and it will match
-      that of JavaScript's % operator (within the limits of its precision) and
-      BigDecimal's remainder method.
-    </p>
-    <pre>
-1 % 0.9                    // 0.09999999999999998
-x = new BigNumber(1)
-x.modulo(0.9)              // '0.1'
-y = new BigNumber(33)
-y.mod('a', 33)             // '3'</pre>
-
-
-
-    <h5 id="plus">
-      plus<code class='inset'>.plus(n [, base]) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber plus
-      <code>n</code>.
-    </p>
-    <pre>
-0.1 + 0.2                       // 0.30000000000000004
-x = new BigNumber(0.1)
-y = x.plus(0.2)                 // '0.3'
-BigNumber(0.7).plus(x).plus(y)  // '1'
-x.plus('0.1', 8)                // '0.225'</pre>
-
-
-
-    <h5 id="times">
-      times<code class='inset'>.times(n [, base]) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber times
-      <code>n</code>.
-    </p>
-    <pre>
-0.6 * 3                         // 1.7999999999999998
-x = new BigNumber(0.6)
-y = x.times(3)                  // '1.8'
-BigNumber('7e+500').times(y)    // '1.26e+501'
-x.times('-a', 16)               // '-6'</pre>
-
-
-
-    <h5 id="pow">
-      toPower<code class='inset'>.pow(exp) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>exp</code> : <i>number</i> : integer, -1e+6 to 1e+6 inclusive
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber raised to
-      the power <code>exp</code>.
-    </p>
-    <p>
-      If <code>exp</code> is negative the result is rounded according to the
-      current <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
-    </p>
-    <p>
-      If <code>exp</code> is not an integer or is out of range:
-    </p>
-    <p class='inset'>
-      If <code>ERRORS</code> is <code>true</code> a BigNumber
-      Error is thrown,<br />
-      else if <code>exp</code> is greater than 1e+6, it is interpreted as
-      <code>Infinity</code>;<br />
-      else if <code>exp</code> is less than -1e+6, it is interpreted as
-      <code>-Infinity</code>;<br />
-      else if <code>exp</code> is otherwise a number, it is truncated to an
-      integer;<br />
-      else it is interpreted as <code>NaN</code>.
-    </p>
-    <p>
-      Note: High value exponents may cause this method to be slow to return.
-    </p>
-    <pre>
-Math.pow(0.7, 2)             // 0.48999999999999994
-x = new BigNumber(0.7)
-x.toPower(2)                 // '0.49'
-BigNumber(3).pow(-2)         // '0.11111111111111111111'
-
-new BigNumber(123.456).toPower(1000).toString().length     // 5099
-new BigNumber(2).pow(1e+6)   // Time taken (Node.js): 9 minutes 34 secs.</pre>
-
-
-
-    <h5 id="eq">
-      equals<code class='inset'>.eq(n [, base]) &rArr; <i>boolean</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns <code>true</code> if the value of this BigNumber equals the value
-      of <code>n</code>, otherwise returns <code>false</code>.<br />
-      As with JavaScript, NaN does not equal NaN.
-      <br />Note : This method uses the <code>comparedTo</code> method
-      internally.
-    </p>
-    <pre>
-0 === 1e-324                    // true
-x = new BigNumber(0)
-x.equals('1e-324')              // false
-BigNumber(-0).eq(x)             // true  ( -0 === 0 )
-BigNumber(255).eq('ff', 16)     // true
-
-y = new BigNumber(NaN)
-y.equals(NaN)                   // false</pre>
-
-
-
-    <h5 id="gt">
-      greaterThan<code class='inset'>.gt(n [, base]) &rArr;
-      <i>boolean</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns <code>true</code> if the value of this BigNumber is greater than
-      the value of <code>n</code>, otherwise returns <code>false</code>.<br />
-      Note : This method uses the <code>comparedTo</code> method internally.
-    </p>
-    <pre>
-0.1 &gt; (0.3 - 0.2)                           // true
-x = new BigNumber(0.1)
-x.greaterThan(BigNumber(0.3).minus(0.2))    // false
-BigNumber(0).gt(x)                          // false
-BigNumber(11, 3).gt(11.1, 2)                // true</pre>
-
-
-
-    <h5 id="gte">
-      greaterThanOrEqualTo<code class='inset'>.gte(n [, base]) &rArr;
-      <i>boolean</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns <code>true</code> if the value of this BigNumber is greater than
-      or equal to the value of <code>n</code>, otherwise returns
-      <code>false</code>.<br />
-      Note : This method uses the <code>comparedTo</code> method internally.
-    </p>
-    <pre>
-(0.3 - 0.2) &gt;= 0.1                   // false
-x = new BigNumber(0.3).minus(0.2)
-x.greaterThanOrEqualTo(0.1)          // true
-BigNumber(1).gte(x)                  // true
-BigNumber(10, 18).gte('i', 36)       // true</pre>
 
 
 
@@ -1058,7 +981,8 @@ BigNumber(10, 18).gte('i', 36)       // true</pre>
     <p>
       <code>n</code> : <i>number|string|BigNumber</i><br />
       <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
       </i>
     </p>
     <p>
@@ -1082,7 +1006,8 @@ BigNumber(11.1, 2).lt(11, 3)         // true</pre>
     <p>
       <code>n</code> : <i>number|string|BigNumber</i><br />
       <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
       </i>
     </p>
     <p>
@@ -1100,33 +1025,204 @@ BigNumber(10, 18).lte('i', 36)                    // true</pre>
 
 
 
-    <h5 id="toE">
-      toExponential<code class='inset'>.toE([decimal_places]) &rArr;
-      <i>string</i></code>
+    <h5 id="minus">
+      minus<code class='inset'>.minus(n [, base]) &rArr; <i>BigNumber</i></code>
     </h5>
     <p>
-      <code>decimal_places</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber minus
+      <code>n</code>.
+    </p>
+    <pre>
+0.3 - 0.1                  // 0.19999999999999998
+x = new BigNumber(0.3)
+x.minus(0.1)               // '0.2'
+x.minus(0.6, 20)           // '0'</pre>
+
+
+
+    <h5 id="mod">
+      modulo<code class='inset'>.mod(n [, base]) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber modulo
+      <code>n</code>, i.e. the integer remainder of dividing this BigNumber by
+      <code>n</code>.
+    </p>
+    <p>
+      The result will have the same sign as this BigNumber, and it will match
+      that of JavaScript's % operator (within the limits of its precision) and
+      BigDecimal's remainder method.
+    </p>
+    <pre>
+1 % 0.9                    // 0.09999999999999998
+x = new BigNumber(1)
+x.modulo(0.9)              // '0.1'
+y = new BigNumber(33)
+y.mod('a', 33)             // '3'</pre>
+
+
+
+    <h5 id="neg">
+      negated<code class='inset'>.neg() &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber negated,
+      i.e. multiplied by -1.
+    </p>
+    <pre>
+x = new BigNumber(1.8)
+x.negated()                   // '-1.8'
+y = new BigNumber(-1.3)
+y.neg()                       // '1.3'</pre>
+
+
+
+    <h5 id="plus">
+      plus<code class='inset'>.plus(n [, base]) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber plus
+      <code>n</code>.
+    </p>
+    <pre>
+0.1 + 0.2                       // 0.30000000000000004
+x = new BigNumber(0.1)
+y = x.plus(0.2)                 // '0.3'
+BigNumber(0.7).plus(x).plus(y)  // '1'
+x.plus('0.1', 8)                // '0.225'</pre>
+
+
+
+    <h5 id="round">
+      round
+      <code class='inset'>.round([dp [, rm]]) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>dp</code> : <i>number</i> : integer, 0 to 1e+9 inclusive<br />
+      <code>rm</code> : <i>number</i> : integer, 0 to 8 inclusive
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber rounded by
+      rounding mode <code>rm</code> to a maximum of <code>dp</code> decimal
+      places.
+    </p>
+    <p>
+      if <code>dp</code> is omitted, or is <code>null</code> or undefined, the
+      return value is <code>n</code> rounded to a whole number.
+    </p>
+    <p>
+      if <code>rm</code> is omitted, or is <code>null</code> or undefined, the
+      current <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting is
+      used.
+    </p>
+    <p>
+      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or
+      out of range <code>dp</code> or <code>rm</code> values.
+    </p>
+    <pre>
+x = 1234.56
+Math.round(x)                             // 1235
+
+y = new BigNumber(x)
+y.round()                                 // '1235'
+y.round(1)                                // '1234.6'
+y.round(2)                                // '1234.56'
+y.round(10)                               // '1234.56'
+y.round(0, 1)                             // '1234'
+y.round(0, 6)                             // '1235'
+y.round(1, 1)                             // '1234.5'
+y.round(1, BigNumber.ROUND_HALF_EVEN)     // '1234.6'
+y                                         // '1234.56'</pre>
+
+
+
+    <h5 id="sqrt">
+      squareRoot<code class='inset'>.sqrt() &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      Returns a BigNumber whose value is the square root of this BigNumber,
+      correctly rounded according to the current
+      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+    </p>
+    <pre>
+x = new BigNumber(16)
+x.squareRoot()                // '4'
+y = new BigNumber(3)
+y.sqrt()                      // '1.73205080756887729353'</pre>
+
+
+
+    <h5 id="times">
+      times<code class='inset'>.times(n [, base]) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber times
+      <code>n</code>.
+    </p>
+    <pre>
+0.6 * 3                         // 1.7999999999999998
+x = new BigNumber(0.6)
+y = x.times(3)                  // '1.8'
+BigNumber('7e+500').times(y)    // '1.26e+501'
+x.times('-a', 16)               // '-6'</pre>
+
+
+
+    <h5 id="toE">
+      toExponential<code class='inset'>.toExponential([dp]) &rArr; <i>string</i></code>
+    </h5>
+    <p>
+      <code>dp</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
     </p>
     <p>
       Returns a string representing the value of this BigNumber in exponential
       notation to the specified decimal places, i.e with one digit before the
-      decimal point and <code>decimal_places</code> digits after it. If rounding
+      decimal point and <code>dp</code> digits after it. If rounding
       is necessary, the current
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
       If the value of this BigNumber in exponential notation has fewer fraction
-      digits then is specified by <code>decimal_places</code>, the return value
-      will be appended with zeros accordingly.
+      digits then is specified by <code>dp</code>, the return value will be
+      appended with zeros accordingly.
     </p>
     <p>
-      If <code>decimal_places</code> is omitted, or is <code>null</code> or
-      undefined, the number of digits after the decimal point defaults to the
-      minimum number of digits necessary to represent the value exactly.
+      If <code>dp</code> is omitted, or is <code>null</code> or undefined, the
+      number of digits after the decimal point defaults to the minimum number of
+      digits necessary to represent the value exactly.
     </p>
     <p>
       See <a href='#Errors'>Errors</a> for the treatment of other
-      non-integer or out of range <code>decimal_places</code> values.
+      non-integer or out of range <code>dp</code> values.
     </p>
     <pre>
 x = 45.6
@@ -1134,32 +1230,31 @@ y = new BigNumber(x)
 x.toExponential()         // '4.56e+1'
 y.toExponential()         // '4.56e+1'
 x.toExponential(0)        // '5e+1'
-y.toE(0)                  // '5e+1'
+y.toExponential(0)        // '5e+1'
 x.toExponential(1)        // '4.6e+1'
-y.toE(1)                  // '4.6e+1'
+y.toExponential(1)        // '4.6e+1'
 x.toExponential(3)        // '4.560e+1'
-y.toE(3)                  // '4.560e+1'</pre>
+y.toExponential(3)        // '4.560e+1'</pre>
 
 
 
     <h5 id="toF">
-      toFixed<code class='inset'>.toF([decimal_places]) &rArr;
-      <i>string</i></code>
+      toFixed<code class='inset'>.toFixed([dp]) &rArr; <i>string</i></code>
     </h5>
     <p>
-      <code>decimal_places</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
+      <code>dp</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
     </p>
     <p>
       Returns a string representing the value of this BigNumber in normal
       notation to the specified fixed number of decimal places, i.e. with
-      <code>decimal_places</code> digits after the decimal point. If rounding is
-      necessary, the current
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting is used.
+      <code>dp</code> digits after the decimal point. If rounding is necessary,
+      the current <a href='#rounding-mode'><code>ROUNDING_MODE</code></a>
+      setting is used.
     </p>
     <p>
       If the value of this BigNumber in normal notation has fewer fraction
-      digits then is specified by <code>decimal_places</code>, the return value
-      will be appended with zeros accordingly.
+      digits then is specified by <code>dp</code>, the return value will be
+      appended with zeros accordingly.
     </p>
     <p>
       Unlike <code>Number.prototype.toFixed</code>, which returns
@@ -1167,31 +1262,139 @@ y.toE(3)                  // '4.560e+1'</pre>
       this method will always return normal notation.
     </p>
     <p>
-      If <code>decimal_places</code> is omitted, or is <code>null</code> or
-      undefined, then the return value is the same as <code>n.toString()</code>.
-      This is  also unlike <code>Number.prototype.toFixed</code>, which returns
-      the value to zero decimal places.
+      If <code>dp</code> is omitted, or is <code>null</code> or undefined, then
+      the return value is the same as <code>n.toString()</code>. This is  also
+      unlike <code>Number.prototype.toFixed</code>, which returns the value to
+      zero decimal places.
     </p>
     <p>
       See <a href='#Errors'>Errors</a> for the treatment of other
-      non-integer or out of range <code>decimal_places</code> values.
+      non-integer or out of range <code>dp</code> values.
     </p>
     <pre>
 x = 45.6
 y = new BigNumber(x)
 x.toFixed()              // '46'
 y.toFixed()              // '45.6'
-y.toF(0)                 // '46'
+y.toFixed(0)             // '46'
 x.toFixed(3)             // '45.600'
-y.toF(3)                 // '45.600'</pre>
+y.toFixed(3)             // '45.600'</pre>
 
 
 
-    <h5 id="toN">toNumber<code class='inset'>.toN() &rArr; <i>number</i></code></h5>
+    <h5 id="toFo">
+       toFormat<code class='inset'>.toFormat([dp]) &rArr; <i>string</i></code>
+    </h5>
+    <p>
+      <code>dp</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
+    </p>
+    <p>
+      Returns a string representing the value of this BigNumber in normal
+      notation rounded to <code>dp</code> decimal places using the current
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a>, and formatted
+      according to the properties of the
+      <a href='#format'><code>FORMAT</code></a> object.
+    </p>
+    <p>
+      See the examples below for the properties of the
+      <a href='#format'><code>FORMAT</code></a> object, their types and their
+      usage.
+    </p>
+    <p>
+      If <code>dp</code> is omitted or is <code>null</code> or undefined, then
+      the return value is not rounded to a fixed number of decimal places.
+    </p>
+    <pre>
+format = {
+    decimalSeparator: '.',
+    groupSeparator: ',',
+    groupSize: 3,
+    secondaryGroupSize: 0,
+    fractionGroupSeparator: ' ',
+    fractionGroupSize: 0
+}
+BigNumber.config({ FORMAT: format })
+
+x = new BigNumber('123456789.123456789')
+x.toFormat()             // '123,456,789.123456789'
+x.toFormat(1)            // '123,456,789.1'
+
+// If a reference to the object assigned to FORMAT has been retained,
+// the format properties can be changed directly
+format.groupSeparator = ' '
+format.fractionGroupSize = 5
+x.toFormat()             // '123 456 789.12345 6789'
+
+BigNumber.config({
+    FORMAT: {
+        decimalSeparator = ',',
+        groupSeparator = '.',
+        groupSize = 3,
+        secondaryGroupSize = 2
+    }
+})
+
+x.toFormat(6)             // '12.34.56.789,123'</pre>
+
+
+
+    <h5 id="toFr">
+      toFraction<code class='inset'>.toFraction([max_denominator]) &rArr;
+      <i>[string, string]</i></code>
+    </h5>
+    <p>
+      <code>max_denominator</code> : <i>number|string|BigNumber</i> :
+      integer &gt;= 1 and &lt; Infinity
+    </p>
+    <p>
+      Returns a string array representing the value of this BigNumber as a
+      simple fraction with an integer numerator and an integer denominator. The
+      denominator will be a positive non-zero value less than or equal to
+      <code>max_denominator</code>.
+    </p>
+    <p>
+      If a maximum denominator is not specified, or is <code>null</code> or
+      undefined, the denominator will be the lowest value necessary to represent
+      the number exactly.
+    </p>
+    <p>
+      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or
+      out of range <code>max_denominator</code> values.
+    </p>
+    <pre>
+x = new BigNumber(1.75)
+x.toFraction()            // '7, 4'
+
+pi = new BigNumber('3.14159265358')
+pi.toFraction()                 // '157079632679,50000000000'
+pi.toFraction(100000)           // '312689, 99532'
+pi.toFraction(10000)            // '355, 113'
+pi.toFraction(100)              // '311, 99'
+pi.toFraction(10)               // '22, 7'
+pi.toFraction(1)                // '3, 1'</pre>
+
+
+
+    <h5 id="toJSON">
+      toJSON<code class='inset'>.toJSON() &rArr; <i>string</i></code>
+    </h5>
+    <p>
+      As <code>toString</code>.
+    </p>
+    <pre>
+x = new BigNumber('123.4e+567')
+str = JSON.stringify(x)</pre>
+
+
+
+    <h5 id="toN">
+      toNumber<code class='inset'>.toNumber() &rArr; <i>number</i></code>
+    </h5>
     <p>Returns the value of this BigNumber as a number primitive.</p>
     <p>
-      Type coercion with, for example, JavaScript's unary plus operator can alternatively be used,
-      but then a BigNumber with the value minus zero will convert to positive zero.
+      Type coercion with, for example, JavaScript's unary plus operator can
+      alternatively be used, but then a BigNumber with the value minus zero will
+      convert to positive zero.
     </p>
     <pre>
 x = new BigNumber(456.789)
@@ -1207,32 +1410,73 @@ z = new BigNumber(-0)
 
 
 
+    <h5 id="pow">
+      toPower<code class='inset'>.pow(n) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number</i> : integer, -1e+6 to 1e+6 inclusive
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber raised to
+      the power <code>n</code>.
+    </p>
+    <p>
+      If <code>n</code> is negative the result is rounded according to the
+      current <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+    </p>
+    <p>
+      If <code>n</code> is not an integer or is out of range:
+    </p>
+    <p class='inset'>
+      If <code>ERRORS</code> is <code>true</code> a BigNumber
+      Error is thrown,<br />
+      else if <code>n</code> is greater than 1e+6, it is interpreted as
+      <code>Infinity</code>;<br />
+      else if <code>n</code> is less than -1e+6, it is interpreted as
+      <code>-Infinity</code>;<br />
+      else if <code>n</code> is otherwise a number, it is truncated to an
+      integer;<br />
+      else it is interpreted as <code>NaN</code>.
+    </p>
+    <p>
+      Note: High value exponents may cause this method to be slow to return.
+    </p>
+    <pre>
+Math.pow(0.7, 2)             // 0.48999999999999994
+x = new BigNumber(0.7)
+x.toPower(2)                 // '0.49'
+BigNumber(3).pow(-2)         // '0.11111111111111111111'
+
+new BigNumber(2).toPower(100000).toString().length    // 30111</pre>
+
+
+
     <h5 id="toP">
-      toPrecision<code class='inset'>.toP([significant_figures]) &rArr;
+      toPrecision<code class='inset'>.toPrecision([sd]) &rArr;
       <i>string</i></code>
     </h5>
     <p>
-      <code>significant_figures</code> : <i>number</i> : integer, 1 to 1e+9
-      inclusive
+      <code>sd</code> : <i>number</i> : integer, 1 to 1e+9 inclusive
     </p>
     <p>
-      Returns a string representing the value of this BigNumber to the
-      specified number of significant digits. If rounding is necessary, the
-      current <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting is
-      used.
+      Returns a string representing the value of this BigNumber to
+      <code>sd</code> significant digits. If rounding is necessary, the
+      current <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting
+      is used.
     </p>
     <p>
-      If <code>significant_figures</code> is less than the number of digits
-      necessary to represent the integer part of the value in normal notation,
-      then exponential notation is used.
+      If <code>sd</code> is less than the number of digits necessary to
+      represent the integer part of the value in normal notation, then
+      exponential notation is used.
     </p>
     <p>
-      If <code>significant_figures</code> is omitted, or is <code>null</code> or
-      undefined, then the return value is the same as <code>n.toString()</code>.
+      If <code>sd</code> is omitted, or is <code>null</code> or undefined,
+      then the return value is the same as <code>n.toString()</code>.
     </p>
     <p>
       See <a href='#Errors'>Errors</a> for the treatment of other
-      non-integer or out of range <code>significant_figures</code> values.
+      non-integer or out of range <code>sd</code> values.
     </p>
     <pre>
 x = 45.6
@@ -1240,14 +1484,14 @@ y = new BigNumber(x)
 x.toPrecision()           // '45.6'
 y.toPrecision()           // '45.6'
 x.toPrecision(1)          // '5e+1'
-y.toP(1)                  // '5e+1'
+y.toPrecision(1)          // '5e+1'
 x.toPrecision(5)          // '45.600'
-y.toP(5)                  // '45.600'</pre>
+y.toPrecision(5)          // '45.600'</pre>
 
 
 
     <h5 id="toS">
-      toString<code class='inset'>.toS([base]) &rArr; <i>string</i></code>
+      toString<code class='inset'>.toString([base]) &rArr; <i>string</i></code>
     </h5>
     <p>
       <code>base</code> : <i>number</i> : integer, 2 to 64 inclusive
@@ -1280,7 +1524,7 @@ y.toP(5)                  // '45.600'</pre>
     <pre>
 x = new BigNumber(750000)
 x.toString()                    // '750000'
-BigNumber.config({ EXPONENTIAL_AT : 5 })
+BigNumber.config({ EXPONENTIAL_AT: 5 })
 x.toString()                    // '7.5e+5'
 
 y = new BigNumber(362.875)
@@ -1288,7 +1532,7 @@ y.toString(2)                   // '101101010.111'
 y.toString(9)                   // '442.77777777777777777778'
 y.toString(32)                  // 'ba.s'
 
-BigNumber.config({ DECIMAL_PLACES : 4 });
+BigNumber.config({ DECIMAL_PLACES: 4 });
 z = new BigNumber('1.23456789')
 z.toString()                    // '1.23456789'
 z.toString(10)                  // '1.2346'</pre>
@@ -1307,116 +1551,34 @@ x.valueOf()                      // '1.777e+457'</pre>
 
 
 
-    <h5 id="toFr">
-      toFraction<code class='inset'>.toFr([max_denominator]) &rArr;
-      <i>[string, string]</i></code>
-    </h5>
-    <p>
-      <code>max_denominator</code> : <i>number|string|BigNumber</i> :
-      integer &gt;= 1 and &lt; Infinity
-    </p>
-    <p>
-      Returns a string array representing the value of this BigNumber as a
-      simple fraction with an integer numerator and an integer denominator. The
-      denominator will be a positive non-zero value less than or equal to
-      <code>max_denominator</code>.
-    </p>
-    <p>
-      If a maximum denominator is not specified, or is <code>null</code> or
-      undefined, the denominator will be the lowest value necessary to represent
-      the number exactly.
-    </p>
-    <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or
-      out of range <code>max_denominator</code> values.
-    </p>
-    <pre>
-x = new BigNumber(1.75)
-x.toFraction()            // '7, 4'
-
-pi = new BigNumber('3.14159265358')
-pi.toFr()                 // '157079632679,50000000000'
-pi.toFr(100000)           // '312689, 99532'
-pi.toFr(10000)            // '355, 113'
-pi.toFr(100)              // '311, 99'
-pi.toFr(10)               // '22, 7'
-pi.toFr(1)                // '3, 1'</pre>
-
-
-
-    <h5 id="round">
-      round<code class='inset'>.round([decimal_places [, rounding_mode]])
-      &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>decimal_places</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
-      <br />
-      <code>rounding_mode</code> : <i>number</i> : integer, 0 to 8 inclusive
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber rounded by
-      the specified <code>rounding_mode</code> to a maximum of
-      <code>decimal_places</code> digits after the decimal point.
-    </p>
-    <p>
-      if <code>decimal_places</code> is omitted, or is <code>null</code> or
-      undefined, the return value is <code>n</code> rounded to a whole number.
-    </p>
-    <p>
-      if <code>rounding_mode</code> is omitted, or is <code>null</code> or
-      undefined, the current
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting is used.
-    </p>
-    <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other
-      non-integer or out of range <code>decimal_places</code> or
-      <code>rounding_mode</code> values.
-    </p>
-    <pre>
-x = 1234.56
-Math.round(x)                             // 1235
-
-y = new BigNumber(x)
-y.round()                                 // '1235'
-y.round(1)                                // '1234.6'
-y.round(2)                                // '1234.56'
-y.round(10)                               // '1234.56'
-y.round(0, 1)                             // '1234'
-y.round(0, 6)                             // '1235'
-y.round(1, 1)                             // '1234.5'
-y.round(1, BigNumber.ROUND_HALF_EVEN)     // '1234.6'
-y                                         // '1234.56'</pre>
-
-
-
     <h4 id="instance-properties">Properties</h4>
     <p>
       A BigNumber is an object with three properties:
     </p>
     <table>
       <tr>
-      	<th>Property</th>
-      	<th>Description</th>
-      	<th>Type</th>
-      	<th>Value</th>
+        <th>Property</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Value</th>
       </tr>
       <tr>
-      	<td class='centre' id='coefficient'><b>c</b></td>
-      	<td>coefficient<sup>*</sup></td>
-      	<td><i>number</i><code>[]</code></td>
-      	<td> Array of single digits</td>
+        <td class='centre' id='coefficient'><b>c</b></td>
+        <td>coefficient<sup>*</sup></td>
+        <td><i>number</i><code>[]</code></td>
+        <td> Array of base 1e14 numbers</td>
       </tr>
       <tr>
-      	<td class='centre' id='exponent'><b>e</b></td>
-      	<td>exponent</td>
-      	<td><i>number</i></td>
-      	<td>Integer, -1e+9 to 1e+9 inclusive</td>
+        <td class='centre' id='exponent'><b>e</b></td>
+        <td>exponent</td>
+        <td><i>number</i></td>
+        <td>Integer, -1e9 to 1e9 inclusive</td>
       </tr>
       <tr>
-      	<td class='centre' id='sign'><b>s</b></td>
-      	<td>sign</td>
-      	<td><i>number</i></td>
-      	<td>-1 or 1</td>
+        <td class='centre' id='sign'><b>s</b></td>
+        <td>sign</td>
+        <td><i>number</i></td>
+        <td>-1 or 1</td>
       </tr>
     </table>
     <p><sup>*</sup>significand</p>
@@ -1424,10 +1586,17 @@ y                                         // '1234.56'</pre>
       The value of any of the three properties may also be <code>null</code>.
     </p>
     <p>
-      The value of a BigNumber is stored in a normalised decimal floating point
-      format which corresponds to the value's <code>toExponential</code> form,
-      with the decimal point to be positioned after the most significant
-      (left-most) digit of the coefficient.
+      From version 2 of this library, the value of the coefficient of a
+      BigNumber is stored in a normalised base <code>100000000000000</code>
+      floating point format, as opposed to the base 10 format used in version 1.
+    </p>
+    <p>
+      This change means the properties of a BigNumber are now best considered to
+      be read-only. Previously it was acceptable to change the exponent of a
+      BigNumber by writing to its exponent property directly, but this is no
+      longer recommended as the number of digits in the first element of the
+      coefficient array is dependent on the exponent, so the coefficient would
+      also need to be altered.
     </p>
     <p>
       Note that, as with JavaScript numbers, the original exponent and
@@ -1448,26 +1617,6 @@ z.e                                   // 4
 z.s                                   // -1</pre>
 
 
-    <p>
-      A BigNumber is mutable in the sense that the value of its properties can
-      be changed.<br />
-      For example, to rapidly shift a value by a power of 10:
-    </p>
-    <pre>
-x = new BigNumber('1234.000')      // '1234'
-x.toExponential()                  // '1.234e+3'
-x.c                                // '1,2,3,4'
-x.e                                // 3
-
-x.e = -5
-x                                  // '0.00001234'</pre>
-    <p>
-      If changing the coefficient array directly, which is not recommended, be
-      careful to avoid leading or trailing zeros (unless zero itself is being
-      represented).
-    </p>
-
-
 
     <h4 id="zero-nan-infinity">Zero, NaN and Infinity</h4>
     <p>
@@ -1475,28 +1624,28 @@ x                                  // '0.00001234'</pre>
     </p>
     <table>
       <tr>
-      	<th> </th>
-      	<th class='centre'>c</th>
-      	<th class='centre'>e</th>
-      	<th class='centre'>s</th>
+        <th> </th>
+        <th class='centre'>c</th>
+        <th class='centre'>e</th>
+        <th class='centre'>s</th>
       </tr>
       <tr>
-      	<td>&plusmn;0</td>
-      	<td><code>[0]</code></td>
-      	<td><code>0</code></td>
-      	<td><code>&plusmn;1</code></td>
+        <td>&plusmn;0</td>
+        <td><code>[0]</code></td>
+        <td><code>0</code></td>
+        <td><code>&plusmn;1</code></td>
       </tr>
       <tr>
-      	<td>NaN</td>
-      	<td><code>null</code></td>
-      	<td><code>null</code></td>
-      	<td><code>null</code></td>
+        <td>NaN</td>
+        <td><code>null</code></td>
+        <td><code>null</code></td>
+        <td><code>null</code></td>
       </tr>
       <tr>
-      	<td>&plusmn;Infinity</td>
-      	<td><code>null</code></td>
-      	<td><code>null</code></td>
-      	<td><code>&plusmn;1</code></td>
+        <td>&plusmn;Infinity</td>
+        <td><code>null</code></td>
+        <td><code>null</code></td>
+        <td><code>&plusmn;1</code></td>
       </tr>
     </table>
     <pre>
@@ -1519,15 +1668,16 @@ y.s                     // -1</pre>
     </p>
     <table class='error-table'>
       <tr>
-      	<th>Method(s)</th>
-      	<th>ERRORS : true<br />Throw BigNumber Error</th>
-      	<th>ERRORS : false<br />Action on invalid argument</th>
+        <th>Method(s)</th>
+        <th>ERRORS: true<br />Throw BigNumber Error</th>
+        <th>ERRORS: false<br />Action on invalid argument</th>
       </tr>
       <tr>
-      	<td rowspan=5><code>
+        <td rowspan=5><code>
         BigNumber<br />
         comparedTo<br />
         dividedBy<br />
+        dividedToIntegerBy<br />
         equals<br />
         greaterThan<br />
         greaterThanOrEqualTo<br />
@@ -1537,148 +1687,151 @@ y.s                     // -1</pre>
         mod<br />
         plus<br />
         times</code></td>
-      	<td>number type has more than<br />15 significant digits</td>
-      	<td>Accept.</td>
+        <td>number type has more than<br />15 significant digits</td>
+        <td>Accept.</td>
       </tr>
       <tr>
-      	<td>not a base... number</td>
-      	<td>Substitute <code>NaN</code>.</td>
+        <td>not a base... number</td>
+        <td>Substitute <code>NaN</code>.</td>
       </tr>
       <tr>
-      	<td>base not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td>base not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>base out of range</td>
-      	<td>Ignore.</td>
+        <td>base out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>not a number<sup>*</sup></td>
-      	<td>Substitute <code>NaN</code>.</td>
+        <td>not a number<sup>*</sup></td>
+        <td>Substitute <code>NaN</code>.</td>
       </tr>
       <tr>
-      	<td rowspan=9><code>config</code></td>
-      	<td><code>DECIMAL_PLACES</code> not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=10><code>config</code></td>
+        <td><code>DECIMAL_PLACES</code> not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td><code>DECIMAL_PLACES</code> out of range</td>
-      	<td>Ignore.</td>
+        <td><code>DECIMAL_PLACES</code> out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td><code>ROUNDING_MODE</code> not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td><code>ROUNDING_MODE</code> not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td><code>ROUNDING_MODE</code> out of range</td>
-      	<td>Ignore.</td>
+        <td><code>ROUNDING_MODE</code> out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>
+        <td>
           <code>EXPONENTIAL_AT</code> not an integer<br />
           or not [integer, integer]
         </td>
-      	<td>Truncate to integer(s).<br />Ignore if not number(s).</td>
+        <td>Truncate to integer(s).<br />Ignore if not number(s).</td>
       </tr>
       <tr>
-      	<td>
+        <td>
           <code>EXPONENTIAL_AT</code> out of range<br />
           or not [negative, positive]
         </td>
-      	<td>Ignore.</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>
+        <td>
           <code>RANGE</code> not a non-zero integer<br />
           or not [integer, integer]
         </td>
-      	<td> Truncate to integer(s).<br />Ignore if zero or not number(s).</td>
+        <td> Truncate to integer(s).<br />Ignore if zero or not number(s).</td>
       </tr>
        <tr>
-      	<td>
+        <td>
           <code>RANGE</code> out of range<br />
           or not [negative, positive]
         </td>
-      	<td>Ignore.</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>
+        <td>
           <code>ERRORS</code> not a boolean<br />
           or binary digit
         </td>
-      	<td>Ignore.</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toPower</code></td>
-      	<td>exponent not an integer</td>
-      	<td>Truncate to integer.<br />Substitute <code>NaN</code> if not a number.</td>
+        <td>
+          <code>FORMAT</code> not an object
+        </td>
+        <td>Ignore.</td>
+      </tr>
+      <tr>
+        <td rowspan=2><code>toPower</code></td>
+        <td>exponent not an integer</td>
+        <td>
+          Truncate to integer.<br />Substitute <code>NaN</code> if not a number.
+        </td>
       </tr>
        <tr>
-      	<td>exponent out of range</td>
-      	<td>Substitute <code>&plusmn;Infinity</code>.
+        <td>exponent out of range</td>
+        <td>Substitute <code>&plusmn;Infinity</code>.
         </td>
       </tr>
       <tr>
-      	<td rowspan=4><code>round</code></td>
-      	<td>decimal places not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=4><code>round</code></td>
+        <td>decimal places not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>decimal places out of range</td>
-      	<td>Ignore.</td>
+        <td>decimal places out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>mode not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td>mode not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>mode out of range</td>
-      	<td>Ignore.</td>
+        <td>mode out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toExponential</code></td>
-      	<td>decimal places not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=2>
+          <code>toExponential</code><br />
+          <code>toFixed</code><br />
+          <code>toFormat</code>
+        </td>
+        <td>decimal places not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>decimal places out of range</td>
-      	<td>Ignore.</td>
+        <td>decimal places out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toFixed</code></td>
-      	<td>decimal places not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=2><code>toFraction</code></td>
+        <td>max denominator not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>decimal places out of range</td>
-      	<td>Ignore.</td>
+        <td>max denominator out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toFraction</code></td>
-      	<td>max denominator not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=2><code>toPrecision</code></td>
+        <td>precision not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>max denominator out of range</td>
-      	<td>Ignore.</td>
+        <td>precision out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toPrecision</code></td>
-      	<td>precision not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=2><code>toString</code></td>
+        <td>base not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>precision out of range</td>
-      	<td>Ignore.</td>
-      </tr>
-      <tr>
-      	<td rowspan=2><code>toString</code></td>
-      	<td>base not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
-      </tr>
-      <tr>
-      	<td>base out of range</td>
-      	<td>Ignore.</td>
+        <td>base out of range</td>
+        <td>Ignore.</td>
       </tr>
     </table>
     <p>
@@ -1748,8 +1901,8 @@ z = x.multiply(y)                 // 4.1400000</pre>
 
   </div>
   <script>
-  /*! bignumber.js v1.5.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
-(function(n){"use strict";function i(n,t){var c,l,a,b,w,p,s=this;if(!(s instanceof i))return new i(n,t);if(n instanceof i)if(u=0,t!==c)n+="";else{s.s=n.s;s.e=n.e;s.c=(n=n.c)?n.slice():n;return}if(typeof n!="string"&&(n=(a=typeof n=="number"||Object.prototype.toString.call(n)=="[object Number]")&&n===0&&1/n<0?"-0":n+""),p=n,t===c&&g.test(n))s.s=n.charAt(0)=="-"?(n=n.slice(1),-1):1;else{if(t==10)return k(n,e,r);if(n=rt.call(n).replace(/^\+(?!-)/,""),s.s=n.charAt(0)=="-"?(n=n.replace(/^-(?!-)/,""),-1):1,t!=null?t!=(t|0)&&y||(o=!(t>=2&&t<65))?(f(t,2),w=g.test(n)):(b="["+d.slice(0,t=t|0)+"]+",n=n.replace(/\.$/,"").replace(/^\./,"0."),(w=new RegExp("^"+b+"(?:\\."+b+")?$",t<37?"i":"").test(n))?(a&&(n.replace(/^0\.0*|\./,"").length>15&&f(p,0),a=!a),n=tt(n,10,t,s.s)):n!="Infinity"&&n!="NaN"&&(f(p,1,t),n="NaN")):w=g.test(n),!w){s.c=s.e=null;n!="Infinity"&&(n!="NaN"&&f(p,3),s.s=null);u=0;return}}for((c=n.indexOf("."))>-1&&(n=n.replace(".","")),(l=n.search(/e/i))>0?(c<0&&(c=l),c+=+n.slice(l+1),n=n.substring(0,l)):c<0&&(c=n.length),l=0;n.charAt(l)=="0";l++);if(t=n.length,a&&t>15&&n.slice(l).length>15&&f(p,0),u=0,(c-=l+1)>h)s.c=s.e=null;else if(l==t||c<v)s.c=[s.e=0];else{for(;n.charAt(--t)=="0";);for(s.e=c,s.c=[],c=0;l<=t;s.c[c++]=+n.charAt(l++));}}function f(n,t,i,r,f,e){if(y){var c,s=["new BigNumber","cmp","div","eq","gt","gte","lt","lte","minus","mod","plus","times","toFr"][u?u<0?-u:u:1/u<0?1:0]+"()",h=o?" out of range":" not a"+(f?" non-zero":"n")+" integer";h=([s+" number type has more than 15 significant digits",s+" not a base "+i+" number",s+" base"+h,s+" not a number"][t]||i+"() "+t+(e?" not a boolean or binary digit":h+(r?" or not ["+(o?" negative, positive":" integer, integer")+" ]":"")))+": "+n;o=u=0;c=new Error(h);c.name="BigNumber Error";throw c;}}function tt(n,t,r,u){function h(n,i){var u,e=0,s=n.length,o,f=[0];for(i=i||r;e<s;e++){for(o=f.length,u=0;u<o;f[u]*=i,u++);for(f[0]+=d.indexOf(n.charAt(e)),u=0;u<f.length;u++)f[u]>t-1&&(f[u+1]==null&&(f[u+1]=0),f[u+1]+=f[u]/t^0,f[u]%=t)}return f.reverse()}function o(n){for(var t=0,r=n.length,i="";t<r;i+=d.charAt(n[t++]));return i}var e,c,l,f,s,a;if(r<37&&(n=n.toLowerCase()),(e=n.indexOf("."))>-1)if(e=n.length-e-1,c=h(new i(r).pow(e).toF(),10),f=n.split("."),l=h(f[1]),f=h(f[0]),a=it(l,c,l.length-c.length,u,t,f[f.length-1]&1),s=a.c,e=a.e){for(;++e;s.unshift(0));n=o(f)+"."+o(s)}else s[0]?f[e=f.length-1]<t-1?(++f[e],n=o(f)):n=new i(o(f),t).plus(p).toS(t):n=o(f);else n=o(h(n));return n}function it(n,t,r,u,f,o){var y,d,k,w,a,rt=t.slice(),g=y=t.length,ut=n.length,s=n.slice(0,y),c=s.length,l=new i(p),nt=l.c=[],tt=0,it=e+(l.e=r)+1;for(l.s=u,u=it<0?0:it;c++<y;s.push(0));rt.unshift(0);do{for(k=0;k<f;k++){if(y!=(c=s.length))w=y>c?1:-1;else for(a=-1,w=0;++a<y;)if(t[a]!=s[a]){w=t[a]>s[a]?1:-1;break}if(w<0){for(d=c==y?t:rt;c;){if(s[--c]<d[c]){for(a=c;a&&!s[--a];s[a]=f-1);--s[a];s[c]+=f}s[c]-=d[c]}for(;!s[0];s.shift());}else break}nt[tt++]=w?k:++k;s[0]&&w?s[c]=n[g]||0:s=[n[g]]}while((g++<ut||s[0]!=null)&&u--);return nt[0]||tt==1||(--l.e,nt.shift()),tt>it&&b(l,e,f,o,s[0]!=null),l.e>h?l.c=l.e=null:l.e<v&&(l.c=[l.e=0]),l}function w(n,t,r){var u=t-(n=new i(n)).e,f=n.c;if(!f)return n.toS();for(f.length>++t&&b(n,u,10),u=f[0]==0?u+1:r?t:n.e+u+1;f.length<u;f.push(0));return u=n.e,r==1||r==2&&(--t<u||u<=c)?(n.s<0&&f[0]?"-":"")+(f.length>1?(f.splice(1,0,"."),f.join("")):f[0])+(u<0?"e":"e+")+u:n.toS()}function b(n,t,i,u,f){var e=n.c,s=n.s<0,c=i/2,o=n.e+t+1,h=e[o],l=f||o<0||e[o+1]!=null;if(f=r<4?(h!=null||l)&&(r==0||r==2&&!s||r==3&&s):h>c||h==c&&(r==4||l||r==6&&(e[o-1]&1||!t&&u)||r==7&&!s||r==8&&s),o<1||!e[0])return e.length=0,e.push(0),f?(e[0]=1,n.e=-t):n.e=0,n;if(e.length=o--,f)for(--i;++e[o]>i;)e[o]=0,o--||(++n.e,e.unshift(1));for(o=e.length;!e[--o];e.pop());return n}function k(n,t,u){var f=r;return r=u,n=new i(n),n.c&&b(n,t,10),r=f,n}var s=1e9,nt=1e6,e=20,r=4,c=-7,a=21,v=-s,h=s,y=!0,l=parseInt,t=i.prototype,d="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_",o,u=0,g=/^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,rt=String.prototype.trim||function(){return this.replace(/^\s+|\s+$/g,"")},p=i(1);i.ROUND_UP=0;i.ROUND_DOWN=1;i.ROUND_CEIL=2;i.ROUND_FLOOR=3;i.ROUND_HALF_UP=4;i.ROUND_HALF_DOWN=5;i.ROUND_HALF_EVEN=6;i.ROUND_HALF_CEIL=7;i.ROUND_HALF_FLOOR=8;i.config=function(){var n,t,g=0,p={},d=arguments,k=d[0],w="config",i=function(n,t,i){return!((o=n<t||n>i)||l(n)!=n&&n!==0)},b=k&&typeof k=="object"?function(){if(k.hasOwnProperty(t))return(n=k[t])!=null}:function(){if(d.length>g)return(n=d[g++])!=null};return b(t="DECIMAL_PLACES")&&(i(n,0,s)?e=n|0:f(n,t,w)),p[t]=e,b(t="ROUNDING_MODE")&&(i(n,0,8)?r=n|0:f(n,t,w)),p[t]=r,b(t="EXPONENTIAL_AT")&&(i(n,-s,s)?c=-(a=~~(n<0?-n:+n)):!o&&n&&i(n[0],-s,0)&&i(n[1],0,s)?(c=~~n[0],a=~~n[1]):f(n,t,w,1)),p[t]=[c,a],b(t="RANGE")&&(i(n,-s,s)&&~~n?v=-(h=~~(n<0?-n:+n)):!o&&n&&i(n[0],-s,-1)&&i(n[1],1,s)?(v=~~n[0],h=~~n[1]):f(n,t,w,1,1)),p[t]=[v,h],b(t="ERRORS")&&(n===!!n||n===1||n===0?l=(o=u=0,y=!!n)?parseInt:parseFloat:f(n,t,w,0,0,1)),p[t]=y,p};t.abs=t.absoluteValue=function(){var n=new i(this);return n.s<0&&(n.s=1),n};t.ceil=function(){return k(this,0,2)};t.comparedTo=t.cmp=function(n,t){var f,l=this,e=l.c,o=(u=-u,n=new i(n,t)).c,r=l.s,c=n.s,s=l.e,h=n.e;if(!r||!c)return null;if(f=e&&!e[0],t=o&&!o[0],f||t)return f?t?0:-c:r;if(r!=c)return r;if(f=r<0,t=s==h,!e||!o)return t?0:!e^f?1:-1;if(!t)return s>h^f?1:-1;for(r=-1,c=(s=e.length)<(h=o.length)?s:h;++r<c;)if(e[r]!=o[r])return e[r]>o[r]^f?1:-1;return s==h?0:s>h^f?1:-1};t.decimalPlaces=t.dp=function(){var n;return this.c?(n=this.c.length-this.e-1,n<0?0:n):null};t.dividedBy=t.div=function(n,t){var r=this.c,o=this.e,s=this.s,f=(u=2,n=new i(n,t)).c,h=n.e,c=n.s,e=s==c?1:-1;return!o&&(!r||!r[0])||!h&&(!f||!f[0])?new i(!s||!c||(r?f&&r[0]==f[0]:!f)?NaN:r&&r[0]==0||!f?e*0:e/0):it(r,f,o-h,e,10)};t.equals=t.eq=function(n,t){return u=3,this.cmp(n,t)===0};t.floor=function(){return k(this,0,3)};t.greaterThan=t.gt=function(n,t){return u=4,this.cmp(n,t)>0};t.greaterThanOrEqualTo=t.gte=function(n,t){return u=5,(t=this.cmp(n,t))==1||t===0};t.isFinite=t.isF=function(){return!!this.c};t.isNaN=function(){return!this.s};t.isNegative=t.isNeg=function(){return this.s<0};t.isZero=t.isZ=function(){return!!this.c&&this.c[0]==0};t.lessThan=t.lt=function(n,t){return u=6,this.cmp(n,t)<0};t.lessThanOrEqualTo=t.lte=function(n,t){return u=7,(t=this.cmp(n,t))==-1||t===0};t.minus=function(n,t){var h,l,a,y,c=this,o=c.s;if(t=(u=8,n=new i(n,t)).s,!o||!t)return new i(NaN);if(o!=t)return n.s=-t,c.plus(n);var f=c.c,p=c.e,e=n.c,s=n.e;if(!p||!s){if(!f||!e)return f?(n.s=-t,n):new i(e?c:NaN);if(!f[0]||!e[0])return e[0]?(n.s=-t,n):new i(f[0]?c:r==3?-0:0)}if(f=f.slice(),o=p-s){for(h=(y=o<0)?(o=-o,f):(s=p,e),h.reverse(),t=o;t--;h.push(0));h.reverse()}else for(a=((y=f.length<e.length)?f:e).length,o=t=0;t<a;t++)if(f[t]!=e[t]){y=f[t]<e[t];break}if(y&&(h=f,f=e,e=h,n.s=-n.s),(t=-((a=f.length)-e.length))>0)for(;t--;f[a++]=0);for(t=e.length;t>o;){if(f[--t]<e[t]){for(l=t;l&&!f[--l];f[l]=9);--f[l];f[t]+=10}f[t]-=e[t]}for(;f[--a]==0;f.pop());for(;f[0]==0;f.shift(),--s);return(s<v||!f[0])&&(f[0]||(n.s=r==3?-1:1),f=[s=0]),n.c=f,n.e=s,n};t.modulo=t.mod=function(n,t){var f=this,h=f.c,c=(u=9,n=new i(n,t)).c,o=f.s,s=n.s;return(t=!o||!s||c&&!c[0],t||h&&!h[0])?new i(t?NaN:f):(f.s=n.s=1,t=n.cmp(f)==1,f.s=o,n.s=s,t?new i(f):(o=e,s=r,e=0,r=1,f=f.div(n),e=o,r=s,this.minus(f.times(n))))};t.negated=t.neg=function(){var n=new i(this);return n.s=-n.s||null,n};t.plus=function(n,t){var o,c=this,f=c.s;if(t=(u=10,n=new i(n,t)).s,!f||!t)return new i(NaN);if(f!=t)return n.s=-t,c.minus(n);var l=c.e,r=c.c,s=n.e,e=n.c;if(!l||!s){if(!r||!e)return new i(f/0);if(!r[0]||!e[0])return e[0]?n:new i(r[0]?c:f*0)}if(r=r.slice(),f=l-s){for(o=f>0?(s=l,e):(f=-f,r),o.reverse();f--;o.push(0));o.reverse()}for(r.length-e.length<0&&(o=e,e=r,r=o),f=e.length,t=0;f;t=(r[--f]=r[f]+e[f]+t)/10^0,r[f]%=10);for(t&&(r.unshift(t),++s>h&&(r=s=null)),f=r.length;r[--f]==0;r.pop());return n.c=r,n.e=s,n};t.toPower=t.pow=function(n){var t=n*0==0?n|0:n,r=new i(this),u=new i(p);if(((o=n<-nt||n>nt)&&(t=n/0)||l(n)!=n&&n!==0&&!(t=NaN))&&!f(n,"exponent","pow")||!t)return new i(Math.pow(r.toS(),t));for(t=t<0?-t:t;;){if(t&1&&(u=u.times(r)),t>>=1,!t)break;r=r.times(r)}return n<0?p.div(u):u};t.round=function(n,t){return n=n==null||((o=n<0||n>s)||l(n)!=n)&&!f(n,"decimal places","round")?0:n|0,t=t==null||((o=t<0||t>8)||l(t)!=t&&t!==0)&&!f(t,"mode","round")?r:t|0,k(this,n,t)};t.squareRoot=t.sqrt=function(){var o,u,c,s,h=this,n=h.c,t=h.s,f=h.e,l=e,a=r,v=new i("0.5");if(t!==1||!n||!n[0])return new i(!t||t<0&&(!n||n[0])?NaN:n?h:1/0);for(t=Math.sqrt(h.toS()),r=1,t==0||t==1/0?(o=n.join(""),o.length+f&1||(o+="0"),u=new i(Math.sqrt(o)+""),u.c||(u.c=[1]),u.e=((f+1)/2|0)-(f<0||f&1)):u=new i(o=t.toString()),c=u.e,t=c+(e+=4),t<3&&(t=0),f=t;;)if(s=u,u=v.times(s.plus(h.div(s))),s.c.slice(0,t).join("")===u.c.slice(0,t).join(""))if(n=u.c,t=t-(o&&u.e<c),n[t]==9&&n[t-1]==9&&n[t-2]==9&&(n[t-3]==9||o&&n[t-3]==4)){if(o&&n[t-3]==9&&(s=u.round(l,0),s.times(s).eq(h)))return r=a,e=l,s;e+=4;t+=4;o=""}else{if(!n[f]&&!n[f-1]&&!n[f-2]&&(!n[f-3]||n[f-3]==5)&&(n.length>f-2&&(n.length=f-2),!u.times(u).eq(h))){while(n.length<f-3)n.push(0);n[f-3]++}return r=a,b(u,e=l,10),u}};t.times=function(n,t){var f,l=this,e=l.c,o=(u=11,n=new i(n,t)).c,s=l.e,r=n.e,c=l.s;if(n.s=c==(t=n.s)?1:-1,!s&&(!e||!e[0])||!r&&(!o||!o[0]))return new i(!c||!t||e&&!e[0]&&!o||o&&!o[0]&&!e?NaN:!e||!o?n.s/0:n.s*0);for(n.e=s+r,(c=e.length)<(t=o.length)&&(f=e,e=o,o=f,r=c,c=t,t=r),r=c+t,f=[];r--;f.push(0));for(s=t-1;s>-1;s--){for(t=0,r=c+s;r>s;t=f[r]+o[s]*e[r-s-1]+t,f[r--]=t%10|0,t=t/10|0);t&&(f[r]=(f[r]+t)%10)}for(t&&++n.e,f[0]||f.shift(),r=f.length;!f[--r];f.pop());return n.c=n.e>h?n.e=null:n.e<v?[n.e=0]:f,n};t.toExponential=t.toE=function(n){return w(this,(n==null||((o=n<0||n>s)||l(n)!=n&&n!==0)&&!f(n,"decimal places","toE"))&&this.c?this.c.length-1:n|0,1)};t.toFixed=t.toF=function(n){var u,t,r,i=this;return n==null||((o=n<0||n>s)||l(n)!=n&&n!==0)&&!f(n,"decimal places","toF")||(r=i.e+(n|0)),u=c,n=a,c=-(a=1/0),r==t?t=i.toS():(t=w(i,r),i.s<0&&i.c&&(i.c[0]?t.indexOf("-")<0&&(t="-"+t):t=t.replace(/^-/,""))),c=u,a=n,t};t.toFraction=t.toFr=function(n){var k,nt,c,l,t,s,d,a=l=new i(p),v=c=new i("0"),w=this,g=w.c,tt=h,it=e,rt=r,b=new i(p);if(!g)return w.toS();for(d=b.e=g.length-w.e-1,(n==null||(!(u=12,s=new i(n)).s||(o=s.cmp(a)<0||!s.c)||y&&s.e<s.c.length-1)&&!f(n,"max denominator","toFr")||(n=s).cmp(b)>0)&&(n=d>0?b:a),h=1/0,s=new i(g.join("")),e=0,r=1;;){if(k=s.div(b),t=l.plus(k.times(v)),t.cmp(n)==1)break;l=v;v=t;a=c.plus(k.times(t=a));c=t;b=s.minus(k.times(t=b));s=t}return t=n.minus(l).div(v),c=c.plus(t.times(a)),l=l.plus(t.times(v)),c.s=a.s=w.s,e=d*2,r=rt,nt=a.div(v).minus(w).abs().cmp(c.div(l).minus(w).abs())<1?[a.toS(),v.toS()]:[c.toS(),l.toS()],h=tt,e=it,nt};t.toPrecision=t.toP=function(n){return n==null||((o=n<1||n>s)||l(n)!=n)&&!f(n,"precision","toP")?this.toS():w(this,--n|0,2)};t.toString=t.toS=function(n){var u,t,e,r=this,i=r.e;if(i===null)t=r.s?"Infinity":"NaN";else{if(n===u&&(i<=c||i>=a))return w(r,r.c.length-1,1);if(t=r.c.join(""),i<0){for(;++i;t="0"+t);t="0."+t}else if(e=t.length,i>0)if(++i>e)for(i-=e;i--;t+="0");else i<e&&(t=t.slice(0,i)+"."+t.slice(i));else if(u=t.charAt(0),e>1)t=u+"."+t.slice(1);else if(u=="0")return u;if(n!=null)if((o=!(n>=2&&n<65))||n!=(n|0)&&y)f(n,"base","toS");else if(t=tt(t,n|0,10,r.s),t=="0")return t}return r.s<0?"-"+t:t};t.toNumber=t.toN=function(){var n=this;return+n||(n.s?0*n.s:NaN)};t.valueOf=t.toJSON=function(){return this.toS()};typeof module!="undefined"&&module.exports?module.exports=i:typeof define=="function"&&define.amd?define(function(){return i}):n.BigNumber=i})(this)
+  /*! bignumber.js v2.0.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
+  (function(n){"use strict";function t(n,i){var b,a,l,p,o,w,s=this;if(!(s instanceof t))return new t(n,i);if(n instanceof t){if(i==null){u=0;s.s=n.s;s.e=n.e;s.c=(n=n.c)?n.slice():n;return}n+=""}else if(p=(o=typeof n)=="number"){if(i==null&&n===~~n){for(s.s=1/n<0?(n=-n,-1):1,a=u=0,l=n;l>=10;l/=10,a++);s.e=a;s.c=[n];return}n=n===0&&1/n<0?"-0":n+""}else o!="string"&&(n+="");if(o=n,i==null&&ft.test(o))s.s=o.charCodeAt(0)===45?(o=o.slice(1),-1):1;else{if(i==10)return s=new t(o),y(s,c+s.e+1,h);if(o=lt.call(o).replace(/^\+(?!-)/,""),s.s=o.charCodeAt(0)===45?(o=o.replace(/^-(?!-)/,""),-1):1,i!=null?i!=~~i&&d||(e=!(i>=2&&i<65))?(f(i,2),w=ft.test(o)):(b="["+ut.slice(0,i=i|0)+"]+",o=o.replace(/\.$/,"").replace(/^\./,"0."),(w=new RegExp("^"+b+"(?:\\."+b+")?$",i<37?"i":"").test(o))?(p&&(o.replace(/^0\.0*|\./,"").length>15&&f(n,0),p=!p),o=ct(o,10,i,s.s)):o!="Infinity"&&o!="NaN"&&(f(n,1,i),n="NaN")):w=ft.test(o),!w){s.c=s.e=null;o!="Infinity"&&(o!="NaN"&&f(n,3),s.s=null);u=0;return}}for((a=o.indexOf("."))>-1&&(o=o.replace(".","")),(l=o.search(/e/i))>0?(a<0&&(a=l),a+=+o.slice(l+1),o=o.substring(0,l)):a<0&&(a=o.length),l=0;o.charCodeAt(l)===48;l++);for(i=o.length;o.charCodeAt(--i)===48;);if(o=o.slice(l,i+1),o)if(i=o.length,p&&i>15&&f(n,0),a=a-l-1,a>v)s.c=s.e=null;else if(a<nt)s.c=[s.e=0];else{if(s.e=a,s.c=[],l=(a+1)%r,a<0&&(l+=r),l<i){for(l&&s.c.push(+o.slice(0,l)),i-=r;l<i;s.c.push(+o.slice(l,l+=r)));o=o.slice(l);l=r-o.length}else l-=i;for(;l--;o+="0");s.c.push(+o)}else s.c=[s.e=0];u=0}function et(n,t,i){for(var f=1,u=t.length;!t[--u];t.pop());for(u=t[0];u>=10;u/=10,f++);return(i=f+i*r-1)>v?n.c=n.e=null:i<nt?n.c=[n.e=0]:(n.e=i,n.c=t),n}function tt(n){for(var t,f,e=1,i=n.length,u=n[0]+"";e<i;){for(t=n[e++]+"",f=r-t.length;f--;t="0"+t);u+=t}for(i=u.length;u.charCodeAt(--i)===48;);return u.slice(0,i+1||1)}function ht(n,t,i){for(var u,r=[0],f,e=0,o=n.length;e<o;){for(f=r.length;f--;r[f]*=t);for(r[u=0]+=ut.indexOf(n.charAt(e++));u<r.length;u++)r[u]>i-1&&(r[u+1]==null&&(r[u+1]=0),r[u+1]+=r[u]/i|0,r[u]%=i)}return r.reverse()}function ct(n,i,r,u){var l,e,v,y,s,f,w,o=n.indexOf("."),p=h;for(r<37&&(n=n.toLowerCase()),o>=0&&(n=n.replace(".",""),w=new t(r),s=w.pow(n.length-o),w.c=ht(s.toFixed(),10,i),w.e=w.c.length),f=ht(n,r,i),e=v=f.length;f[--v]==0;f.pop());if(!f[0])return"0";if(o<0?--e:(s.c=f,s.e=e,s.s=u,s=a(s,w,c,p,i),f=s.c,y=s.r,e=s.e),l=e+c+1,o=f[l],v=i/2,y=y||l<0||f[l+1]!=null,y=p<4?(o!=null||y)&&(p==0||p==(s.s<0?3:2)):o>v||o==v&&(p==4||y||p==6&&f[l-1]&1||p==(s.s<0?8:7)),l<1||!f[0])f.length=1,v=0,y?(f[0]=1,e=-c):e=f[0]=0;else{if(f.length=l,y)for(--i;++f[--l]>i;)f[l]=0,l||(++e,f.unshift(1));for(v=f.length;!f[--v];);}for(o=0,n="";o<=v;n+=ut.charAt(f[o++]));if(e<0){for(;++e;n="0"+n);n="0."+n}else if(o=n.length,++e>o)for(e-=o;e--;n+="0");else e<o&&(n=n.slice(0,e)+"."+n.slice(e));return n}function rt(n,i,r){var o,u,e,f=(n=new t(n)).e;if(i==null?o=0:(y(n,++i,h),o=r?i:i+n.e-f,f=n.e),u=tt(n.c),r==1||r==2&&(i<=f||f<=p)){for(;u.length<o;u+="0");u.length>1&&(u=u.charAt(0)+"."+u.slice(1));u+=(f<0?"e":"e+")+f}else{if(r=u.length,f<0){for(e=o-r;++f;u="0"+u);u="0."+u}else if(++f>r){for(e=o-f,f-=r;f--;u+="0");e>0&&(u+=".")}else e=o-r,f<r?u=u.slice(0,f)+"."+u.slice(f):e>0&&(u+=".");if(e>0)for(;e--;u+="0");}return n.s<0&&n.c[0]?"-"+u:u}function f(n,t,i,r,f,o){if(d){var c,s=["new BigNumber","cmp","div","eq","gt","gte","lt","lte","minus","mod","plus","times","toFraction","divToInt"][u?u<0?-u:u:1/u<0?1:0]+"()",h=e?" out of range":" not a"+(f?" non-zero":"n")+" integer";h=([s+" number type has more than 15 significant digits",s+" not a base "+i+" number",s+" base"+h,s+" not a number"][t]||i+"() "+t+(o?" not a boolean or binary digit":h+(r?" or not ["+(e?" negative, positive":" integer, integer")+" ]":"")))+": "+n;e=u=0;c=new Error(h);c.name="BigNumber Error";throw c;}}function y(n,t,i,u){var c,o,e,s,a,h,p,f,y=st;if(f=n.c){n:{for(c=1,s=f[0];s>=10;s/=10,c++);if(o=t-c,o<0)o+=r,e=t,a=f[h=0],p=a/y[c-e-1]%10|0;else if(h=Math.ceil((o+1)/r),h>=f.length)if(u){for(;f.length<=h;f.push(0));a=p=0;c=1;o%=r;e=o-r+1}else break n;else{for(a=s=f[h],c=1;s>=10;s/=10,c++);o%=r;e=o-r+c;p=e<0?0:a/y[c-e-1]%10|0}if(u=u||t<0||f[h+1]!=null||(e<0?a:a%y[c-e-1]),u=i<4?(p||u)&&(i==0||i==(n.s<0?3:2)):p>5||p==5&&(i==4||u||i==6&&(o>0?e>0?a/y[c-e]:0:f[h-1])%10&1||i==(n.s<0?8:7)),t<1||!f[0])return f.length=0,u?(t-=n.e+1,f[0]=y[t%r],n.e=-t||0):f[0]=n.e=0,n;if(o==0?(f.length=h,s=1,h--):(f.length=h+1,s=y[r-o],f[h]=e>0?g(a/y[c-e]%y[e])*s:0),u)for(;;)if(h==0){for(o=1,e=f[0];e>=10;e/=10,o++);for(e=f[0]+=s,s=1;e>=10;e/=10,s++);o!=s&&(n.e++,f[0]==l&&(f[0]=1));break}else{if(f[h]+=s,f[h]!=l)break;f[h--]=0;s=1}for(o=f.length;f[--o]===0;f.pop());}n.e>v?n.c=n.e=null:n.e<nt&&(n.c=[n.e=0])}return n}var o=1e9,ot=1e6,c=20,h=4,p=-7,k=21,nt=-o,v=o,d=!0,w=parseInt,b={decimalSeparator:".",groupSeparator:",",groupSize:3,secondaryGroupSize:0,fractionGroupSeparator:" ",fractionGroupSize:0},i=t.prototype,ut="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_",e,u=0,g=Math.floor,ft=/^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,lt=String.prototype.trim||function(){return this.replace(/^\s+|\s+$/g,"")},l=1e14,r=14,s=1e7,st=[1,10,100,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13],it=new t(1),a;t.ROUND_UP=0;t.ROUND_DOWN=1;t.ROUND_CEIL=2;t.ROUND_FLOOR=3;t.ROUND_HALF_UP=4;t.ROUND_HALF_DOWN=5;t.ROUND_HALF_EVEN=6;t.ROUND_HALF_CEIL=7;t.ROUND_HALF_FLOOR=8;t.config=function(){var n,t,g=0,i={},y=arguments,a=y[0],s="config",r=function(n,t,i){return!((e=n<t||n>i)||w(n)!=n&&n!==0)},l=a&&typeof a=="object"?function(){if(a.hasOwnProperty(t))return(n=a[t])!=null}:function(){if(y.length>g)return(n=y[g++])!=null};if(l(t="DECIMAL_PLACES")&&(r(n,0,o)?c=n|0:f(n,t,s)),i[t]=c,l(t="ROUNDING_MODE")&&(r(n,0,8)?h=n|0:f(n,t,s)),i[t]=h,l(t="EXPONENTIAL_AT")&&(r(n,-o,o)?p=-(k=~~(n<0?-n:+n)):!e&&n&&r(n[0],-o,0)&&r(n[1],0,o)?(p=~~n[0],k=~~n[1]):f(n,t,s,1)),i[t]=[p,k],l(t="RANGE")&&(r(n,-o,o)&&~~n?nt=-(v=~~(n<0?-n:+n)):!e&&n&&r(n[0],-o,-1)&&r(n[1],1,o)?(nt=~~n[0],v=~~n[1]):f(n,t,s,1,1)),i[t]=[nt,v],l(t="ERRORS")&&(n===!!n||n===1||n===0?(e=u=0,w=(d=!!n)?parseInt:parseFloat):f(n,t,s,0,0,1)),i[t]=d,l(t="FORMAT"))if(typeof n=="object")b=n;else if(d){i=new Error(s+"() "+t+" not an object: "+n);i.name="BigNumber Error";throw i;}return i[t]=b,i};a=function(){function n(n,t,i){var f,e,o,h,r=0,u=n.length,c=t%s,l=t/s|0;for(n=n.slice();u--;)o=n[u]%s,h=n[u]/s|0,f=l*o+h*c,e=c*o+f%s*s+r,r=(e/i|0)+(f/s|0)+l*h,n[u]=e%i;return r&&n.unshift(r),n}function i(n,t,i,r){var u,f;if(i!=r)f=i>r?1:-1;else for(u=f=0;u<i;u++)if(n[u]!=t[u]){f=n[u]>t[u]?1:-1;break}return f}function u(n,t,i,r){for(var u=0;i--;)n[i]-=u,u=n[i]<t[i]?1:0,n[i]=u*r+n[i]-t[i];for(;!n[0]&&n.length>1;n.shift());}return function(f,e,o,s,h){var nt,ut,a,ot,p,tt,ft,it,et,v,w,st,ht,rt,lt,k,ct,d=f.s==e.s?1:-1,b=f.c,c=e.c;if(!b||!b[0]||!c||!c[0])return new t(!f.s||!e.s||(b?c&&b[0]==c[0]:!c)?NaN:b&&b[0]==0||!c?d*0:d/0);for(it=new t(d),et=it.c=[],ut=f.e-e.e,d=o+ut+1,h||(h=l,ut=(rt=f.e/r,a=rt|0,rt>0||rt===a?a:a-1)-(k=e.e/r,a=k|0,k>0||k===a?a:a-1),d=d/r|0),a=0;c[a]==(b[a]||0);a++);if(c[a]>(b[a]||0)&&ut--,d<0)et.push(1),ot=!0;else{for(rt=b.length,k=c.length,a=0,d+=2,p=g(h/(c[0]+1)),p>1&&(c=n(c,p,h),b=n(b,p,h),k=c.length,rt=b.length),ht=k,v=b.slice(0,k),w=v.length;w<k;v[w++]=0);ct=c.slice();ct.unshift(0);lt=c[0];c[1]>=h/2&&lt++;do p=0,nt=i(c,v,k,w),nt<0?(st=v[0],k!=w&&(st=st*h+(v[1]||0)),p=g(st/lt),p>1?(p>=h&&(p=h-1),tt=n(c,p,h),ft=tt.length,w=v.length,nt=i(tt,v,ft,w),nt==1&&(p--,u(tt,k<ft?ct:c,ft,h))):(p==0&&(nt=p=1),tt=c.slice()),ft=tt.length,ft<w&&tt.unshift(0),u(v,tt,w,h),nt==-1&&(w=v.length,nt=i(c,v,k,w),nt<1&&(p++,u(v,k<w?ct:c,w,h))),w=v.length):nt===0&&(p++,v=[0]),et[a++]=p,nt&&v[0]?v[w++]=b[ht]||0:(v=[b[ht]],w=1);while((ht++<rt||v[0]!=null)&&d--);ot=v[0]!=null;et[0]||et.shift()}if(h==l){for(a=1,d=et[0];d>=10;d/=10,a++);y(it,o+(it.e=a+ut*r-1)+1,s,ot)}else it.e=ut,it.r=+ot;return it}}();i.absoluteValue=i.abs=function(){var n=new t(this);return n.s<0&&(n.s=1),n};i.ceil=function(){return y(new t(this),this.e+1,2)};i.comparedTo=i.cmp=function(n,i){var f,l=this,e=l.c,o=(u=-u,n=new t(n,i)).c,r=l.s,c=n.s,s=l.e,h=n.e;if(!r||!c)return null;if(f=e&&!e[0],i=o&&!o[0],f||i)return f?i?0:-c:r;if(r!=c)return r;if(f=r<0,i=s==h,!e||!o)return i?0:!e^f?1:-1;if(!i)return s>h^f?1:-1;for(r=-1,c=(s=e.length)<(h=o.length)?s:h;++r<c;)if(e[r]!=o[r])return e[r]>o[r]^f?1:-1;return s==h?0:s>h^f?1:-1};i.decimalPlaces=i.dp=function(){var n,t,i=this.c;if(!i)return null;if(n=((t=i.length-1)-g(this.e/r))*r,t=i[t])for(;t%10==0;t/=10,n--);return n<0&&(n=0),n};i.dividedBy=i.div=function(n,i){return u=2,a(this,new t(n,i),c,h)};i.dividedToIntegerBy=i.divToInt=function(n,i){return u=13,a(this,new t(n,i),0,1)};i.equals=i.eq=function(n,t){return u=3,this.cmp(n,t)===0};i.floor=function(){return y(new t(this),this.e+1,3)};i.greaterThan=i.gt=function(n,t){return u=4,this.cmp(n,t)>0};i.greaterThanOrEqualTo=i.gte=function(n,t){return u=5,(t=this.cmp(n,t))==1||t===0};i.isFinite=function(){return!!this.c};i.isInteger=i.isInt=function(){return!!this.c&&g(this.e/r)>this.c.length-2};i.isNaN=function(){return!this.s};i.isNegative=i.isNeg=function(){return this.s<0};i.isZero=function(){return!!this.c&&this.c[0]==0};i.lessThan=i.lt=function(n,t){return u=6,this.cmp(n,t)<0};i.lessThanOrEqualTo=i.lte=function(n,t){return u=7,(t=this.cmp(n,t))==-1||t===0};i.minus=function(n,i){var e,c,v,w,p=this,s=p.s;if(u=8,n=new t(n,i),i=n.s,!s||!i)return new t(NaN);if(s!=i)return n.s=-i,p.plus(n);var y=p.e/r,a=n.e/r,f=p.c,o=n.c;if(!y||!a){if(!f||!o)return f?(n.s=-i,n):new t(o?p:NaN);if(!f[0]||!o[0])return o[0]?(n.s=-i,n):new t(f[0]?p:h==3?-0:0)}if(e=y|0,y=y>0||y===e?e:e-1,e=a|0,a=a>0||a===e?e:e-1,f=f.slice(),s=y-a){for((w=s<0)?(s=-s,v=f):(a=y,v=o),v.reverse(),i=s;i--;v.push(0));v.reverse()}else for(c=(w=(s=f.length)<(i=o.length))?s:i,s=i=0;i<c;i++)if(f[i]!=o[i]){w=f[i]<o[i];break}if(w&&(v=f,f=o,o=v,n.s=-n.s),i=(c=o.length)-(e=f.length),i>0)for(;i--;f[e++]=0);for(i=l-1;c>s;){if(f[--c]<o[c]){for(e=c;e&&!f[--e];f[e]=i);--f[e];f[c]+=l}f[c]-=o[c]}for(;f[0]==0;f.shift(),--a);return f[0]?et(n,f,a):(n.s=h==3?-1:1,n.c=[n.e=0],n)};i.modulo=i.mod=function(n,i){u=9;var r=this,f=r.c,e=(n=new t(n,i)).c,o=r.s,s=n.s;return(i=!o||!s||e&&!e[0],i||f&&!f[0])?new t(i?NaN:r):(r.s=n.s=1,i=n.cmp(r)==1,r.s=o,n.s=s,i?new t(r):r.minus(a(r,n,0,1).times(n)))};i.negated=i.neg=function(){var n=new t(this);return n.s=-n.s||null,n};i.plus=function(n,i){var h,a=this,f=a.s;if(u=10,n=new t(n,i),i=n.s,!f||!i)return new t(NaN);if(f!=i)return n.s=-i,a.minus(n);var c=a.e/r,o=n.e/r,e=a.c,s=n.c;if(!c||!o){if(!e||!s)return new t(f/0);if(!e[0]||!s[0])return s[0]?n:new t(e[0]?a:f*0)}if(f=c|0,c=c>0||c===f?f:f-1,f=o|0,o=o>0||o===f?f:f-1,e=e.slice(),f=c-o){for(f>0?(o=c,h=s):(f=-f,h=e),h.reverse();f--;h.push(0));h.reverse()}for(f=e.length,i=s.length,f-i<0&&(h=s,s=e,e=h,i=f),f=0;i;)f=(e[--i]=e[i]+s[i]+f)/l|0,e[i]%=l;return f&&(e.unshift(f),++o),et(n,e,o)};i.round=function(n,i){return n=n==null||((e=n<0||n>o)||w(n)!=n)&&!f(n,"decimal places","round")?0:n|0,i=i==null||((e=i<0||i>8)||w(i)!=i&&i!==0)&&!f(i,"mode","round")?h:i|0,y(new t(this),n+this.e+1,i)};i.squareRoot=i.sqrt=function(){var v,i,r,s,f,e=this,o=e.c,n=e.s,u=e.e,l=c+4,p=new t("0.5");if(n!==1||!o||!o[0])return new t(!n||n<0&&(!o||o[0])?NaN:o?e:1/0);if(n=Math.sqrt(+e),n==0||n==1/0?(i=tt(o),(i.length+u)%2==0&&(i+="0"),n=Math.sqrt(i),u=g((u+1)/2)-(u<0||u%2),n==1/0?i="1e"+u:(i=n.toExponential(),i=i.slice(0,i.indexOf("e")+1)+u),r=new t(i)):r=new t(n.toString()),r.c[0])for(u=r.e,n=u+l,n<3&&(n=0);;)if(f=r,r=p.times(f.plus(a(e,f,l,1))),tt(f.c).slice(0,n)===(i=tt(r.c)).slice(0,n))if(r.e<u&&--n,i=i.slice(n-3,n+1),i!="9999"&&(s||i!="4999")){+i&&(+i.slice(1)||i.charAt(0)!="5")||(y(r,r.e+c+2,1),v=!r.times(r).eq(e));break}else{if(!s&&(y(f,f.e+c+2,0),f.times(f).eq(e))){r=f;break}l+=4;n+=4;s=1}return y(r,r.e+c+1,h,v)};i.times=function(n,i){var p,e,w,b,a,y,k,d,g,nt=this,o=nt.c,h=(u=11,n=new t(n,i)).c,c=nt.e/r,f=n.e/r,v=nt.s;if(n.s=v==(i=n.s)?1:-1,!c&&(!o||!o[0])||!f&&(!h||!h[0]))return new t(!v||!i||o&&!o[0]&&!h||h&&!h[0]&&!o?NaN:!o||!h?n.s/0:n.s*0);for(e=(e=c|0,c>0||c===e?e:e-1)+(e=f|0,f>0||f===e?e:e-1),v=o.length,i=h.length,v<i&&(a=o,o=h,h=a,f=v,v=i,i=f),f=v+i,a=[];f--;a.push(0));for(c=i;--c>=0;){for(p=0,f=v+c,w=v,d=h[c]%s,g=h[c]/s|0;f>c;)y=o[--w]%s,k=o[w]/s|0,b=g*y+k*d,y=d*y+b%s*s+a[f]+p,p=(y/l|0)+(b/s|0)+g*k,a[f--]=y%l;a[f]=p}return p?++e:a.shift(),et(n,a,e)};i.toExponential=function(n){var t=this;return t.c?rt(t,n==null||((e=n<0||n>o)||w(n)!=n&&n!==0)&&!f(n,"decimal places","toExponential")?null:n|0,1):t.toString()};i.toFixed=function(n){var t,i=this,r=p,u=k;return n=n==null||((e=n<0||n>o)||w(n)!=n&&n!==0)&&!f(n,"decimal places","toFixed")?null:i.e+(n|0),p=-(k=1/0),n!=null&&i.c?(t=rt(i,n),i.s<0&&i.c&&(i.c[0]?t.indexOf("-")<0&&(t="-"+t):t=t.replace("-",""))):t=i.toString(),p=r,k=u,t};i.toFormat=function(n){var f=this;if(!f.c)return f.toString();var t,h=f.s<0,c=b.groupSeparator,r=+b.groupSize,u=+b.secondaryGroupSize,l=f.toFixed(n).split("."),i=l[0],s=l[1],e=h?i.slice(1):i,o=e.length;if(u&&(t=r,r=u,u=t,o-=t),r>0&&o>0){for(t=o%r||r,i=e.substr(0,t);t<o;t+=r)i+=c+e.substr(t,r);u>0&&(i+=c+e.slice(t));h&&(i="-"+i)}return s?i+b.decimalSeparator+((u=+b.fractionGroupSize)?s.replace(new RegExp("\\d{"+u+"}\\B","g"),"$&"+b.fractionGroupSeparator):s):i};i.toFraction=function(n){var ut,c,i,w,k,o,s,nt,rt,l=c=new t(it),y=s=new t(it),b=this,ft=b.c,p=new t(it);if(!ft)return b.toString();for(rt=tt(ft),w=p.e=rt.length-b.e-1,p.c[0]=st[(k=w%r)<0?r+k:k],(n==null||(!(u=12,o=new t(n)).s||(e=o.cmp(l)<0||!o.c)||d&&g(o.e/r)<o.c.length-1)&&!f(n,"max denominator","toFraction")||(n=o).cmp(p)>0)&&(n=w>0?p:l),k=v,v=1/0,o=new t(rt),s.c[0]=0;;){if(nt=a(o,p,0,1),i=c.plus(nt.times(y)),i.cmp(n)==1)break;c=y;y=i;l=s.plus(nt.times(i=l));s=i;p=o.minus(nt.times(i=p));o=i}return i=a(n.minus(c),y,0,1),s=s.plus(i.times(l)),c=c.plus(i.times(y)),s.s=l.s=b.s,w*=2,ut=a(l,y,w,h).minus(b).abs().cmp(a(s,c,w,h).minus(b).abs())<1?[l.toString(),y.toString()]:[s.toString(),c.toString()],v=k,ut};i.toNumber=function(){var n=this;return+n||(n.s?0*n.s:NaN)};i.toPower=i.pow=function(n){var i=n*0==0?~~n:n,r=new t(this),u=new t(it);if(((e=n<-ot||n>ot)&&(i=n/0)||w(n)!=n&&n!==0&&!(i=NaN))&&!f(n,"exponent","pow")||!i)return new t(Math.pow(+r,i));for(i=i<0?-i:i;;){if(i&1&&(u=u.times(r)),i>>=1,!i)break;r=r.times(r)}return n<0?it.div(u):u};i.toPrecision=function(n){var t=this;return n==null||((e=n<1||n>o)||w(n)!=n)&&!f(n,"precision","toPrecision")||!t.c?t.toString():rt(t,--n|0,2)};i.toString=function(n){var r,t,o,u=this,i=u.e;if(i===null)t=u.s?"Infinity":"NaN";else{if(n==r&&(i<=p||i>=k))return rt(u,r,1);if(t=tt(u.c),i<0){for(;++i;t="0"+t);t="0."+t}else if(o=t.length,i>0)if(++i>o)for(i-=o;i--;t+="0");else i<o&&(t=t.slice(0,i)+"."+t.slice(i));else if(r=t.charAt(0),o>1)t=r+"."+t.slice(1);else if(r=="0")return r;if(n!=null)if((e=!(n>=2&&n<65))||n!=~~n&&d)f(n,"base","toS");else if(t=ct(t,n|0,10,u.s),t=="0")return t}return u.s<0?"-"+t:t};i.valueOf=i.toJSON=function(){return this.toString()};typeof module!="undefined"&&module.exports?module.exports=t:typeof define=="function"&&define.amd?define(function(){return t}):n.BigNumber=t})(this)
   </script>
 
 </body>
