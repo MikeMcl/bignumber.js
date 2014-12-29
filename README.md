@@ -14,7 +14,7 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
   - Includes a `toFraction` and a correctly-rounded `squareRoot` method
   - No dependencies
   - ECMAScript 3 compliant
-  - Comprehensive [documentation](http://mikemcl.github.io/bignumber.js/) and test set 
+  - Comprehensive documentation and test set 
 
 If an even smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).   
 It's half the size but only works with decimal numbers and only has half the methods.   
@@ -132,7 +132,7 @@ The value of a BigNumber is stored in a decimal floating point format in terms o
     x.e                                 // 2                exponent 
     x.s                                 // -1               sign
 
-For futher information see the [API](http://mikemcl.github.io/bignumber.js/) reference from the *doc* folder.
+For futher information see the API reference from the *doc* folder.
 
 ## Test
 
