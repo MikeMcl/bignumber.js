@@ -105,51 +105,51 @@
     }
 
     try {
-        n = new BigNumber(2).toE(300.3);
+        n = new BigNumber(2).toExponential(300.3);
     } catch (e) {
         console.error(e + '')
     } try {
-        n = new BigNumber(2).toE(1e99);
+        n = new BigNumber(2).toExponential(1e99);
     } catch (e) {
         console.error(e + '')
     }
 
     try {
-        n = new BigNumber(2).toF(300.3);
+        n = new BigNumber(2).toFixed(300.3);
     } catch (e) {
         console.error(e + '')
     } try {
-        n = new BigNumber(2).toF(1e99);
+        n = new BigNumber(2).toFixed(1e99);
     } catch (e) {
         console.error(e + '')
     }
 
     try {
-        n = new BigNumber(2).toFr(300.3);
+        n = new BigNumber(2).toFraction(300.3);
     } catch (e) {
         console.error(e + '')
     } try {
-        n = new BigNumber(2).toFr(-1);
+        n = new BigNumber(2).toFraction(-1);
     } catch (e) {
         console.error(e + '')
     }
 
     try {
-        n = new BigNumber(2).toP(300.3);
+        n = new BigNumber(2).toPrecision(300.3);
     } catch (e) {
         console.error(e + '')
     } try {
-       n = new BigNumber(2).toP(0);
+       n = new BigNumber(2).toPrecision(0);
     } catch (e) {
         console.error(e + '')
     }
 
     try {
-        n = new BigNumber(2).toS(3.3);
+        n = new BigNumber(2).toString(3.3);
     } catch (e) {
         console.error(e + '')
     } try {
-        n = new BigNumber(2).toS(1);
+        n = new BigNumber(2).toString(1);
     } catch (e) {
         console.error(e + '')
     }

@@ -31,11 +31,31 @@ var count = (function others(BigNumber) {
         }
     }
 
+    function assertException(func, message) {
+        var actual;
+        total++;
+        try {
+            func();
+        } catch (e) {
+            actual = e;
+        }
+        if (actual && actual.name == 'BigNumber Error') {
+            passed++;
+            //log('\n Expected and actual: ' + actual);
+        } else {
+            error('\n Test number: ' + total + ' failed');
+            error('\n Expected: ' + message + ' to raise a BigNumber Error.');
+            error(' Actual:   ' + (actual || 'no exception'));
+            //process.exit();
+        }
+    }
+
     log('\n Testing others...');
 
     /*
      *
      * isFinite
+     * isInteger
      * isNaN
      * isNegative
      * isZero
@@ -58,6 +78,7 @@ var count = (function others(BigNumber) {
 
     n = new BigNumber(1);
     assert(true, n.isFinite());
+    assert(true, n.isInteger());
     assert(false, n.isNaN());
     assert(false, n.isNegative());
     assert(false, n.isZero());
@@ -104,10 +125,11 @@ var count = (function others(BigNumber) {
     assert(n.toString(), n.valueOf());
 
      n = new BigNumber('-0.1');
-    assert(true, n.isF());
+    assert(true, n.isFinite());
+    assert(false, n.isInt());
     assert(false, n.isNaN());
     assert(true, n.isNeg());
-    assert(false, n.isZ());
+    assert(false, n.isZero());
     assert(false, n.equals(0.1));
     assert(false, n.greaterThan(-0.1));
     assert(true, n.greaterThanOrEqualTo(-1));
@@ -117,6 +139,7 @@ var count = (function others(BigNumber) {
 
     n = new BigNumber(Infinity);
     assert(false, n.isFinite());
+    assert(false, n.isInteger());
     assert(false, n.isNaN());
     assert(false, n.isNegative());
     assert(false, n.isZero());
@@ -129,10 +152,11 @@ var count = (function others(BigNumber) {
     assert(n.toString(), n.valueOf());
 
     n = new BigNumber('-Infinity');
-    assert(false, n.isF());
+    assert(false, n.isFinite());
+    assert(false, n.isInt());
     assert(false, n.isNaN());
     assert(true, n.isNeg());
-    assert(false, n.isZ());
+    assert(false, n.isZero());
     assert(false, n.equals(Infinity));
     assert(true, n.equals(-1/0));
     assert(false, n.greaterThan(-Infinity));
@@ -143,6 +167,7 @@ var count = (function others(BigNumber) {
 
     n = new BigNumber('0.0000000');
     assert(true, n.isFinite());
+    assert(true, n.isInteger());
     assert(false, n.isNaN());
     assert(false, n.isNegative());
     assert(true, n.isZero());
@@ -154,10 +179,11 @@ var count = (function others(BigNumber) {
     assert(n.toString(), n.valueOf());
 
     n = new BigNumber(-0);
-    assert(true, n.isF());
+    assert(true, n.isFinite());
+    assert(true, n.isInt());
     assert(false, n.isNaN());
     assert(true, n.isNeg());
-    assert(true, n.isZ());
+    assert(true, n.isZero());
     assert(true, n.equals('0.000'));
     assert(true, n.greaterThan(-1));
     assert(false, n.greaterThanOrEqualTo(0.1));
@@ -169,6 +195,7 @@ var count = (function others(BigNumber) {
 
     n = new BigNumber('NaN');
     assert(false, n.isFinite());
+    assert(false, n.isInteger());
     assert(true, n.isNaN());
     assert(false, n.isNegative());
     assert(false, n.isZero());
@@ -185,6 +212,7 @@ var count = (function others(BigNumber) {
 
     n = new BigNumber('hiya');
     assert(false, n.isFinite());
+    assert(false, n.isInteger());
     assert(true, n.isNaN());
     assert(false, n.isNegative());
     assert(false, n.isZero());
@@ -198,10 +226,11 @@ var count = (function others(BigNumber) {
     BigNumber.config({ ERRORS : true });
 
     n = new BigNumber('-1.234e+2');
-    assert(true, n.isF());
+    assert(true, n.isFinite());
+    assert(false, n.isInt());
     assert(false, n.isNaN());
     assert(true, n.isNeg());
-    assert(false, n.isZ());
+    assert(false, n.isZero());
     assert(true, n.eq(-123.4, 10));
     assert(true, n.gt('-ff', 16));
     assert(true, n.gte('-1.234e+3'));
@@ -211,6 +240,7 @@ var count = (function others(BigNumber) {
 
     n = new BigNumber('5e-200');
     assert(true, n.isFinite());
+    assert(false, n.isInteger());
     assert(false, n.isNaN());
     assert(false, n.isNegative());
     assert(false, n.isZero());
@@ -223,7 +253,7 @@ var count = (function others(BigNumber) {
 
     n = new BigNumber('1');
     assert(true, n.equals(n));
-    assert(true, n.equals(n.toS()));
+    assert(true, n.equals(n.toString()));
     assert(true, n.equals(n.toString()));
     assert(true, n.equals(n.valueOf()));
     assert(true, n.equals(n.toFixed()));
@@ -354,6 +384,9 @@ var count = (function others(BigNumber) {
     assert(false, new BigNumber(1.23e+2).gte(1.23001e+2));
     assert(false, new BigNumber(9.999999e+2).greaterThanOrEqualTo(1e+3));
     assert(true, new BigNumber(1e+3).gte(9.9999999e+2));
+
+    assertException(function () {new BigNumber(1).lt(null)}, "new BigNumber(1).lt(null)");
+    assertException(function () {new BigNumber(1).gt('one')}, "new BigNumber(1).gt('one')");
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];;

@@ -75,6 +75,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
           <li><a href="#exponential-at">EXPONENTIAL_AT</a></li>
           <li><a href="#range"         >RANGE</a></li>
           <li><a href="#errors"        >ERRORS</a></li>
+          <li><a href="#format"        >FORMAT</a></li>
         </ul>
       </li>
     </ul>
@@ -98,34 +99,38 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
     <ul>
       <li><a href="#abs"    >absoluteValue</a></li>
       <li><a href="#ceil"   >ceil</a></li>
+      <li><a href="#cmp"    >comparedTo</a></li>
       <li><a href="#dp"     >decimalPlaces</a></li>
+      <li><a href="#div"    >dividedBy</a></li>
+      <li><a href="#divInt" >dividedToIntegerBy</a></li>
+      <li><a href="#eq"     >equals</a></li>
       <li><a href="#floor"  >floor</a></li>
-      <li><a href="#neg"    >negated</a></li>
-      <li><a href="#sqrt"   >squareRoot</a></li>
+      <li><a href="#gt"     >greaterThan</a></li>
+      <li><a href="#gte"    >greaterThanOrEqualTo</a></li>
       <li><a href="#isF"    >isFinite</a></li>
+      <li><a href="#isInt"  >isInteger</a></li>
       <li><a href="#isNaN"  >isNaN</a></li>
       <li><a href="#isNeg"  >isNegative</a></li>
       <li><a href="#isZ"    >isZero</a></li>
-      <li><a href="#cmp"    >comparedTo</a></li>
-      <li><a href="#div"    >dividedBy</a></li>
-      <li><a href="#minus"  >minus</a></li>
-      <li><a href="#mod"    >modulo</a></li>
-      <li><a href="#plus"   >plus</a></li>
-      <li><a href="#times"  >times</a></li>
-      <li><a href="#pow"    >toPower</a></li>
-      <li><a href="#eq"     >equals</a></li>
-      <li><a href="#gt"     >greaterThan</a></li>
-      <li><a href="#gte"    >greaterThanOrEqualTo</a></li>
       <li><a href="#lt"     >lessThan</a></li>
       <li><a href="#lte"    >lessThanOrEqualTo</a></li>
+      <li><a href="#minus"  >minus</a></li>
+      <li><a href="#mod"    >modulo</a></li>
+      <li><a href="#neg"    >negated</a></li>
+      <li><a href="#plus"   >plus</a></li>
+      <li><a href="#round"  >round</a></li>
+      <li><a href="#sqrt"   >squareRoot</a></li>
+      <li><a href="#times"  >times</a></li>
       <li><a href="#toE"    >toExponential</a></li>
       <li><a href="#toF"    >toFixed</a></li>
+      <li><a href="#toFo"   >toFormat</a></li>
+      <li><a href="#toFr"   >toFraction</a></li>
+      <li><a href="#toJSON" >toJSON</a></li>
       <li><a href="#toN"    >toNumber</a></li>
+      <li><a href="#pow"    >toPower</a></li>
       <li><a href="#toP"    >toPrecision</a></li>
       <li><a href="#toS"    >toString</a></li>
       <li><a href="#valueOf">valueOf</a></li>
-      <li><a href="#toFr"   >toFraction</a></li>
-      <li><a href="#round"  >round</a></li>
     </ul>
 
     <a href="#instance-properties">Properties</a>
@@ -189,6 +194,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
         considered invalid as calling <code>toString</code> or
         <code>valueOf</code> on such numbers may not result in the intended
         value.
+        <pre>console.log( 823456789123456.3 );    // 823456789123456.2</pre>
       </dd>
       <dd>
         There is no limit to the number of digits of a value of type
@@ -196,7 +202,7 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
       </dd>
       <dd>
         Decimal string values may be in exponential, as well as normal
-        (non-exponential) notation. Non-decimal values must be in normal
+        (fixed-point) notation. Non-decimal values must be in normal
         notation.
       </dd>
       <dd>
@@ -210,8 +216,8 @@ code,pre{font-family:Monaco,Consolas,"Lucida Console",monospace;
         represent values from 10 to 35. For bases above 36, <code>a-z</code>
         represents values from 10 to 35, <code>A-Z</code> from 36 to 61, and
         <code>$</code> and <code>_</code> represent 62 and 63 respectively <i>
-        (this can be changed by ediiting the DIGITS variable near the top of the
-        source file).</i>
+        (this can be changed by editing the <code>DIGITS</code> variable near
+        the top of the source file).</i>
       </dd>
     </dl>
     <dl>
@@ -260,7 +266,7 @@ new BigNumber(96517860459076817.4395)
 new BigNumber('blurgh')
 // Throws 'not a number' if ERRORS is true, otherwise 'NaN'
 
-BigNumber.config({DECIMAL_PLACES : 5})
+BigNumber.config({DECIMAL_PLACES: 5})
 new BigNumber(1.23456789)                  // '1.23456789'
 new BigNumber(1.23456789, 10)              // '1.23457'</pre>
 
@@ -276,8 +282,7 @@ new BigNumber(1.23456789, 10)              // '1.23457'</pre>
       config<code class='inset'>config([settings]) &rArr; <i>object</i></code>
     </h5>
     <i>
-      Note: the settings can also be supplied as an argument list,
-      see below.
+      Note: the settings can also be supplied as an argument list, see below.
     </i>
     <dl>
       <dt><code>settings</code></dt>
@@ -286,8 +291,6 @@ new BigNumber(1.23456789, 10)              // '1.23457'</pre>
       <dd>
         An object that contains some or all of the following properties:
         <dl>
-
-
 
           <dt id="decimal-places"><code><b>DECIMAL_PLACES</b></code></dt>
           <dd>
@@ -305,7 +308,7 @@ new BigNumber(1.23456789, 10)              // '1.23457'</pre>
             <code>toPower</code> methods.
           </dd>
           <dd>
-            <pre>BigNumber.config({ DECIMAL_PLACES : 5 })
+            <pre>BigNumber.config({ DECIMAL_PLACES: 5 })
 BigNumber.config(5)    // equivalent</pre>
           </dd>
 
@@ -322,7 +325,8 @@ BigNumber.config(5)    // equivalent</pre>
             The rounding mode used in the above operations and by
             <a href='#round'><code>round</code></a>,
             <a href='#toE'><code>toExponential</code></a>,
-            <a href='#toF'><code>toFixed</code></a> and
+            <a href='#toF'><code>toFixed</code></a>,
+            <a href='#toFo'><code>toFormat</code></a> and
             <a href='#toP'><code>toPrecision</code></a>.
           </dd>
           <dd>
@@ -330,7 +334,7 @@ BigNumber.config(5)    // equivalent</pre>
              constructor.
           </dd>
            <dd>
-            <pre>BigNumber.config({ ROUNDING_MODE : 0 })
+            <pre>BigNumber.config({ ROUNDING_MODE: 0 })
 BigNumber.config(null, BigNumber.ROUND_UP)    // equivalent</pre>
           </dd>
 
@@ -362,21 +366,21 @@ BigNumber.config(null, BigNumber.ROUND_UP)    // equivalent</pre>
             <code>[-7, 20]</code>.
           </dd>
           <dd>
-            <pre>BigNumber.config({ EXPONENTIAL_AT : 2 })
+            <pre>BigNumber.config({ EXPONENTIAL_AT: 2 })
 new BigNumber(12.3)         // '12.3'        e is only 1
 new BigNumber(123)          // '1.23e+2'
 new BigNumber(0.123)        // '0.123'       e is only -1
 new BigNumber(0.0123)       // '1.23e-2'
 
-BigNumber.config({ EXPONENTIAL_AT : [-7, 20] })
+BigNumber.config({ EXPONENTIAL_AT: [-7, 20] })
 new BigNumber(123456789)    // '123456789'   e is only 8
 new BigNumber(0.000000123)  // '1.23e-7'
 
 // Almost never return exponential notation:
-BigNumber.config({ EXPONENTIAL_AT : 1e+9 })
+BigNumber.config({ EXPONENTIAL_AT: 1e+9 })
 
 // Always return exponential notation:
-BigNumber.config({ EXPONENTIAL_AT : 0 })</pre>
+BigNumber.config({ EXPONENTIAL_AT: 0 })</pre>
           </dd>
           <dd>
             Regardless of the value of <code>EXPONENTIAL_AT</code>, the
@@ -419,14 +423,14 @@ BigNumber.config({ EXPONENTIAL_AT : 0 })</pre>
             <code>[-324, 308]</code>.
           </dd>
           <dd>
-            <pre>BigNumber.config({ RANGE : 500 })
+            <pre>BigNumber.config({ RANGE: 500 })
 BigNumber.config().RANGE     // [ -500, 500 ]
 new BigNumber('9.999e499')   // '9.999e+499'
 new BigNumber('1e500')       // 'Infinity'
 new BigNumber('1e-499')      // '1e-499'
 new BigNumber('1e-500')      // '0'
 
-BigNumber.config({ RANGE : [-3, 4] })
+BigNumber.config({ RANGE: [-3, 4] })
 new BigNumber(99999)         // '99999'      e is only 4
 new BigNumber(100000)        // 'Infinity'   e is 5
 new BigNumber(0.001)         // '0.01'       e is only -3
@@ -454,8 +458,49 @@ new BigNumber(0.0001)        // '0'          e is -4</pre>
             See <a href='#Errors'>Errors</a>.
           </dd>
            <dd>
-            <pre>BigNumber.config({ ERRORS : false })</pre>
+            <pre>BigNumber.config({ ERRORS: false })</pre>
           </dd>
+
+
+
+          <dt id="format"><code><b>FORMAT</b></code></dt>
+          <dd><i>object</i></dd>
+          <dd>
+            The <code>FORMAT</code> object configures the format of the string
+            returned by the <a href='#toFo'><code>toFormat</code></a> method.
+          </dd>
+          <dd>
+            The example below shows the properties of the <code>FORMAT</code>
+            object that are recognised, and their default values.
+          </dd>
+          <dd>
+             Unlike when changing other settings, the values of the properties
+             of the <code>FORMAT</code> object will not be checked for validity.
+             The existing <code>FORMAT</code> object will simply be replaced by
+             the object that is passed in. Note that all the properties shown
+             below do not have to be included.
+          </dd>
+          <dd>
+            See <a href='#toFo'><code>toFormat</code></a> for examples of usage.
+          </dd>
+          <dd><pre>
+BigNumber.config({
+    FORMAT: {
+        // the decimal separator
+        decimalSeparator : '.',
+        // the grouping separator of the integer part
+        groupSeparator : ',',
+        // the primary grouping size of the integer part
+        groupSize : 3,
+        // the secondary grouping size of the integer part
+        secondaryGroupSize : 0,
+        // the grouping separator of the fraction part
+        fractionGroupSeparator : ' ',
+        // the grouping size of the fraction part
+        fractionGroupSize : 0
+    }
+});</pre></dd>
+
         </dl>
       </dd>
     </dl>
@@ -470,11 +515,11 @@ new BigNumber(0.0001)        // '0'          e is -4</pre>
     </p>
     <pre>
 BigNumber.config({
-    DECIMAL_PLACES : 40,
-    ROUNDING_MODE : BigNumber.ROUND_HALF_CEIL,
-    EXPONENTIAL_AT : [-10, 20],
-    RANGE : [-500, 500],
-    ERRORS : true
+    DECIMAL_PLACES: 40,
+    ROUNDING_MODE: BigNumber.ROUND_HALF_CEIL,
+    EXPONENTIAL_AT: [-10, 20],
+    RANGE: [-500, 500],
+    ERRORS: true
 });
 
 // Alternatively but equivalently:
@@ -498,74 +543,74 @@ obj.RANGE        // [-500, 500]</pre>
     </p>
     <table>
       <tr>
-      	<th>Property</th>
-      	<th>Value</th>
-      	<th>Description</th>
+        <th>Property</th>
+        <th>Value</th>
+        <th>Description</th>
       </tr>
       <tr>
-      	<td id="round-up"><b>ROUND_UP</b></td>
-      	<td class='centre'>0</td>
-      	<td>Rounds away from zero</td>
+        <td id="round-up"><b>ROUND_UP</b></td>
+        <td class='centre'>0</td>
+        <td>Rounds away from zero</td>
       </tr>
       <tr>
-      	<td id="round-down"><b>ROUND_DOWN</b></td>
-      	<td class='centre'>1</td>
-      	<td>Rounds towards zero</td>
+        <td id="round-down"><b>ROUND_DOWN</b></td>
+        <td class='centre'>1</td>
+        <td>Rounds towards zero</td>
       </tr>
       <tr>
-      	<td id="round-ceil"><b>ROUND_CEIL</b></td>
-      	<td class='centre'>2</td>
-      	<td>Rounds towards Infinity</td>
+        <td id="round-ceil"><b>ROUND_CEIL</b></td>
+        <td class='centre'>2</td>
+        <td>Rounds towards Infinity</td>
       </tr>
       <tr>
-      	<td id="round-floor"><b>ROUND_FLOOR</b></td>
-      	<td class='centre'>3</td>
-      	<td>Rounds towards -Infinity</td>
+        <td id="round-floor"><b>ROUND_FLOOR</b></td>
+        <td class='centre'>3</td>
+        <td>Rounds towards -Infinity</td>
       </tr>
       <tr>
-      	<td id="round-half-up"><b>ROUND_HALF_UP</b></td>
-      	<td class='centre'>4</td>
-      	<td>
+        <td id="round-half-up"><b>ROUND_HALF_UP</b></td>
+        <td class='centre'>4</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds away from zero
         </td>
       </tr>
       <tr>
-      	<td id="round-half-down"><b>ROUND_HALF_DOWN</b></td>
-      	<td class='centre'>5</td>
-      	<td>
+        <td id="round-half-down"><b>ROUND_HALF_DOWN</b></td>
+        <td class='centre'>5</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds towards zero
         </td>
       </tr>
       <tr>
-      	<td id="round-half-even"><b>ROUND_HALF_EVEN</b></td>
-      	<td class='centre'>6</td>
-      	<td>
+        <td id="round-half-even"><b>ROUND_HALF_EVEN</b></td>
+        <td class='centre'>6</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds towards even neighbour
         </td>
       </tr>
       <tr>
-      	<td id="round-half-ceil"><b>ROUND_HALF_CEIL</b></td>
-      	<td class='centre'>7</td>
-      	<td>
+        <td id="round-half-ceil"><b>ROUND_HALF_CEIL</b></td>
+        <td class='centre'>7</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds towards Infinity
         </td>
       </tr>
       <tr>
-      	<td id="round-half-floor"><b>ROUND_HALF_FLOOR</b></td>
-      	<td class='centre'>8</td>
-      	<td>
+        <td id="round-half-floor"><b>ROUND_HALF_FLOOR</b></td>
+        <td class='centre'>8</td>
+        <td>
           Rounds towards nearest neighbour.<br />
           If equidistant, rounds towards -Infinity
         </td>
       </tr>
     </table>
     <pre>
-BigNumber.config({ ROUNDING_MODE : BigNumber.ROUND_CEIL })
-BigNumber.config({ ROUNDING_MODE : 2 })     // equivalent</pre>
+BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_CEIL })
+BigNumber.config({ ROUNDING_MODE: 2 })     // equivalent</pre>
 
 
     <h3>INSTANCE</h3>
@@ -584,8 +629,7 @@ BigNumber.config({ ROUNDING_MODE : 2 })     // equivalent</pre>
       <code>NaN</code> is consistent with how JavaScript treats these values.
     </p>
     <p>
-      Method names over 5 letters in length have a shorter alias (except
-      <code>valueOf</code>).<br />
+      Many method names have a shorter alias.<br />
       Internally, the library always uses the shorter method names.
     </p>
 
@@ -619,13 +663,65 @@ y = new BigNumber(-1.8)
 y.ceil()                      // '-1'</pre>
 
 
-    
+
+    <h5 id="cmp">
+      comparedTo<code class='inset'>.cmp(n [, base]) &rArr; <i>number</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <table>
+      <tr>
+        <th>Returns</th>
+        <th colspan=2>&nbsp;</th>
+      </tr>
+      <tr>
+        <td class='centre'>1</td>
+        <td>
+          If the value of this BigNumber is greater than the value of
+          <code>n</code>
+        </td>
+      </tr>
+      <tr>
+        <td class='centre'>-1</td>
+        <td>
+          If the value of this BigNumber is less than the value of
+          <code>n</code>
+        </td>
+      </tr>
+      <tr>
+        <td class='centre'>0</td>
+        <td>If this BigNumber and <code>n</code> have the same value</td>
+      </tr>
+       <tr>
+        <td class='centre'>null</td>
+        <td>
+          if the value of either this BigNumber or <code>n</code> is
+          <code>NaN</code>
+        </td>
+      </tr>
+    </table>
+    <pre>
+x = new BigNumber(Infinity)
+y = new BigNumber(5)
+x.comparedTo(y)                // 1
+x.comparedTo(x.minus(1))       // 0
+y.cmp(NaN)                     // null
+y.cmp('110', 2)                // -1</pre>
+
+
+
     <h5 id="dp">
       decimalPlaces<code class='inset'>.dp() &rArr; <i>number</i></code>
     </h5>
     <p>
-      Return the number of decimal places of the value of this BigNumber, or <code>null</code>
-      if the value of this BigNumber is <code>&plusmn;Infinity</code> or <code>NaN</code>.
+      Return the number of decimal places of the value of this BigNumber, or
+      <code>null</code> if the value of this BigNumber is
+      <code>&plusmn;Infinity</code> or <code>NaN</code>.
     </p>
     <pre>
 x = new BigNumber(123.45)
@@ -634,7 +730,86 @@ y = new BigNumber('9.9e-101')
 y.dp()                        // 102</pre>
 
 
-    
+
+    <h5 id="div">
+      dividedBy<code class='inset'>.div(n [, base]) &rArr;
+      <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber divided by
+      <code>n</code>, rounded according to the current
+      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+    </p>
+    <pre>
+x = new BigNumber(355)
+y = new BigNumber(113)
+x.dividedBy(y)             // '3.14159292035398230088'
+x.div(5)                   // '71'
+x.div(47, 16)              // '5'</pre>
+
+
+
+    <h5 id="divInt">
+      dividedToIntegerBy<code class='inset'>.divToInt(n [, base]) &rArr;
+      <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Return a BigNumber whose value is the integer part (truncating towards
+      zero) of dividing the value of this BigNumber by <code>n</code>.
+    </p>
+    <pre>
+x = new BigNumber(5)
+y = new BigNumber(3)
+x.dividedToIntegerBy(y)         // '1'
+x.divToInt(0.7)                 // '7'
+x.divToInt('0.f', 16)           // '5'</pre>
+
+
+
+    <h5 id="eq">
+      equals<code class='inset'>.eq(n [, base]) &rArr; <i>boolean</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber equals the value
+      of <code>n</code>, otherwise returns <code>false</code>.<br />
+      As with JavaScript, NaN does not equal NaN.
+      <br />Note : This method uses the <code>comparedTo</code> method
+      internally.
+    </p>
+    <pre>
+0 === 1e-324                    // true
+x = new BigNumber(0)
+x.equals('1e-324')              // false
+BigNumber(-0).eq(x)             // true  ( -0 === 0 )
+BigNumber(255).eq('ff', 16)     // true
+
+y = new BigNumber(NaN)
+y.equals(NaN)                   // false</pre>
+
+
+
     <h5 id="floor">
       floor<code class='inset'>.floor() &rArr;
       <i>BigNumber</i></code>
@@ -651,40 +826,59 @@ y.floor()                     // '-2'</pre>
 
 
 
-    <h5 id="neg">
-      negated<code class='inset'>.neg() &rArr; <i>BigNumber</i></code>
+    <h5 id="gt">
+      greaterThan<code class='inset'>.gt(n [, base]) &rArr;
+      <i>boolean</i></code>
     </h5>
     <p>
-      Returns a BigNumber whose value is the value of this BigNumber negated,
-      i.e. multiplied by -1.
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber is greater than
+      the value of <code>n</code>, otherwise returns <code>false</code>.<br />
+      Note : This method uses the <code>comparedTo</code> method internally.
     </p>
     <pre>
-x = new BigNumber(1.8)
-x.negated()                   // '-1.8'
-y = new BigNumber(-1.3)
-y.neg()                       // '1.3'</pre>
+0.1 &gt; (0.3 - 0.2)                           // true
+x = new BigNumber(0.1)
+x.greaterThan(BigNumber(0.3).minus(0.2))    // false
+BigNumber(0).gt(x)                          // false
+BigNumber(11, 3).gt(11.1, 2)                // true</pre>
 
 
 
-    <h5 id="sqrt">
-      squareRoot<code class='inset'>.sqrt() &rArr; <i>BigNumber</i></code>
+    <h5 id="gte">
+      greaterThanOrEqualTo<code class='inset'>.gte(n [, base]) &rArr;
+      <i>boolean</i></code>
     </h5>
     <p>
-      Returns a BigNumber whose value is the square root of this BigNumber,
-      correctly rounded according to the current
-      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber is greater than
+      or equal to the value of <code>n</code>, otherwise returns
+      <code>false</code>.<br />
+      Note : This method uses the <code>comparedTo</code> method internally.
     </p>
     <pre>
-x = new BigNumber(16)
-x.squareRoot()                // '4'
-y = new BigNumber(3)
-y.sqrt()                      // '1.73205080756887729353'</pre>
+(0.3 - 0.2) &gt;= 0.1                   // false
+x = new BigNumber(0.3).minus(0.2)
+x.greaterThanOrEqualTo(0.1)          // true
+BigNumber(1).gte(x)                  // true
+BigNumber(10, 18).gte('i', 36)       // true</pre>
 
 
 
     <h5 id="isF">
-      isFinite<code class='inset'>.isF() &rArr; <i>boolean</i></code>
+      isFinite<code class='inset'>.isFinite() &rArr; <i>boolean</i></code>
     </h5>
     <p>
       Returns <code>true</code> if the value of this BigNumber is a finite
@@ -696,11 +890,26 @@ y.sqrt()                      // '1.73205080756887729353'</pre>
 x = new BigNumber(1)
 x.isFinite()                  // true
 y = new BigNumber(Infinity)
-y.isF()                       // false</pre>
+y.isFinite()                  // false</pre>
     <p>
       Note: The native method <code>isFinite()</code> can be used if
       <code>n &lt;= Number.MAX_VALUE</code>.
     </p>
+
+
+
+    <h5 id="isInt">
+      isInteger<code class='inset'>.isInt() &rArr; <i>boolean</i></code>
+    </h5>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber is a whole
+      number, otherwise returns <code>false</code>.
+    </p>
+    <pre>
+x = new BigNumber(1)
+x.isInteger()                 // true
+y = new BigNumber(123.456)
+y.isInt()                     // false</pre>
 
 
 
@@ -742,7 +951,7 @@ y.isNeg                       // false</pre>
 
 
     <h5 id="isZ">
-      isZero<code class='inset'>.isZ() &rArr; <i>boolean</i></code>
+      isZero<code class='inset'>.isZero() &rArr; <i>boolean</i></code>
     </h5>
     <p>
       Returns <code>true</code> if the value of this BigNumber is zero or minus
@@ -752,298 +961,11 @@ y.isNeg                       // false</pre>
 x = new BigNumber(-0)
 x.isZero() && x.isNeg()        // true
 y = new BigNumber(Infinity)
-y.isZ()                        // false</pre>
+y.isZero()                     // false</pre>
     <p>
       Note: <code>n == 0</code> can be used if
       <code>n &gt;= Number.MIN_VALUE</code>.
     </p>
-
-
-
-    <h5 id="cmp">
-      comparedTo<code class='inset'>.cmp(n [, base]) &rArr; <i>number</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>
-        See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <table>
-      <tr>
-      	<th>Returns</th>
-      	<th colspan=2>&nbsp;</th>
-      </tr>
-      <tr>
-      	<td class='centre'>1</td>
-      	<td>
-          If the value of this BigNumber is greater than the value of <code>n</code>
-        </td>
-      </tr>
-      <tr>
-      	<td class='centre'>-1</td>
-      	<td>
-          If the value of this BigNumber is less than the value of <code>n</code>
-        </td>
-      </tr>
-      <tr>
-      	<td class='centre'>0</td>
-      	<td>If this BigNumber and <code>n</code> have the same value</td>
-      </tr>
-       <tr>
-      	<td class='centre'>null</td>
-      	<td>
-          if the value of either this BigNumber or <code>n</code> is
-          <code>NaN</code>
-        </td>
-      </tr>
-    </table>
-    <pre>
-x = new BigNumber(Infinity)
-y = new BigNumber(5)
-x.comparedTo(y)                // 1
-x.comparedTo(x.minus(1))       // 0
-y.cmp(NaN)                     // null
-y.cmp('110', 2)                // -1</pre>
-
-
-
-    <h5 id="div">
-      dividedBy<code class='inset'>.div(n [, base]) &rArr;
-      <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber divided by
-      <code>n</code>, rounded according to the current
-      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
-    </p>
-    <pre>
-x = new BigNumber(355)
-y = new BigNumber(113)
-x.dividedBy(y)             // '3.14159292035398230088'
-x.div(5)                   // '71'
-x.div(47, 16)              // '5'</pre>
-
-
-
-    <h5 id="minus">
-      minus<code class='inset'>.minus(n [, base]) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber minus
-      <code>n</code>.
-    </p>
-    <pre>
-0.3 - 0.1                  // 0.19999999999999998
-x = new BigNumber(0.3)
-x.minus(0.1)               // '0.2'
-x.minus(0.6, 20)           // '0'</pre>
-
-
-
-    <h5 id="mod">
-      modulo<code class='inset'>.mod(n [, base]) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber modulo
-      <code>n</code>, i.e. the integer remainder of dividing this BigNumber by
-      <code>n</code>.
-    </p>
-    <p>
-      The result will have the same sign as this BigNumber, and it will match
-      that of JavaScript's % operator (within the limits of its precision) and
-      BigDecimal's remainder method.
-    </p>
-    <pre>
-1 % 0.9                    // 0.09999999999999998
-x = new BigNumber(1)
-x.modulo(0.9)              // '0.1'
-y = new BigNumber(33)
-y.mod('a', 33)             // '3'</pre>
-
-
-
-    <h5 id="plus">
-      plus<code class='inset'>.plus(n [, base]) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber plus
-      <code>n</code>.
-    </p>
-    <pre>
-0.1 + 0.2                       // 0.30000000000000004
-x = new BigNumber(0.1)
-y = x.plus(0.2)                 // '0.3'
-BigNumber(0.7).plus(x).plus(y)  // '1'
-x.plus('0.1', 8)                // '0.225'</pre>
-
-
-
-    <h5 id="times">
-      times<code class='inset'>.times(n [, base]) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber times
-      <code>n</code>.
-    </p>
-    <pre>
-0.6 * 3                         // 1.7999999999999998
-x = new BigNumber(0.6)
-y = x.times(3)                  // '1.8'
-BigNumber('7e+500').times(y)    // '1.26e+501'
-x.times('-a', 16)               // '-6'</pre>
-
-
-
-    <h5 id="pow">
-      toPower<code class='inset'>.pow(exp) &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>exp</code> : <i>number</i> : integer, -1e+6 to 1e+6 inclusive
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber raised to
-      the power <code>exp</code>.
-    </p>
-    <p>
-      If <code>exp</code> is negative the result is rounded according to the
-      current <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
-    </p>
-    <p>
-      If <code>exp</code> is not an integer or is out of range:
-    </p>
-    <p class='inset'>
-      If <code>ERRORS</code> is <code>true</code> a BigNumber
-      Error is thrown,<br />
-      else if <code>exp</code> is greater than 1e+6, it is interpreted as
-      <code>Infinity</code>;<br />
-      else if <code>exp</code> is less than -1e+6, it is interpreted as
-      <code>-Infinity</code>;<br />
-      else if <code>exp</code> is otherwise a number, it is truncated to an
-      integer;<br />
-      else it is interpreted as <code>NaN</code>.
-    </p>
-    <p>
-      Note: High value exponents may cause this method to be slow to return.
-    </p>
-    <pre>
-Math.pow(0.7, 2)             // 0.48999999999999994
-x = new BigNumber(0.7)
-x.toPower(2)                 // '0.49'
-BigNumber(3).pow(-2)         // '0.11111111111111111111'
-
-new BigNumber(123.456).toPower(1000).toString().length     // 5099
-new BigNumber(2).pow(1e+6)   // Time taken (Node.js): 9 minutes 34 secs.</pre>
-
-
-
-    <h5 id="eq">
-      equals<code class='inset'>.eq(n [, base]) &rArr; <i>boolean</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns <code>true</code> if the value of this BigNumber equals the value
-      of <code>n</code>, otherwise returns <code>false</code>.<br />
-      As with JavaScript, NaN does not equal NaN.
-      <br />Note : This method uses the <code>comparedTo</code> method
-      internally.
-    </p>
-    <pre>
-0 === 1e-324                    // true
-x = new BigNumber(0)
-x.equals('1e-324')              // false
-BigNumber(-0).eq(x)             // true  ( -0 === 0 )
-BigNumber(255).eq('ff', 16)     // true
-
-y = new BigNumber(NaN)
-y.equals(NaN)                   // false</pre>
-
-
-
-    <h5 id="gt">
-      greaterThan<code class='inset'>.gt(n [, base]) &rArr;
-      <i>boolean</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns <code>true</code> if the value of this BigNumber is greater than
-      the value of <code>n</code>, otherwise returns <code>false</code>.<br />
-      Note : This method uses the <code>comparedTo</code> method internally.
-    </p>
-    <pre>
-0.1 &gt; (0.3 - 0.2)                           // true
-x = new BigNumber(0.1)
-x.greaterThan(BigNumber(0.3).minus(0.2))    // false
-BigNumber(0).gt(x)                          // false
-BigNumber(11, 3).gt(11.1, 2)                // true</pre>
-
-
-
-    <h5 id="gte">
-      greaterThanOrEqualTo<code class='inset'>.gte(n [, base]) &rArr;
-      <i>boolean</i></code>
-    </h5>
-    <p>
-      <code>n</code> : <i>number|string|BigNumber</i><br />
-      <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
-      </i>
-    </p>
-    <p>
-      Returns <code>true</code> if the value of this BigNumber is greater than
-      or equal to the value of <code>n</code>, otherwise returns
-      <code>false</code>.<br />
-      Note : This method uses the <code>comparedTo</code> method internally.
-    </p>
-    <pre>
-(0.3 - 0.2) &gt;= 0.1                   // false
-x = new BigNumber(0.3).minus(0.2)
-x.greaterThanOrEqualTo(0.1)          // true
-BigNumber(1).gte(x)                  // true
-BigNumber(10, 18).gte('i', 36)       // true</pre>
 
 
 
@@ -1053,7 +975,8 @@ BigNumber(10, 18).gte('i', 36)       // true</pre>
     <p>
       <code>n</code> : <i>number|string|BigNumber</i><br />
       <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
       </i>
     </p>
     <p>
@@ -1077,7 +1000,8 @@ BigNumber(11.1, 2).lt(11, 3)         // true</pre>
     <p>
       <code>n</code> : <i>number|string|BigNumber</i><br />
       <code>base</code> : <i>number</i><br />
-      <i>See <a href="#bignumber">constructor</a> for further parameter details.
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
       </i>
     </p>
     <p>
@@ -1095,33 +1019,204 @@ BigNumber(10, 18).lte('i', 36)                    // true</pre>
 
 
 
-    <h5 id="toE">
-      toExponential<code class='inset'>.toE([decimal_places]) &rArr;
-      <i>string</i></code>
+    <h5 id="minus">
+      minus<code class='inset'>.minus(n [, base]) &rArr; <i>BigNumber</i></code>
     </h5>
     <p>
-      <code>decimal_places</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber minus
+      <code>n</code>.
+    </p>
+    <pre>
+0.3 - 0.1                  // 0.19999999999999998
+x = new BigNumber(0.3)
+x.minus(0.1)               // '0.2'
+x.minus(0.6, 20)           // '0'</pre>
+
+
+
+    <h5 id="mod">
+      modulo<code class='inset'>.mod(n [, base]) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber modulo
+      <code>n</code>, i.e. the integer remainder of dividing this BigNumber by
+      <code>n</code>.
+    </p>
+    <p>
+      The result will have the same sign as this BigNumber, and it will match
+      that of JavaScript's % operator (within the limits of its precision) and
+      BigDecimal's remainder method.
+    </p>
+    <pre>
+1 % 0.9                    // 0.09999999999999998
+x = new BigNumber(1)
+x.modulo(0.9)              // '0.1'
+y = new BigNumber(33)
+y.mod('a', 33)             // '3'</pre>
+
+
+
+    <h5 id="neg">
+      negated<code class='inset'>.neg() &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber negated,
+      i.e. multiplied by -1.
+    </p>
+    <pre>
+x = new BigNumber(1.8)
+x.negated()                   // '-1.8'
+y = new BigNumber(-1.3)
+y.neg()                       // '1.3'</pre>
+
+
+
+    <h5 id="plus">
+      plus<code class='inset'>.plus(n [, base]) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber plus
+      <code>n</code>.
+    </p>
+    <pre>
+0.1 + 0.2                       // 0.30000000000000004
+x = new BigNumber(0.1)
+y = x.plus(0.2)                 // '0.3'
+BigNumber(0.7).plus(x).plus(y)  // '1'
+x.plus('0.1', 8)                // '0.225'</pre>
+
+
+
+    <h5 id="round">
+      round
+      <code class='inset'>.round([dp [, rm]]) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>dp</code> : <i>number</i> : integer, 0 to 1e+9 inclusive<br />
+      <code>rm</code> : <i>number</i> : integer, 0 to 8 inclusive
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber rounded by
+      rounding mode <code>rm</code> to a maximum of <code>dp</code> decimal
+      places.
+    </p>
+    <p>
+      if <code>dp</code> is omitted, or is <code>null</code> or undefined, the
+      return value is <code>n</code> rounded to a whole number.
+    </p>
+    <p>
+      if <code>rm</code> is omitted, or is <code>null</code> or undefined, the
+      current <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting is
+      used.
+    </p>
+    <p>
+      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or
+      out of range <code>dp</code> or <code>rm</code> values.
+    </p>
+    <pre>
+x = 1234.56
+Math.round(x)                             // 1235
+
+y = new BigNumber(x)
+y.round()                                 // '1235'
+y.round(1)                                // '1234.6'
+y.round(2)                                // '1234.56'
+y.round(10)                               // '1234.56'
+y.round(0, 1)                             // '1234'
+y.round(0, 6)                             // '1235'
+y.round(1, 1)                             // '1234.5'
+y.round(1, BigNumber.ROUND_HALF_EVEN)     // '1234.6'
+y                                         // '1234.56'</pre>
+
+
+
+    <h5 id="sqrt">
+      squareRoot<code class='inset'>.sqrt() &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      Returns a BigNumber whose value is the square root of this BigNumber,
+      correctly rounded according to the current
+      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+    </p>
+    <pre>
+x = new BigNumber(16)
+x.squareRoot()                // '4'
+y = new BigNumber(3)
+y.sqrt()                      // '1.73205080756887729353'</pre>
+
+
+
+    <h5 id="times">
+      times<code class='inset'>.times(n [, base]) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number|string|BigNumber</i><br />
+      <code>base</code> : <i>number</i><br />
+      <i>
+        See <a href="#bignumber">constructor</a> for further parameter details.
+      </i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber times
+      <code>n</code>.
+    </p>
+    <pre>
+0.6 * 3                         // 1.7999999999999998
+x = new BigNumber(0.6)
+y = x.times(3)                  // '1.8'
+BigNumber('7e+500').times(y)    // '1.26e+501'
+x.times('-a', 16)               // '-6'</pre>
+
+
+
+    <h5 id="toE">
+      toExponential<code class='inset'>.toExponential([dp]) &rArr; <i>string</i></code>
+    </h5>
+    <p>
+      <code>dp</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
     </p>
     <p>
       Returns a string representing the value of this BigNumber in exponential
       notation to the specified decimal places, i.e with one digit before the
-      decimal point and <code>decimal_places</code> digits after it. If rounding
+      decimal point and <code>dp</code> digits after it. If rounding
       is necessary, the current
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
       If the value of this BigNumber in exponential notation has fewer fraction
-      digits then is specified by <code>decimal_places</code>, the return value
-      will be appended with zeros accordingly.
+      digits then is specified by <code>dp</code>, the return value will be
+      appended with zeros accordingly.
     </p>
     <p>
-      If <code>decimal_places</code> is omitted, or is <code>null</code> or
-      undefined, the number of digits after the decimal point defaults to the
-      minimum number of digits necessary to represent the value exactly.
+      If <code>dp</code> is omitted, or is <code>null</code> or undefined, the
+      number of digits after the decimal point defaults to the minimum number of
+      digits necessary to represent the value exactly.
     </p>
     <p>
       See <a href='#Errors'>Errors</a> for the treatment of other
-      non-integer or out of range <code>decimal_places</code> values.
+      non-integer or out of range <code>dp</code> values.
     </p>
     <pre>
 x = 45.6
@@ -1129,32 +1224,31 @@ y = new BigNumber(x)
 x.toExponential()         // '4.56e+1'
 y.toExponential()         // '4.56e+1'
 x.toExponential(0)        // '5e+1'
-y.toE(0)                  // '5e+1'
+y.toExponential(0)        // '5e+1'
 x.toExponential(1)        // '4.6e+1'
-y.toE(1)                  // '4.6e+1'
+y.toExponential(1)        // '4.6e+1'
 x.toExponential(3)        // '4.560e+1'
-y.toE(3)                  // '4.560e+1'</pre>
+y.toExponential(3)        // '4.560e+1'</pre>
 
 
 
     <h5 id="toF">
-      toFixed<code class='inset'>.toF([decimal_places]) &rArr;
-      <i>string</i></code>
+      toFixed<code class='inset'>.toFixed([dp]) &rArr; <i>string</i></code>
     </h5>
     <p>
-      <code>decimal_places</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
+      <code>dp</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
     </p>
     <p>
       Returns a string representing the value of this BigNumber in normal
       notation to the specified fixed number of decimal places, i.e. with
-      <code>decimal_places</code> digits after the decimal point. If rounding is
-      necessary, the current
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting is used.
+      <code>dp</code> digits after the decimal point. If rounding is necessary,
+      the current <a href='#rounding-mode'><code>ROUNDING_MODE</code></a>
+      setting is used.
     </p>
     <p>
       If the value of this BigNumber in normal notation has fewer fraction
-      digits then is specified by <code>decimal_places</code>, the return value
-      will be appended with zeros accordingly.
+      digits then is specified by <code>dp</code>, the return value will be
+      appended with zeros accordingly.
     </p>
     <p>
       Unlike <code>Number.prototype.toFixed</code>, which returns
@@ -1162,31 +1256,139 @@ y.toE(3)                  // '4.560e+1'</pre>
       this method will always return normal notation.
     </p>
     <p>
-      If <code>decimal_places</code> is omitted, or is <code>null</code> or
-      undefined, then the return value is the same as <code>n.toString()</code>.
-      This is  also unlike <code>Number.prototype.toFixed</code>, which returns
-      the value to zero decimal places.
+      If <code>dp</code> is omitted, or is <code>null</code> or undefined, then
+      the return value is the same as <code>n.toString()</code>. This is  also
+      unlike <code>Number.prototype.toFixed</code>, which returns the value to
+      zero decimal places.
     </p>
     <p>
       See <a href='#Errors'>Errors</a> for the treatment of other
-      non-integer or out of range <code>decimal_places</code> values.
+      non-integer or out of range <code>dp</code> values.
     </p>
     <pre>
 x = 45.6
 y = new BigNumber(x)
 x.toFixed()              // '46'
 y.toFixed()              // '45.6'
-y.toF(0)                 // '46'
+y.toFixed(0)             // '46'
 x.toFixed(3)             // '45.600'
-y.toF(3)                 // '45.600'</pre>
+y.toFixed(3)             // '45.600'</pre>
 
 
 
-    <h5 id="toN">toNumber<code class='inset'>.toN() &rArr; <i>number</i></code></h5>
+    <h5 id="toFo">
+       toFormat<code class='inset'>.toFormat([dp]) &rArr; <i>string</i></code>
+    </h5>
+    <p>
+      <code>dp</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
+    </p>
+    <p>
+      Returns a string representing the value of this BigNumber in normal
+      notation rounded to <code>dp</code> decimal places using the current
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a>, and formatted
+      according to the properties of the
+      <a href='#format'><code>FORMAT</code></a> object.
+    </p>
+    <p>
+      See the examples below for the properties of the
+      <a href='#format'><code>FORMAT</code></a> object, their types and their
+      usage.
+    </p>
+    <p>
+      If <code>dp</code> is omitted or is <code>null</code> or undefined, then
+      the return value is not rounded to a fixed number of decimal places.
+    </p>
+    <pre>
+format = {
+    decimalSeparator: '.',
+    groupSeparator: ',',
+    groupSize: 3,
+    secondaryGroupSize: 0,
+    fractionGroupSeparator: ' ',
+    fractionGroupSize: 0
+}
+BigNumber.config({ FORMAT: format })
+
+x = new BigNumber('123456789.123456789')
+x.toFormat()             // '123,456,789.123456789'
+x.toFormat(1)            // '123,456,789.1'
+
+// If a reference to the object assigned to FORMAT has been retained,
+// the format properties can be changed directly
+format.groupSeparator = ' '
+format.fractionGroupSize = 5
+x.toFormat()             // '123 456 789.12345 6789'
+
+BigNumber.config({
+    FORMAT: {
+        decimalSeparator = ',',
+        groupSeparator = '.',
+        groupSize = 3,
+        secondaryGroupSize = 2
+    }
+})
+
+x.toFormat(6)             // '12.34.56.789,123'</pre>
+
+
+
+    <h5 id="toFr">
+      toFraction<code class='inset'>.toFraction([max_denominator]) &rArr;
+      <i>[string, string]</i></code>
+    </h5>
+    <p>
+      <code>max_denominator</code> : <i>number|string|BigNumber</i> :
+      integer &gt;= 1 and &lt; Infinity
+    </p>
+    <p>
+      Returns a string array representing the value of this BigNumber as a
+      simple fraction with an integer numerator and an integer denominator. The
+      denominator will be a positive non-zero value less than or equal to
+      <code>max_denominator</code>.
+    </p>
+    <p>
+      If a maximum denominator is not specified, or is <code>null</code> or
+      undefined, the denominator will be the lowest value necessary to represent
+      the number exactly.
+    </p>
+    <p>
+      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or
+      out of range <code>max_denominator</code> values.
+    </p>
+    <pre>
+x = new BigNumber(1.75)
+x.toFraction()            // '7, 4'
+
+pi = new BigNumber('3.14159265358')
+pi.toFraction()                 // '157079632679,50000000000'
+pi.toFraction(100000)           // '312689, 99532'
+pi.toFraction(10000)            // '355, 113'
+pi.toFraction(100)              // '311, 99'
+pi.toFraction(10)               // '22, 7'
+pi.toFraction(1)                // '3, 1'</pre>
+
+
+
+    <h5 id="toJSON">
+      toJSON<code class='inset'>.toJSON() &rArr; <i>string</i></code>
+    </h5>
+    <p>
+      As <code>toString</code>.
+    </p>
+    <pre>
+x = new BigNumber('123.4e+567')
+str = JSON.stringify(x)</pre>
+
+
+
+    <h5 id="toN">
+      toNumber<code class='inset'>.toNumber() &rArr; <i>number</i></code>
+    </h5>
     <p>Returns the value of this BigNumber as a number primitive.</p>
     <p>
-      Type coercion with, for example, JavaScript's unary plus operator can alternatively be used,
-      but then a BigNumber with the value minus zero will convert to positive zero.
+      Type coercion with, for example, JavaScript's unary plus operator can
+      alternatively be used, but then a BigNumber with the value minus zero will
+      convert to positive zero.
     </p>
     <pre>
 x = new BigNumber(456.789)
@@ -1202,32 +1404,73 @@ z = new BigNumber(-0)
 
 
 
+    <h5 id="pow">
+      toPower<code class='inset'>.pow(n) &rArr; <i>BigNumber</i></code>
+    </h5>
+    <p>
+      <code>n</code> : <i>number</i> : integer, -1e+6 to 1e+6 inclusive
+    </p>
+    <p>
+      Returns a BigNumber whose value is the value of this BigNumber raised to
+      the power <code>n</code>.
+    </p>
+    <p>
+      If <code>n</code> is negative the result is rounded according to the
+      current <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+    </p>
+    <p>
+      If <code>n</code> is not an integer or is out of range:
+    </p>
+    <p class='inset'>
+      If <code>ERRORS</code> is <code>true</code> a BigNumber
+      Error is thrown,<br />
+      else if <code>n</code> is greater than 1e+6, it is interpreted as
+      <code>Infinity</code>;<br />
+      else if <code>n</code> is less than -1e+6, it is interpreted as
+      <code>-Infinity</code>;<br />
+      else if <code>n</code> is otherwise a number, it is truncated to an
+      integer;<br />
+      else it is interpreted as <code>NaN</code>.
+    </p>
+    <p>
+      Note: High value exponents may cause this method to be slow to return.
+    </p>
+    <pre>
+Math.pow(0.7, 2)             // 0.48999999999999994
+x = new BigNumber(0.7)
+x.toPower(2)                 // '0.49'
+BigNumber(3).pow(-2)         // '0.11111111111111111111'
+
+new BigNumber(2).toPower(100000).toString().length    // 30111</pre>
+
+
+
     <h5 id="toP">
-      toPrecision<code class='inset'>.toP([significant_figures]) &rArr;
+      toPrecision<code class='inset'>.toPrecision([sd]) &rArr;
       <i>string</i></code>
     </h5>
     <p>
-      <code>significant_figures</code> : <i>number</i> : integer, 1 to 1e+9
-      inclusive
+      <code>sd</code> : <i>number</i> : integer, 1 to 1e+9 inclusive
     </p>
     <p>
-      Returns a string representing the value of this BigNumber to the
-      specified number of significant digits. If rounding is necessary, the
-      current <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting is
-      used.
+      Returns a string representing the value of this BigNumber to
+      <code>sd</code> significant digits. If rounding is necessary, the
+      current <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting
+      is used.
     </p>
     <p>
-      If <code>significant_figures</code> is less than the number of digits
-      necessary to represent the integer part of the value in normal notation,
-      then exponential notation is used.
+      If <code>sd</code> is less than the number of digits necessary to
+      represent the integer part of the value in normal notation, then
+      exponential notation is used.
     </p>
     <p>
-      If <code>significant_figures</code> is omitted, or is <code>null</code> or
-      undefined, then the return value is the same as <code>n.toString()</code>.
+      If <code>sd</code> is omitted, or is <code>null</code> or undefined,
+      then the return value is the same as <code>n.toString()</code>.
     </p>
     <p>
       See <a href='#Errors'>Errors</a> for the treatment of other
-      non-integer or out of range <code>significant_figures</code> values.
+      non-integer or out of range <code>sd</code> values.
     </p>
     <pre>
 x = 45.6
@@ -1235,14 +1478,14 @@ y = new BigNumber(x)
 x.toPrecision()           // '45.6'
 y.toPrecision()           // '45.6'
 x.toPrecision(1)          // '5e+1'
-y.toP(1)                  // '5e+1'
+y.toPrecision(1)          // '5e+1'
 x.toPrecision(5)          // '45.600'
-y.toP(5)                  // '45.600'</pre>
+y.toPrecision(5)          // '45.600'</pre>
 
 
 
     <h5 id="toS">
-      toString<code class='inset'>.toS([base]) &rArr; <i>string</i></code>
+      toString<code class='inset'>.toString([base]) &rArr; <i>string</i></code>
     </h5>
     <p>
       <code>base</code> : <i>number</i> : integer, 2 to 64 inclusive
@@ -1275,7 +1518,7 @@ y.toP(5)                  // '45.600'</pre>
     <pre>
 x = new BigNumber(750000)
 x.toString()                    // '750000'
-BigNumber.config({ EXPONENTIAL_AT : 5 })
+BigNumber.config({ EXPONENTIAL_AT: 5 })
 x.toString()                    // '7.5e+5'
 
 y = new BigNumber(362.875)
@@ -1283,7 +1526,7 @@ y.toString(2)                   // '101101010.111'
 y.toString(9)                   // '442.77777777777777777778'
 y.toString(32)                  // 'ba.s'
 
-BigNumber.config({ DECIMAL_PLACES : 4 });
+BigNumber.config({ DECIMAL_PLACES: 4 });
 z = new BigNumber('1.23456789')
 z.toString()                    // '1.23456789'
 z.toString(10)                  // '1.2346'</pre>
@@ -1302,116 +1545,34 @@ x.valueOf()                      // '1.777e+457'</pre>
 
 
 
-    <h5 id="toFr">
-      toFraction<code class='inset'>.toFr([max_denominator]) &rArr;
-      <i>[string, string]</i></code>
-    </h5>
-    <p>
-      <code>max_denominator</code> : <i>number|string|BigNumber</i> :
-      integer &gt;= 1 and &lt; Infinity
-    </p>
-    <p>
-      Returns a string array representing the value of this BigNumber as a
-      simple fraction with an integer numerator and an integer denominator. The
-      denominator will be a positive non-zero value less than or equal to
-      <code>max_denominator</code>.
-    </p>
-    <p>
-      If a maximum denominator is not specified, or is <code>null</code> or
-      undefined, the denominator will be the lowest value necessary to represent
-      the number exactly.
-    </p>
-    <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or
-      out of range <code>max_denominator</code> values.
-    </p>
-    <pre>
-x = new BigNumber(1.75)
-x.toFraction()            // '7, 4'
-
-pi = new BigNumber('3.14159265358')
-pi.toFr()                 // '157079632679,50000000000'
-pi.toFr(100000)           // '312689, 99532'
-pi.toFr(10000)            // '355, 113'
-pi.toFr(100)              // '311, 99'
-pi.toFr(10)               // '22, 7'
-pi.toFr(1)                // '3, 1'</pre>
-
-
-
-    <h5 id="round">
-      round<code class='inset'>.round([decimal_places [, rounding_mode]])
-      &rArr; <i>BigNumber</i></code>
-    </h5>
-    <p>
-      <code>decimal_places</code> : <i>number</i> : integer, 0 to 1e+9 inclusive
-      <br />
-      <code>rounding_mode</code> : <i>number</i> : integer, 0 to 8 inclusive
-    </p>
-    <p>
-      Returns a BigNumber whose value is the value of this BigNumber rounded by
-      the specified <code>rounding_mode</code> to a maximum of
-      <code>decimal_places</code> digits after the decimal point.
-    </p>
-    <p>
-      if <code>decimal_places</code> is omitted, or is <code>null</code> or
-      undefined, the return value is <code>n</code> rounded to a whole number.
-    </p>
-    <p>
-      if <code>rounding_mode</code> is omitted, or is <code>null</code> or
-      undefined, the current
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> setting is used.
-    </p>
-    <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other
-      non-integer or out of range <code>decimal_places</code> or
-      <code>rounding_mode</code> values.
-    </p>
-    <pre>
-x = 1234.56
-Math.round(x)                             // 1235
-
-y = new BigNumber(x)
-y.round()                                 // '1235'
-y.round(1)                                // '1234.6'
-y.round(2)                                // '1234.56'
-y.round(10)                               // '1234.56'
-y.round(0, 1)                             // '1234'
-y.round(0, 6)                             // '1235'
-y.round(1, 1)                             // '1234.5'
-y.round(1, BigNumber.ROUND_HALF_EVEN)     // '1234.6'
-y                                         // '1234.56'</pre>
-
-
-
     <h4 id="instance-properties">Properties</h4>
     <p>
       A BigNumber is an object with three properties:
     </p>
     <table>
       <tr>
-      	<th>Property</th>
-      	<th>Description</th>
-      	<th>Type</th>
-      	<th>Value</th>
+        <th>Property</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Value</th>
       </tr>
       <tr>
-      	<td class='centre' id='coefficient'><b>c</b></td>
-      	<td>coefficient<sup>*</sup></td>
-      	<td><i>number</i><code>[]</code></td>
-      	<td> Array of single digits</td>
+        <td class='centre' id='coefficient'><b>c</b></td>
+        <td>coefficient<sup>*</sup></td>
+        <td><i>number</i><code>[]</code></td>
+        <td> Array of base 1e14 numbers</td>
       </tr>
       <tr>
-      	<td class='centre' id='exponent'><b>e</b></td>
-      	<td>exponent</td>
-      	<td><i>number</i></td>
-      	<td>Integer, -1e+9 to 1e+9 inclusive</td>
+        <td class='centre' id='exponent'><b>e</b></td>
+        <td>exponent</td>
+        <td><i>number</i></td>
+        <td>Integer, -1e9 to 1e9 inclusive</td>
       </tr>
       <tr>
-      	<td class='centre' id='sign'><b>s</b></td>
-      	<td>sign</td>
-      	<td><i>number</i></td>
-      	<td>-1 or 1</td>
+        <td class='centre' id='sign'><b>s</b></td>
+        <td>sign</td>
+        <td><i>number</i></td>
+        <td>-1 or 1</td>
       </tr>
     </table>
     <p><sup>*</sup>significand</p>
@@ -1419,10 +1580,17 @@ y                                         // '1234.56'</pre>
       The value of any of the three properties may also be <code>null</code>.
     </p>
     <p>
-      The value of a BigNumber is stored in a normalised decimal floating point
-      format which corresponds to the value's <code>toExponential</code> form,
-      with the decimal point to be positioned after the most significant
-      (left-most) digit of the coefficient.
+      From version 2 of this library, the value of the coefficient of a
+      BigNumber is stored in a normalised base <code>100000000000000</code>
+      floating point format, as opposed to the base 10 format used in version 1.
+    </p>
+    <p>
+      This change means the properties of a BigNumber are now best considered to
+      be read-only. Previously it was acceptable to change the exponent of a
+      BigNumber by writing to its exponent property directly, but this is no
+      longer recommended as the number of digits in the first element of the
+      coefficient array is dependent on the exponent, so the coefficient would
+      also need to be altered.
     </p>
     <p>
       Note that, as with JavaScript numbers, the original exponent and
@@ -1443,26 +1611,6 @@ z.e                                   // 4
 z.s                                   // -1</pre>
 
 
-    <p>
-      A BigNumber is mutable in the sense that the value of its properties can
-      be changed.<br />
-      For example, to rapidly shift a value by a power of 10:
-    </p>
-    <pre>
-x = new BigNumber('1234.000')      // '1234'
-x.toExponential()                  // '1.234e+3'
-x.c                                // '1,2,3,4'
-x.e                                // 3
-
-x.e = -5
-x                                  // '0.00001234'</pre>
-    <p>
-      If changing the coefficient array directly, which is not recommended, be
-      careful to avoid leading or trailing zeros (unless zero itself is being
-      represented).
-    </p>
-
-
 
     <h4 id="zero-nan-infinity">Zero, NaN and Infinity</h4>
     <p>
@@ -1470,28 +1618,28 @@ x                                  // '0.00001234'</pre>
     </p>
     <table>
       <tr>
-      	<th> </th>
-      	<th class='centre'>c</th>
-      	<th class='centre'>e</th>
-      	<th class='centre'>s</th>
+        <th> </th>
+        <th class='centre'>c</th>
+        <th class='centre'>e</th>
+        <th class='centre'>s</th>
       </tr>
       <tr>
-      	<td>&plusmn;0</td>
-      	<td><code>[0]</code></td>
-      	<td><code>0</code></td>
-      	<td><code>&plusmn;1</code></td>
+        <td>&plusmn;0</td>
+        <td><code>[0]</code></td>
+        <td><code>0</code></td>
+        <td><code>&plusmn;1</code></td>
       </tr>
       <tr>
-      	<td>NaN</td>
-      	<td><code>null</code></td>
-      	<td><code>null</code></td>
-      	<td><code>null</code></td>
+        <td>NaN</td>
+        <td><code>null</code></td>
+        <td><code>null</code></td>
+        <td><code>null</code></td>
       </tr>
       <tr>
-      	<td>&plusmn;Infinity</td>
-      	<td><code>null</code></td>
-      	<td><code>null</code></td>
-      	<td><code>&plusmn;1</code></td>
+        <td>&plusmn;Infinity</td>
+        <td><code>null</code></td>
+        <td><code>null</code></td>
+        <td><code>&plusmn;1</code></td>
       </tr>
     </table>
     <pre>
@@ -1514,15 +1662,16 @@ y.s                     // -1</pre>
     </p>
     <table class='error-table'>
       <tr>
-      	<th>Method(s)</th>
-      	<th>ERRORS : true<br />Throw BigNumber Error</th>
-      	<th>ERRORS : false<br />Action on invalid argument</th>
+        <th>Method(s)</th>
+        <th>ERRORS: true<br />Throw BigNumber Error</th>
+        <th>ERRORS: false<br />Action on invalid argument</th>
       </tr>
       <tr>
-      	<td rowspan=5><code>
+        <td rowspan=5><code>
         BigNumber<br />
         comparedTo<br />
         dividedBy<br />
+        dividedToIntegerBy<br />
         equals<br />
         greaterThan<br />
         greaterThanOrEqualTo<br />
@@ -1532,148 +1681,151 @@ y.s                     // -1</pre>
         mod<br />
         plus<br />
         times</code></td>
-      	<td>number type has more than<br />15 significant digits</td>
-      	<td>Accept.</td>
+        <td>number type has more than<br />15 significant digits</td>
+        <td>Accept.</td>
       </tr>
       <tr>
-      	<td>not a base... number</td>
-      	<td>Substitute <code>NaN</code>.</td>
+        <td>not a base... number</td>
+        <td>Substitute <code>NaN</code>.</td>
       </tr>
       <tr>
-      	<td>base not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td>base not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>base out of range</td>
-      	<td>Ignore.</td>
+        <td>base out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>not a number<sup>*</sup></td>
-      	<td>Substitute <code>NaN</code>.</td>
+        <td>not a number<sup>*</sup></td>
+        <td>Substitute <code>NaN</code>.</td>
       </tr>
       <tr>
-      	<td rowspan=9><code>config</code></td>
-      	<td><code>DECIMAL_PLACES</code> not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=10><code>config</code></td>
+        <td><code>DECIMAL_PLACES</code> not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td><code>DECIMAL_PLACES</code> out of range</td>
-      	<td>Ignore.</td>
+        <td><code>DECIMAL_PLACES</code> out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td><code>ROUNDING_MODE</code> not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td><code>ROUNDING_MODE</code> not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td><code>ROUNDING_MODE</code> out of range</td>
-      	<td>Ignore.</td>
+        <td><code>ROUNDING_MODE</code> out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>
+        <td>
           <code>EXPONENTIAL_AT</code> not an integer<br />
           or not [integer, integer]
         </td>
-      	<td>Truncate to integer(s).<br />Ignore if not number(s).</td>
+        <td>Truncate to integer(s).<br />Ignore if not number(s).</td>
       </tr>
       <tr>
-      	<td>
+        <td>
           <code>EXPONENTIAL_AT</code> out of range<br />
           or not [negative, positive]
         </td>
-      	<td>Ignore.</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>
+        <td>
           <code>RANGE</code> not a non-zero integer<br />
           or not [integer, integer]
         </td>
-      	<td> Truncate to integer(s).<br />Ignore if zero or not number(s).</td>
+        <td> Truncate to integer(s).<br />Ignore if zero or not number(s).</td>
       </tr>
        <tr>
-      	<td>
+        <td>
           <code>RANGE</code> out of range<br />
           or not [negative, positive]
         </td>
-      	<td>Ignore.</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>
+        <td>
           <code>ERRORS</code> not a boolean<br />
           or binary digit
         </td>
-      	<td>Ignore.</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toPower</code></td>
-      	<td>exponent not an integer</td>
-      	<td>Truncate to integer.<br />Substitute <code>NaN</code> if not a number.</td>
+        <td>
+          <code>FORMAT</code> not an object
+        </td>
+        <td>Ignore.</td>
+      </tr>
+      <tr>
+        <td rowspan=2><code>toPower</code></td>
+        <td>exponent not an integer</td>
+        <td>
+          Truncate to integer.<br />Substitute <code>NaN</code> if not a number.
+        </td>
       </tr>
        <tr>
-      	<td>exponent out of range</td>
-      	<td>Substitute <code>&plusmn;Infinity</code>.
+        <td>exponent out of range</td>
+        <td>Substitute <code>&plusmn;Infinity</code>.
         </td>
       </tr>
       <tr>
-      	<td rowspan=4><code>round</code></td>
-      	<td>decimal places not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=4><code>round</code></td>
+        <td>decimal places not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>decimal places out of range</td>
-      	<td>Ignore.</td>
+        <td>decimal places out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td>mode not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td>mode not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>mode out of range</td>
-      	<td>Ignore.</td>
+        <td>mode out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toExponential</code></td>
-      	<td>decimal places not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=2>
+          <code>toExponential</code><br />
+          <code>toFixed</code><br />
+          <code>toFormat</code>
+        </td>
+        <td>decimal places not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>decimal places out of range</td>
-      	<td>Ignore.</td>
+        <td>decimal places out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toFixed</code></td>
-      	<td>decimal places not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=2><code>toFraction</code></td>
+        <td>max denominator not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>decimal places out of range</td>
-      	<td>Ignore.</td>
+        <td>max denominator out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toFraction</code></td>
-      	<td>max denominator not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=2><code>toPrecision</code></td>
+        <td>precision not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>max denominator out of range</td>
-      	<td>Ignore.</td>
+        <td>precision out of range</td>
+        <td>Ignore.</td>
       </tr>
       <tr>
-      	<td rowspan=2><code>toPrecision</code></td>
-      	<td>precision not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=2><code>toString</code></td>
+        <td>base not an integer</td>
+        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
-      	<td>precision out of range</td>
-      	<td>Ignore.</td>
-      </tr>
-      <tr>
-      	<td rowspan=2><code>toString</code></td>
-      	<td>base not an integer</td>
-      	<td>Truncate to integer.<br />Ignore if not a number.</td>
-      </tr>
-      <tr>
-      	<td>base out of range</td>
-      	<td>Ignore.</td>
+        <td>base out of range</td>
+        <td>Ignore.</td>
       </tr>
     </table>
     <p>

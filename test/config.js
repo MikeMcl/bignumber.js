@@ -417,6 +417,31 @@ var count = (function config(BigNumber) {
     assert(false, BigNumber.config({ERRORS : Boolean(false)}).ERRORS);
     assert(true, BigNumber.config({ERRORS : Boolean('false')}).ERRORS);
 
+    // FORMAT
+
+    assertException(function () {BigNumber.config({FORMAT : ''})}, "FORMAT : ''");
+    assertException(function () {BigNumber.config({FORMAT : 1})}, "FORMAT : 1");
+
+    obj = {
+        decimalSeparator : '.',
+        groupSeparator : ',',
+        groupSize : 3,
+        secondaryGroupSize : 0,
+        fractionGroupSeparator : '\xA0',
+        fractionGroupSize : 0
+    };
+
+    assert(obj, BigNumber.config({FORMAT : obj}).FORMAT);
+
+    assert('.', BigNumber.config().FORMAT.decimalSeparator);
+    obj.decimalSeparator = ',';
+    assert(',', BigNumber.config().FORMAT.decimalSeparator);
+
+    assert(obj, BigNumber.config({FORMAT : null}).FORMAT);
+
+    BigNumber.config({ ERRORS : false });
+    assert(obj, BigNumber.config({FORMAT : 2}).FORMAT);
+
     // Test constructor parsing.
 
     BigNumber.config({
@@ -427,19 +452,24 @@ var count = (function config(BigNumber) {
         ERRORS : true
     });
 
-    assert('NaN', new BigNumber(NaN).toS());
-    assert('NaN', new BigNumber('NaN').toS());
-    assert('NaN', new BigNumber(' NaN').toS());
-    assert('NaN', new BigNumber('NaN ').toS());
-    assert('NaN', new BigNumber(' NaN ').toS());
-    assert('NaN', new BigNumber('+NaN').toS());
-    assert('NaN', new BigNumber(' +NaN').toS());
-    assert('NaN', new BigNumber('+NaN ').toS());
-    assert('NaN', new BigNumber(' +NaN ').toS());
-    assert('NaN', new BigNumber('-NaN').toS());
-    assert('NaN', new BigNumber(' -NaN').toS());
-    assert('NaN', new BigNumber('-NaN ').toS());
-    assert('NaN', new BigNumber(' -NaN ').toS());
+    assert('Infinity', new BigNumber('1e10000000000').toString());
+    assert('-Infinity', new BigNumber('-1e10000000000').toString());
+    assert('0', new BigNumber('1e-10000000000').toString());
+    assert('0', new BigNumber('-1e-10000000000').toString());
+
+    assert('NaN', new BigNumber(NaN).toString());
+    assert('NaN', new BigNumber('NaN').toString());
+    assert('NaN', new BigNumber(' NaN').toString());
+    assert('NaN', new BigNumber('NaN ').toString());
+    assert('NaN', new BigNumber(' NaN ').toString());
+    assert('NaN', new BigNumber('+NaN').toString());
+    assert('NaN', new BigNumber(' +NaN').toString());
+    assert('NaN', new BigNumber('+NaN ').toString());
+    assert('NaN', new BigNumber(' +NaN ').toString());
+    assert('NaN', new BigNumber('-NaN').toString());
+    assert('NaN', new BigNumber(' -NaN').toString());
+    assert('NaN', new BigNumber('-NaN ').toString());
+    assert('NaN', new BigNumber(' -NaN ').toString());
 
     assertException(function () {new BigNumber('+ NaN')}, "+ NaN");
     assertException(function () {new BigNumber('- NaN')}, "- NaN");
@@ -451,19 +481,19 @@ var count = (function config(BigNumber) {
     assertException(function () {new BigNumber('-.NaN')}, "-.NaN");
     assertException(function () {new BigNumber('+.NaN')}, "+.NaN");
 
-    assert('Infinity', new BigNumber(Infinity).toS());
-    assert('Infinity', new BigNumber('Infinity').toS());
-    assert('Infinity', new BigNumber(' Infinity').toS());
-    assert('Infinity', new BigNumber('Infinity ').toS());
-    assert('Infinity', new BigNumber(' Infinity ').toS());
-    assert('Infinity', new BigNumber('+Infinity').toS());
-    assert('Infinity', new BigNumber(' +Infinity').toS());
-    assert('Infinity', new BigNumber('+Infinity ').toS());
-    assert('Infinity', new BigNumber(' +Infinity ').toS());
-    assert('-Infinity', new BigNumber('-Infinity').toS());
-    assert('-Infinity', new BigNumber(' -Infinity').toS());
-    assert('-Infinity', new BigNumber('-Infinity ').toS());
-    assert('-Infinity', new BigNumber(' -Infinity ').toS());
+    assert('Infinity', new BigNumber(Infinity).toString());
+    assert('Infinity', new BigNumber('Infinity').toString());
+    assert('Infinity', new BigNumber(' Infinity').toString());
+    assert('Infinity', new BigNumber('Infinity ').toString());
+    assert('Infinity', new BigNumber(' Infinity ').toString());
+    assert('Infinity', new BigNumber('+Infinity').toString());
+    assert('Infinity', new BigNumber(' +Infinity').toString());
+    assert('Infinity', new BigNumber('+Infinity ').toString());
+    assert('Infinity', new BigNumber(' +Infinity ').toString());
+    assert('-Infinity', new BigNumber('-Infinity').toString());
+    assert('-Infinity', new BigNumber(' -Infinity').toString());
+    assert('-Infinity', new BigNumber('-Infinity ').toString());
+    assert('-Infinity', new BigNumber(' -Infinity ').toString());
 
     assertException(function () {new BigNumber('+ Infinity')}, "+ Infinity");
     assertException(function () {new BigNumber(' + Infinity')}, " + Infinity");
@@ -476,24 +506,24 @@ var count = (function config(BigNumber) {
     assertException(function () {new BigNumber('-.Infinity')}, "-.Infinity");
     assertException(function () {new BigNumber('+.Infinity')}, "+.Infinity");
 
-    assert('0', new BigNumber(0).toS());
-    assert('0', new BigNumber(-0).toS());
-    assert('0', new BigNumber('.0').toS());
-    assert('0', new BigNumber('0.').toS());
-    assert('0', new BigNumber('-0.').toS());
-    assert('0', new BigNumber('+0.').toS());
-    assert('0', new BigNumber('+0').toS());
-    assert('0', new BigNumber('-0').toS());
-    assert('0', new BigNumber(' +0').toS());
-    assert('0', new BigNumber(' -0').toS());
-    assert('0', new BigNumber(' +0 ').toS());
-    assert('0', new BigNumber(' -0 ').toS());
-    assert('0', new BigNumber('+.0').toS());
-    assert('0', new BigNumber('-.0').toS());
-    assert('0', new BigNumber(' +.0').toS());
-    assert('0', new BigNumber(' -.0').toS());
-    assert('0', new BigNumber(' +.0 ').toS());
-    assert('0', new BigNumber(' -.0 ').toS());
+    assert('0', new BigNumber(0).toString());
+    assert('0', new BigNumber(-0).toString());
+    assert('0', new BigNumber('.0').toString());
+    assert('0', new BigNumber('0.').toString());
+    assert('0', new BigNumber('-0.').toString());
+    assert('0', new BigNumber('+0.').toString());
+    assert('0', new BigNumber('+0').toString());
+    assert('0', new BigNumber('-0').toString());
+    assert('0', new BigNumber(' +0').toString());
+    assert('0', new BigNumber(' -0').toString());
+    assert('0', new BigNumber(' +0 ').toString());
+    assert('0', new BigNumber(' -0 ').toString());
+    assert('0', new BigNumber('+.0').toString());
+    assert('0', new BigNumber('-.0').toString());
+    assert('0', new BigNumber(' +.0').toString());
+    assert('0', new BigNumber(' -.0').toString());
+    assert('0', new BigNumber(' +.0 ').toString());
+    assert('0', new BigNumber(' -.0 ').toString());
 
     assertException(function () {new BigNumber('+-0')}, "+-0");
     assertException(function () {new BigNumber('-+0')}, "-+0");
@@ -509,22 +539,22 @@ var count = (function config(BigNumber) {
     assertException(function () {new BigNumber('+. 0')}, "+. 0");
     assertException(function () {new BigNumber('-. 0')}, "-. 0");
 
-    assert('2', new BigNumber('+2').toS());
-    assert('-2', new BigNumber('-2').toS());
-    assert('2', new BigNumber(' +2').toS());
-    assert('-2', new BigNumber(' -2').toS());
-    assert('2', new BigNumber(' +2 ').toS());
-    assert('-2', new BigNumber(' -2 ').toS());
-    assert('0.2', new BigNumber('.2').toS());
-    assert('2', new BigNumber('2.').toS());
-    assert('-2', new BigNumber('-2.').toS());
-    assert('2', new BigNumber('+2.').toS());
-    assert('0.2', new BigNumber('+.2').toS());
-    assert('-0.2', new BigNumber('-.2').toS());
-    assert('0.2', new BigNumber(' +.2').toS());
-    assert('-0.2', new BigNumber(' -.2').toS());
-    assert('0.2', new BigNumber(' +.2 ').toS());
-    assert('-0.2', new BigNumber(' -.2 ').toS());
+    assert('2', new BigNumber('+2').toString());
+    assert('-2', new BigNumber('-2').toString());
+    assert('2', new BigNumber(' +2').toString());
+    assert('-2', new BigNumber(' -2').toString());
+    assert('2', new BigNumber(' +2 ').toString());
+    assert('-2', new BigNumber(' -2 ').toString());
+    assert('0.2', new BigNumber('.2').toString());
+    assert('2', new BigNumber('2.').toString());
+    assert('-2', new BigNumber('-2.').toString());
+    assert('2', new BigNumber('+2.').toString());
+    assert('0.2', new BigNumber('+.2').toString());
+    assert('-0.2', new BigNumber('-.2').toString());
+    assert('0.2', new BigNumber(' +.2').toString());
+    assert('-0.2', new BigNumber(' -.2').toString());
+    assert('0.2', new BigNumber(' +.2 ').toString());
+    assert('-0.2', new BigNumber(' -.2 ').toString());
 
     assertException(function () {new BigNumber('+-2')}, "+-2");
     assertException(function () {new BigNumber('-+2')}, "-+2");

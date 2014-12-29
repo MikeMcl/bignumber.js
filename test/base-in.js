@@ -370,6 +370,7 @@ var count = (function baseIn(BigNumber) {
 
     BigNumber.config({DECIMAL_PLACES : 20});
 
+    assertException(function () {new BigNumber(1010101010101010, 2).toString()}, "(1010101010101010, 2)");
     assertException(function () {new BigNumber('2', 0).toString()}, "('2', 0)");
     assertException(function () {new BigNumber('2', 2).toString()}, "('2', 2)");
     assertException(function () {new BigNumber('2', '-2').toString()}, "('2', '-2')");
@@ -448,6 +449,11 @@ var count = (function baseIn(BigNumber) {
     T('-Infinity', '-Infinity', 10);
     T('101725686101180', '101725686101180', undefined);
     T('101725686101180', '101725686101180', 10);
+
+    BigNumber.config({ERRORS : true});
+
+    T('635356108986960269840155289238139379273453551922021969747464031737829471932451727645074552025138332075241803866047', '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_', 64);
+    T('64163.091552734375', 'fGz.5T', 64);
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];;

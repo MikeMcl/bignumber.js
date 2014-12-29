@@ -64,6 +64,11 @@ var count = (function toFraction(BigNumber) {
         EXPONENTIAL_AT : 1E9
     });
 
+    T('Infinity', 'Infinity', u);
+    T('-Infinity', -Infinity, u);
+    T('NaN', 'NaN', u);
+    T('NaN', NaN, u);
+
     // Tests generated using Python's fraction module.
 
     T('1,10', '0.1', u);

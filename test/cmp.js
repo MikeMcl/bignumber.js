@@ -34,6 +34,25 @@ var count = (function cmp(BigNumber) {
         }
     }
 
+    function assertException(func, message) {
+        var actual;
+        total++;
+        try {
+            func();
+        } catch (e) {
+            actual = e;
+        }
+        if (actual && actual.name == 'BigNumber Error') {
+            passed++;
+            //log('\n Expected and actual: ' + actual);
+        } else {
+            error('\n Test number: ' + total + ' failed');
+            error('\n Expected: ' + message + ' to raise a BigNumber Error.');
+            error(' Actual:   ' + (actual || 'no exception'));
+            //process.exit();
+        }
+    }
+
     function T(a, b, expected) {
         assert(String(expected), String(new BigNumber(a).cmp(b)));
         assert(String(expected), String(new BigNumber(a).cmp(new BigNumber(b))));
@@ -4120,6 +4139,9 @@ var count = (function cmp(BigNumber) {
     T('40.541819234520934594813', '-40.541819234520934594813', 1);
     T('-0.10021507', '-2049541544645617700923988306', 1);
     T('6609143733354158875894', '-6609143733354158875894', 1);
+
+    BigNumber.config({ ERRORS : true });
+    assertException(function () {new BigNumber(1).cmp('one')}, "new BigNumber(1).cmp('one')");
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];;

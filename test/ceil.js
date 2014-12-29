@@ -203,6 +203,6 @@ var count = (function ceil(BigNumber) {
     // ------------------------------------------------------------------ v8 end
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;
