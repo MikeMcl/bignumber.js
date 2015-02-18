@@ -247,8 +247,12 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.0.2
+* 18/02/2015
+* Correct links
+
 ####2.0.1
-* 17/02/2015
+* 18/02/2015
 * Add `max`, `min`, `precision`, `random`, `shift`, `toDigits` and `truncated` methods.
 * Add the short-forms: `add`, `mul`, `sd`, `sub` and `trunc`.
 * Add an `another` method to enable multiple independent constructors to be created.
