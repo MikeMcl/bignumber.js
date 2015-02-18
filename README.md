@@ -212,7 +212,7 @@ This is version 2.x.x of the library, for version 1.x.x see the tagged releases 
 
 ## Performance
 
-See the [README](https://github.com/MikeMcl/bignumber.js/perf/README.md) in the *perf* directory.
+See the [README](https://github.com/MikeMcl/bignumber.js/tree/master/perf) in the *perf* directory.
 
 ## Build
 
@@ -243,7 +243,7 @@ BTC
 
 MIT.
 
-See [LICENCE](https://github.com/MikeMcl/bignumber.js/LICENCE).
+See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
