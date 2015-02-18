@@ -38,11 +38,11 @@ var count = (function ceil(BigNumber) {
     log('\n Testing ceil...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: 1E9
     });
 
     T('-2075364', '-2075364.364286541923');
@@ -151,7 +151,7 @@ var count = (function ceil(BigNumber) {
     T(-1, -1.5);
     T(-1, -1.7);
 
-    BigNumber.config({EXPONENTIAL_AT : 100});
+    BigNumber.config({EXPONENTIAL_AT: 100});
 
     T(0, -1e-308);
     T(-1e308, -1e308);

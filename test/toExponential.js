@@ -4,7 +4,8 @@ var count = (function toExponential(BigNumber) {
         error,
         undefined,
         passed = 0,
-        total = 0;
+        total = 0,
+        MAX = 1e9;
 
     if (typeof window === 'undefined') {
         log = console.log;
@@ -57,11 +58,11 @@ var count = (function toExponential(BigNumber) {
     log('\n Testing toExponential...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: 1E9
     });
 
     T('1e+0', 1, undefined);
@@ -152,7 +153,7 @@ var count = (function toExponential(BigNumber) {
     T('1.00e+9', '999702726', 2);
     T('1.000e+3', '999.964717', 3);
 
-    BigNumber.config({ROUNDING_MODE : 0});
+    BigNumber.config({ROUNDING_MODE: 0});
 
     T('-5.3453435435e+8', '-53453.435435E4', undefined);
     T('-8.8254658100092746334967191957167916942544e+17', '-882546581000927463.34967191957167916942543286', 40);
@@ -226,7 +227,7 @@ var count = (function toExponential(BigNumber) {
     T('-6.02219e+18', '-6022186164465021650.884475588', 5);
     T('-7.790612428288e+18', '-7790612428287383595.5394047', 12);
 
-    BigNumber.config({ROUNDING_MODE : 1});
+    BigNumber.config({ROUNDING_MODE: 1});
 
     T('0e+0', '-0.0E-0', undefined);
     T('-2.856376815219143184897347685012382222462687620998915470135915e+6', '-2856376.815219143184897347685012382222462687620998915470135915511363444', 60);
@@ -294,7 +295,7 @@ var count = (function toExponential(BigNumber) {
     T('-4.092360120459492827213341546580282588568024330771e+25', '-40923601204594928272133415.465802825885680243307714368088538', 48);
     T('-1.241037736e-28', '-0.00000000000000000000000000012410377364', 9);
 
-    BigNumber.config({ROUNDING_MODE : 2});
+    BigNumber.config({ROUNDING_MODE: 2});
 
     T('0e+0', '0E0000000000', undefined);
     T('0e+0', '-0E01', undefined);
@@ -392,7 +393,7 @@ var count = (function toExponential(BigNumber) {
     T('-7.2570104326587672213e+16', '-72570104326587672.213076838263780308795144628367752', 19);
     T('-4.445769230869049803541e+15', '-4445769230869049.80354196820931591782233498498378174385', 21);
 
-    BigNumber.config({ROUNDING_MODE : 3});
+    BigNumber.config({ROUNDING_MODE: 3});
 
     T('-9.99999999000000009e+8', '-999999999.000000009e-0', undefined);
     T('-3.99764422903251220452704763278376060858663250289320247532595e+24', '-3997644229032512204527047.63278376060858663250289320247532594416986984981431156065660613', 59);
@@ -486,7 +487,7 @@ var count = (function toExponential(BigNumber) {
     T('-9.41834953e+18', '-9418349527156084224.2', 8);
     T('-3.19716162829318952418046452988e+13', '-31971616282931.895241804645298754890905582545633', 29);
 
-    BigNumber.config({ROUNDING_MODE : 4});
+    BigNumber.config({ROUNDING_MODE: 4});
 
     T('-5.002239116605888927178702930656e-39', '-0.00000000000000000000000000000000000000500223911660588892717870293065633642', 30);
     T('-8.52292947230244775435e+29', '-852292947230244775434968241532.494643593912804433318745222587246680109833509655450267792446', 20);
@@ -574,7 +575,7 @@ var count = (function toExponential(BigNumber) {
     T('-7.121660153198989278372512656775647e-11', '-0.0000000000712166015319898927837251265677564651728358', 33);
     T('-7.98924570545536548623603750084330391943e+19', '-79892457054553654862.360375008433039194317394396964358522', 38);
 
-    BigNumber.config({ROUNDING_MODE : 5});
+    BigNumber.config({ROUNDING_MODE: 5});
 
     T('4.95474614815842e+38', '495474614815842191683004449862568813538.573064401156', 14);
     T('-8.9667567079038139e+16', '-89667567079038139', 16);
@@ -654,7 +655,7 @@ var count = (function toExponential(BigNumber) {
     T('-7.18294352e-11', '-0.0000000000718294352479105', 8);
     T('-3.52454012503419773886785e-25', '-0.000000000000000000000000352454012503419773886785342913143', 23);
 
-    BigNumber.config({ROUNDING_MODE : 6});
+    BigNumber.config({ROUNDING_MODE: 6});
 
     T('-4.3502707501164e+36', '-4350270750116411997402439304498892819', 13);
     T('9.5e-21', '0.0000000000000000000094520280724178734152', 1);
@@ -734,7 +735,7 @@ var count = (function toExponential(BigNumber) {
     T('-4.06575860462e+17', '-406575860461750182.91372176567693718', 11);
     T('-8.90585675951e+19', '-89058567595113495345', 11);
 
-    BigNumber.config({ROUNDING_MODE : 4});
+    BigNumber.config({ROUNDING_MODE: 4});
 
     T('-2.033619450856645241153977e+0', '-2.03361945085664524115397653636144859', 24);
     T('1.130e+8', '112955590.0430616', 3);
@@ -759,7 +760,9 @@ var count = (function toExponential(BigNumber) {
     T('-5.00e-2', '-0.05', 2);
     T('1.00e-2', '0.01', 2);
 
-    T('1.230e+2', '12.3e1',BigNumber('3'));
+    T('1.23000000000e+2', '12.3e1', '1.1e1');
+    T('1.230e+2', '12.3e1', new BigNumber('3'));
+    T('1.230e+2', '12.3e1', 3);
     T('1.23e+2', '12.3e1', null);
     T('1.23e+2', '12.3e1', undefined);
     T('1e+2', '12.3e1', '0');
@@ -780,21 +783,21 @@ var count = (function toExponential(BigNumber) {
     assertException(function () {new BigNumber('1.23').toExponential(new RegExp)}, "('1.23').toExponential(new RegExp)");
     assertException(function () {new BigNumber('1.23').toExponential(2.01)}, "('1.23').toExponential(2.01)");
     assertException(function () {new BigNumber('1.23').toExponential(10.5)}, "('1.23').toExponential(10.5)");
-    assertException(function () {new BigNumber('1.23').toExponential('1.1e1')}, "('1.23').toExponential('1.1e1')");
+    assertException(function () {new BigNumber('1.23').toExponential('-1.1e1')}, "('1.23').toExponential('-1.1e1')");
     assertException(function () {new BigNumber('1.23').toExponential(true)}, "('1.23').toExponential(true)");
     assertException(function () {new BigNumber('1.23').toExponential(false)}, "('1.23').toExponential(false)");
     assertException(function () {new BigNumber('1.23').toExponential(function (){})}, "('1.23').toExponential(function (){})");
 
     assertException(function () {new BigNumber(12.3).toExponential('-1')}, ".toExponential('-1')");
     assertException(function () {new BigNumber(12.3).toExponential(-23)}, ".toExponential(-23)");
-    assertException(function () {new BigNumber(12.3).toExponential(1e9 + 1)}, ".toExponential(1e9 + 1)");
-    assertException(function () {new BigNumber(12.3).toExponential(1e9 + 0.1)}, ".toExponential(1e9 + 0.1)");
+    assertException(function () {new BigNumber(12.3).toExponential(MAX + 1)}, ".toExponential(MAX + 1)");
+    assertException(function () {new BigNumber(12.3).toExponential(MAX + 0.1)}, ".toExponential(MAX + 0.1)");
     assertException(function () {new BigNumber(12.3).toExponential(-0.01)}, ".toExponential(-0.01)");
     assertException(function () {new BigNumber(12.3).toExponential('-1e-1')}, ".toExponential('-1e-1')");
     assertException(function () {new BigNumber(12.3).toExponential(Infinity)}, ".toExponential(Infinity)");
     assertException(function () {new BigNumber(12.3).toExponential('-Infinity')}, ".toExponential('-Infinity')");
 
-    BigNumber.config({ERRORS : false});
+    BigNumber.config({ERRORS: false});
 
     T('Infinity', Infinity, 0);
     T('Infinity', Infinity, NaN);
@@ -816,7 +819,7 @@ var count = (function toExponential(BigNumber) {
     T('1.23e+2', '12.3e1', ' ');
     T('1.23e+2', '12.3e1', new Date);
     T('1.23e+2', '12.3e1', new RegExp);
-    
+
     T('1e+2', '12.3e1', -0);
     T('1.2e+2', '12.3e1', 1.999);
     T('1.2300000e+2', '12.3e1', 7.5);
@@ -824,22 +827,13 @@ var count = (function toExponential(BigNumber) {
 
     T('1.23e+2', '12.3e1', '-1');
     T('1.23e+2', '12.3e1', -23);
-    T('1.23e+2', '12.3e1', 1e9 + 1);
-    T('1.23e+2', '12.3e1', 1e9 + 0.1);
-    T('1.23e+2', '12.3e1', -0.01);
-    T('1.23e+2', '12.3e1', '-1e-1');
+    T('1.23e+2', '12.3e1', MAX + 1);
+    T('1e+2', '12.3e1', -0.01);
+    T('1e+2', '12.3e1', '-1e-1');
     T('1.23e+2', '12.3e1', Infinity);
     T('1.23e+2', '12.3e1', '-Infinity');
 
-    BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
-    });
-    
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

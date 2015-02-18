@@ -34,7 +34,7 @@ var arg, i, max, method, methodIndex, decimalPlaces,
             if ( z = r === '0' ) {
                 r += '.';
             }
-            
+
             for ( ; i++ < n; r += Math.random() * 10 | 0 ){}
 
             // 20% chance of integer
@@ -45,13 +45,13 @@ var arg, i, max, method, methodIndex, decimalPlaces,
         // Avoid 'division by zero' error with division and modulo.
         if ((bdM == 'divide' || bdM == 'remainder') && parseFloat(r) === 0)
             r = ( ( Math.random() * 9 | 0 ) + 1 ) + '';
-            
+
         total += n + 1;
 
         // 50% chance of negative
         return Math.random() > 0.5 ? r : '-' + r;
     },
-    
+
     pad = function (str) {
         str += '... ';
         while (str.length < 26) str += ' ';
@@ -124,7 +124,14 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     '\n To show memory usage include an argument m or -m' +
     '\n E.g.  node bigtime-OOM m add');
 } else {
-    BigNumber.config({EXPONENTIAL_AT : 1E9, RANGE : 1E9});
+     BigNumber.config({
+        EXPONENTIAL_AT: 1E9,
+        RANGE: 1E9,
+        ERRORS: false,
+        MODULO_MODE: 1,
+        POW_PRECISION: 10000
+    });
+
     Number.prototype.toPlainString = Number.prototype.toString;
 
     for (i = 0; i < args.length; i++) {
@@ -229,7 +236,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
 
         // POW: TIME CREATION OF BIGNUMBERS
 
-        process.stdout.write(' Creating BigNumbers...      ');
+        process.stdout.write(' Creating BigNumbers...   ');
 
         start = +new Date();
             for (i = 0; i < reps; i++) {

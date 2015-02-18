@@ -43,11 +43,11 @@ var count = (function sqrt(BigNumber) {
     log('\n Testing sqrt...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: 1E9
     });
 
     // Test the special cases specified by ES 15.8.2.17
@@ -63,13 +63,13 @@ var count = (function sqrt(BigNumber) {
     T('Infinity', Infinity);
     T('NaN', -Infinity);
 
-    BigNumber.config({ERRORS : false});
+    BigNumber.config({ERRORS: false});
 
     T('NaN', undefined);
     T('NaN', null);
     T('NaN', []);
 
-    BigNumber.config({ERRORS : true});
+    BigNumber.config({ERRORS: true});
 
     T('NaN', -1);
     T('NaN', -35.999);
@@ -452,7 +452,7 @@ var count = (function sqrt(BigNumber) {
     T('1', '1e-324', 0, 0);
 
     var x = new BigNumber('0.000000009');
-    BigNumber.config({ RANGE : [-4, 1e9] });
+    BigNumber.config({ RANGE: [-4, 1e9] });
     // sqrt(0.000000009) = 0.00009486...
     T('0', x, 5, 4);
 

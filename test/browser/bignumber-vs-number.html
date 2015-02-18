@@ -159,9 +159,9 @@
             dpEmpty = dp === '',
             input = ($input.value = $input.value.replace(/\s+/g, '')),
             exceptions = $exceptionsTrue.checked,
-            code = 'BigNumber.config({ERRORS : ' + exceptions;
+            code = 'BigNumber.config({ERRORS: ' + exceptions;
 
-        BigNumber.config({ERRORS : exceptions});
+        BigNumber.config({ERRORS: exceptions});
 
         if (input) {
             for (i = 0; i < 15; i++) {
@@ -193,10 +193,10 @@
                         $bignumber.value = e;
                         return;
                     }
-                    code += ', DECIMAL_PLACES : ' + dp;
+                    code += ', DECIMAL_PLACES: ' + dp;
                 }
-                BigNumber.config({ROUNDING_MODE : mode});
-                code += ', ROUNDING_MODE : ' + mode;
+                BigNumber.config({ROUNDING_MODE: mode});
+                code += ', ROUNDING_MODE: ' + mode;
             }
 
             code += "})<br>BigNumber('" + input + "')." + method + "(";
@@ -249,11 +249,14 @@
     }
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : false,
-        EXPONENTIAL_AT : 1E9,
-        RANGE : 1E9
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        EXPONENTIAL_AT: 1E9,
+        RANGE: 1E9,
+        ERRORS: false,
+        CRYPTO: false,
+        POW_PRECISION: 100,
+        MODULO_MODE: 1
     });
 
     $input.value = $dp.value = $num.value = $bignumber.value = '';

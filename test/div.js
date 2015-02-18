@@ -47,11 +47,11 @@ var count = (function div(BigNumber) {
     log('\n Testing div...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 40,
-        ROUNDING_MODE : 4,
-        EXPONENTIAL_AT : [-7, 21],
-        RANGE : 1E9,
-        ERRORS : false
+        DECIMAL_PLACES: 40,
+        ROUNDING_MODE: 4,
+        EXPONENTIAL_AT: [-7, 21],
+        RANGE: 1E9,
+        ERRORS: false
     });
 
     T(1, 0, I);

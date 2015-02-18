@@ -41,11 +41,11 @@ var count = (function neg(BigNumber) {
     log('\n Testing neg...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : [-7, 21]
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: [-7, 21]
     });
 
     T(-4, 4);
@@ -60,7 +60,7 @@ var count = (function neg(BigNumber) {
     T(-Infinity, +Infinity);
     T(Infinity, -Infinity);
     T(+Infinity, -Infinity);
-    
+
     T('0', '0');
     T('-238', '238');
     T('1.3e-11', '-0.000000000013');
@@ -487,7 +487,7 @@ var count = (function neg(BigNumber) {
     T('-0.032192', '0.032192');
     T('2.6e-8', '-0.000000026');
 
-    BigNumber.config({EXPONENTIAL_AT : 0});
+    BigNumber.config({EXPONENTIAL_AT: 0});
 
     T('-5.0600621890668482322956892808849303e+20', '5.0600621890668482322956892808849303e+20');
     T('7e+0', '-7e+0');
@@ -521,7 +521,7 @@ var count = (function neg(BigNumber) {
     T('NaN', NaN);
     T('NaN', 'NaN');
 
-    BigNumber.config({EXPONENTIAL_AT : 1e+9});
+    BigNumber.config({EXPONENTIAL_AT: 1e+9});
 
     assert(-1, new BigNumber(2).neg().s);
     assert(1, new BigNumber(-2).neg().s);
@@ -539,6 +539,6 @@ var count = (function neg(BigNumber) {
     assert(false, isMinusZero(new BigNumber('-0').neg()));
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

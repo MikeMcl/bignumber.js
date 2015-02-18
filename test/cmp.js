@@ -65,11 +65,11 @@ var count = (function cmp(BigNumber) {
     log('\n Testing cmp...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : false,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: false,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: 1E9
     });
 
     T(1, 0, 1);
@@ -4140,7 +4140,7 @@ var count = (function cmp(BigNumber) {
     T('-0.10021507', '-2049541544645617700923988306', 1);
     T('6609143733354158875894', '-6609143733354158875894', 1);
 
-    BigNumber.config({ ERRORS : true });
+    BigNumber.config({ ERRORS: true });
     assertException(function () {new BigNumber(1).cmp('one')}, "new BigNumber(1).cmp('one')");
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');

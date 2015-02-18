@@ -4,7 +4,8 @@ var count = (function toFixed(BigNumber) {
         error,
         u,
         passed = 0,
-        total = 0;
+        total = 0,
+        MAX = 1e9;
 
     if (typeof window === 'undefined') {
         log = console.log;
@@ -23,7 +24,7 @@ var count = (function toFixed(BigNumber) {
            error('\n Test number: ' + total + ' failed');
            error(' Expected: ' + expected);
            error(' Actual:   ' + actual);
-           //process.exit();
+           process.exit();
         }
         else {
             passed++;
@@ -57,17 +58,17 @@ var count = (function toFixed(BigNumber) {
     log('\n Testing toFixed...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: 1E9
     });
 
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number/toFixed
-    // Javascript:            2.26.toFixed(5)  returns  2.26000
-    // Javascript:           -2.26.toFixed(5)  returns -2.26
-    // BigNumber:  new BigNumber(-2.26).toFixed(5) returns -2.26000
+    // Javascript:                   2.26.toFixed(5)  returns  2.26000
+    // Javascript:                  -2.26.toFixed(5)  returns -2.26
+    // bignumber.js:  new BigNumber(-2.26).toFixed(5) returns -2.26000
 
     T('100.0', 99.9512986, 1);
     T('10.0',  9.95036, 1);
@@ -157,7 +158,7 @@ var count = (function toFixed(BigNumber) {
     T('234.2041', 234.20405, 4);
     T('234.2041', '234.204050000000000000000000000000006', 4);
 
-    BigNumber.config({ROUNDING_MODE : 0});
+    BigNumber.config({ROUNDING_MODE: 0});
 
     T('6552606716539719300271040797809220.3', '6552606716539719300271040797809220.237838405', 1);
     T('25605410.260045950231371', '25605410.260045950231370974066', 15);
@@ -260,7 +261,7 @@ var count = (function toFixed(BigNumber) {
     T('18848356500282.000000', '18848356500282', 6);
     T('-6865183293234767102.91096748000', '-6865183293234767102.91096748', 11);
 
-    BigNumber.config({ROUNDING_MODE : 1});
+    BigNumber.config({ROUNDING_MODE: 1});
 
     T('0.3', '0.3', 1);
     T('-200258348374.3', '-200258348374.3595802551014614089785610548492885372322083789', 1);
@@ -363,7 +364,7 @@ var count = (function toFixed(BigNumber) {
     T('29485932208290816133111088923502731.000000', '29485932208290816133111088923502731', 6);
     T('0.0000', '0.000000000006', 4);
 
-    BigNumber.config({ROUNDING_MODE : 2});
+    BigNumber.config({ROUNDING_MODE: 2});
 
     T('7810971819938620325901899057970512790433.0000000000000000', '7810971819938620325901899057970512790433', 16);
     T('-623395.0', '-623395', 1);
@@ -466,7 +467,7 @@ var count = (function toFixed(BigNumber) {
     T('-3063.0', '-3063', 1);
     T('-3.0', '-3', 1);
 
-    BigNumber.config({ROUNDING_MODE : 3});
+    BigNumber.config({ROUNDING_MODE: 3});
 
     T('0.0000', '0.00000000000584', 4);
     T('-79055907138737329232.165677999092552368', '-79055907138737329232.1656779990925523674', 18);
@@ -569,7 +570,7 @@ var count = (function toFixed(BigNumber) {
     T('-2699105308.4', '-2699105308.3051738674733271523825325743', 1);
     T('-0.000000000001', '-0.00000000000000883409579454508262166084385', 12);
 
-    BigNumber.config({ROUNDING_MODE : 4, EXPONENTIAL_AT : 0});
+    BigNumber.config({ROUNDING_MODE: 4, EXPONENTIAL_AT: 0});
 
     T('733744593401073823825766410831877679446.0000000000000000000', '733744593401073823825766410831877679446', 19);
     T('-64.6849459', '-64.6849458687691227978', 7);
@@ -672,7 +673,7 @@ var count = (function toFixed(BigNumber) {
     T('-637697600918508531049573689760309.5119477000000000', '-637697600918508531049573689760309.5119477', 16);
     T('-6.19247283', '-6.19247282501186063445037314', 8);
 
-    BigNumber.config({ROUNDING_MODE : 5});
+    BigNumber.config({ROUNDING_MODE: 5});
 
     T('0.00', '0.00000000000000070362', 2);
     T('682377946933004839.0000000', '682377946933004839', 7);
@@ -732,7 +733,7 @@ var count = (function toFixed(BigNumber) {
     T('5836715007847225.0000', '5836715007847225', 4);
     T('1056180.997', '1056180.99676966515555844225990248546', 3);
 
-    BigNumber.config({ROUNDING_MODE : 6});
+    BigNumber.config({ROUNDING_MODE: 6});
 
     T('-6614662975368684488885953285955838893900074215956.00', '-6614662975368684488885953285955838893900074215956', 2);
     T('8642393776898.000', '8642393776898', 3);
@@ -817,7 +818,7 @@ var count = (function toFixed(BigNumber) {
     T('1.5', '1.5', u);
     T('-1.5', '-1.5', u);
 
-    BigNumber.config({ROUNDING_MODE : 4});
+    BigNumber.config({ROUNDING_MODE: 4});
 
     T('-535564000.00', '-535564000', 2);
     T('-80000000.000', '-80000000', 3);
@@ -1353,8 +1354,9 @@ var count = (function toFixed(BigNumber) {
     '353090531769.175603436034231639743395165930222246484607747046044079492519304034422365673974111568710016025760763' +
     '83664408162624867351605015229777701990865326902932136430587015275752666401315258528531504569482239').toFixed(100));
 
-    BigNumber.config({ERRORS : true});
+    BigNumber.config({ERRORS: true});
 
+    T('123.45000000000', '12.345e1', '1.1e1');
     T('123.450', '12.345e1', new BigNumber('3'));
     T('123.45', '12.345e1', null);
     T('123.45', '12.345e1', u);
@@ -1375,21 +1377,21 @@ var count = (function toFixed(BigNumber) {
     assertException(function () {new BigNumber(1.23).toFixed(new RegExp)}, "(1.23).toFixed(new RegExp)");
     assertException(function () {new BigNumber(1.23).toFixed(2.01)}, "(1.23).toFixed(2.01)");
     assertException(function () {new BigNumber(1.23).toFixed(10.5)}, "(1.23).toFixed(10.5)");
-    assertException(function () {new BigNumber(1.23).toFixed('1.1e1')}, "(1.23).toFixed('1.1e1')");
+    assertException(function () {new BigNumber(1.23).toFixed('-1.1e1')}, "(1.23).toFixed('-1.1e1')");
     assertException(function () {new BigNumber(1.23).toFixed(true)}, "(1.23).toFixed(true)");
     assertException(function () {new BigNumber(1.23).toFixed(false)}, "(1.23).toFixed(false)");
     assertException(function () {new BigNumber(1.23).toFixed(function (){})}, "(1.23).toFixed(function (){})");
 
     assertException(function () {new BigNumber('12.345e1').toFixed('-1')}, ".toFixed('-1')");
     assertException(function () {new BigNumber('12.345e1').toFixed(-23)}, ".toFixed(-23)");
-    assertException(function () {new BigNumber('12.345e1').toFixed(1e9 + 1)}, ".toFixed(1e9 + 1)");
-    assertException(function () {new BigNumber('12.345e1').toFixed(1e9 + 0.1)}, ".toFixed(1e9 + 1)");
+    assertException(function () {new BigNumber('12.345e1').toFixed(MAX + 1)}, ".toFixed(MAX + 1)");
+    assertException(function () {new BigNumber('12.345e1').toFixed(MAX + 0.1)}, ".toFixed(MAX + 1)");
     assertException(function () {new BigNumber('12.345e1').toFixed('-0.01')}, ".toFixed('-0.01')");
     assertException(function () {new BigNumber('12.345e1').toFixed('-1e-1')}, ".toFixed('-1e-1')");
     assertException(function () {new BigNumber('12.345e1').toFixed(Infinity)}, ".toFixed(Infinity)");
     assertException(function () {new BigNumber('12.345e1').toFixed('-Infinity')}, ".toFixed('-Infinity')");
 
-    BigNumber.config({ERRORS : false});
+    BigNumber.config({ERRORS: false});
 
     T('Infinity', Infinity, 0);
     T('Infinity', Infinity, NaN);
@@ -1410,25 +1412,26 @@ var count = (function toFixed(BigNumber) {
     T('123.45', '12.345e1', '\t');
     T('123.45', '12.345e1', new Date);
     T('123.45', '12.345e1', new RegExp);
-    
+
     T('123', '12.345e1', -0);
-    
+
     T('123.4500000', '12.345e1', 7.5);
     T('123.45000000000', '12.345e1', '1.1e1');
 
     T('123.5', '12.345e1', 1);
     T('123.45', '12.345e1', '-1');
     T('123.45', '12.345e1', -23);
-    T('123.45', '12.345e1', 1e9 + 1);
-    T('123.45', '12.345e1', 1e9 + 0.1);
-    T('123.45', '12.345e1', '-0.01');
-    T('123.45', '12.345e1', '-1e-1');
+    T('123.45', '12.345e1', MAX + 1);
+    T('123', '12.345e1', '-0.01');
+    T('123', '12.345e1', '-1e-1');
     T('123.45', '12.345e1', Infinity);
     T('123.45', '12.345e1', '-Infinity');
 
+    T('12', '12.345', 1e-8);
+
     // ROUND_HALF_CEIL
     // Rounds towards nearest neighbour. If equidistant, rounds towards Infinity
-    BigNumber.config({ERRORS : true, ROUNDING_MODE : 7});
+    BigNumber.config({ERRORS: true, ROUNDING_MODE: 7});
 
     T('0.1', '0.05', 1);
     T('1', 0.5, 0);
@@ -1457,7 +1460,7 @@ var count = (function toFixed(BigNumber) {
 
     // ROUND_HALF_FLOOR
     // Rounds towards nearest neighbour. If equidistant, rounds towards -Infinity
-    BigNumber.config({ROUNDING_MODE : 8});
+    BigNumber.config({ROUNDING_MODE: 8});
 
     T('0.0', '0.05', '1');
     T('0', 0.5, '0');
@@ -1484,16 +1487,8 @@ var count = (function toFixed(BigNumber) {
     T('1.00000000000000000000', '1.000000000000000000005', '20')
     T('-1.00000000000000000', '-1.000000000000000000005', '17')
     T('-1.00000000000000000001', '-1.000000000000000000005', '20')
-    
-    BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
-    });
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

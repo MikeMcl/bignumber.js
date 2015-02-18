@@ -4,7 +4,8 @@ var count = (function toPrecision(BigNumber) {
         error,
         undefined,
         passed = 0,
-        total = 0;
+        total = 0,
+        MAX = 1e9;
 
     if (typeof window === 'undefined') {
         log = console.log;
@@ -57,11 +58,11 @@ var count = (function toPrecision(BigNumber) {
     log('\n Testing toPrecision...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : [-7, 40]
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: [-7, 40]
     });
 
     // ---------------------------------------------------------------- v8 start
@@ -161,7 +162,7 @@ var count = (function toPrecision(BigNumber) {
 
     // ------------------------------------------------------------------ v8 end
 
-    BigNumber.config({ROUNDING_MODE : 0});
+    BigNumber.config({ROUNDING_MODE: 0});
 
     T('-0.000090000000', '-0.00009', 8);
     T('-7e-7', '-0.0000007', 1);
@@ -250,7 +251,7 @@ var count = (function toPrecision(BigNumber) {
     T('-8606297211156287.52520023752564', '-8606297211156287.5252002375256362382564355963505470716151', 30);
     T('-8.4634889709e+24', '-8463488970828351722405003.220603', 11);
 
-    BigNumber.config({ROUNDING_MODE : 1});
+    BigNumber.config({ROUNDING_MODE: 1});
 
     T('-844789036.5239726', '-844789036.52397268892', 16);
     T('-5056.20629012767878749185273209679064306054', '-5056.206290127678787491852732096790643060542', 42);
@@ -341,7 +342,7 @@ var count = (function toPrecision(BigNumber) {
     T('45285.246089613169416440797840714', '45285.2460896131694164407978407142422013937', 32);
     T('307760226411464.7333268079863299', '307760226411464.73332680798632996332324381779707', 31);
 
-    BigNumber.config({ROUNDING_MODE : 2});
+    BigNumber.config({ROUNDING_MODE: 2});
 
     T('-0.0300', '-0.0300921721159558', 3);
     T('65317841202.20949859371772273480125', '65317841202.2094985937177227348012464402154', 34);
@@ -426,7 +427,7 @@ var count = (function toPrecision(BigNumber) {
     T('-49379651041268.5', '-49379651041268.548293', 15);
     T('-7685054.17489171951660', '-7685054.17489171951660508194254495141726065698575306365447451', 21);
 
-    BigNumber.config({ROUNDING_MODE : 3});
+    BigNumber.config({ROUNDING_MODE: 3});
 
     T('-39449414270333.925852213835', '-39449414270333.925852213834759031494508489474', 26);
     T('-7.50437989976', '-7.50437989975503711836768', 12);
@@ -518,7 +519,7 @@ var count = (function toPrecision(BigNumber) {
     T('-6.4898237111e+26', '-648982371105405071851661301', 11);
     T('-4641197449469148.658850361201903', '-4641197449469148.658850361201902222', 31);
 
-    BigNumber.config({ROUNDING_MODE : 4});
+    BigNumber.config({ROUNDING_MODE: 4});
 
     T('7.905300379788e+16', '79053003797878062.6454954', 13);
     T('-6.83490000000e-13', '-0.00000000000068349', 12);
@@ -606,7 +607,7 @@ var count = (function toPrecision(BigNumber) {
     T('-6.21108762339449e+20', '-621108762339448671355.1393522133', 15);
     T('8380435.063269894549337249', '8380435.063269894549337248813357930541546715547', 25);
 
-    BigNumber.config({ROUNDING_MODE : 5});
+    BigNumber.config({ROUNDING_MODE: 5});
 
     T('-1408003897645960.648499616456', '-1408003897645960.648499616456', 28);
     T('-7719307749101742537.6299396338672184', '-7719307749101742537.6299396338672184334306', 35);
@@ -693,7 +694,7 @@ var count = (function toPrecision(BigNumber) {
     T('50325.551277778107847798802', '50325.551277778107847798801525', 26);
     T('-5.289303987e+29', '-528930398665449048343281311623.69686', 10);
 
-    BigNumber.config({ROUNDING_MODE : 6});
+    BigNumber.config({ROUNDING_MODE: 6});
 
     T('0.08000', '0.08', 4);
     T('-4.5132e+21', '-4513243388120382069815.8508153058993058875', 5);
@@ -783,7 +784,9 @@ var count = (function toPrecision(BigNumber) {
     T('5313610990.737', '5313610990.7373810218', 13);
     T('-3.56e+4', '-35566.4678487', 3);
 
-    T('123', '12.345e1', BigNumber(3));
+    T('123.45000000', '12.345e1', '1.1e+1');
+    T('123.4500', '12.345e1', '   700e-2 ');
+    T('123', '12.345e1', new BigNumber(3));
     T('123.45', '12.345e1', null);
     T('123.45', '12.345e1', undefined);
 
@@ -799,15 +802,15 @@ var count = (function toPrecision(BigNumber) {
     assertException(function () {new BigNumber(1.23).toPrecision(new RegExp)}, "(1.23).toPrecision(new RegExp)");
     assertException(function () {new BigNumber(1.23).toPrecision(2.01)}, "(1.23).toPrecision(2.01)");
     assertException(function () {new BigNumber(1.23).toPrecision(10.5)}, "(1.23).toPrecision(10.5)");
-    assertException(function () {new BigNumber(1.23).toPrecision('1.1e1')}, "(1.23).toPrecision('1.1e1')");
+    assertException(function () {new BigNumber(1.23).toPrecision('-1.1e1')}, "(1.23).toPrecision('-1.1e1')");
     assertException(function () {new BigNumber(1.23).toPrecision(true)}, "(1.23).toPrecision(true)");
     assertException(function () {new BigNumber(1.23).toPrecision(false)}, "(1.23).toPrecision(false)");
     assertException(function () {new BigNumber(1.23).toPrecision(function (){})}, "(1.23).toPrecision(function (){})");
 
     assertException(function () {new BigNumber('12.345e1').toPrecision('-1')}, ".toPrecision('-1')");
     assertException(function () {new BigNumber('12.345e1').toPrecision(-23)}, ".toPrecision(-23)");
-    assertException(function () {new BigNumber('12.345e1').toPrecision(1e9 + 1)}, ".toPrecision(1e9 + 1)");
-    assertException(function () {new BigNumber('12.345e1').toPrecision(1e9 + 0.1)}, ".toPrecision(1e9 + 0.1)");
+    assertException(function () {new BigNumber('12.345e1').toPrecision(MAX + 1)}, ".toPrecision(MAX + 1)");
+    assertException(function () {new BigNumber('12.345e1').toPrecision(MAX + 0.1)}, ".toPrecision(MAX + 0.1)");
     assertException(function () {new BigNumber('12.345e1').toPrecision(0)}, ".toPrecision(0)");
     assertException(function () {new BigNumber('12.345e1').toPrecision('-0')}, ".toPrecision('-0')");
     assertException(function () {new BigNumber('12.345e1').toPrecision(0.9)}, ".toPrecision(0.9)");
@@ -815,7 +818,7 @@ var count = (function toPrecision(BigNumber) {
     assertException(function () {new BigNumber('12.345e1').toPrecision(Infinity)}, ".toPrecision(Infinity)");
     assertException(function () {new BigNumber('12.345e1').toPrecision('-Infinity')}, ".toPrecision('-Infinity')");
 
-    BigNumber.config({ERRORS : false});
+    BigNumber.config({ERRORS: false});
 
     T('123', '12.345e1', BigNumber(3));
     T('123.45', '12.345e1', null);
@@ -835,10 +838,10 @@ var count = (function toPrecision(BigNumber) {
     T('123.45000000', '12.345e1', '1.1e1');
 
     T('1e+2', '12.345e1', 1);
+    T('1e+2', '12.345e1', 1.0001);
     T('123.45', '12.345e1', '-1');
     T('123.45', '12.345e1', -23);
-    T('123.45', '12.345e1', 1e9 + 1);
-    T('123.45', '12.345e1', 1e9 + 0.1);
+    T('123.45', '12.345e1', MAX + 1);
     T('123.45', '12.345e1', 0);
     T('123.45', '12.345e1', '-0');
     T('123.45', '12.345e1', 0.9);
@@ -847,6 +850,6 @@ var count = (function toPrecision(BigNumber) {
     T('123.45', '12.345e1', '-Infinity');
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

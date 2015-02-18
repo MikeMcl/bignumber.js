@@ -57,11 +57,11 @@ var count = (function toFraction(BigNumber) {
     log('\n Testing toFraction...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: 1E9
     });
 
     T('Infinity', 'Infinity', u);
@@ -3009,10 +3009,9 @@ var count = (function toFraction(BigNumber) {
     assertException(function () {new BigNumber('12.3e1').toFraction('0.99')}, ".toFraction('0.99')");
     assertException(function () {new BigNumber('12.3e1').toFraction(-1)}, ".toFraction(-1)");
     assertException(function () {new BigNumber('12.3e1').toFraction(-23)}, ".toFraction(-23)");
-    assertException(function () {new BigNumber('12.3e1').toFraction(Infinity)}, ".toFraction(Infinity)");
     assertException(function () {new BigNumber('12.3e1').toFraction('-Infinity')}, ".toFraction('-Infinity')");
 
-    BigNumber.config({ERRORS : false});
+    BigNumber.config({ERRORS: false});
 
     T('2469,20', '12.345e1', null);
     T('2469,20', '12.345e1', u);
@@ -3026,7 +3025,12 @@ var count = (function toFraction(BigNumber) {
     T('2469,20', '12.345e1', {});
     T('2469,20', '12.345e1', new Date);
     T('2469,20', '12.345e1', new RegExp);
-    T('864,7',   '12.345e1', '7.5');
+    T('2469,20', '12.345e1', -1);
+    T('2469,20', '12.345e1',  0.99);
+    T('123,1', '12.345e1',  1.1);
+    T('864,7', '12.345e1', '7.5');
+    T('864,7', '12.345e1', new BigNumber(7));
+    T('2469,20', '12.345e1', new BigNumber(-7));
     T('2469,20', '12.345e1', 0);
     T('2469,20', '12.345e1', -23);
     T('2469,20', '12.345e1', '2.1e1');
@@ -3037,6 +3041,6 @@ var count = (function toFraction(BigNumber) {
     T('2469,20', '12.345e1', new BigNumber(Infinity));
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

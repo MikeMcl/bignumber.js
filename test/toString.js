@@ -7,7 +7,7 @@ var count = (function toString(BigNumber) {
 
     if (typeof window === 'undefined') {
         log = console.log;
-        error = console.error; 
+        error = console.error;
     } else {
         log = function (str) { document.body.innerHTML += str.replace('\n', '<br>') };
         error = function (str) { document.body.innerHTML += '<div style="color: red">' +
@@ -37,11 +37,11 @@ var count = (function toString(BigNumber) {
     log('\n Testing toString...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : 1E9
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: 1E9
     });
 
     // ---------------------------------------------------------------------- v8
@@ -62,7 +62,7 @@ var count = (function toString(BigNumber) {
     T('0.00001', 0.00001);
     T('0.000001', 0.000001);
 
-    BigNumber.config({EXPONENTIAL_AT : 0});
+    BigNumber.config({EXPONENTIAL_AT: 0});
 
     T('1e-7', 0.0000001);
     T('1.2e-7', 0.00000012);
@@ -77,7 +77,7 @@ var count = (function toString(BigNumber) {
     T('-1.2e-8', -0.000000012);
     T('-1.23e-8', -0.0000000123);
 
-    BigNumber.config({EXPONENTIAL_AT : 60});
+    BigNumber.config({EXPONENTIAL_AT: 60});
 
     T('0', -0);
     T('-9', -9);
@@ -95,7 +95,7 @@ var count = (function toString(BigNumber) {
     // ------------------------------------------------------------------ v8 end
 
     // 1000 toString to exponentials
-    BigNumber.config({EXPONENTIAL_AT : 0});
+    BigNumber.config({EXPONENTIAL_AT: 0});
 
     T('5.73447902457635174479825134e+14', '573447902457635.174479825134');
     T('1.07688e+1', '10.7688');
@@ -1099,6 +1099,6 @@ var count = (function toString(BigNumber) {
     T('1.512063585971680294584184272035496e+15', '1512063585971680.294584184272035496');
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

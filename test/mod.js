@@ -45,11 +45,11 @@ var count = (function mod(BigNumber) {
     log('\n Testing mod...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : false,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : [-7, 21]
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: false,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: [-7, 21]
     });
 
     T(1, 0, N);
@@ -1900,6 +1900,6 @@ var count = (function mod(BigNumber) {
     T('-5.343344296409307514661858172266262866671109159598323e+9', '2.3273061846552018803169584402231121660442419923712e+8', '-223270690.167863377964549603775416101373776776381683');
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;
