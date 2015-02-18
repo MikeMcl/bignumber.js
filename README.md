@@ -32,7 +32,7 @@ See also [decimal.js](https://github.com/MikeMcl/decimal.js/), which among other
 The library is the single JavaScript file *bignumber.js* (or minified, *bignumber.min.js*).
 
 ```html
-    <script src='relative/path/to/bignumber.js'></script>
+<script src='relative/path/to/bignumber.js'></script>
 ```
 
 For [Node.js](http://nodejs.org) or [io.js](https://iojs.org/en/index.html), the library is available from the [npm](https://npmjs.org/) registry
@@ -226,7 +226,7 @@ then
 
 will create *bignumber.min.js*.
 
-The *bignumber.min.js* already present was created with *Microsoft Ajax Minifier 5.14*.
+A source map will also be created in the *doc* directory.
 
 ## Feedback
 
@@ -247,9 +247,13 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.0.3
+* 18/02/2015
+* Amend README. Add source map.
+
 ####2.0.2
 * 18/02/2015
-* Correct links
+* Correct links.
 
 ####2.0.1
 * 18/02/2015
