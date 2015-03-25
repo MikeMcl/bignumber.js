@@ -1,5 +1,7 @@
 ![bignumber.js](https://raw.githubusercontent.com/MikeMcl/bignumber.js/gh-pages/bignumberjs.png)
 
+*WARNING: Critical division bug found in v2.0.0 - v2.0.3. Fixed in v2.0.4+*
+
 A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 [![Build Status](https://travis-ci.org/MikeMcl/bignumber.js.svg)](https://travis-ci.org/MikeMcl/bignumber.js)
@@ -18,7 +20,7 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
   - No dependencies
   - Wide platform compatibility: uses JavaScript 1.5 (ECMAScript 3) features only
   - Comprehensive [documentation](http://mikemcl.github.io/bignumber.js/) and test set
-  
+
 ![API](https://raw.githubusercontent.com/MikeMcl/bignumber.js/gh-pages/API.png)
 
 If a smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).
@@ -236,9 +238,6 @@ Michael
 
 <a href="mailto:M8ch88l@gmail.com">M8ch88l@gmail.com</a>
 
-BTC
-:small_orange_diamond: 1GHTAxHbBHW5TrUu6oq84Yr3LUCcUXKZmJ :small_orange_diamond:
-
 ## Licence
 
 MIT.
@@ -246,6 +245,10 @@ MIT.
 See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
+
+####2.0.5
+* 25/03/2015
+* Amend README. Remove bitcoin address.
 
 ####2.0.4
 * 25/03/2015
