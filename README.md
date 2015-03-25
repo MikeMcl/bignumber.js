@@ -247,6 +247,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.0.4
+* 25/03/2015
+* Critical bugfix #58: division.
+
 ####2.0.3
 * 18/02/2015
 * Amend README. Add source map.
