@@ -884,7 +884,8 @@
                             //    6. If remainder > divisor: remainder -= divisor, n++
 
                             if ( n > 1 ) {
-                                if ( n >= base ) n = base - 1;
+
+                                if (n >= base) n = base - 1;
 
                                 // product = divisor * trial digit.
                                 prod = multiply( yc, n, base );
@@ -916,28 +917,25 @@
 
                             // Subtract product from remainder.
                             subtract( rem, prod, remL, base );
+                            remL = rem.length;
 
-                            // If product was < previous remainder.
+                            // If product was < remainder.
                             if ( cmp == -1 ) {
-                                remL = rem.length;
 
                                 // Compare divisor and new remainder.
-                                cmp = compare( yc, rem, yL, remL );
-
                                 // If divisor < new remainder, subtract divisor from remainder.
-                                if ( cmp < 1 ) {
+                                while ( ( cmp = compare( yc, rem, yL, remL ) ) < 1 ) {
                                     n++;
 
                                     // Subtract divisor from remainder.
                                     subtract( rem, yL < remL ? yz : yc, remL, base );
+                                    remL = rem.length;
                                 }
                             }
-                            remL = rem.length;
                         } else if ( cmp === 0 ) {
                             n++;
                             rem = [0];
-                        }
-                        // if cmp === 1, n will be 0
+                        } // else cmp === 1 and n will be 0
 
                         // Add the next digit, n, to the result array.
                         qc[i++] = n;
