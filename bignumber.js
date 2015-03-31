@@ -836,10 +836,12 @@
                     i = 0;
                     s += 2;
 
-                    // Normalise xc and yc so highest order digit of yc is >= base/2
+                    // Normalise xc and yc so highest order digit of yc is >= base / 2.
 
                     n = mathfloor( base / ( yc[0] + 1 ) );
 
+                    // Not necessary, but to handle odd bases where yc[0] == ( base / 2 ) - 1.
+                    // if ( n > 1 || n++ == 1 && yc[0] < base / 2 ) {
                     if ( n > 1 ) {
                         yc = multiply( yc, n, base );
                         xc = multiply( xc, n, base );
@@ -857,6 +859,8 @@
                     yz.unshift(0);
                     yc0 = yc[0];
                     if ( yc[1] >= base / 2 ) yc0++;
+                    // Not necessary, but to prevent trial digit n > base, when using base 3.
+                    // else if ( base == 3 && yc0 == 1 ) yc0 = 1 + 1e-15;
 
                     do {
                         n = 0;
@@ -885,6 +889,7 @@
 
                             if ( n > 1 ) {
 
+                                // n may be > base only when base is 3.
                                 if (n >= base) n = base - 1;
 
                                 // product = divisor * trial digit.
@@ -893,38 +898,49 @@
                                 remL = rem.length;
 
                                 // Compare product and remainder.
-                                cmp = compare( prod, rem, prodL, remL );
-
-                                // product > remainder.
-                                if ( cmp == 1 ) {
+                                // If product > remainder.
+                                // Trial digit n too high.
+                                // n is 1 too high about 5% of the time, and is not known to have
+                                // ever been more than 1 too high.
+                                while ( compare( prod, rem, prodL, remL ) == 1 ) {
                                     n--;
 
                                     // Subtract divisor from product.
                                     subtract( prod, yL < prodL ? yz : yc, prodL, base );
+                                    prodL = prod.length;
+                                    cmp = 1;
                                 }
                             } else {
 
-                                // cmp is -1.
-                                // If n is 0, there is no need to compare yc and rem again
-                                // below, so change cmp to 1 to avoid it.
-                                // If n is 1, compare yc and rem again below.
-                                if ( n == 0 ) cmp = n = 1;
+                                // n is 0 or 1, cmp is -1.
+                                // If n is 0, there is no need to compare yc and rem again below,
+                                // so change cmp to 1 to avoid it.
+                                // If n is 1, leave cmp as -1, so yc and rem are compared again.
+                                if ( n == 0 ) {
+
+                                    // divisor < remainder, so n must be at least 1.
+                                    cmp = n = 1;
+                                }
+
+                                // product = divisor
                                 prod = yc.slice();
+                                prodL = prod.length;
                             }
 
-                            prodL = prod.length;
                             if ( prodL < remL ) prod.unshift(0);
 
                             // Subtract product from remainder.
                             subtract( rem, prod, remL, base );
                             remL = rem.length;
 
-                            // If product was < remainder.
+                             // If product was < remainder.
                             if ( cmp == -1 ) {
 
                                 // Compare divisor and new remainder.
                                 // If divisor < new remainder, subtract divisor from remainder.
-                                while ( ( cmp = compare( yc, rem, yL, remL ) ) < 1 ) {
+                                // Trial digit n too low.
+                                // n is 1 too low about 5% of the time, and very rarely 2 too low.
+                                while ( compare( yc, rem, yL, remL ) < 1 ) {
                                     n++;
 
                                     // Subtract divisor from remainder.
@@ -941,7 +957,7 @@
                         qc[i++] = n;
 
                         // Update the remainder.
-                        if ( cmp && rem[0] ) {
+                        if ( rem[0] ) {
                             rem[remL++] = xc[xi] || 0;
                         } else {
                             rem = [ xc[xi] ];
