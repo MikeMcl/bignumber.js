@@ -1,7 +1,5 @@
 ![bignumber.js](https://raw.githubusercontent.com/MikeMcl/bignumber.js/gh-pages/bignumberjs.png)
 
-*WARNING: Critical division bug found in v2.0.0 - v2.0.3. Fixed in v2.0.4+*
-
 A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 [![Build Status](https://travis-ci.org/MikeMcl/bignumber.js.svg)](https://travis-ci.org/MikeMcl/bignumber.js)
@@ -245,6 +243,10 @@ MIT.
 See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
+
+####2.0.6
+* 31/03/2015
+* Add bower.json. Tweak division after in-depth review.
 
 ####2.0.5
 * 25/03/2015
