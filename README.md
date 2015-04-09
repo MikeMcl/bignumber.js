@@ -226,7 +226,7 @@ then
 
 will create *bignumber.min.js*.
 
-A source map will also be created in the *doc* directory.
+A source map will also be created in the root directory.
 
 ## Feedback
 
