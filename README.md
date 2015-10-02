@@ -244,6 +244,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.0.8
+* 2/10/2015
+* Internal round function bugfix.
+
 ####2.0.6
 * 31/03/2015
 * Add bower.json. Tweak division after in-depth review.
