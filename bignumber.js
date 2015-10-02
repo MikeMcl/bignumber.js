@@ -1300,7 +1300,7 @@
                             sd -= x.e + 1;
 
                             // 1, 0.1, 0.01, 0.001, 0.0001 etc.
-                            xc[0] = pows10[ sd % LOG_BASE ];
+                            xc[0] = pows10[ ( LOG_BASE - sd % LOG_BASE ) % LOG_BASE ];
                             x.e = -sd || 0;
                         } else {
 
