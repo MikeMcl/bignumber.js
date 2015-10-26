@@ -244,6 +244,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.1.0
+* 26/10/2015
+* For `valueOf` and `toJSON`, include the minus sign with negative zero.
+
 ####2.0.8
 * 2/10/2015
 * Internal round function bugfix.
