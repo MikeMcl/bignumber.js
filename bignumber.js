@@ -2353,10 +2353,7 @@
          * Return the value of this BigNumber converted to a number primitive.
          */
         P.toNumber = function () {
-            var x = this;
-
-            // Ensure zero has correct sign.
-            return +x || ( x.s ? x.s * 0 : NaN );
+            return +this;
         };
 
 
@@ -2485,10 +2482,23 @@
 
 
         /*
-         * Return as toString, but do not accept a base argument.
+         * Return as toString, but do not accept a base argument, and include the minus sign for
+         * negative zero.
          */
         P.valueOf = P.toJSON = function () {
-            return this.toString();
+            var str,
+                n = this,
+                e = n.e;
+
+            if ( e === null ) return n.toString();
+
+            str = coeffToString( n.c );
+
+            str = e <= TO_EXP_NEG || e >= TO_EXP_POS
+                ? toExponential( str, e )
+                : toFixedPoint( str, e );
+
+            return n.s < 0 ? '-' + str : str;
         };
 
 

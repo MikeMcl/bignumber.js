@@ -1752,10 +1752,16 @@ y.trunc()                       // '-12'</pre>
 
 
     <h5 id="valueOf">valueOf<code class='inset'>.valueOf() <i>&rArr; string</i></code></h5>
-    <p>As <code>toString</code>, but does not accept a base argument.</p>
+    <p>
+      As <code>toString</code>, but does not accept a base argument and includes the minus sign
+      for negative zero.
+    </p>
     <pre>
-x = new BigNumber('1.777e+457')
-x.valueOf()                     // '1.777e+457'</pre>
+x = new BigNumber('-0')
+x.toString()                    // '0'
+x.valueOf()                     // '-0'
+y = new BigNumber('1.777e+457')
+y.valueOf()                     // '1.777e+457'</pre>
 
 
 

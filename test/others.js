@@ -189,7 +189,9 @@ var count = (function others(BigNumber) {
     assert(false, n.lessThan(0, 36));
     assert(true, n.lessThan(0.1));
     assert(true, n.lessThanOrEqualTo(0));
-    assert(n.toString(), n.valueOf());
+    assert(true, n.valueOf() === '-0');
+    assert(true, n.toJSON() === '-0');
+    assert(true, n.toString() === '0');
 
     n = new BigNumber('NaN');
     assert(false, n.isFinite());
