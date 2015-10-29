@@ -37,7 +37,7 @@ var arg, i, j, max, method, methodIndex, decimalPlaces, rounding, reps, start,
             if ( z = r === '0' ) {
                 r += '.';
             }
-            
+
             for ( ; i++ < n; r += Math.random() * 10 | 0 ){}
 
             // 20% chance of integer
@@ -52,7 +52,7 @@ var arg, i, j, max, method, methodIndex, decimalPlaces, rounding, reps, start,
         // 50% chance of negative
         return Math.random() > 0.5 ? r : '-' + r;
     },
-    
+
     // Returns exponential notation.
     //getRandom = function (maxDigits) {
     //    var i = 0,
@@ -138,7 +138,14 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
             '\n E.g.   node bigtime m add');
 } else {
 
-    BigNumber.config({EXPONENTIAL_AT : 1E9, RANGE : 1E9});
+    BigNumber.config({
+        EXPONENTIAL_AT: 1E9,
+        RANGE: 1E9,
+        ERRORS: false,
+        MODULO_MODE: 1,
+        POW_PRECISION: 10000
+    });
+
     Number.prototype.toPlainString = Number.prototype.toString;
 
     for (i = 0; i < args.length; i++) {
@@ -183,7 +190,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
         bdM == 'abs' || bdM == 'negate' || bdM == 'abs' ? reps : reps * 2);
 
     console.log(' Max. digits of operands: %d', max);
-    
+
     if (bdM == 'divide') {
         rounding = Math.floor(Math.random() * 7);
         console.log('\n Decimal places: %d\n Rounding mode: %d', decimalPlaces, rounding);

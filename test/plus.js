@@ -46,11 +46,11 @@ var count = (function plus(BigNumber) {
     log('\n Testing plus...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : false,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : [-7, 21]
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: false,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: [-7, 21]
     });
 
     T(1, 0, 1);
@@ -76,7 +76,7 @@ var count = (function plus(BigNumber) {
       shall be −0.
       However, x + x = x −(−x) retains the same sign as x even when x is zero.
     */
-    BigNumber.config( {ROUNDING_MODE : 3} );
+    BigNumber.config( {ROUNDING_MODE: 3} );
     assert(true, isMinusZero(new BigNumber(0).plus(-0)));     //   0 + -0 = -0
     assert(true, isMinusZero(new BigNumber(-0).plus(0)));     //  -0 +  0 = -0
     assert(false, isMinusZero(new BigNumber(0).plus(0)));     //   0 +  0 =  0
@@ -84,7 +84,7 @@ var count = (function plus(BigNumber) {
     assert(true, isMinusZero(new BigNumber(1).plus(-1)));     //   1 + -1 = -0
     assert(true, isMinusZero(new BigNumber(-1).plus(1)));     //  -1 +  1 = -0
 
-    BigNumber.config( {ROUNDING_MODE : 4} );
+    BigNumber.config( {ROUNDING_MODE: 4} );
     assert(false, isMinusZero(new BigNumber(0).plus(-0)));    //   0 + -0 =  0
     assert(false, isMinusZero(new BigNumber(-0).plus(0)));    //  -0 +  0 =  0
     assert(false, isMinusZero(new BigNumber(0).plus(0)));     //   0 +  0 =  0
@@ -1985,6 +1985,6 @@ var count = (function plus(BigNumber) {
     T('4.813328953637197259781466269e-12', '-4.47e+0', '-4.469999999995186671046362802740218533731');
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

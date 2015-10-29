@@ -37,11 +37,11 @@ var count = (function abs(BigNumber) {
     log('\n Testing abs...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : [-7, 21]
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: [-7, 21]
     });
 
     T(1, 1);
@@ -88,7 +88,7 @@ var count = (function abs(BigNumber) {
     assert(true, !isMinusZero(new BigNumber('-0').abs()));
     assert(true, !isMinusZero(new BigNumber(minusZero).abs()));
 
-    BigNumber.config({EXPONENTIAL_AT : 100});
+    BigNumber.config({EXPONENTIAL_AT: 100});
 
     T(Number.MIN_VALUE, Number.MIN_VALUE);
     T(Number.MIN_VALUE, -Number.MIN_VALUE);
@@ -117,7 +117,7 @@ var count = (function abs(BigNumber) {
     T(two_31 - 1, two_31 - 1);
     T(two_31 - 1, -two_31 + 1);
 
-    BigNumber.config({ EXPONENTIAL_AT : [-7, 21] });
+    BigNumber.config({ EXPONENTIAL_AT: [-7, 21] });
 
     T(NaN, 'NaN');
     T('0', '0');
@@ -537,7 +537,7 @@ var count = (function abs(BigNumber) {
     T('93.6206', '93.6206');
     T('3.07e-18', '0.00000000000000000307');
 
-    BigNumber.config({EXPONENTIAL_AT : 0});
+    BigNumber.config({EXPONENTIAL_AT: 0});
 
     T('5.2452468128e+1', '-5.2452468128e+1');
     T('1.41525905257189365008396e+16', '1.41525905257189365008396e+16');
@@ -1075,6 +1075,6 @@ var count = (function abs(BigNumber) {
     T('5.5879983320336874473209567979e+28', '-5.5879983320336874473209567979e+28');
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

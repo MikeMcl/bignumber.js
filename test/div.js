@@ -47,11 +47,11 @@ var count = (function div(BigNumber) {
     log('\n Testing div...');
 
     BigNumber.config({
-        DECIMAL_PLACES : 40,
-        ROUNDING_MODE : 4,
-        EXPONENTIAL_AT : [-7, 21],
-        RANGE : 1E9,
-        ERRORS : false
+        DECIMAL_PLACES: 40,
+        ROUNDING_MODE: 4,
+        EXPONENTIAL_AT: [-7, 21],
+        RANGE: 1E9,
+        ERRORS: false
     });
 
     T(1, 0, I);
@@ -2018,6 +2018,9 @@ var count = (function div(BigNumber) {
     var x = new BigNumber(1e-9);
     BigNumber.config({ RANGE: [-8, 1e9], ERRORS: true });
     T(x, 1, '0', 9, 4);
+
+    // Issue #58
+    T(1, '0.50000025000012500006', '1.99999900000000000001', 20, 4);
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];;

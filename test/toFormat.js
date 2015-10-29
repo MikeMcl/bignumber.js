@@ -57,20 +57,20 @@ var count = (function toFormat(BigNumber) {
     log('\n Testing toFormat...');
 
     format = {
-        decimalSeparator : '.',
-        groupSeparator : ',',
-        groupSize : 3,
-        secondaryGroupSize : 0,
-        fractionGroupSeparator : ' ',
-        fractionGroupSize : 0
+        decimalSeparator: '.',
+        groupSeparator: ',',
+        groupSize: 3,
+        secondaryGroupSize: 0,
+        fractionGroupSeparator: ' ',
+        fractionGroupSize: 0
     };
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        ERRORS : true,
-        RANGE : 1E9,
-        EXPONENTIAL_AT : [-7, 21],
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: [-7, 21],
         FORMAT: format
     });
 
@@ -188,10 +188,10 @@ var count = (function toFormat(BigNumber) {
     T('1.000000000', 1, 9);
 
     format = {
-        decimalSeparator : '.',
-        groupSeparator : ',',
-        groupSize : 3,
-        secondaryGroupSize : 2
+        decimalSeparator: '.',
+        groupSeparator: ',',
+        groupSize: 3,
+        secondaryGroupSize: 2
     };
     BigNumber.config({ FORMAT: format });
 

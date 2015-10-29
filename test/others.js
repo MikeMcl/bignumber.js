@@ -53,7 +53,6 @@ var count = (function others(BigNumber) {
     log('\n Testing others...');
 
     /*
-     *
      * isFinite
      * isInteger
      * isNaN
@@ -65,15 +64,14 @@ var count = (function others(BigNumber) {
      * lessThan
      * lessThanOrEqualTo
      * valueOf
-     *
      */
 
     BigNumber.config({
-        DECIMAL_PLACES : 20,
-        ROUNDING_MODE : 4,
-        EXPONENTIAL_AT : 1e+9,
-        RANGE : 1e+9,
-        ERRORS : true
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        EXPONENTIAL_AT: 1e+9,
+        RANGE: 1e+9,
+        ERRORS: true
     });
 
     n = new BigNumber(1);
@@ -191,7 +189,9 @@ var count = (function others(BigNumber) {
     assert(false, n.lessThan(0, 36));
     assert(true, n.lessThan(0.1));
     assert(true, n.lessThanOrEqualTo(0));
-    assert(n.toString(), n.valueOf());
+    assert(true, n.valueOf() === '-0');
+    assert(true, n.toJSON() === '-0');
+    assert(true, n.toString() === '0');
 
     n = new BigNumber('NaN');
     assert(false, n.isFinite());
@@ -208,7 +208,7 @@ var count = (function others(BigNumber) {
     assert(false, n.lte(-1));
     assert(n.toString(), n.valueOf());
 
-    BigNumber.config({ ERRORS : false });
+    BigNumber.config({ ERRORS: false });
 
     n = new BigNumber('hiya');
     assert(false, n.isFinite());
@@ -223,7 +223,7 @@ var count = (function others(BigNumber) {
     assert(false, n.lessThanOrEqualTo(0));
     assert(n.toString(), n.valueOf());
 
-    BigNumber.config({ ERRORS : true });
+    BigNumber.config({ ERRORS: true });
 
     n = new BigNumber('-1.234e+2');
     assert(true, n.isFinite());
@@ -262,7 +262,7 @@ var count = (function others(BigNumber) {
     assert(false, n.equals(-1));
     assert(false, n.equals(0.1));
 
-    BigNumber.config({ ERRORS : false });
+    BigNumber.config({ ERRORS: false });
 
     assert(false, new BigNumber(NaN).equals(0));
     assert(false, new BigNumber(null).equals(0));
@@ -290,7 +290,7 @@ var count = (function others(BigNumber) {
     assert(true, new BigNumber('a', 16).lessThanOrEqualTo('ff', 16));
     assert(true, new BigNumber('b', 16).greaterThanOrEqualTo(9, 16));
 
-    BigNumber.config({ ERRORS : true });
+    BigNumber.config({ ERRORS: true });
 
     assert(true, new BigNumber(10).greaterThan(10, 2));
     assert(true, new BigNumber(10).greaterThan(10, 3));
@@ -389,6 +389,6 @@ var count = (function others(BigNumber) {
     assertException(function () {new BigNumber(1).gt('one')}, "new BigNumber(1).gt('one')");
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
-    return [passed, total];;
+    return [passed, total];
 })(this.BigNumber);
 if (typeof module !== 'undefined' && module.exports) module.exports = count;

@@ -575,9 +575,11 @@ $GWT.onclick = function () {
 BigNumber.config({
 	DECIMAL_PLACES : 20,
 	ROUNDING_MODE : 4,
-	ERRORS : false,
-	RANGE : 1E9,
-	EXPONENTIAL_AT : 1E9
+    EXPONENTIAL_AT: 1E9,
+    RANGE: 1E9,
+    ERRORS: false,
+    MODULO_MODE: 1,
+    POW_PRECISION: 10000
 });
 
 // Set defaults
