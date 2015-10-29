@@ -2682,7 +2682,7 @@
         define( function () { return BigNumber; } );
 
     // Node and other environments that support module.exports.
-    } else if ( typeof module != 'undefined' && module.exports ) {
+    } else if ( typeof module != 'undefined' && module.exports && typeof window === 'undefined') {
         module.exports = BigNumber;
         if ( !crypto ) try { crypto = require('crypto'); } catch (e) {}
 
