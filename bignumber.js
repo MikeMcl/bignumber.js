@@ -12,7 +12,8 @@
     */
 
 
-    var BigNumber, crypto, parseNumeric,
+    var BigNumber, parseNumeric,
+        crypto = global.crypto,
         isNumeric = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
         mathceil = Math.ceil,
         mathfloor = Math.floor,
@@ -2684,7 +2685,7 @@
     // Node and other environments that support module.exports.
     } else if ( typeof module != 'undefined' && module.exports ) {
         module.exports = BigNumber;
-        try { crypto = require('cry' + 'pto'); } catch (e) {}
+        if ( !crypto ) try { crypto = require('cry' + 'pto'); } catch (e) {}
 
     // Browser.
     } else {
