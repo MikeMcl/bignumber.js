@@ -2685,7 +2685,7 @@
     // Node and other environments that support module.exports.
     } else if ( typeof module != 'undefined' && module.exports ) {
         module.exports = BigNumber;
-        if ( !crypto ) try { crypto = require('cry' + 'pto'); } catch (e) {}
+        if ( !crypto && typeof GLOBAL !== 'undefined' ) try { crypto = require('cry' + 'pto'); } catch (e) {}
 
     // Browser.
     } else {
