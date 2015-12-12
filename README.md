@@ -244,6 +244,14 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.1.2
+* 10/12/2015
+* Bugfix: `window.crypto` not assigned to `crypto`.
+
+####2.1.1
+* 09/12/2015
+* Prevent code bundler from adding `crypto` shim.
+
 ####2.1.0
 * 26/10/2015
 * For `valueOf` and `toJSON`, include the minus sign with negative zero.

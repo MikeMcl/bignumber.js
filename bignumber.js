@@ -1,10 +1,10 @@
-/*! bignumber.js v2.0.8 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/*! bignumber.js v2.1.2 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (global) {
     'use strict';
 
     /*
-      bignumber.js v2.0.8
+      bignumber.js v2.1.2
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2015 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -12,7 +12,8 @@
     */
 
 
-    var BigNumber, crypto, parseNumeric,
+    var BigNumber, parseNumeric,
+        crypto = global.crypto,
         isNumeric = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
         mathceil = Math.ceil,
         mathfloor = Math.floor,
@@ -2684,7 +2685,7 @@
     // Node and other environments that support module.exports.
     } else if ( typeof module != 'undefined' && module.exports ) {
         module.exports = BigNumber;
-        if ( !crypto && typeof GLOBAL !== 'undefined' ) try { crypto = require('crypto'); } catch (e) {}
+        if ( !crypto && typeof GLOBAL !== 'undefined' ) try { crypto = require('cry' + 'pto'); } catch (e) {}
 
     // Browser.
     } else {
