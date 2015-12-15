@@ -2677,19 +2677,20 @@
     // EXPORT
 
 
-    // AMD.
+   // AMD.
     if ( typeof define == 'function' && define.amd ) {
         define( function () { return constructorFactory(); } );
 
-    // Node and other environments that support module.exports.
+    // Node.js and other environments that support module.exports.
     } else if ( typeof module != 'undefined' && module.exports ) {
         module.exports = constructorFactory();
-        if ( !cryptoObj ) try { cryptoOj = require('cry' + 'pto'); } catch (e) {}
+
+        // Split string stops browserify adding crypto shim.
+        if ( !cryptoObj ) try { cryptoObj = require('cry' + 'pto'); } catch (e) {}
 
     // Browser.
-    } else if (globalObj) {
-        globalObj.BigNumber = constructorFactory();
     } else {
-        BigNumber = constructorFactory();
+        if ( !globalObj ) globalObj = typeof self != 'undefined' ? self : Function('return this')();
+        globalObj.BigNumber = constructorFactory();
     }
 })(this);
