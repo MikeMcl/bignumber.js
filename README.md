@@ -244,6 +244,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.1.4
+* 15/12/2015
+* Correct UMD.
+
 ####2.1.3
 * 13/12/2015
 * Refactor re global object and crypto availability when bundling.
