@@ -2360,7 +2360,7 @@
 
 
         /*
-         * Return a BigNumber whose value is the value of this BigNumber raised to the power n.
+         * Return a BigNumber whose value is the value of this BigNumber raised to the power n (optionally modulus BigNumber(m)).
          * If n is negative round according to DECIMAL_PLACES and ROUNDING_MODE.
          * If POW_PRECISION is not 0, round to POW_PRECISION using ROUNDING_MODE.
          *
@@ -2369,14 +2369,46 @@
          *
          * 'pow() exponent not an integer: {n}'
          * 'pow() exponent out of range: {n}'
+         *
+         * m {number} Integer|BigNumber
          */
-        P.toPower = P.pow = function (n) {
+        P.toPower = P.pow = function (n, m) {
             var k, y,
                 i = mathfloor( n < 0 ? -n : +n ),
-                x = this;
+                x = this,
+                nIsValidInt = isValidInt( n, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER, 23, 'exponent' ),
+                hasMod = typeof m !== 'undefined';
+
+            //Implement fast modular exponentiation via
+            //RTL binary method when n >= 0 && m > 0
+            //Returns a BigNumber which equals (x ^ n) % m
+            function powMod(x, n, m, k) {
+                var y = new BigNumber(ONE);
+
+                //For this algorithm to work with n < 0,
+                //must calculate the modular inverse of x (mod m).
+                if ( n < 0 ) {
+                    raise(23, 'modular exponentiation with n < 0 not supported.', n);
+                }
+
+                //Any int modulus 1 is 0
+                if ( m === 1 ) return 0;
+
+                x = x.mod( m );
+                while ( n > 0 ) {
+                    if ( n % 2 === 1 ) {
+                        y = y.times( x ).mod( m );
+                        if ( k && y.c.length > k ) y.c.length = k;
+                    }
+                    n = n >> 1;
+                    x = x.times( x ).mod( m );
+                    if ( k && x.c && x.c.length > k ) x.c.length = k;
+                }
+                return y;
+            }
 
             // Pass ±Infinity to Math.pow if exponent is out of range.
-            if ( !isValidInt( n, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER, 23, 'exponent' ) &&
+            if ( !nIsValidInt &&
               ( !isFinite(n) || i > MAX_SAFE_INTEGER && ( n /= 0 ) ||
                 parseFloat(n) != n && !( n = NaN ) ) ) {
                 return new BigNumber( Math.pow( +x, n ) );
@@ -2386,21 +2418,31 @@
             // to truncating significant digits to POW_PRECISION + [28, 41], i.e. there will be a
             // minimum of 28 guard digits retained. (Using + 1.5 would give [9, 21] guard digits.)
             k = POW_PRECISION ? mathceil( POW_PRECISION / LOG_BASE + 2 ) : 0;
-            y = new BigNumber(ONE);
 
-            for ( ; ; ) {
+            if (hasMod 
+                && n >= 0 
+                && nIsValidInt
+                && x.isInteger() ) {
+                y = powMod(x, n, m, k);
+            }
+            else {
+                y = new BigNumber(ONE);
 
-                if ( i % 2 ) {
-                    y = y.times(x);
-                    if ( !y.c ) break;
-                    if ( k && y.c.length > k ) y.c.length = k;
+                for ( ; ; ) {
+
+                    if ( i % 2 ) {
+                        y = y.times(x);
+                        if ( !y.c ) break;
+                        if ( k && y.c.length > k ) y.c.length = k;
+                    }
+
+                    i = mathfloor( i / 2 );
+                    if ( !i ) break;
+
+                    x = x.times(x);
+                    if ( k && x.c && x.c.length > k ) x.c.length = k;
                 }
-
-                i = mathfloor( i / 2 );
-                if ( !i ) break;
-
-                x = x.times(x);
-                if ( k && x.c && x.c.length > k ) x.c.length = k;
+                y = hasMod ? y.mod( m ) : y;
             }
 
             if ( n < 0 ) y = ONE.div(y);
