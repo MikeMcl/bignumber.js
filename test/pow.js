@@ -956,6 +956,7 @@ T('4096', '8', 4);
     assertException(function () {new BigNumber('2').pow('-Infinity')}, ".pow('-Infinity')");
 
     assertException(function () {new BigNumber(1).pow(MAX_POWER + 1)}, ".pow(MAX_POWER + 1)");
+    assertException(function () {new BigNumber(2).pow(-1, 2)}, ".pow(-1, 2)");
     T(1, 1, MAX_POWER);
 
     T('16', 2, '4.00000000');
