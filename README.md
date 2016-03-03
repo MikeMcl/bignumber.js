@@ -244,6 +244,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.2.0
+* 03/03/2016
+* #91 Permit larger JS integers.
+
 ####2.1.4
 * 15/12/2015
 * Correct UMD.
