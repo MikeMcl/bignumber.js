@@ -260,7 +260,9 @@
 
                 // Disallow numbers with over 15 significant digits if number type.
                 // 'new BigNumber() number type has more than 15 significant digits: {n}'
-                if ( num && ERRORS && len > 15 ) raise( id, tooManyDigits, x.s * n );
+                if ( num && ERRORS && len > 15 && ( n > MAX_SAFE_INTEGER || n !== mathfloor(n) ) ) {
+                    raise( id, tooManyDigits, x.s * n );
+                }
 
                 e = e - i - 1;
 
