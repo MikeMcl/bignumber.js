@@ -2362,7 +2362,7 @@
 
 
         /*
-         * Return a BigNumber whose value is the value of this BigNumber raised to the power n.
+         * Return a BigNumber whose value is the value of this BigNumber raised to the power n (optionally modulus BigNumber(m)).
          * If n is negative round according to DECIMAL_PLACES and ROUNDING_MODE.
          * If POW_PRECISION is not 0, round to POW_PRECISION using ROUNDING_MODE.
          *
@@ -2371,12 +2371,20 @@
          *
          * 'pow() exponent not an integer: {n}'
          * 'pow() exponent out of range: {n}'
+         *
+         * m {number} Integer|BigNumber
          */
-        P.toPower = P.pow = function (n) {
+        P.toPower = P.pow = function (n, m) {
             var k, y,
                 i = mathfloor( n < 0 ? -n : +n ),
-                x = this;
+                x = this,
+                hasMod = typeof m !== 'undefined';
 
+            //Requires finding the modular inverse of
+            //x (mod m)
+            if (hasMod && n < 0) {
+                raise( 23, 'toPower(n, m) with m and n < 0 unsupported.', n );
+            }
             // Pass ±Infinity to Math.pow if exponent is out of range.
             if ( !isValidInt( n, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER, 23, 'exponent' ) &&
               ( !isFinite(n) || i > MAX_SAFE_INTEGER && ( n /= 0 ) ||
@@ -2394,6 +2402,7 @@
 
                 if ( i % 2 ) {
                     y = y.times(x);
+                    if (hasMod) y = y.mod( m );
                     if ( !y.c ) break;
                     if ( k && y.c.length > k ) y.c.length = k;
                 }
