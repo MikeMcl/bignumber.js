@@ -7,7 +7,7 @@
       bignumber.js v2.2.0
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
-      Copyright (c) 2015 Michael Mclaughlin <M8ch88l@gmail.com>
+      Copyright (c) 2016 Michael Mclaughlin <M8ch88l@gmail.com>
       MIT Expat Licence
     */
 
@@ -2363,50 +2363,85 @@
 
         /*
          * Return a BigNumber whose value is the value of this BigNumber raised to the power n.
+         * If m is present, return the result modulo m.
          * If n is negative round according to DECIMAL_PLACES and ROUNDING_MODE.
-         * If POW_PRECISION is not 0, round to POW_PRECISION using ROUNDING_MODE.
+         * If POW_PRECISION is non-zero and m is not present, round to POW_PRECISION using
+         * ROUNDING_MODE.
          *
-         * n {number} Integer, -9007199254740992 to 9007199254740992 inclusive.
-         * (Performs 54 loop iterations for n of 9007199254740992.)
+         * The modular power operation works efficiently when x, n, and m are positive integers,
+         * otherwise it is equivalent to calculating x.toPower(n).modulo(m) (with POW_PRECISION 0).
+         *
+         * n {number} Integer, -MAX_SAFE_INTEGER to MAX_SAFE_INTEGER inclusive.
+         * [m] {number|string|BigNumber} The modulus.
          *
          * 'pow() exponent not an integer: {n}'
          * 'pow() exponent out of range: {n}'
+         *
+         * Performs 54 loop iterations for n of 9007199254740991.
          */
-        P.toPower = P.pow = function (n) {
-            var k, y,
+        P.toPower = P.pow = function ( n, m ) {
+            var k, y, z,
                 i = mathfloor( n < 0 ? -n : +n ),
                 x = this;
+
+            if ( m != null ) {
+                id = 23;
+                m = new BigNumber(m);
+            }
 
             // Pass ±Infinity to Math.pow if exponent is out of range.
             if ( !isValidInt( n, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER, 23, 'exponent' ) &&
               ( !isFinite(n) || i > MAX_SAFE_INTEGER && ( n /= 0 ) ||
-                parseFloat(n) != n && !( n = NaN ) ) ) {
-                return new BigNumber( Math.pow( +x, n ) );
+                parseFloat(n) != n && !( n = NaN ) ) || n == 0 ) {
+                k = Math.pow( +x, n );
+                return new BigNumber( m ? k % m : k );
             }
 
-            // Truncating each coefficient array to a length of k after each multiplication equates
-            // to truncating significant digits to POW_PRECISION + [28, 41], i.e. there will be a
-            // minimum of 28 guard digits retained. (Using + 1.5 would give [9, 21] guard digits.)
-            k = POW_PRECISION ? mathceil( POW_PRECISION / LOG_BASE + 2 ) : 0;
+            if (m) {
+                if ( n > 1 && x.gt(ONE) && x.isInt() && m.gt(ONE) && m.isInt() ) {
+                    x = x.mod(m);
+                } else {
+                    z = m;
+
+                    // Nullify m so only a single mod operation is performed at the end.
+                    m = null;
+                }
+            } else if (POW_PRECISION) {
+
+                // Truncating each coefficient array to a length of k after each multiplication
+                // equates to truncating significant digits to POW_PRECISION + [28, 41],
+                // i.e. there will be a minimum of 28 guard digits retained.
+                // (Using + 1.5 would give [9, 21] guard digits.)
+                k = mathceil( POW_PRECISION / LOG_BASE + 2 );
+            }
+
             y = new BigNumber(ONE);
 
             for ( ; ; ) {
-
                 if ( i % 2 ) {
                     y = y.times(x);
                     if ( !y.c ) break;
-                    if ( k && y.c.length > k ) y.c.length = k;
+                    if (k) {
+                        if ( y.c.length > k ) y.c.length = k;
+                    } else if (m) {
+                        y = y.mod(m);
+                    }
                 }
 
                 i = mathfloor( i / 2 );
                 if ( !i ) break;
-
                 x = x.times(x);
-                if ( k && x.c && x.c.length > k ) x.c.length = k;
+                if (k) {
+                    if ( x.c && x.c.length > k ) x.c.length = k;
+                } else if (m) {
+                    x = x.mod(m);
+                }
             }
 
+            if (m) return y;
             if ( n < 0 ) y = ONE.div(y);
-            return k ? round( y, POW_PRECISION, ROUNDING_MODE ) : y;
+
+            return z ? y.mod(z) : k ? round( y, POW_PRECISION, ROUNDING_MODE ) : y;
         };
 
 

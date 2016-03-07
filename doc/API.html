@@ -590,7 +590,8 @@ BigNumber.config({ MODULO_MODE: 9 })          // equivalent</pre>
         Default value: <code>100</code>
       </dd>
       <dd>
-        The <i>maximum</i> number of significant digits of the result of the power operation.
+        The <i>maximum</i> number of significant digits of the result of the power operation 
+        (unless a modulus is specified).
       </dd>
       <dd>If set to <code>0</code>, the number of signifcant digits will not be limited.</dd>
       <dd>See <a href='#pow'><code>toPower</code></a>.</dd>
@@ -1601,14 +1602,15 @@ z = new BigNumber(-0)
 
 
 
-    <h5 id="pow">toPower<code class='inset'>.pow(n) <i>&rArr; BigNumber</i></code></h5>
+    <h5 id="pow">toPower<code class='inset'>.pow(n [, m]) <i>&rArr; BigNumber</i></code></h5>
     <p>
       <code>n</code>: <i>number</i>: integer,
-      <code>-9007199254740991</code> to <code>9007199254740991</code> inclusive
+      <code>-9007199254740991</code> to <code>9007199254740991</code> inclusive<br />
+      <code>m</code>: <i>number|string|BigNumber</i>
     </p>
     <p>
       Returns a BigNumber whose value is the value of this BigNumber raised to the power
-      <code>n</code>.
+      <code>n</code>, and optionally modulo a modulus <code>m</code>.
     </p>
     <p>
       If <code>n</code> is negative the result is rounded according to the current
@@ -1632,7 +1634,7 @@ z = new BigNumber(-0)
       e.g. 123.456<sup>10000</sup> has over <code>50000</code> digits, the number of significant
       digits calculated is limited to the value of the
       <a href='#pow-precision'><code>POW_PRECISION</code></a> setting (default value:
-      <code>100</code>).
+      <code>100</code>) unless a modulus <code>m</code> is specified.
     </p>
     <p>
       Set <a href='#pow-precision'><code>POW_PRECISION</code></a> to <code>0</code> for an
@@ -1643,6 +1645,13 @@ z = new BigNumber(-0)
       Negative exponents will be calculated to the number of decimal places specified by
       <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> (but not to more than
       <a href='#pow-precision'><code>POW_PRECISION</code></a> significant digits).
+    </p>
+    <p>
+      If <code>m</code> is specified and the value of <code>m</code>, <code>n</code> and this
+      BigNumber are positive integers, then a fast modular exponentiation algorithm is used,
+      otherwise if any of the values is not a positive integer the operation will simply be
+      performed as <code>x.toPower(n).modulo(m)</code> with a 
+      <a href='#pow-precision'><code>POW_PRECISION</code></a> of <code>0</code>.
     </p>
     <pre>
 Math.pow(0.7, 2)                // 0.48999999999999994
