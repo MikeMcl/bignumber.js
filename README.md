@@ -35,7 +35,7 @@ The library is the single JavaScript file *bignumber.js* (or minified, *bignumbe
 <script src='relative/path/to/bignumber.js'></script>
 ```
 
-For [Node.js](http://nodejs.org) or [io.js](https://iojs.org/en/index.html), the library is available from the [npm](https://npmjs.org/) registry
+For [Node.js](http://nodejs.org), the library is available from the [npm](https://npmjs.org/) registry
 
     $ npm install bignumber.js
 
