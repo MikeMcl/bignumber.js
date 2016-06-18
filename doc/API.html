@@ -1369,12 +1369,12 @@ x.times('-a', 16)               // '-6'</pre>
 BigNumber.config({ precision: 5, rounding: 4 })
 x = new BigNumber(9876.54321)
 
-x.toSignificantDigits()                          // '9876.5'
-x.toSignificantDigits(6)                         // '9876.54'
-x.toSignificantDigits(6, BigNumber.ROUND_UP)     // '9876.55'
-x.toSD(2)                                        // '9900'
-x.toSD(2, 1)                                     // '9800'
-x                                                // '9876.54321'</pre>
+x.toDigits()                          // '9876.5'
+x.toDigits(6)                         // '9876.54'
+x.toDigits(6, BigNumber.ROUND_UP)     // '9876.55'
+x.toDigits(2)                         // '9900'
+x.toDigits(2, 1)                      // '9800'
+x                                     // '9876.54321'</pre>
 
 
 
