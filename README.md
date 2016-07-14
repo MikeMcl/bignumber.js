@@ -244,6 +244,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+####2.4.0
+* 14/07/2016
+* #97 Add exports to support ES6 imports.
+
 ####2.3.0
 * 07/03/2016
 * #86 Add modulus parameter to `toPower`.
