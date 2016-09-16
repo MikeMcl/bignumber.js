@@ -86,6 +86,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       <li><a href="#max"    >max</a></li>
       <li><a href="#min"    >min</a></li>
       <li><a href="#random" >random</a></li>
+      <li><a href="#is-big-number" >isBigNumber</a></li>
     </ul>
 
     <a href="#constructor-properties">Properties</a>
@@ -740,6 +741,21 @@ BigNumber.min(arr)                            // '-15.9999'</pre>
     <pre>BigNumber.config({ DECIMAL_PLACES: 10 })
 BigNumber.random()              // '0.4117936847'
 BigNumber.random(20)            // '0.78193327636914089009'</pre>
+
+
+
+    <h5 id="is-big-number">
+      isBigNumber<code class='inset'>.isBigNumber(instance) <i>&rArr; boolean</i></code>
+    </h5>
+    <p><code>instance</code>: <i>any</i></p>
+    <p>
+      Checks if passed instance is BigNumber.
+    </p>
+    <pre>BigNumber.isBigNumber(42)                  // false
+BigNumber.isBigNumber(new BigNumber('42')) // true
+
+var BN = BigNumber.another();
+BigNumber.isBigNumber(new BN('42'))        // true</pre>
 
 
 
