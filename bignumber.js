@@ -12,7 +12,7 @@
     */
 
 
-    var BigNumber, cryptoObj, parseNumeric,
+    var BigNumber, parseNumeric,
         isNumeric = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
         mathceil = Math.ceil,
         mathfloor = Math.floor,
@@ -33,8 +33,6 @@
          * exception is thrown (if ERRORS is true).
          */
         MAX = 1E9;                                   // 0 to MAX_INT32
-
-    if ( typeof crypto != 'undefined' ) cryptoObj = crypto;
 
 
     /*
@@ -127,7 +125,7 @@
 
             // The maximum number of significant digits of the result of the toPower operation.
             // If POW_PRECISION is 0, there will be unlimited significant digits.
-            POW_PRECISION = 100,                     // 0 to MAX
+            POW_PRECISION = 0,                       // 0 to MAX
 
             // The format specification used by the BigNumber.prototype.toFormat method.
             FORMAT = {
@@ -364,7 +362,7 @@
          * Ignore properties/parameters set to null or undefined.
          * Return an object with the properties current values.
          */
-        BigNumber.config = function () {
+        BigNumber.config = BigNumber.set = function () {
             var v, p,
                 i = 0,
                 r = {},
@@ -444,9 +442,19 @@
             // 'config() crypto unavailable: {crypto}'
             if ( has( p = 'CRYPTO' ) ) {
 
-                if ( v === !!v || v === 1 || v === 0 ) {
-                    CRYPTO = !!( v && cryptoObj );
-                    if ( v && !CRYPTO && ERRORS ) raise( 2, 'crypto unavailable', cryptoObj );
+                if ( v === true || v === false || v === 1 || v === 0 ) {
+                    if (v) {
+                        v = typeof crypto == 'undefined';
+                        if ( !v && crypto && (crypto.getRandomValues || crypto.randomBytes)) {
+                            CRYPTO = true;
+                        } else if (ERRORS) {
+                            raise( 2, 'crypto unavailable', v ? void 0 : crypto );
+                        } else {
+                            CRYPTO = false;
+                        }
+                    } else {
+                        CRYPTO = false;
+                    }
                 } else if (ERRORS) {
                     raise( 2, p + notBool, v );
                 }
@@ -536,9 +544,9 @@
                 if (CRYPTO) {
 
                     // Browsers supporting crypto.getRandomValues.
-                    if ( cryptoObj && cryptoObj.getRandomValues ) {
+                    if (crypto.getRandomValues) {
 
-                        a = cryptoObj.getRandomValues( new Uint32Array( k *= 2 ) );
+                        a = crypto.getRandomValues( new Uint32Array( k *= 2 ) );
 
                         for ( ; i < k; ) {
 
@@ -555,7 +563,7 @@
                             // Probability that v >= 9e15, is
                             // 7199254740992 / 9007199254740992 ~= 0.0008, i.e. 1 in 1251
                             if ( v >= 9e15 ) {
-                                b = cryptoObj.getRandomValues( new Uint32Array(2) );
+                                b = crypto.getRandomValues( new Uint32Array(2) );
                                 a[i] = b[0];
                                 a[i + 1] = b[1];
                             } else {
@@ -569,10 +577,10 @@
                         i = k / 2;
 
                     // Node.js supporting crypto.randomBytes.
-                    } else if ( cryptoObj && cryptoObj.randomBytes ) {
+                    } else if (crypto.randomBytes) {
 
                         // buffer
-                        a = cryptoObj.randomBytes( k *= 7 );
+                        a = crypto.randomBytes( k *= 7 );
 
                         for ( ; i < k; ) {
 
@@ -585,7 +593,7 @@
                                   ( a[i + 4] << 16 ) + ( a[i + 5] << 8 ) + a[i + 6];
 
                             if ( v >= 9e15 ) {
-                                cryptoObj.randomBytes(7).copy( a, i );
+                                crypto.randomBytes(7).copy( a, i );
                             } else {
 
                                 // 0 <= (v % 1e14) <= 99999999999999
@@ -594,13 +602,18 @@
                             }
                         }
                         i = k / 7;
-                    } else if (ERRORS) {
-                        raise( 14, 'crypto unavailable', cryptoObj );
+                    } else {
+                        CRYPTO = false;
+
+                        if (ERRORS) {
+                            raise( 14, 'crypto unavailable',
+                                crypto.getRandomValues || crypto.randomBytes );
+                        }
                     }
                 }
 
-                // Use Math.random: CRYPTO is false or crypto is unavailable and ERRORS is false.
-                if (!i) {
+                // Use Math.random.
+                if (!CRYPTO) {
 
                     for ( ; i < k; ) {
                         v = random53bitInt();
@@ -2725,9 +2738,6 @@
     // Node.js and other environments that support module.exports.
     } else if ( typeof module != 'undefined' && module.exports ) {
         module.exports = BigNumber;
-
-        // Split string stops browserify adding crypto shim.
-        if ( !cryptoObj ) try { cryptoObj = require('cry' + 'pto'); } catch (e) {}
 
     // Browser.
     } else {
