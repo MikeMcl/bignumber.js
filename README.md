@@ -128,7 +128,6 @@ The other arithmetic operations always give the exact result.
 
 ```javascript
 BigNumber.config({ DECIMAL_PLACES: 10, ROUNDING_MODE: 4 })
-// Alternatively, BigNumber.config( 10, 4 );
 
 x = new BigNumber(2);
 y = new BigNumber(3);
@@ -244,63 +243,69 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
-####2.4.0
+#### 3.0.0
+* 09/11/2016
+* Remove `require('crypto')` - leave it to the user.
+* Add `BigNumber.set` as `BigNumber.config` alias.
+* Default `POW_PRECISION` to `0`.
+
+#### 2.4.0
 * 14/07/2016
 * #97 Add exports to support ES6 imports.
 
-####2.3.0
+#### 2.3.0
 * 07/03/2016
 * #86 Add modulus parameter to `toPower`.
 
-####2.2.0
+#### 2.2.0
 * 03/03/2016
 * #91 Permit larger JS integers.
 
-####2.1.4
+#### 2.1.4
 * 15/12/2015
 * Correct UMD.
 
-####2.1.3
+#### 2.1.3
 * 13/12/2015
 * Refactor re global object and crypto availability when bundling.
 
-####2.1.2
+#### 2.1.2
 * 10/12/2015
 * Bugfix: `window.crypto` not assigned to `crypto`.
 
-####2.1.1
+#### 2.1.1
 * 09/12/2015
 * Prevent code bundler from adding `crypto` shim.
 
-####2.1.0
+#### 2.1.0
 * 26/10/2015
 * For `valueOf` and `toJSON`, include the minus sign with negative zero.
 
-####2.0.8
+#### 2.0.8
 * 2/10/2015
 * Internal round function bugfix.
 
-####2.0.6
+#### 2.0.6
 * 31/03/2015
 * Add bower.json. Tweak division after in-depth review.
 
-####2.0.5
+#### 2.0.5
 * 25/03/2015
 * Amend README. Remove bitcoin address.
 
-####2.0.4
+#### 2.0.4
 * 25/03/2015
 * Critical bugfix #58: division.
 
-####2.0.3
+#### 2.0.3
 * 18/02/2015
 * Amend README. Add source map.
 
-####2.0.2
+#### 2.0.2
 * 18/02/2015
 * Correct links.
 
-####2.0.1
+#### 2.0.1
 * 18/02/2015
 * Add `max`, `min`, `precision`, `random`, `shift`, `toDigits` and `truncated` methods.
 * Add the short-forms: `add`, `mul`, `sd`, `sub` and `trunc`.
@@ -313,7 +318,7 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 * Improve code quality.
 * Improve documentation.
 
-####2.0.0
+#### 2.0.0
 * 29/12/2014
 * Add `dividedToIntegerBy`, `isInteger` and `toFormat` methods.
 * Remove the following short-forms: `isF`, `isZ`, `toE`, `toF`, `toFr`, `toN`, `toP`, `toS`.
@@ -321,42 +326,42 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 * Add fast path for integers to BigNumber constructor.
 * Incorporate the library into the online documentation.
 
-####1.5.0
+#### 1.5.0
 * 13/11/2014
 * Add `toJSON` and `decimalPlaces` methods.
 
-####1.4.1
+#### 1.4.1
 * 08/06/2014
 * Amend README.
 
-####1.4.0
+#### 1.4.0
 * 08/05/2014
 * Add `toNumber`.
 
-####1.3.0
+#### 1.3.0
 * 08/11/2013
 * Ensure correct rounding of `sqrt` in all, rather than almost all, cases.
 * Maximum radix to 64.
 
-####1.2.1
+#### 1.2.1
 * 17/10/2013
 * Sign of zero when x < 0 and x + (-x) = 0.
 
-####1.2.0
+#### 1.2.0
 * 19/9/2013
 * Throw Error objects for stack.
 
-####1.1.1
+#### 1.1.1
 * 22/8/2013
 * Show original value in constructor error message.
 
-####1.1.0
+#### 1.1.0
 * 1/8/2013
 * Allow numbers with trailing radix point.
 
-####1.0.1
+#### 1.0.1
 * Bugfix: error messages with incorrect method name
 
-####1.0.0
+#### 1.0.0
 * 8/11/2012
 * Initial release

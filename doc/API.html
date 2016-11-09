@@ -326,12 +326,12 @@ BN.config({ DECIMAL_PLACES: 9 })</pre>
 
 
 
-    <h5 id="config">config<code class='inset'>config([obj]) <i>&rArr; object</i></code></h5>
+    <h5 id="config">config<code class='inset'>set([obj]) <i>&rArr; object</i></code></h5>
     <p>
       <code>obj</code>: <i>object</i>: an object that contains some or all of the following
       properties.
     </p>
-    <p>Configures the 'global' settings for this particular BigNumber constructor.</p>
+    <p>Configures the settings for this particular BigNumber constructor.</p>
     <p><i>Note: the configuration can also be supplied as an argument list, see below.</i></p>
     <dl class='inset'>
       <dt id="decimal-places"><code><b>DECIMAL_PLACES</b></code></dt>
@@ -346,6 +346,7 @@ BN.config({ DECIMAL_PLACES: 9 })</pre>
       </dd>
       <dd>
       <pre>BigNumber.config({ DECIMAL_PLACES: 5 })
+BigNumber.set({ DECIMAL_PLACES: 5 })    // equivalent
 BigNumber.config(5)    // equivalent</pre>
       </dd>
 
@@ -587,7 +588,7 @@ BigNumber.config({ MODULO_MODE: 9 })          // equivalent</pre>
       <dt id="pow-precision"><code><b>POW_PRECISION</b></code></dt>
       <dd>
         <i>number</i>: integer, <code>0</code> to <code>1e+9</code> inclusive.<br />
-        Default value: <code>100</code>
+        Default value: <code>0</code>
       </dd>
       <dd>
         The <i>maximum</i> number of significant digits of the result of the power operation 
@@ -1633,13 +1634,13 @@ z = new BigNumber(-0)
       As the number of digits of the result of the power operation can grow so large so quickly,
       e.g. 123.456<sup>10000</sup> has over <code>50000</code> digits, the number of significant
       digits calculated is limited to the value of the
-      <a href='#pow-precision'><code>POW_PRECISION</code></a> setting (default value:
-      <code>100</code>) unless a modulus <code>m</code> is specified.
+      <a href='#pow-precision'><code>POW_PRECISION</code></a> setting (unless a modulus
+      <code>m</code> is specified).
     </p>
     <p>
-      Set <a href='#pow-precision'><code>POW_PRECISION</code></a> to <code>0</code> for an
-      unlimited number of significant digits to be calculated (this will cause the method to slow
-      dramatically for larger exponents).
+      By default <a href='#pow-precision'><code>POW_PRECISION</code></a> is set to <code>0</code>.
+      This means that an unlimited number of significant digits will be calculated, and that the
+      method's performance will decrease dramatically for larger exponents.
     </p>
     <p>
       Negative exponents will be calculated to the number of decimal places specified by
