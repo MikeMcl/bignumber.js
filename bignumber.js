@@ -604,11 +604,7 @@
                         i = k / 7;
                     } else {
                         CRYPTO = false;
-
-                        if (ERRORS) {
-                            raise( 14, 'crypto unavailable',
-                                crypto.getRandomValues || crypto.randomBytes );
-                        }
+                        if (ERRORS) raise( 14, 'crypto unavailable', crypto );
                     }
                 }
 
