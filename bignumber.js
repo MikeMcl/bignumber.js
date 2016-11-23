@@ -1859,7 +1859,7 @@
             // Only start adding at yc.length - 1 as the further digits of xc can be ignored.
             for ( a = 0; b; ) {
                 a = ( xc[--b] = xc[b] + yc[b] + a ) / BASE | 0;
-                xc[b] %= BASE;
+                xc[b] = BASE === xc[b] ? 0 : xc[b] % BASE;
             }
 
             if (a) {
