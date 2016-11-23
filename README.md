@@ -243,6 +243,11 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+#### 3.0.1
+* 23/11/2016
+* Apply fix for old ipads with `%` issue, see #57 and #102.
+* Correct error message.
+
 #### 3.0.0
 * 09/11/2016
 * Remove `require('crypto')` - leave it to the user.

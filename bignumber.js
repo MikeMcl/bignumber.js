@@ -1,10 +1,10 @@
-/*! bignumber.js v3.0.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/*! bignumber.js v3.0.1 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (globalObj) {
     'use strict';
 
     /*
-      bignumber.js v3.0.0
+      bignumber.js v3.0.1
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2016 Michael Mclaughlin <M8ch88l@gmail.com>
