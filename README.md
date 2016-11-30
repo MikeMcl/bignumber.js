@@ -207,7 +207,7 @@ For the browser, see *every-test.html* and *single-test.html* in the *test/brows
 
 ## Versions
 
-This is version 2.x.x of the library, for version 1.x.x see the tagged releases or switch to the 'original' branch. The advantages of version 2 are that it is considerably faster for numbers with many digits and that there are a some added methods (see Change Log below). The disadvantages are more lines of code and increased code complexity, and the loss of simplicity in no longer having the coefficient of a BigNumber stored in base 10. The 'original' version will continue to be supported.
+Version 1.x.x of this library is still supported on the 'original' branch. The advantages of later versions are that they are considerably faster for numbers with many digits and that there are some added methods (see Change Log below). The disadvantages are more lines of code and increased code complexity, and the loss of simplicity in no longer having the coefficient of a BigNumber stored in base 10.
 
 ## Performance
 
