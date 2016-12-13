@@ -2549,6 +2549,19 @@
             return n.s < 0 ? '-' + str : str;
         };
 
+        P.bitShiftLeft = P.shiftLeft = function (n) {
+            var b = this.abs().floor().toString(2);
+            b += '0'.repeat(n);
+            if ( this.isNegative() ) b = '-' + b;
+            return new BigNumber( b, 2 );
+        };
+
+        P.bitShiftRight = P.shiftRight = function (n) {
+            var b = this.abs().floor().toString(2);
+            b = b.slice( 0, -n );
+            if ( this.isNegative() ) b = '-' + b;
+            return new BigNumber( b, 2 );
+        };
 
         // Aliases for BigDecimal methods.
         //P.add = P.plus;         // P.add included above
