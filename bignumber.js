@@ -2549,7 +2549,7 @@
             return n.s < 0 ? '-' + str : str;
         };
 
-        P.bitShiftLeft = P.shiftLeft = function (n) {
+        P.shiftLeft = function (n) {
             n = +n.toString();
             var b = this.abs().floor().toString(2);
             b += '0'.repeat(n);
@@ -2557,12 +2557,31 @@
             return new BigNumber( b, 2 );
         };
 
-        P.bitShiftRight = P.shiftRight = function (n) {
+        P.shiftRight = function (n) {
             n = +n.toString();
             var b = this.abs().floor().toString(2);
             b = b.slice( 0, -n );
             if ( this.isNegative() ) b = '-' + b;
             return new BigNumber( b, 2 );
+        };
+
+        P.and = function (a) {
+            var b = new BigNumber(a).abs().floor().toString(2),
+                c = this.abs().floor().toString(2),
+                d = this.isNegative() && a.isNegative();
+                    ? '-'
+                    : '';
+            for ( var i = 0; i < c.length; i++ ) {
+                if ( +b[i] && +c[i] ) d += '1';
+                else d += '0';
+            };
+            return new BigNumber( d, 2 );
+        };
+
+        P.not = function () {
+            return this.isNegative()
+                ? this.ceil().plus(1).negated()
+                : this.floor().plus(1).negated();
         };
 
         // Aliases for BigDecimal methods.
