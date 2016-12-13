@@ -2568,7 +2568,7 @@
         P.and = function (a) {
             var b = new BigNumber(a).abs().floor().toString(2),
                 c = this.abs().floor().toString(2),
-                d = this.isNegative() && a.isNegative();
+                d = this.isNegative() && a.isNegative()
                     ? '-'
                     : '';
             for ( var i = 0; i < c.length; i++ ) {
