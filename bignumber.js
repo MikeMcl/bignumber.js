@@ -2569,8 +2569,8 @@
             var b = new BigNumber(a).abs().floor().toString(2),
                 c = this.abs().floor().toString(2),
                 d = this.isNegative() && a.isNegative()
-                    ? '-'
-                    : '';
+                    ? '-0'
+                    : '0';
             for ( var i = 0; i < c.length; i++ ) {
                 if ( +b[i] && +c[i] ) d += '1';
                 else d += '0';
