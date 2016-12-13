@@ -2550,6 +2550,7 @@
         };
 
         P.bitShiftLeft = P.shiftLeft = function (n) {
+            n = +n.toString();
             var b = this.abs().floor().toString(2);
             b += '0'.repeat(n);
             if ( this.isNegative() ) b = '-' + b;
@@ -2557,6 +2558,7 @@
         };
 
         P.bitShiftRight = P.shiftRight = function (n) {
+            n = +n.toString();
             var b = this.abs().floor().toString(2);
             b = b.slice( 0, -n );
             if ( this.isNegative() ) b = '-' + b;
