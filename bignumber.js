@@ -2568,9 +2568,10 @@
         P.and = function (a) {
             var b = new BigNumber(a).abs().floor().toString(2),
                 c = this.abs().floor().toString(2),
-                d = this.isNegative() && a.isNegative()
-                    ? '-0'
-                    : '0';
+                d = '0';
+            this.isNegative() && a.isNegative()
+            if ( b.length < c.length ) b = '0'.repeat( c.length - b.length );
+            else if ( b.length > c.length ) c = '0'.repeat( b.length - c.length );
             for ( var i = 0; i < c.length; i++ ) {
                 if ( +b[i] && +c[i] ) d += '1';
                 else d += '0';
