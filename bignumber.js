@@ -2569,13 +2569,27 @@
             var b = new BigNumber(a).abs().floor().toString(2),
                 c = this.abs().floor().toString(2),
                 d = '0';
-            if ( b.length < c.length ) b = '0'.repeat( c.length - b.length );
-            else if ( b.length > c.length ) c = '0'.repeat( b.length - c.length );
+            if ( b.length < c.length ) b = '0'.repeat( c.length - b.length ) + b;
+            else if ( b.length > c.length ) c = '0'.repeat( b.length - c.length ) + c;
             for ( var i = 0; i < c.length; i++ ) {
                 if ( +b[i] && +c[i] ) d += '1';
                 else d += '0';
             };
-            if ( this.isNegative() && a.isNegative() ) d = '-' + d;
+            if ( this.isNegative() && new BigNumber(a).isNegative() ) d = '-' + d;
+            return new BigNumber( d, 2 );
+        };
+
+        P.or = function (a) {
+            var b = new BigNumber(a).abs().floor().toString(2),
+                c = this.abs().floor().toString(2),
+                d = '0';
+            if ( b.length < c.length ) b = '0'.repeat( c.length - b.length ) + b;
+            else if ( b.length > c.length ) c = '0'.repeat( b.length - c.length ) + c;
+            for ( var i = 0; i < c.length; i++ ) {
+                if ( +b[i] || +c[i] ) d += '1';
+                else d += '0';
+            };
+            if ( this.isNegative() || new BigNumber(a).isNegative() ) d = '-' + d;
             return new BigNumber( d, 2 );
         };
 
