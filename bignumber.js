@@ -2549,6 +2549,8 @@
             return n.s < 0 ? '-' + str : str;
         };
 
+
+
         /*
          * Shifts this BigNumber in binary representation {n} bits to the left.
          */
@@ -2560,6 +2562,7 @@
             return new BigNumber( b, 2 );
         };
 
+
         /*
          * Shifts this BigNumber in binary representation {n} bits to the right.
          */
@@ -2570,7 +2573,8 @@
             if ( this.isNegative() ) b = '-' + b;
             return new BigNumber( b, 2 );
         };
-        
+
+
         /*
          * Returns a one in each bit position for which the corresponding bits of this and {a} are
          * ones.
@@ -2589,8 +2593,10 @@
             return new BigNumber( d, 2 );
         };
 
+
         /*
-         * Returns a one in each bit position for which the corresponding bits of either or both operands are ones.
+         * Returns a one in each bit position for which the corresponding bits of either or both this and
+         * {a} are ones.
          */
         P.or = function (a) {
             var b = new BigNumber(a).abs().floor().toString(2),
@@ -2606,6 +2612,11 @@
             return new BigNumber( d, 2 );
         };
 
+
+        /*
+         * Returns a one in each bit position for which the corresponding bits of either but not both this
+         * and {a} are ones.
+         */
         P.xor = function (a) {
             var b = new BigNumber(a).abs().floor().toString(2),
                 c = this.abs().floor().toString(2),
@@ -2620,6 +2631,10 @@
             return new BigNumber( d, 2 );
         };
 
+
+        /*
+         * Inverts the bits of this BigNumber.
+         */
         P.not = function () {
             return this.isNegative()
                 ? this.ceil().plus(1).negated()
