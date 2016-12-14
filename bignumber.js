@@ -2549,6 +2549,9 @@
             return n.s < 0 ? '-' + str : str;
         };
 
+        /*
+         * Shifts this BigNumber in binary representation {n} bits to the left.
+         */
         P.shiftLeft = function (n) {
             n = +n.toString();
             var b = this.abs().floor().toString(2);
@@ -2557,6 +2560,9 @@
             return new BigNumber( b, 2 );
         };
 
+        /*
+         * Shifts this BigNumber in binary representation {n} bits to the right.
+         */
         P.shiftRight = function (n) {
             n = +n.toString();
             var b = this.abs().floor().toString(2);
@@ -2564,7 +2570,11 @@
             if ( this.isNegative() ) b = '-' + b;
             return new BigNumber( b, 2 );
         };
-
+        
+        /*
+         * Returns a one in each bit position for which the corresponding bits of this and {a} are
+         * ones.
+         */
         P.and = function (a) {
             var b = new BigNumber(a).abs().floor().toString(2),
                 c = this.abs().floor().toString(2),
@@ -2579,6 +2589,9 @@
             return new BigNumber( d, 2 );
         };
 
+        /*
+         * Returns a one in each bit position for which the corresponding bits of either or both operands are ones.
+         */
         P.or = function (a) {
             var b = new BigNumber(a).abs().floor().toString(2),
                 c = this.abs().floor().toString(2),
@@ -2590,6 +2603,20 @@
                 else d += '0';
             };
             if ( this.isNegative() || new BigNumber(a).isNegative() ) d = '-' + d;
+            return new BigNumber( d, 2 );
+        };
+
+        P.xor = function (a) {
+            var b = new BigNumber(a).abs().floor().toString(2),
+                c = this.abs().floor().toString(2),
+                d = '0';
+            if ( b.length < c.length ) b = '0'.repeat( c.length - b.length ) + b;
+            else if ( b.length > c.length ) c = '0'.repeat( b.length - c.length ) + c;
+            for ( var i = 0; i < c.length; i++ ) {
+                if ( +b[i] ^ +c[i] ) d += '1';
+                else d += '0';
+            };
+            if ( this.isNegative() ^ new BigNumber(a).isNegative() ) d = '-' + d;
             return new BigNumber( d, 2 );
         };
 
