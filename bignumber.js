@@ -12,7 +12,7 @@
     */
 
 
-    var BigNumber, parseNumeric,
+    var BigNumber,
         isNumeric = /^-?(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i,
         mathceil = Math.ceil,
         mathfloor = Math.floor,
@@ -39,7 +39,7 @@
      * Create and return a BigNumber constructor.
      */
     function constructorFactory(configObj) {
-        var div,
+        var div, parseNumeric,
 
             // id tracks the caller function, so its name can be included in error messages.
             id = 0,
