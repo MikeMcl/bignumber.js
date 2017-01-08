@@ -16,6 +16,7 @@ console.log( '\n STARTING TESTS...\n' );
   'divToInt',
   'dp',
   'floor',
+  'isBigNumber',
   'minmax',
   'minus',
   'mod',
@@ -37,8 +38,7 @@ console.log( '\n STARTING TESTS...\n' );
   'toNumber',
   'toPrecision',
   'toString',
-  'trunc',
-  'isBigNumber'
+  'trunc'
 ]
 .forEach( function (method) {
     arr = require('./' + method);

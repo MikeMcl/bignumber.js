@@ -243,6 +243,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+#### 3.1.0
+* 08/01/2017
+* Add `isBigNumber` method.
+
 #### 3.0.2
 * 08/01/2017
 * Bugfix: Possible incorrect value of `ERRORS` after a `BigNumber.another` call (due to `parseNumeric` declaration in outer scope).

@@ -1,10 +1,10 @@
-/*! bignumber.js v3.0.1 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/*! bignumber.js v3.1.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (globalObj) {
     'use strict';
 
     /*
-      bignumber.js v3.0.1
+      bignumber.js v3.1.0
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2016 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -328,19 +328,6 @@
         BigNumber.ROUND_HALF_FLOOR = 8;
         BigNumber.EUCLID = 9;
 
-        /*
-         * Check if passed instance is BigNumber
-         *
-         * @param {*} instance - what to check
-         * @returns {boolean}
-         */
-        BigNumber.isBigNumber = function (instance) {
-            if (!instance || !instance._isBigNumberInstance) {
-                return false;
-            }
-
-            return true;
-        }
 
         /*
          * Configure infrequently-changing library-wide settings.
@@ -504,6 +491,14 @@
 
             return r;
         };
+
+
+        /*
+         * Return true if value v is a BigNumber instance, otherwise return false.
+         *
+         * v {any} A value that may or may not be a BigNumber instance.
+         */
+        BigNumber.isBigNumber = isBigNumber;
 
 
         /*
@@ -2541,7 +2536,6 @@
         };
 
 
-
         /*
          * Return as toString, but do not accept a base argument, and include the minus sign for
          * negative zero.
@@ -2561,18 +2555,6 @@
 
             return n.s < 0 ? '-' + str : str;
         };
-
-        P._isBigNumberInstance = true;
-
-
-        // Aliases for BigDecimal methods.
-        //P.add = P.plus;         // P.add included above
-        //P.subtract = P.minus;   // P.sub included above
-        //P.multiply = P.times;   // P.mul included above
-        //P.divide = P.div;
-        //P.remainder = P.mod;
-        //P.compareTo = P.cmp;
-        //P.negate = P.neg;
 
 
         if ( configObj != null ) BigNumber.config(configObj);
@@ -2663,6 +2645,11 @@
 
     function isArray(obj) {
         return Object.prototype.toString.call(obj) == '[object Array]';
+    }
+
+
+    function isBigNumber(v) {
+      return !!( v && v.constructor && v.constructor.isBigNumber === isBigNumber );
     }
 
 

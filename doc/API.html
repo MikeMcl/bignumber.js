@@ -83,10 +83,10 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
           <li><a href="#format"        >FORMAT</a></li>
         </ul>
       </li>
-      <li><a href="#max"    >max</a></li>
-      <li><a href="#min"    >min</a></li>
-      <li><a href="#random" >random</a></li>
-      <li><a href="#is-big-number" >isBigNumber</a></li>
+      <li><a href="#is-bignumber">isBigNumber</a></li>
+      <li><a href="#max">max</a></li>
+      <li><a href="#min">min</a></li>
+      <li><a href="#random">random</a></li>
     </ul>
 
     <a href="#constructor-properties">Properties</a>
@@ -279,7 +279,7 @@ new BigNumber('0xff.8')                    // '255.5'</pre>
     <pre>new BigNumber(9, 2)</pre>
     <p>
       The following throws <code>'number type has more than 15 significant digits'</code> if
-      <a href='#errors'><code>errors</code></a> is true, otherwise it returns a BigNumber with value
+      <a href='#errors'><code>ERRORS</code></a> is true, otherwise it returns a BigNumber with value
       <code>96517860459076820</code>.
     </p>
     <pre>new BigNumber(96517860459076817.4395)</pre>
@@ -592,7 +592,7 @@ BigNumber.config({ MODULO_MODE: 9 })          // equivalent</pre>
         Default value: <code>0</code>
       </dd>
       <dd>
-        The <i>maximum</i> number of significant digits of the result of the power operation 
+        The <i>maximum</i> number of significant digits of the result of the power operation
         (unless a modulus is specified).
       </dd>
       <dd>If set to <code>0</code>, the number of signifcant digits will not be limited.</dd>
@@ -745,18 +745,24 @@ BigNumber.random(20)            // '0.78193327636914089009'</pre>
 
 
 
-    <h5 id="is-big-number">
-      isBigNumber<code class='inset'>.isBigNumber(instance) <i>&rArr; boolean</i></code>
+    <h5 id="is-bignumber">
+      isBigNumber<code class='inset'>.isBigNumber(n) <i>&rArr; boolean</i></code>
     </h5>
-    <p><code>instance</code>: <i>any</i></p>
+    <p><code>n</code>: <i>any</i></p>
     <p>
-      Checks if passed instance is BigNumber.
+      Returns <code>true</code> if <code>n</code> is a BigNumber instance, otherwise returns
+      <code>false</code>.
     </p>
-    <pre>BigNumber.isBigNumber(42)                  // false
-BigNumber.isBigNumber(new BigNumber('42')) // true
+    <pre>
+x = 42
+y = new BigNumber(x)
+BigNumber.isBigNumber(x)             // false
+BigNumber.isBigNumber(y)             // true
 
-var BN = BigNumber.another();
-BigNumber.isBigNumber(new BN('42'))        // true</pre>
+BN = BigNumber.another();
+z = new BN(x)
+
+BigNumber.isBigNumber(z)             // true</pre>
 
 
 
@@ -1667,7 +1673,7 @@ z = new BigNumber(-0)
       If <code>m</code> is specified and the value of <code>m</code>, <code>n</code> and this
       BigNumber are positive integers, then a fast modular exponentiation algorithm is used,
       otherwise if any of the values is not a positive integer the operation will simply be
-      performed as <code>x.toPower(n).modulo(m)</code> with a 
+      performed as <code>x.toPower(n).modulo(m)</code> with a
       <a href='#pow-precision'><code>POW_PRECISION</code></a> of <code>0</code>.
     </p>
     <pre>
