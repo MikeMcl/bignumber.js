@@ -243,6 +243,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+#### 3.1.2
+* 08/01/2017
+* Minor documentation edit.
+
 #### 3.1.1
 * 08/01/2017
 * Uncomment `isBigNumber` tests.

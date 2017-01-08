@@ -671,6 +671,27 @@ obj.RANGE        // [-500, 500]</pre>
 
 
 
+    <h5 id="is-bignumber">
+      isBigNumber<code class='inset'>.isBigNumber(n) <i>&rArr; boolean</i></code>
+    </h5>
+    <p><code>n</code>: <i>any</i></p>
+    <p>
+      Returns <code>true</code> if <code>n</code> is a BigNumber instance, otherwise returns
+      <code>false</code>.
+    </p>
+    <pre>
+x = 42
+y = new BigNumber(x)
+BigNumber.isBigNumber(x)             // false
+BigNumber.isBigNumber(y)             // true
+
+BN = BigNumber.another();
+z = new BN(x)
+
+BigNumber.isBigNumber(z)             // true</pre>
+
+
+
     <h5 id="max">
       max<code class='inset'>.max([arg1 [, arg2, ...]]) <i>&rArr; BigNumber</i></code>
     </h5>
@@ -742,27 +763,6 @@ BigNumber.min(arr)                            // '-15.9999'</pre>
     <pre>BigNumber.config({ DECIMAL_PLACES: 10 })
 BigNumber.random()              // '0.4117936847'
 BigNumber.random(20)            // '0.78193327636914089009'</pre>
-
-
-
-    <h5 id="is-bignumber">
-      isBigNumber<code class='inset'>.isBigNumber(n) <i>&rArr; boolean</i></code>
-    </h5>
-    <p><code>n</code>: <i>any</i></p>
-    <p>
-      Returns <code>true</code> if <code>n</code> is a BigNumber instance, otherwise returns
-      <code>false</code>.
-    </p>
-    <pre>
-x = 42
-y = new BigNumber(x)
-BigNumber.isBigNumber(x)             // false
-BigNumber.isBigNumber(y)             // true
-
-BN = BigNumber.another();
-z = new BN(x)
-
-BigNumber.isBigNumber(z)             // true</pre>
 
 
 
