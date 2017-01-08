@@ -50,10 +50,10 @@ var count = (function isBigNumber(BigNumber) {
     T(true, new BigNumber('1'));
 
     var AnotherBigNumber = BigNumber.another();
-    //T(true, new AnotherBigNumber(0));
-    //T(true, new AnotherBigNumber('0'));
-    //T(true, new AnotherBigNumber(1));
-    //T(true, new AnotherBigNumber('1'));
+    T(true, new AnotherBigNumber(0));
+    T(true, new AnotherBigNumber('0'));
+    T(true, new AnotherBigNumber(1));
+    T(true, new AnotherBigNumber('1'));
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];
