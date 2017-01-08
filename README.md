@@ -243,6 +243,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+#### 3.0.2
+* 08/01/2017
+* Bugfix: Possible incorrect value of `ERRORS` after a `BigNumber.another` call (due to `parseNumeric` declaration in outer scope).
+
 #### 3.0.1
 * 23/11/2016
 * Apply fix for old ipads with `%` issue, see #57 and #102.
