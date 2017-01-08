@@ -37,7 +37,8 @@ console.log( '\n STARTING TESTS...\n' );
   'toNumber',
   'toPrecision',
   'toString',
-  'trunc'
+  'trunc',
+  'isBigNumber'
 ]
 .forEach( function (method) {
     arr = require('./' + method);

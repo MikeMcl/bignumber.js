@@ -328,6 +328,19 @@
         BigNumber.ROUND_HALF_FLOOR = 8;
         BigNumber.EUCLID = 9;
 
+        /*
+         * Check if passed instance is BigNumber
+         *
+         * @param {*} instance - what to check
+         * @returns {boolean}
+         */
+        BigNumber.isBigNumber = function (instance) {
+            if (!instance || !instance._isBigNumberInstance) {
+                return false;
+            }
+
+            return true;
+        }
 
         /*
          * Configure infrequently-changing library-wide settings.
@@ -2548,6 +2561,8 @@
 
             return n.s < 0 ? '-' + str : str;
         };
+
+        P._isBigNumberInstance = true;
 
 
         // Aliases for BigDecimal methods.
