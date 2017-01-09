@@ -16,7 +16,6 @@ console.log( '\n STARTING TESTS...\n' );
   'divToInt',
   'dp',
   'floor',
-  'isBigNumber',
   'minmax',
   'minus',
   'mod',

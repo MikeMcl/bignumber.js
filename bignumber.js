@@ -38,7 +38,7 @@
     /*
      * Create and return a BigNumber constructor.
      */
-    function constructorFactory(configObj) {
+    function constructorFactory(config) {
         var div, parseNumeric,
 
             // id tracks the caller function, so its name can be included in error messages.
@@ -491,14 +491,6 @@
 
             return r;
         };
-
-
-        /*
-         * Return true if value v is a BigNumber instance, otherwise return false.
-         *
-         * v {any} A value that may or may not be a BigNumber instance.
-         */
-        BigNumber.isBigNumber = isBigNumber;
 
 
         /*
@@ -2557,7 +2549,9 @@
         };
 
 
-        if ( configObj != null ) BigNumber.config(configObj);
+        P.isBigNumber = true;
+
+        if ( config != null ) BigNumber.config(config);
 
         return BigNumber;
     }
@@ -2645,11 +2639,6 @@
 
     function isArray(obj) {
         return Object.prototype.toString.call(obj) == '[object Array]';
-    }
-
-
-    function isBigNumber(v) {
-      return !!( v && v.constructor && v.constructor.isBigNumber === isBigNumber );
     }
 
 
