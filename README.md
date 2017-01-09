@@ -243,6 +243,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+#### 4.0.0
+* 09/01/2017
+* Replace BigNumber.isBigNumber method with isBigNumber prototype property.
+
 #### 3.1.2
 * 08/01/2017
 * Minor documentation edit.
