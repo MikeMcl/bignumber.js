@@ -635,7 +635,7 @@
                 } else {
 
                     // Remove leading elements which are zero and adjust exponent accordingly.
-                    for ( e = -1 ; c[0] === 0; c.shift(), e -= LOG_BASE);
+                    for ( e = -1 ; c[0] === 0; c.splice(0, 1), e -= LOG_BASE);
 
                     // Count the digits of the first element of c to determine leading zeros, and...
                     for ( i = 1, v = c[0]; v >= 10; v /= 10, i++);
@@ -728,7 +728,7 @@
 
                         if ( !d ) {
                             ++e;
-                            xc.unshift(1);
+                            xc = [1].concat(xc);
                         }
                     }
                 }
@@ -766,7 +766,7 @@
                     x[i] = temp % base;
                 }
 
-                if (carry) x.unshift(carry);
+                if (carry) x = [carry].concat(x);
 
                 return x;
             }
@@ -800,7 +800,7 @@
                 }
 
                 // Remove leading zeros.
-                for ( ; !a[0] && a.length > 1; a.shift() );
+                for ( ; !a[0] && a.length > 1; a.splice(0, 1) );
             }
 
             // x: dividend, y: divisor.
@@ -869,7 +869,7 @@
                     // Add zeros to make remainder as long as divisor.
                     for ( ; remL < yL; rem[remL++] = 0 );
                     yz = yc.slice();
-                    yz.unshift(0);
+                    yz = [0].concat(yz);
                     yc0 = yc[0];
                     if ( yc[1] >= base / 2 ) yc0++;
                     // Not necessary, but to prevent trial digit n > base, when using base 3.
@@ -940,7 +940,7 @@
                                 prodL = prod.length;
                             }
 
-                            if ( prodL < remL ) prod.unshift(0);
+                            if ( prodL < remL ) prod = [0].concat(prod);
 
                             // Subtract product from remainder.
                             subtract( rem, prod, remL, base );
@@ -981,7 +981,7 @@
                     more = rem[0] != null;
 
                     // Leading zero?
-                    if ( !qc[0] ) qc.shift();
+                    if ( !qc[0] ) qc.splice(0, 1);
                 }
 
                 if ( base == BASE ) {
@@ -1691,7 +1691,7 @@
             }
 
             // Remove leading zeros and adjust exponent accordingly.
-            for ( ; xc[0] == 0; xc.shift(), --ye );
+            for ( ; xc[0] == 0; xc.splice(0, 1), --ye );
 
             // Zero?
             if ( !xc[0] ) {
@@ -1859,7 +1859,7 @@
             }
 
             if (a) {
-                xc.unshift(a);
+                xc = [a].concat(xc);
                 ++ye;
             }
 
@@ -2148,7 +2148,7 @@
             if (c) {
                 ++e;
             } else {
-                zc.shift();
+                zc.splice(0, 1);
             }
 
             return normalise( y, zc, e );
