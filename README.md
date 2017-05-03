@@ -62,7 +62,7 @@ It accepts a value of type number *(up to 15 significant digits only)*, string o
 
 ```javascript
 x = new BigNumber(123.4567)
-y = BigNumber('123456.7e-3')
+y = BigNumber('123456.7e-3') // without new works if BigNumber.set({ERRORS: false})
 z = new BigNumber(x)
 x.equals(y) && y.equals(z) && x.equals(z)      // true
 ```
