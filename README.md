@@ -62,7 +62,7 @@ It accepts a value of type number *(up to 15 significant digits only)*, string o
 
 ```javascript
 x = new BigNumber(123.4567)
-y = BigNumber('123456.7e-3')
+y = new BigNumber('123456.7e-3')
 z = new BigNumber(x)
 x.equals(y) && y.equals(z) && x.equals(z)      // true
 ```
@@ -242,6 +242,10 @@ MIT.
 See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
+
+#### 4.0.2
+* 03/05/2017
+* #120 Workaround Safari/Webkit bug.
 
 #### 4.0.1
 * 05/04/2017
