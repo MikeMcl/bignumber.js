@@ -23,8 +23,8 @@ var count = (function toBuffer(BigNumber) {
 
         if (!diffBuffer(expected, actual)) {
            error('\n Test number: ' + total + ' failed');
-           error(' Expected: ' + (expected ? expected.join(',') : expected));
-           error(' Actual:   ' + (actual ? actual.join(',') : actual));
+           error(' Expected: ' + (expected ? expected.toString('hex') : expected));
+           error(' Actual:   ' + (actual ? actual.toString('hex') : actual));
            //process.exit();
         }
         else {
