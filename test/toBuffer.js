@@ -1,0 +1,191 @@
+var count = (function toBuffer(BigNumber) {
+    var start = +new Date(),
+        log,
+        error,
+        undefined,
+        passed = 0,
+        total = 0,
+        MAX = 1e9;
+
+    if (typeof window === 'undefined') {
+        log = console.log;
+        error = console.error;
+    } else {
+        log = function (str) { document.body.innerHTML += str.replace('\n', '<br>') };
+        error = function (str) { document.body.innerHTML += '<div style="color: red">' +
+          str.replace('\n', '<br>') + '</div>' };
+    }
+
+    if (!BigNumber && typeof require === 'function') BigNumber = require('../bignumber');
+
+    function assert(expected, actual) {
+        total++;
+        var test = (expected === null || actual === null) ?
+                    expected === actual : expected.compare(actual) === 0;
+        if (!test) {
+           error('\n Test number: ' + total + ' failed');
+           error(' Expected: ' + (expected ? expected.join(',') : expected));
+           error(' Actual:   ' + (actual ? actual.join(',') : actual));
+           //process.exit();
+        }
+        else {
+            passed++;
+            //log('\n Expected and actual: ' + actual);
+        }
+    }
+
+    function assertException(func, message) {
+        var actual;
+        total++;
+        try {
+            func();
+        } catch (e) {
+            actual = e;
+        }
+        if (actual && actual.name == 'BigNumber Error') {
+            passed++;
+            //log('\n Expected and actual: ' + actual);
+        } else {
+            error('\n Test number: ' + total + ' failed');
+            error('\n Expected: ' + message + ' to raise a BigNumber Error.');
+            error(' Actual:   ' + (actual || 'no exception'));
+            //process.exit();
+        }
+    }
+
+    function T(expected, value){
+        assert(expected, value.toBuffer());
+    }
+
+    log('\n Testing toBuffer...');
+
+    BigNumber.config({
+        DECIMAL_PLACES: 20,
+        ROUNDING_MODE: 4,
+        ERRORS: true,
+        RANGE: 1E9,
+        EXPONENTIAL_AT: 1E9
+    });
+
+    var MAX_SIGNED_64BIT = '9223372036854775807',     // 7fffffff ffffffff
+        MIN_SIGNED_64BIT = '-9223372036854775808',    // 80000000 00000000
+        MAX_UNSIGNED_64BIT = '18446744073709551615';  // ffffffff ffffffff
+
+    BigNumber.config({ERRORS: false});
+
+    T(Buffer.alloc(8, 0x00), new BigNumber(0));
+    T(Buffer.from([0x01,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(1));
+    T(Buffer.from([0x02,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(2));
+    T(Buffer.from([0x03,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(3));
+    T(Buffer.from([0x04,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(4));
+    T(Buffer.from([0x05,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(5));
+    T(Buffer.from([0x06,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(6));
+    T(Buffer.from([0x07,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(7));
+    T(Buffer.from([0x08,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(8));
+    T(Buffer.from([0x09,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(9));
+    T(Buffer.from([0x0a,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(10));
+    T(Buffer.from([0x0b,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(11));
+    T(Buffer.from([0x0c,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(12));
+    T(Buffer.from([0x0d,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(13));
+    T(Buffer.from([0x0e,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(14));
+    T(Buffer.from([0x0f,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(15));
+    T(Buffer.from([0x10,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(16));
+    T(Buffer.from([0x11,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(17));
+    T(Buffer.from([0xff,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(255));
+    T(Buffer.from([0x00,0x01,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(256));
+    T(Buffer.from([0x01,0x01,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(257));
+    T(Buffer.from([0xe8,0x03,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(1000));
+    T(Buffer.from([0x40,0x42,0x0f,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(1000000));
+    T(Buffer.from([0x00,0xca,0x9a,0x3b, 0x00,0x00,0x00,0x00]), new BigNumber(1000000000));
+    T(Buffer.from([0x00,0x10,0xa5,0xd4, 0xe8,0x00,0x00,0x00]), new BigNumber(1000000000000));
+    T(Buffer.from([0x00,0x80,0xc6,0xa4, 0x7e,0x8d,0x03,0x00]), new BigNumber(1000000000000000));
+    T(Buffer.from([0xfe,0xff,0xff,0xff, 0xff,0xff,0x1f,0x00]), new BigNumber(Number.MAX_SAFE_INTEGER).minus(1));
+    T(Buffer.from([0xff,0xff,0xff,0xff, 0xff,0xff,0x1f,0x00]), new BigNumber(Number.MAX_SAFE_INTEGER));
+    T(Buffer.from([0x00,0x00,0x00,0x00, 0x00,0x00,0x20,0x00]), new BigNumber(Number.MAX_SAFE_INTEGER).plus(1));
+    T(Buffer.from([0xfe,0xff,0xff,0xff, 0xff,0xff,0xff,0x7f]), new BigNumber(MAX_SIGNED_64BIT).minus(1));
+    T(Buffer.from([0xff,0xff,0xff,0xff, 0xff,0xff,0xff,0x7f]), new BigNumber(MAX_SIGNED_64BIT));
+    T(Buffer.from([0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x80]), new BigNumber(MAX_SIGNED_64BIT).plus(1));
+    T(Buffer.from([0xfe,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(MAX_UNSIGNED_64BIT).minus(1));
+    T(Buffer.from([0xff,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(MAX_UNSIGNED_64BIT));
+    T(null, new BigNumber(MAX_UNSIGNED_64BIT).plus(1));
+    T(null, new BigNumber(MAX_UNSIGNED_64BIT).times(16));
+    //console.log('>>>> ' + total)
+
+    T(Buffer.from([0xff,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-1));
+    T(Buffer.from([0xfe,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-2));
+    T(Buffer.from([0xfd,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-3));
+    T(Buffer.from([0xfc,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-4));
+    T(Buffer.from([0xfb,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-5));
+    T(Buffer.from([0xfa,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-6));
+    T(Buffer.from([0xf9,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-7));
+    T(Buffer.from([0xf8,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-8));
+    T(Buffer.from([0xf7,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-9));
+    T(Buffer.from([0xf6,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-10));
+    T(Buffer.from([0xf5,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-11));
+    T(Buffer.from([0xf4,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-12));
+    T(Buffer.from([0xf3,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-13));
+    T(Buffer.from([0xf2,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-14));
+    T(Buffer.from([0xf1,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-15));
+    T(Buffer.from([0xf0,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-16));
+    T(Buffer.from([0xef,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-17));
+    T(Buffer.from([0x01,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-255));
+    T(Buffer.from([0x00,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-256));
+    T(Buffer.from([0xff,0xfe,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-257));
+    T(Buffer.from([0x18,0xfc,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-1000));
+    T(Buffer.from([0xc0,0xbd,0xf0,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-1000000));
+    T(Buffer.from([0x00,0x36,0x65,0xc4, 0xff,0xff,0xff,0xff]), new BigNumber(-1000000000));
+    T(Buffer.from([0x00,0xf0,0x5a,0x2b, 0x17,0xff,0xff,0xff]), new BigNumber(-1000000000000));
+    T(Buffer.from([0x00,0x80,0x39,0x5b, 0x81,0x72,0xfc,0xff]), new BigNumber(-1000000000000000));
+    T(Buffer.from([0x02,0x00,0x00,0x00, 0x00,0x00,0xe0,0xff]), new BigNumber(Number.MIN_SAFE_INTEGER).plus(1));
+    T(Buffer.from([0x01,0x00,0x00,0x00, 0x00,0x00,0xe0,0xff]), new BigNumber(Number.MIN_SAFE_INTEGER));
+    T(Buffer.from([0x00,0x00,0x00,0x00, 0x00,0x00,0xe0,0xff]), new BigNumber(Number.MIN_SAFE_INTEGER).minus(1));
+    T(Buffer.from([0x01,0x00,0x00,0x00, 0x00,0x00,0x00,0x80]), new BigNumber(MIN_SIGNED_64BIT).plus(1));
+    T(Buffer.from([0x00,0x00,0x00,0x00, 0x00,0x00,0x00,0x80]), new BigNumber(MIN_SIGNED_64BIT));
+    T(null, new BigNumber(MIN_SIGNED_64BIT).minus(1));
+    T(null, new BigNumber(MIN_SIGNED_64BIT).times(16));
+    //console.log('>>>> ' + total)
+
+    T(Buffer.alloc(8, 0x00), new BigNumber(0.0));
+    T(null, new BigNumber(0.1));
+    T(null, new BigNumber(0.9));
+    T(Buffer.from([0x01,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(1.0));
+    T(Buffer.from([0xe8,0x03,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(1.0E+3));
+    T(Buffer.from([0x01,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(0.001E+3));
+    T(null, new BigNumber(1.0E-3));
+    T(Buffer.from([0x01,0x00,0x00,0x00, 0x00,0x00,0x00,0x00]), new BigNumber(1000.0E-3));
+    T(null, new BigNumber(-0.1));
+    T(null, new BigNumber(-0.9));
+    T(Buffer.from([0xff,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-1.0));
+    T(Buffer.from([0x18,0xfc,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-1.0E+3));
+    T(Buffer.from([0xff,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-0.001E+3));
+    T(null, new BigNumber(-1.0E-3));
+    T(Buffer.from([0xff,0xff,0xff,0xff, 0xff,0xff,0xff,0xff]), new BigNumber(-1000.0E-3));
+    T(null, new BigNumber(Number.NaN));
+    T(null, new BigNumber(Number.POSITIVE_INFINITY));
+    T(null, new BigNumber(Number.NEGATIVE_INFINITY));
+    T(null, new BigNumber(Number.MAX_VALUE));
+    T(null, new BigNumber(Number.MIN_VALUE));
+
+    BigNumber.config({ERRORS: true});
+
+    assertException(function () {new BigNumber(MAX_UNSIGNED_64BIT).plus(1).toBuffer()}, "(MAX_UNSIGNED_64BIT).plus(1).toBuffer()");
+    assertException(function () {new BigNumber(MAX_UNSIGNED_64BIT).times(16).toBuffer()}, "(MAX_UNSIGNED_64BIT).times(16).toBuffer()");
+    assertException(function () {new BigNumber(MIN_SIGNED_64BIT).minus(1).toBuffer()}, "(MIN_SIGNED_64BIT).minus(1).toBuffer()");
+    assertException(function () {new BigNumber(MIN_SIGNED_64BIT).times(16).toBuffer()}, "(MIN_SIGNED_64BIT).times(16).toBuffer()");
+    assertException(function () {new BigNumber(0.1).toBuffer()}, "(0.1).toBuffer()");
+    assertException(function () {new BigNumber(0.9).toBuffer()}, "(0.9).toBuffer()");
+    assertException(function () {new BigNumber(1.0E-3).toBuffer()}, "(1.0E-3).toBuffer()");
+    assertException(function () {new BigNumber(-0.1).toBuffer()}, "(-0.1).toBuffer()");
+    assertException(function () {new BigNumber(-0.9).toBuffer()}, "(-0.9).toBuffer()");
+    assertException(function () {new BigNumber(-1.0E-3).toBuffer()}, "(-1.0E-3).toBuffer()");
+    assertException(function () {new BigNumber(Number.NaN).toBuffer()}, "(Number.NaN).toBuffer()");
+    assertException(function () {new BigNumber(Number.POSITIVE_INFINITY).toBuffer()}, "(Number.POSITIVE_INFINITY).toBuffer()");
+    assertException(function () {new BigNumber(Number.NEGATIVE_INFINITY).toBuffer()}, "(Number.NEGATIVE_INFINITY).toBuffer()");
+    assertException(function () {new BigNumber(Number.MAX_VALUE).toBuffer()}, "(Number.MAX_VALUE).toBuffer()");
+    assertException(function () {new BigNumber(Number.MIN_VALUE).toBuffer()}, "(Number.MIN_VALUE).toBuffer()");
+
+
+    log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
+    return [passed, total];
+})(this.BigNumber);
+if (typeof module !== 'undefined' && module.exports) module.exports = count;

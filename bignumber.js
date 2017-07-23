@@ -1214,7 +1214,8 @@
                 'pow',               // 23
                 'toPrecision',       // 24
                 'toString',          // 25
-                'BigNumber'          // 26
+                'BigNumber',         // 26
+                'toBuffer'           // 27
             ][caller] + '() ' + msg + ': ' + val );
 
             error.name = 'BigNumber Error';
@@ -2152,6 +2153,60 @@
             }
 
             return normalise( y, zc, e );
+        };
+
+
+        /*
+         * Return a Buffer object of Node.js representing the value of this BigNumber with 8 bytes.
+         * Work with integer between the minimum of signed 64-bit integer and the maximum of
+         * unsigned 64-bit integer, otherwise throws an exception or returns null.
+         */
+        P.toBuffer = function () {
+            var i, bar,
+                bsz = 8,
+                buf = Buffer.alloc( bsz, 0 ),
+                msg = ', must be -9223372036854775808 to 18446744073709551615 inclusive';
+
+            if ( !this.isInt() ) {
+                if (ERRORS) raise( 27, 'not an integer', this.toString() );
+                return null;
+            }
+
+            // make byte array
+            bar = toBaseOut( toFixedPoint( coeffToString( this.c ), this.e ), 10, 0x100 );
+
+            // over 64 bit?
+            if ( bar.length > bsz ) {
+                if (ERRORS) raise( 27, 'out of range' + msg, this.toString() );
+                return null;
+            }
+
+            // pad higher bytes with zero
+            for ( ; bar.length < bsz; ) bar.unshift( 0 );
+
+            // less than zero?
+            if ( this.s < 0 ) {
+
+                // calculate 2's complement
+                for ( i = 0; i < bsz; i++ ) bar[i] = 0xff - bar[i];
+                for ( i = bsz - 1; i > -1; i-- ) {
+                    bar[i] = bar[i] === 0xff ? 0x00 : bar[i] + 1;
+                    if ( bar[i] !== 0x00 ) break;
+                }
+
+                // most significant bit is off?
+                if ( bar[0] < 0x80 ) {
+                    if (ERRORS) raise( 27, 'out of range' + msg, this.toString() );
+                    return null;
+                }
+            }
+
+            // for little endian byte order
+            bar = bar.reverse();
+
+            for ( i = 0; i < bsz; i++ ) buf[i] = bar[i];
+
+            return buf;
         };
 
 
