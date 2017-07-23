@@ -2164,8 +2164,10 @@
         P.toBuffer = function () {
             var i, bar,
                 bsz = 8,
-                buf = Buffer.alloc( bsz, 0 ),
+                buf = new Buffer( bsz ),
                 msg = ', must be -9223372036854775808 to 18446744073709551615 inclusive';
+
+            buf.fill( 0 )
 
             if ( !this.isInt() ) {
                 if (ERRORS) raise( 27, 'not an integer', this.toString() );
