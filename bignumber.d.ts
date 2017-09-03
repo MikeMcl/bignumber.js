@@ -542,6 +542,11 @@ export class BigNumber {
     abs(): BigNumber;
 
     /**
+     * See [[plus]]
+     */
+    add(n: number | string | BigNumber, base?: number): BigNumber;
+
+    /**
      * Returns a BigNumber whose value is the value of this BigNumber rounded to a whole number in the direction of
      * positive `Infinity`.
      *
@@ -793,6 +798,8 @@ export class BigNumber {
      * Returns a BigNumber whose value is the value of this BigNumber minus `n`.
      *
      * The return value is always exact and unrounded.
+     *
+     * @alias [[sub]]
      */
     minus(n: number | string | BigNumber, base?: number): BigNumber;
 
@@ -825,6 +832,11 @@ export class BigNumber {
     mod(n: number | string | BigNumber, base?: number): BigNumber;
 
     /**
+     * See [[times]]
+     */
+    mul(n: number | string | BigNumber, base?: number): BigNumber;
+
+    /**
      * Returns a BigNumber whose value is the value of this BigNumber negated, i.e. multiplied by -1.
      *
      * ```ts
@@ -847,6 +859,8 @@ export class BigNumber {
      * Returns a BigNumber whose value is the value of this BigNumber plus `n`.
      *
      * The return value is always exact and unrounded.
+     *
+     * @alias [[add]]
      */
     plus(n: number | string | BigNumber, base?: number): BigNumber;
 
@@ -918,9 +932,16 @@ export class BigNumber {
     sqrt(): BigNumber;
 
     /**
+     * See [[minus]]
+     */
+    sub(n: number | string | BigNumber, base?: number): BigNumber;
+
+    /**
      * Returns a BigNumber whose value is the value of this BigNumber times n.
      *
      * The return value is always exact and unrounded.
+     *
+     * @alias [[mul]]
      */
     times(n: number | string | BigNumber, base?: number): BigNumber;
 
