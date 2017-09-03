@@ -29,6 +29,7 @@ console.log( '\n STARTING TESTS...\n' );
   'shift',
   'sqrt',
   'times',
+  'toBuffer',
   'toDigits',
   'toExponential',
   'toFixed',
