@@ -243,6 +243,10 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+#### 4.0.4
+* 03/09/2017
+* Add missing aliases to *bignumber.d.ts*.
+
 #### 4.0.3
 * 30/08/2017
 * Add types: *bignumber.d.ts*.
