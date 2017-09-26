@@ -1,7 +1,7 @@
 {
   "name": "bignumber.js",
   "description": "A library for arbitrary-precision decimal and non-decimal arithmetic",
-  "version": "4.0.4",
+  "version": "4.1.0",
   "keywords": [
     "arbitrary",
     "precision",
@@ -21,7 +21,6 @@
     "url": "https://github.com/MikeMcl/bignumber.js.git"
   },
   "main": "bignumber.js",
-  "module": "bignumber.mjs",
   "types": "bignumber.d.ts",
   "author": {
     "name": "Michael Mclaughlin",
@@ -33,6 +32,6 @@
   "license": "MIT",
   "scripts": {
     "test": "node ./test/every-test.js",
-    "build": "uglifyjs bignumber.js --source-map bignumber.js.map -c -m -o bignumber.min.js --preamble \"/* bignumber.js v4.0.4 https://github.com/MikeMcl/bignumber.js/LICENCE */\""
+    "build": "uglifyjs bignumber.js --source-map bignumber.js.map -c -m -o bignumber.min.js --preamble \"/* bignumber.js v4.1.0 https://github.com/MikeMcl/bignumber.js/LICENCE */\""
   }
 }

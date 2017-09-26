@@ -243,6 +243,12 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+
+#### 4.1.0
+* 26/09/2017
+* Remove node 0.6 from *.travis.yml*.
+* Add *bignumber.mjs*.
+
 #### 4.0.4
 * 03/09/2017
 * Add missing aliases to *bignumber.d.ts*.
