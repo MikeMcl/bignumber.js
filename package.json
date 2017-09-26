@@ -21,6 +21,7 @@
     "url": "https://github.com/MikeMcl/bignumber.js.git"
   },
   "main": "bignumber.js",
+  "module": "bignumber.mjs",
   "types": "bignumber.d.ts",
   "author": {
     "name": "Michael Mclaughlin",
