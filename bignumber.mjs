@@ -156,7 +156,7 @@ function constructorFactory(config) {
         if ( !( x instanceof BigNumber ) ) {
 
             // 'BigNumber() constructor call without new: {n}'
-            if (ERRORS) raise( 26, 'constructor call without new', n );
+            //if (ERRORS) raise( 26, 'constructor call without new', n );
             return new BigNumber( n, b );
         }
 
