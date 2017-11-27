@@ -62,7 +62,7 @@ It accepts a value of type number *(up to 15 significant digits only)*, string o
 
 ```javascript
 x = new BigNumber(123.4567)
-y = new BigNumber('123456.7e-3')
+y = BigNumber('123456.7e-3')
 z = new BigNumber(x)
 x.equals(y) && y.equals(z) && x.equals(z)      // true
 ```
@@ -243,6 +243,9 @@ See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
 
 ## Change Log
 
+#### 5.0.0
+* 27/11/2017
+* #81 Don't throw on constructor call without `new`.
 
 #### 4.1.0
 * 26/09/2017

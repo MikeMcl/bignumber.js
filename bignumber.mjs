@@ -1,6 +1,6 @@
 /*
  *
- * bignumber.js v4.1.0
+ * bignumber.js v5.0.0
  * A JavaScript library for arbitrary-precision arithmetic.
  * https://github.com/MikeMcl/bignumber.js
  * Copyright (c) 2017 Michael Mclaughlin <M8ch88l@gmail.com>
