@@ -42,7 +42,7 @@ var count = (function random(BigNumber) {
 
         if ( i & 1 ) {
             dp = Math.random() * 100 + 1 | 0;
-            BigNumber.config(dp);
+            BigNumber.config({ DECIMAL_PLACES: dp });
             r = BigNumber.random();
         } else {
             dp = Math.random() * 100 | 0;

@@ -62,24 +62,14 @@ var count = (function config(BigNumber) {
         ERRORS: false
     });
 
-    assert(true, obj.DECIMAL_PLACES === 100 &&
-                 obj.ROUNDING_MODE === 0 &&
-                 obj.EXPONENTIAL_AT[0] === -50 &&
-                 obj.EXPONENTIAL_AT[1] === 50 &&
-                 obj.RANGE[0] === -500 &&
-                 obj.RANGE[1] === 500 &&
-                 obj.ERRORS === false
-    );
-
-    obj = BigNumber.config( 99, 8, 32, 333, 1 );
-
-    assert(true, obj.DECIMAL_PLACES === 99 &&
-                 obj.ROUNDING_MODE === 8 &&
-                 obj.EXPONENTIAL_AT[0] === -32 &&
-                 obj.EXPONENTIAL_AT[1] === 32 &&
-                 obj.RANGE[0] === -333 &&
-                 obj.RANGE[1] === 333 &&
-                 obj.ERRORS === true
+    assert(true,
+        obj.DECIMAL_PLACES === 100 &&
+        obj.ROUNDING_MODE === 0 &&
+        obj.EXPONENTIAL_AT[0] === -50 &&
+        obj.EXPONENTIAL_AT[1] === 50 &&
+        obj.RANGE[0] === -500 &&
+        obj.RANGE[1] === 500 &&
+        obj.ERRORS === false
     );
 
     obj = BigNumber.config({
@@ -90,8 +80,13 @@ var count = (function config(BigNumber) {
         ERRORS: true
     });
 
-    obj = BigNumber.config( null, null, null, null, null );
-    obj = BigNumber.config( undefined, undefined, undefined, undefined, undefined );
+    obj = BigNumber.config({
+        DECIMAL_PLACES: null,
+        ROUNDING_MODE: undefined,
+        EXPONENTIAL_AT: null,
+        RANGE: undefined,
+        ERRORS: null
+    });
 
     assert(true, typeof obj === 'object');
     assert(true, obj.DECIMAL_PLACES === 40);
@@ -110,14 +105,6 @@ var count = (function config(BigNumber) {
 
     // DECIMAL_PLACES
 
-    assert(0, BigNumber.config(0).DECIMAL_PLACES);
-    assert(1, BigNumber.config(1).DECIMAL_PLACES);
-    assert(20, BigNumber.config(20).DECIMAL_PLACES);
-    assert(300000, BigNumber.config(300000).DECIMAL_PLACES);
-    assert(4e+8, BigNumber.config(4e8).DECIMAL_PLACES);
-    assert(123456789, BigNumber.config('123456789').DECIMAL_PLACES);
-    assert(MAX, BigNumber.config(MAX).DECIMAL_PLACES);
-
     assert(0, BigNumber.config({DECIMAL_PLACES: 0}).DECIMAL_PLACES);
     assert(1, BigNumber.config({DECIMAL_PLACES: 1}).DECIMAL_PLACES);
     assert(20, BigNumber.config({DECIMAL_PLACES: 20}).DECIMAL_PLACES);
@@ -127,8 +114,6 @@ var count = (function config(BigNumber) {
     assert(2000, BigNumber.config({DECIMAL_PLACES: '2e+3'}).DECIMAL_PLACES);
     assert(MAX, BigNumber.config({DECIMAL_PLACES: MAX}).DECIMAL_PLACES);
 
-    assert(MAX, BigNumber.config(null).DECIMAL_PLACES);
-    assert(MAX, BigNumber.config(undefined).DECIMAL_PLACES);
     assert(MAX, BigNumber.config({DECIMAL_PLACES: null}).DECIMAL_PLACES);
     assert(MAX, BigNumber.config({DECIMAL_PLACES: undefined}).DECIMAL_PLACES);
 
@@ -149,37 +134,21 @@ var count = (function config(BigNumber) {
 
     BigNumber.config({ ERRORS: false });
 
-    assert(1e9, BigNumber.config(-1).DECIMAL_PLACES);
-    assert(0, BigNumber.config(0.1).DECIMAL_PLACES);
-    assert(1, BigNumber.config(1.99).DECIMAL_PLACES);
-    assert(1, BigNumber.config(-1.1).DECIMAL_PLACES);
-    assert(8, BigNumber.config(8.7654321).DECIMAL_PLACES);
-    assert(8, BigNumber.config(MAX + 1).DECIMAL_PLACES);
-    assert(8, BigNumber.config([]).DECIMAL_PLACES);
-    assert(8, BigNumber.config({}).DECIMAL_PLACES);
-    assert(8, BigNumber.config('').DECIMAL_PLACES);
-    assert(8, BigNumber.config(' ').DECIMAL_PLACES);
-    assert(8, BigNumber.config('hi').DECIMAL_PLACES);
-    assert(MAX, BigNumber.config(MAX.toExponential()).DECIMAL_PLACES);
+    assert(MAX, BigNumber.config([]).DECIMAL_PLACES);
+    assert(MAX, BigNumber.config({}).DECIMAL_PLACES);
+    assert(MAX, BigNumber.config('').DECIMAL_PLACES);
+    assert(MAX, BigNumber.config(' ').DECIMAL_PLACES);
+    assert(MAX, BigNumber.config('hi').DECIMAL_PLACES);
     assert(MAX, BigNumber.config(NaN).DECIMAL_PLACES);
     assert(MAX, BigNumber.config(Infinity).DECIMAL_PLACES);
     assert(MAX, BigNumber.config(new Date).DECIMAL_PLACES);
     assert(MAX, BigNumber.config(null).DECIMAL_PLACES);
     assert(MAX, BigNumber.config(undefined).DECIMAL_PLACES);
 
-    BigNumber.config({ ERRORS: 1 });
+    BigNumber.config({DECIMAL_PLACES: 40});
+    BigNumber.config({ ERRORS: true });
 
     // ROUNDING_MODE
-
-    assert(0, BigNumber.config(null, 0).ROUNDING_MODE);
-    assert(1, BigNumber.config(null, 1).ROUNDING_MODE);
-    assert(2, BigNumber.config(null, 2).ROUNDING_MODE);
-    assert(3, BigNumber.config(null, 3).ROUNDING_MODE);
-    assert(4, BigNumber.config(null, 4).ROUNDING_MODE);
-    assert(5, BigNumber.config(null, 5).ROUNDING_MODE);
-    assert(6, BigNumber.config(null, 6).ROUNDING_MODE);
-    assert(7, BigNumber.config(null, 7).ROUNDING_MODE);
-    assert(8, BigNumber.config(null, 8).ROUNDING_MODE);
 
     assert(0, BigNumber.config({ROUNDING_MODE: 0}).ROUNDING_MODE);
     assert(1, BigNumber.config({ROUNDING_MODE: 1}).ROUNDING_MODE);
@@ -191,8 +160,8 @@ var count = (function config(BigNumber) {
     assert(7, BigNumber.config({ROUNDING_MODE: 7}).ROUNDING_MODE);
     assert(8, BigNumber.config({ROUNDING_MODE: 8}).ROUNDING_MODE);
 
-    assert(8, BigNumber.config(null, null).ROUNDING_MODE);
-    assert(8, BigNumber.config(null, undefined).ROUNDING_MODE);
+    assert(8, BigNumber.config(null).ROUNDING_MODE);
+    assert(8, BigNumber.config(undefined).ROUNDING_MODE);
     assert(8, BigNumber.config({ROUNDING_MODE: null}).ROUNDING_MODE);
     assert(8, BigNumber.config({ROUNDING_MODE: undefined}).ROUNDING_MODE);
 
@@ -210,27 +179,6 @@ var count = (function config(BigNumber) {
     assertException(function () {BigNumber.config({ROUNDING_MODE: 'hi'})}, "ROUNDING_MODE: 'hi'");
     assertException(function () {BigNumber.config({ROUNDING_MODE: NaN})}, "ROUNDING_MODE: NaN");
     assertException(function () {BigNumber.config({ROUNDING_MODE: Infinity})}, "ROUNDING_MODE: Infinity");
-
-    BigNumber.config({ ERRORS: 0 });
-
-    assert(8, BigNumber.config(0, -1).ROUNDING_MODE);
-    assert(0, BigNumber.config(0, 0.1).ROUNDING_MODE);
-    assert(1, BigNumber.config(0, 1.99).ROUNDING_MODE);
-    assert(1, BigNumber.config(0, -1.1).ROUNDING_MODE);
-    assert(8, BigNumber.config(0, 8.01).ROUNDING_MODE);
-    assert(7, BigNumber.config(0, 7.99).ROUNDING_MODE);
-    assert(7, BigNumber.config(0, MAX + 1).ROUNDING_MODE);
-    assert(7, BigNumber.config(0, []).ROUNDING_MODE);
-    assert(7, BigNumber.config(0, {}).ROUNDING_MODE);
-    assert(7, BigNumber.config(0, '').ROUNDING_MODE);
-    assert(7, BigNumber.config(0, ' ').ROUNDING_MODE);
-    assert(7, BigNumber.config(0, 'hi').ROUNDING_MODE);
-    assert(1, BigNumber.config(0, '1e+0').ROUNDING_MODE);
-    assert(1, BigNumber.config(0, NaN).ROUNDING_MODE);
-    assert(1, BigNumber.config(0, Infinity).ROUNDING_MODE);
-    assert(1, BigNumber.config(0, new Date).ROUNDING_MODE);
-    assert(1, BigNumber.config(0, null).ROUNDING_MODE);
-    assert(1, BigNumber.config(0, undefined).ROUNDING_MODE);
 
     BigNumber.config({ ERRORS: true });
 
@@ -264,36 +212,6 @@ var count = (function config(BigNumber) {
 
     obj = BigNumber.config({EXPONENTIAL_AT: -1});
     assert(true, obj.EXPONENTIAL_AT[0] === -1 && obj.EXPONENTIAL_AT[1] === 1);
-
-    BigNumber.config({ ERRORS: false });
-
-    assert(1, BigNumber.config(0, 0, -1).EXPONENTIAL_AT[1]);
-    assert(0, BigNumber.config(0, 0, 0.1).EXPONENTIAL_AT[0]);
-    assert(1, BigNumber.config(0, 0, 1.99).EXPONENTIAL_AT[1]);
-    assert(-2, BigNumber.config(0, 0, -2.1).EXPONENTIAL_AT[0]);
-    assert(8, BigNumber.config(0, 0, 8.01).EXPONENTIAL_AT[1]);
-    assert(-7, BigNumber.config(0, 0, -7.99).EXPONENTIAL_AT[0]);
-    assert(7, BigNumber.config(0, 0, MAX + 1).EXPONENTIAL_AT[1]);
-    assert(7, BigNumber.config(0, 0, -MAX - 1).EXPONENTIAL_AT[1]);
-    assert(-7, BigNumber.config(0, 0, []).EXPONENTIAL_AT[0]);
-    assert(7, BigNumber.config(0, 0, {}).EXPONENTIAL_AT[1]);
-    assert(-7, BigNumber.config(0, 0, '').EXPONENTIAL_AT[0]);
-    assert(7, BigNumber.config(0, 0, ' ').EXPONENTIAL_AT[1]);
-    assert(-7, BigNumber.config(0, 0, 'hi').EXPONENTIAL_AT[0]);
-    assert(13000, BigNumber.config(0, 0, '1.3e+4').EXPONENTIAL_AT[1]);
-    assert(-13000, BigNumber.config(0, 0, NaN).EXPONENTIAL_AT[0]);
-    assert(13000, BigNumber.config(0, 0, Infinity).EXPONENTIAL_AT[1]);
-    assert(-13000, BigNumber.config(0, 0, new Date).EXPONENTIAL_AT[0]);
-    assert(13000, BigNumber.config(0, 0, null).EXPONENTIAL_AT[1]);
-    assert(-13000, BigNumber.config(0, 0, undefined).EXPONENTIAL_AT[0]);
-    assert(-98765, BigNumber.config(0, 0, 98765.4321).EXPONENTIAL_AT[0]);
-    assert(98765, BigNumber.config(0, 0, -98765.4321).EXPONENTIAL_AT[1]);
-    assert(1, BigNumber.config(0, 0, [-98765.4321, 1]).EXPONENTIAL_AT[1]);
-    assert(-1, BigNumber.config(0, 0, [-1, 98765.4321]).EXPONENTIAL_AT[0]);
-    assert(98765, BigNumber.config(0, 0, [-1, 98765.4321]).EXPONENTIAL_AT[1]);
-    assert(98765, BigNumber.config(0, 0, [-1, null]).EXPONENTIAL_AT[1]);
-    assert(98765, BigNumber.config(0, 0, [null, 98765.4321]).EXPONENTIAL_AT[1]);
-    assert(-1, BigNumber.config(0, 0, [null, 98765.4321]).EXPONENTIAL_AT[0]);
 
     BigNumber.config({ ERRORS: true });
 
@@ -330,58 +248,20 @@ var count = (function config(BigNumber) {
     obj = BigNumber.config({RANGE: -1});
     assert(true, obj.RANGE[0] === -1 && obj.RANGE[1] === 1);
 
-    BigNumber.config({ ERRORS: 0 });
-
-    assert(1, BigNumber.config(0, 0, 0, -1).RANGE[1]);
-    assert(-1, BigNumber.config(0, 0, 0, 0.1).RANGE[0]);
-    assert(1, BigNumber.config(0, 0, 0, 1.99).RANGE[1]);
-    assert(-2, BigNumber.config(0, 0, 0, -2.1).RANGE[0]);
-    assert(8, BigNumber.config(0, 0, 0, 8.01).RANGE[1]);
-    assert(-7, BigNumber.config(0, 0, 0, -7.99).RANGE[0]);
-    assert(7, BigNumber.config(0, 0, 0, MAX + 1).RANGE[1]);
-    assert(7, BigNumber.config(0, 0, 0, -MAX - 1).RANGE[1]);
-    assert(-7, BigNumber.config(0, 0, 0, []).RANGE[0]);
-    assert(7, BigNumber.config(0, 0, 0, {}).RANGE[1]);
-    assert(-7, BigNumber.config(0, 0, 0, '').RANGE[0]);
-    assert(7, BigNumber.config(0, 0, 0, ' ').RANGE[1]);
-    assert(-7, BigNumber.config(0, 0, 0, 'hi').RANGE[0]);
-    assert(13000, BigNumber.config(0, 0, 0, '1.3e+4').RANGE[1]);
-    assert(-13000, BigNumber.config(0, 0, 0, NaN).RANGE[0]);
-    assert(13000, BigNumber.config(0, 0, 0, Infinity).RANGE[1]);
-    assert(-13000, BigNumber.config(0, 0, 0, new Date).RANGE[0]);
-    assert(13000, BigNumber.config(0, 0, 0, null).RANGE[1]);
-    assert(-13000, BigNumber.config(0, 0, 0, undefined).RANGE[0]);
-    assert(-98765, BigNumber.config(0, 0, 0, 98765.4321).RANGE[0]);
-    assert(98765, BigNumber.config(0, 0, 0, -98765.4321).RANGE[1]);
-    assert(1, BigNumber.config(0, 0, 0, [-98765.4321, 1]).RANGE[1]);
-    assert(-1, BigNumber.config(0, 0, 0, [-1, 98765.4321]).RANGE[0]);
-    assert(98765, BigNumber.config(0, 0, 0, [-1, 98765.4321]).RANGE[1]);
-    assert(98765, BigNumber.config(0, 0, 0, [-1, null]).RANGE[1]);
-    assert(98765, BigNumber.config(0, 0, 0, [null, 98765.4321]).RANGE[1]);
-    assert(-1, BigNumber.config(0, 0, 0, [null, 98765.4321]).RANGE[0]);
-
     BigNumber.config({ ERRORS: true });
 
     // ERRORS
 
-    assert(false, BigNumber.config(null, null, null, null, 0).ERRORS);
-    assert(true,  BigNumber.config(null, null, null, null, 1).ERRORS);
-    assert(false, BigNumber.config(null, null, null, null, false).ERRORS);
-    assert(true,  BigNumber.config(null, null, null, null, true).ERRORS);
-
-    assert(false, BigNumber.config({ERRORS: 0}).ERRORS);
-    assert(true,  BigNumber.config({ERRORS: 1}).ERRORS);
     assert(false, BigNumber.config({ERRORS: false}).ERRORS);
     assert(true,  BigNumber.config({ERRORS: true}).ERRORS);
-
-    assert(true,  BigNumber.config(null, null, null, null, null).ERRORS);
-    assert(true,  BigNumber.config(null, null, null, null, undefined).ERRORS);
     assert(true,  BigNumber.config({ERRORS: null}).ERRORS);
     assert(true,  BigNumber.config({ERRORS: undefined}).ERRORS);
 
     assertException(function () {BigNumber.config({ERRORS: 'hiya'})}, "ERRORS: 'hiya'");
     assertException(function () {BigNumber.config({ERRORS: 'true'})}, "ERRORS: 'true'");
     assertException(function () {BigNumber.config({ERRORS: 'false'})}, "ERRORS: 'false'");
+    assertException(function () {BigNumber.config({ERRORS: 0})}, "ERRORS: 0");
+    assertException(function () {BigNumber.config({ERRORS: 1})}, "ERRORS: 1");
     assertException(function () {BigNumber.config({ERRORS: '0'})}, "ERRORS: '0'");
     assertException(function () {BigNumber.config({ERRORS: '1'})}, "ERRORS: '1'");
     assertException(function () {BigNumber.config({ERRORS: -1})}, "ERRORS: -1");
@@ -398,14 +278,6 @@ var count = (function config(BigNumber) {
 
     BigNumber.config({ ERRORS: false });
 
-    assert(false, BigNumber.config(null, null, null, null, 0).ERRORS);
-    assert(false, BigNumber.config(null, null, null, null, 1.1).ERRORS);
-    assert(false, BigNumber.config(null, null, null, null, false).ERRORS);
-    assert(true,  BigNumber.config(null, null, null, null, 1).ERRORS);
-    assert(false, BigNumber.config(null, null, null, null, 0).ERRORS);
-    assert(false, BigNumber.config(null, null, null, null, '1').ERRORS);
-    assert(false, BigNumber.config(null, null, null, null, 'true').ERRORS);
-    assert(false, BigNumber.config(null, null, null, null, false).ERRORS);
     assert(false, BigNumber.config({ERRORS: null}).ERRORS);
     assert(false, BigNumber.config({ERRORS: undefined}).ERRORS);
     assert(false, BigNumber.config({ERRORS: NaN}).ERRORS);
@@ -420,6 +292,8 @@ var count = (function config(BigNumber) {
     assert(true, BigNumber.config({ERRORS: Boolean('false')}).ERRORS);
 
     // FORMAT
+
+    BigNumber.config({ ERRORS: true });
 
     assertException(function () {BigNumber.config({FORMAT: ''})}, "FORMAT: ''");
     assertException(function () {BigNumber.config({FORMAT: 1})}, "FORMAT: 1");
@@ -443,6 +317,28 @@ var count = (function config(BigNumber) {
 
     BigNumber.config({ ERRORS: false });
     assert(obj, BigNumber.config({FORMAT: 2}).FORMAT);
+
+    // ALPHABET
+
+    BigNumber.config({ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz', ERRORS: true});
+
+    assertException(function () {BigNumber.config({ALPHABET: '1'})}, "ALPHABET: '1'");
+    assertException(function () {BigNumber.config({ALPHABET: 2})}, "ALPHABET: 2");
+    assertException(function () {BigNumber.config({ALPHABET: true})}, "ALPHABET: true");
+    assertException(function () {BigNumber.config({ALPHABET: 'aba'})}, "ALPHABET: 'aba'");
+    assertException(function () {BigNumber.config({ALPHABET: ',.'})}, "ALPHABET: ',.'");
+    assertException(function () {BigNumber.config({ALPHABET: '0123456789.'})}, "ALPHABET: '0123456789.'");
+
+    BigNumber.config({ALPHABET: 'xy'});
+    assert('xy', BigNumber.config().ALPHABET);
+
+    BigNumber.config({ALPHABET: '0123456789TE'});
+    assert('0123456789TE', BigNumber.config().ALPHABET);
+
+    BigNumber.config({ALPHABET: '9876543210'});
+    assert('9876543210', BigNumber.config().ALPHABET);
+    
+    BigNumber.config({ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'});
 
     // Test constructor parsing.
 

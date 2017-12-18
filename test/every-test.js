@@ -43,6 +43,7 @@ console.log( '\n STARTING TESTS...\n' );
     arr = require('./' + method);
     passed += arr[0];
     total += arr[1];
+    //delete require.cache[require.resolve('../bignumber.js')];
 });
 
 console.log( '\n IN TOTAL: ' + passed + ' of ' + total + ' tests passed in ' +

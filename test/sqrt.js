@@ -32,7 +32,7 @@ var count = (function sqrt(BigNumber) {
     }
 
     function T(root, value, dp, rm) {
-        BigNumber.config(dp, rm);
+        BigNumber.config({ DECIMAL_PLACES: dp, ROUNDING_MODE: rm });
         assert(root, new BigNumber(value).sqrt().toString())
     }
 

@@ -35,7 +35,7 @@ var count = (function div(BigNumber) {
     }
 
     function T(dividend, divisor, expected, dp, rm) {
-        if (dp != null) BigNumber.config(dp, rm);
+        if (dp != null) BigNumber.config({ DECIMAL_PLACES: dp, ROUNDING_MODE: rm });
         assert(String(expected), String(new BigNumber(dividend).div(divisor)));
         //assert(String(expected), String(new BigNumber(dividend).div(new BigNumber(divisor))));
     }

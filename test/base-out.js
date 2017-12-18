@@ -50,7 +50,10 @@ var count = (function baseOut(BigNumber) {
         }
     }
 
+    //var alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_';
+
     function T(expected, value, base) {
+        //if (base) BigNumber.config({ ALPHABET: alphabet.slice(0, base) });
         assert(expected, new BigNumber(value).toString(base))
     }
 
@@ -61,7 +64,8 @@ var count = (function baseOut(BigNumber) {
         ROUNDING_MODE: 4,
         ERRORS: true,
         RANGE: 1E9,
-        EXPONENTIAL_AT: 1E9
+        EXPONENTIAL_AT: 1E9,
+        ALPHABET: undefined
     });
 
     // ---------------------------------------------------------------- v8 start
@@ -10809,6 +10813,32 @@ var count = (function baseOut(BigNumber) {
     T('-Infinity', '-Infinity', 10);
     T('101725686101180', '101725686101180', undefined);
     T('101725686101180', '101725686101180', 10);
+
+    // Test ALPHABET
+
+    // function T(expected, value, base) {
+    //     assert(expected, new BigNumber(value).toString(base))
+    // }
+
+    BigNumber.config({ERRORS: true, ALPHABET: 'xy'});
+
+    T('y', '1', 2);    // 1
+    T('yx', 2, 2);     // 10           y0
+    T('yy', '3', 2);   // 11
+    T('yxx', 4, 2);    // 100          y00
+    T('yxy', '5', 2);  // 101
+
+    BigNumber.config({ALPHABET: '0123456789*#'});
+
+    T('*', '10', 12);
+    T('#', 11, 12);
+    T('100', 144, 12);
+
+    T('144', '144', 10);
+
+    // TODO: more ALPHABET tests.
+    
+    BigNumber.config({ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'});
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];;

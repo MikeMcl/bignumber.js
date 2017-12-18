@@ -80,6 +80,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
           <li><a href="#modulo-mode"   >MODULO_MODE</a></li>
           <li><a href="#pow-precision" >POW_PRECISION</a></li>
           <li><a href="#format"        >FORMAT</a></li>
+          <li><a href="#alphabet"      >ALPHABET</a></li>
         </ul>
       </li>
       <li><a href="#max"   >max</a></li>
@@ -217,22 +218,13 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
         decimals, e.g. <code>'011'</code> is interpreted as 11, not 9.
       </dd>
       <dd>Values in any base may have fraction digits.</dd>
-      <dd>
-        For bases from <code>10</code> to <code>36</code>, lower and/or upper case letters can be
-        used to represent values from <code>10</code> to <code>35</code>.
-      </dd>
-      <dd>
-        For bases above 36, <code>a-z</code> represents values from <code>10</code> to
-        <code>35</code>, <code>A-Z</code> from <code>36</code> to <code>61</code>, and
-        <code>$</code> and <code>_</code> represent <code>62</code> and <code>63</code> respectively
-        <i>(this can be changed by editing the <code>ALPHABET</code> variable near the top of the
-        source file)</i>.
-      </dd>
     </dl>
     <dl>
       <dt><code>base</code></dt>
       <dd>
-        <i>number</i>: integer, <code>2</code> to <code>64</code> inclusive
+        <i>number</i>: integer,
+        <code>2</code> to <code>ALPHABET.length</code> inclusive
+        (see <a href='#alphabet'><code>ALPHABET</code></a>).
       </dd>
       <dd>The base of <code>value</code>.</dd>
       <dd>
@@ -332,7 +324,6 @@ BN.config({ DECIMAL_PLACES: 9 })</pre>
       properties.
     </p>
     <p>Configures the settings for this particular BigNumber constructor.</p>
-    <p><i>Note: the configuration can also be supplied as an argument list, see below.</i></p>
     <dl class='inset'>
       <dt id="decimal-places"><code><b>DECIMAL_PLACES</b></code></dt>
       <dd>
@@ -346,8 +337,7 @@ BN.config({ DECIMAL_PLACES: 9 })</pre>
       </dd>
       <dd>
       <pre>BigNumber.config({ DECIMAL_PLACES: 5 })
-BigNumber.set({ DECIMAL_PLACES: 5 })    // equivalent
-BigNumber.config(5)    // equivalent</pre>
+BigNumber.set({ DECIMAL_PLACES: 5 })    // equivalent</pre>
       </dd>
 
 
@@ -367,8 +357,7 @@ BigNumber.config(5)    // equivalent</pre>
       </dd>
       <dd>The modes are available as enumerated properties of the BigNumber constructor.</dd>
        <dd>
-      <pre>BigNumber.config({ ROUNDING_MODE: 0 })
-BigNumber.config(null, BigNumber.ROUND_UP)    // equivalent</pre>
+      <pre>BigNumber.config({ ROUNDING_MODE: 0 })</pre>
         </dd>
 
 
@@ -594,7 +583,7 @@ BigNumber.config({ MODULO_MODE: 9 })          // equivalent</pre>
         The <i>maximum</i> number of significant digits of the result of the power operation
         (unless a modulus is specified).
       </dd>
-      <dd>If set to <code>0</code>, the number of signifcant digits will not be limited.</dd>
+      <dd>If set to <code>0</code>, the number of significant digits will not be limited.</dd>
       <dd>See <a href='#pow'><code>toPower</code></a>.</dd>
       <dd><pre>BigNumber.config({ POW_PRECISION: 100 })</pre></dd>
 
@@ -636,8 +625,37 @@ BigNumber.config({
     }
 });</pre>
       </dd>
+
+
+
+      <dt id="alphabet"><code><b>ALPHABET</b></code></dt>
+      <dd>
+        <i>string</i><br />
+        Default value: <code>'0123456789abcdefghijklmnopqrstuvwxyz'</code>
+      </dd>
+      <dd>
+        The alphabet used for base conversion. The length of the alphabet corresponds to the
+        maximum value of the base argument that can be passed to the
+        <a href='#bignumber'><code>BigNumber</code></a> constructor or
+        <a href='#toS'><code>toString</code></a>.
+      </dd>
+      <dd>
+        There is no maximum length for the alphabet, but it must be at least 2 characters long, and
+        it must not contain a repeated character, or <code>'.'</code>, as that is used as the
+        decimal separator for all values whatever their base.
+      </dd>
+      <dd>
+        <pre>// duodecimal (base 12)
+BigNumber.config({ ALPHABET: '0123456789TE' })
+x = new BigNumber('T', 12)
+x.toString()                // '10'
+x.toString(12)              // 'T'</pre>
+      </dd>
+
+
+
     </dl>
-    <br />
+    <br /><br />
     <p>Returns an object with the above properties and their current values.</p>
     <p>
       If the value to be assigned to any of the above properties is <code>null</code> or
@@ -658,11 +676,9 @@ BigNumber.config({
         groupSize: 3,
         groupSeparator: ' ',
         decimalSeparator: ','
-    }
+    },
+    ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_'
 });
-
-// Alternatively but equivalently (excluding FORMAT):
-BigNumber.config( 40, 7, [-10, 20], 500, 1, 1, 3, 80 )
 
 obj = BigNumber.config();
 obj.ERRORS       // true
@@ -1702,17 +1718,20 @@ y.toPrecision(5)                // '45.600'</pre>
 
 
     <h5 id="toS">toString<code class='inset'>.toString([base]) <i>&rArr; string</i></code></h5>
-    <p><code>base</code>: <i>number</i>: integer, <code>2</code> to <code>64</code> inclusive</p>
+    <p>
+      <code>base</code>: <i>number</i>: integer, <code>2</code> to <code>ALPHABET.length</code>
+      inclusive (see <a href='#alphabet'><code>ALPHABET</code></a>).
+    </p>
     <p>
       Returns a string representing the value of this BigNumber in the specified base, or base
       <code>10</code> if <code>base</code> is omitted or is <code>null</code> or
       <code>undefined</code>.
     </p>
     <p>
-      For bases above <code>10</code>, values from <code>10</code> to <code>35</code> are
-      represented by <code>a-z</code> (as with <code>Number.prototype.toString</code>),
-      <code>36</code> to <code>61</code> by <code>A-Z</code>, and <code>62</code> and
-      <code>63</code> by <code>$</code> and <code>_</code> respectively.
+      For bases above <code>10</code>, and using the default base conversion alphabet
+      (see <a href='#alphabet'><code>ALPHABET</code></a>), values from <code>10</code> to
+      <code>35</code> are represented by <code>a-z</code>
+      (as with <code>Number.prototype.toString</code>).
     </p>
     <p>
       If a base is specified the value is rounded according to the current
@@ -1854,7 +1873,7 @@ BN = BigNumber.another();
 y = new BN(3)
 y instanceof BigNumber     // false
 y.isBigNumber              // true</pre>
-    
+
 
 
 
