@@ -40,7 +40,7 @@ var count = (function toPrecision(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -60,7 +60,6 @@ var count = (function toPrecision(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
-        ERRORS: true,
         RANGE: 1E9,
         EXPONENTIAL_AT: [-7, 40]
     });
@@ -784,9 +783,9 @@ var count = (function toPrecision(BigNumber) {
     T('5313610990.737', '5313610990.7373810218', 13);
     T('-3.56e+4', '-35566.4678487', 3);
 
-    T('123.45000000', '12.345e1', '1.1e+1');
-    T('123.4500', '12.345e1', '   700e-2 ');
-    T('123', '12.345e1', new BigNumber(3));
+    T('123.45000000', '12.345e1', 11);
+    T('123.4500', '12.345e1', 7);
+    T('123', '12.345e1', 3);
     T('123.45', '12.345e1', null);
     T('123.45', '12.345e1', undefined);
 
@@ -817,37 +816,6 @@ var count = (function toPrecision(BigNumber) {
     assertException(function () {new BigNumber('12.345e1').toPrecision('-1e-1')}, ".toPrecision('-1e-1')");
     assertException(function () {new BigNumber('12.345e1').toPrecision(Infinity)}, ".toPrecision(Infinity)");
     assertException(function () {new BigNumber('12.345e1').toPrecision('-Infinity')}, ".toPrecision('-Infinity')");
-
-    BigNumber.config({ERRORS: false});
-
-    T('123', '12.345e1', BigNumber(3));
-    T('123.45', '12.345e1', null);
-    T('123.45', '12.345e1', undefined);
-    T('123.45', '12.345e1', NaN);
-    T('123.45', '12.345e1', 'NaN');
-    T('123.45', '12.345e1', []);
-    T('123.45', '12.345e1', {});
-    T('123.45', '12.345e1', '');
-    T('123.45', '12.345e1', ' ');
-    T('123.45', '12.345e1', 'hello');
-    T('123.45', '12.345e1', '\t');
-    T('123.45', '12.345e1', ' ');
-    T('123.45', '12.345e1', new Date);
-    T('123.45', '12.345e1', new RegExp);
-    T('123.4500', '12.345e1', 7.5);
-    T('123.45000000', '12.345e1', '1.1e1');
-
-    T('1e+2', '12.345e1', 1);
-    T('1e+2', '12.345e1', 1.0001);
-    T('123.45', '12.345e1', '-1');
-    T('123.45', '12.345e1', -23);
-    T('123.45', '12.345e1', MAX + 1);
-    T('123.45', '12.345e1', 0);
-    T('123.45', '12.345e1', '-0');
-    T('123.45', '12.345e1', 0.9);
-    T('123.45', '12.345e1', '-1e-1');
-    T('123.45', '12.345e1', Infinity);
-    T('123.45', '12.345e1', '-Infinity');
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];

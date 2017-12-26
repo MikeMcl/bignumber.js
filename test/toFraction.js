@@ -39,7 +39,7 @@ var count = (function toFraction(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -59,7 +59,6 @@ var count = (function toFraction(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
-        ERRORS: true,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9
     });
@@ -2981,7 +2980,6 @@ var count = (function toFraction(BigNumber) {
     T('3761571027751684615243460444230696668509504743538045995257317822557431413971266200889927052756417,10000000000000000000000000000000000000000000000000000000', '376157102775168461524346044423069666850950.4743538045995257317822557431413971266200889927052756417', '902612837213836957407294100697258033215360383465558379387665');
     */
 
-    T('2469,20', '12.345e1', null);
     T('2469,20', '12.345e1', u);
     T('2469,20', '12.345e1', '2.1e1');
     T('1111,9',  '12.345e1', new BigNumber(10));
@@ -3010,35 +3008,6 @@ var count = (function toFraction(BigNumber) {
     assertException(function () {new BigNumber('12.3e1').toFraction(-1)}, ".toFraction(-1)");
     assertException(function () {new BigNumber('12.3e1').toFraction(-23)}, ".toFraction(-23)");
     assertException(function () {new BigNumber('12.3e1').toFraction('-Infinity')}, ".toFraction('-Infinity')");
-
-    BigNumber.config({ERRORS: false});
-
-    T('2469,20', '12.345e1', null);
-    T('2469,20', '12.345e1', u);
-    T('2469,20', '12.345e1', undefined);
-    T('2469,20', '12.345e1', '');
-    T('2469,20', '12.345e1', ' ');
-    T('2469,20', '12.345e1', '\t');
-    T('2469,20', '12.345e1', NaN);
-    T('2469,20', '12.345e1', 'NaN');
-    T('2469,20', '12.345e1', []);
-    T('2469,20', '12.345e1', {});
-    T('2469,20', '12.345e1', new Date);
-    T('2469,20', '12.345e1', new RegExp);
-    T('2469,20', '12.345e1', -1);
-    T('2469,20', '12.345e1',  0.99);
-    T('123,1', '12.345e1',  1.1);
-    T('864,7', '12.345e1', '7.5');
-    T('864,7', '12.345e1', new BigNumber(7));
-    T('2469,20', '12.345e1', new BigNumber(-7));
-    T('2469,20', '12.345e1', 0);
-    T('2469,20', '12.345e1', -23);
-    T('2469,20', '12.345e1', '2.1e1');
-    T('2469,20', '12.345e1', Infinity);
-    T('2469,20', '12.345e1', '-Infinity');
-    T('1111,9',  '12.345e1', new BigNumber(10));
-    T('2469,20', '12.345e1', new BigNumber('123e399'));
-    T('2469,20', '12.345e1', new BigNumber(Infinity));
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];

@@ -44,8 +44,7 @@ var count = (function divToInt(BigNumber) {
         DECIMAL_PLACES: 40,
         ROUNDING_MODE: 4,
         EXPONENTIAL_AT: 0,
-        RANGE: 1E9,
-        ERRORS: true
+        RANGE: 1E9
     });
 
     T('0', '1', '0e+0');

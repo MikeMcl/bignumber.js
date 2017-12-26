@@ -43,7 +43,6 @@ var count = (function neg(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
-        ERRORS: true,
         RANGE: 1E9,
         EXPONENTIAL_AT: [-7, 21]
     });

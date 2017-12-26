@@ -42,16 +42,10 @@ var count = (function minMax(BigNumber) {
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
         EXPONENTIAL_AT: [-7, 21],
-        RANGE: 1e9,
-        ERRORS: false
+        RANGE: 1e9
     });
 
     assert(false, BigNumber.min(0, 0, 0).isNaN());
-    assert(true, BigNumber.min(u, null, NaN).isNaN());
-    assert(true, BigNumber.min(-2, 0, -1, u).isNaN());
-    assert(true, BigNumber.max(-2, 0, -1, u).isNaN());
-    assert(true, BigNumber.min(null, -2, 0, -1).isNaN());
-    assert(true, BigNumber.max(null, -2, 0, -1).isNaN());
     assert(true, BigNumber.min(NaN, -2, 0, -1).isNaN());
     assert(true, BigNumber.max(NaN, -2, 0, -1).isNaN());
     assert(true, BigNumber.min(-2, 0, -1, new BigNumber(NaN)).isNaN());
@@ -64,9 +58,6 @@ var count = (function minMax(BigNumber) {
     assert(false, BigNumber.min(-2, 0, -1, Infinity).isNaN());
     assert(false, BigNumber.max(-2, 0, -1, Infinity).isNaN());
     assert(false, BigNumber.min(-2, -Infinity, 0, -1, Infinity).isNaN());
-    assert(true, BigNumber.max(Infinity, -2, 'hi', 0, -1, -Infinity).isNaN());
-    assert(true, BigNumber.min(null, Infinity, -2, 0, -1, -Infinity).isNaN());
-    assert(true, BigNumber.max(Infinity, -2, NaN, 0, -1, -Infinity, u).isNaN());
 
     assert(true, new BigNumber(-Infinity).eq(BigNumber.min(-Infinity, -2, 0, -1, Infinity)));
     assert(true, new BigNumber(-Infinity).eq(BigNumber.min(Infinity, -2, 0, -1, -Infinity)));

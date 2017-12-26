@@ -48,7 +48,6 @@ var count = (function minus(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
-        ERRORS: false,
         RANGE: 1E9,
         EXPONENTIAL_AT: [-7, 21]
     });
@@ -136,32 +135,10 @@ var count = (function minus(BigNumber) {
     T(1, '3.345E-9', '0.999999996655');
     T(1, '-345.43e+4', '3454301');
     T(1, '-94.12E+0', '95.12');
-    T(1, '', N);
-    T(1, '    ', N);
-    T(1, '\t\t', N);
-    T(1, 'ertgrt546', N);
-    T(1, 'qweqwdewee', N);
-    T(1, true, N);
-    T(1, false, N);
-    T(1, 'e 4.3', N);
-    T(1, '4 .3', N);
-    T(1, '4.0 01e', N);
     T(1, ' 4.001', '-3.001');
     T(1, '4.001 ', '-3.001');
-    T(1, ' 4.001 ', '-3.001');
-    T(1, '    4.001', '-3.001');
-    T(1, ' 4.0 01', N);
-    T(1, '4. 001', N);
-    T(1, '4. 001 ', N);
-    T(1, '  4.001e ', N);
-    T(1, ' 4 .001 e ', N);
-    T(1, undefined, N);
-    T(1, null, N);
     T(1, Number.POSITIVE_INFINITY, -I);
     T(1, Number.NEGATIVE_INFINITY, I);
-    T(1, new Date(2012, 11, 4), N);
-    T(1, new Object(), N);
-    T(1, function () {}, N);
     T('0', 0, '0');
     T(0, '+0', '0');
     T('0', '0', '0');
@@ -197,18 +174,7 @@ var count = (function minus(BigNumber) {
     T(-1, -0.1, '-0.9');
     T(43534.5435, '0.054645', '43534.488855');
     T('99999', '1', '99998');
-    T('3e', 8, N);
-    T('-3..0', 13, N);
-    T('0 0', -0.4, N);
     T(' +3e0', 4, '-1');
-    T(9.9806, '+ 1', N);
-    T(' +2 0', '1e1', N);
-    T('e3', 4, N);
-    T(' ', 0, N);
-    T(323, null, N);
-    T(undefined, undefined, N);
-    T('undefined', undefined, N);
-    T(null, null, N);
 
     T('-0.00000020', '-1.5', '1.4999998');
     T('-5', '0', '-5');

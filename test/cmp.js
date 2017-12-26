@@ -42,7 +42,7 @@ var count = (function cmp(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -67,7 +67,6 @@ var count = (function cmp(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
-        ERRORS: false,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9
     });
@@ -159,32 +158,8 @@ var count = (function cmp(BigNumber) {
     T(1, '3.345E-9', '1');
     T(1, '-345.43e+4', '1');
     T(1, '-94.12E+0', '1');
-    T(1, '', n);
-    T(1, '    ', n);
-    T(1, '\t\t', n);
-    T(1, 'ertgrt546', n);
-    T(1, 'qweqwdewee', n);
-    T(1, true, n);
-    T(1, false, n);
-    T(1, 'e 4.3', n);
-    T(1, '4 .3', n);
-    T(1, '4.0 01e', n);
-    T(1, ' 4.001', '-1');
-    T(1, '4.001 ', '-1');
-    T(1, ' 4.001 ', '-1');
-    T(1, '    4.001', '-1');
-    T(1, ' 4.0 01', n);
-    T(1, '4. 001', n);
-    T(1, '4. 001 ', n);
-    T(1, '  4.001e ', n);
-    T(1, ' 4 .001 e ', n);
-    T(1, undefined, n);
-    T(1, null, n);
     T(1, Number.POSITIVE_INFINITY, '-1');
     T(1, Number.NEGATIVE_INFINITY, '1');
-    T(1, new Date(2012, 11, 4), n);
-    T(1, new Object(), n);
-    T(1, function () {}, n);
     T('0', 0, '0');
     T(0, '+0', '0');
     T('0', '0', '0');
@@ -220,18 +195,7 @@ var count = (function cmp(BigNumber) {
     T(-1, -0.1, '-1');
     T(43534.5435, '0.054645', '1');
     T('99999', '1', '1');
-    T('3e', 8, n);
-    T('-3..0', 13, n);
-    T('0 0', -0.4, n);
     T(' +3e0', 4, '-1');
-    T(9.9806, '+ 1', n);
-    T(' +2 0', '1e1', n);
-    T('e3', 4, n);
-    T(' ', 0, n);
-    T(323, null, n);
-    T(undefined, undefined, n);
-    T('undefined', undefined, n);
-    T(null, null, n);
 
     T(0.04, 0.079393068, -1);
     T(0.023, 0.04840192819, -1);
@@ -4140,7 +4104,6 @@ var count = (function cmp(BigNumber) {
     T('-0.10021507', '-2049541544645617700923988306', 1);
     T('6609143733354158875894', '-6609143733354158875894', 1);
 
-    BigNumber.config({ ERRORS: true });
     assertException(function () {new BigNumber(1).cmp('one')}, "new BigNumber(1).cmp('one')");
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');

@@ -39,7 +39,7 @@ var count = (function baseOut(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -62,10 +62,9 @@ var count = (function baseOut(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
-        ERRORS: true,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9,
-        ALPHABET: undefined
+        ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'
     });
 
     // ---------------------------------------------------------------- v8 start
@@ -10765,51 +10764,11 @@ var count = (function baseOut(BigNumber) {
     T('NaN', '-NaN', 2);
     T('NaN', -NaN, 10);
     T('NaN', 'NaN', 10);
-    T('12.345', 12.345, new BigNumber(10));
     T('12.345', 12.345, null);
     T('12.345', 12.345, undefined);
-    T('12.345', 12.345, '1e1');
     T('Infinity', 'Infinity', 2);
     T('Infinity', 'Infinity', 10);
     T('-Infinity', '-Infinity', 2);
-    T('-Infinity', '-Infinity', 10);
-    T('101725686101180', '101725686101180', undefined);
-    T('101725686101180', '101725686101180', 10);
-
-    BigNumber.config({ERRORS: false});
-
-    T('2', '2', 0);
-    T('2', '2', 1);
-    T('2', '2', '-2');
-    T('2', '2', 1.9);
-    T('1.23', '1.23', 65);
-
-    T('NaN', 'NaN', 'NaN');
-    T('NaN', 'NaN', undefined);
-    T('NaN', 'NaN', null);
-    T('NaN', NaN, 2);
-    T('NaN', '-NaN', 2);
-    T('NaN', -NaN, 10);
-    T('NaN', 'NaN', 10);
-    T('12.345', 12.345, new BigNumber(10));
-    T('12.345', 12.345, null);
-    T('12.345', 12.345, undefined);
-    T('12.345', 12.345, NaN);
-    T('12.345', 12.345, 'NaN');
-    T('12.345', 12.345, []);
-    T('12.345', 12.345, {});
-    T('12.345', 12.345, '');
-    T('12.345', 12.345, ' ');
-    T('12.345', 12.345, 'hello');
-    T('12.345', 12.345, '\t');
-    T('12.345', 12.345, new Date);
-    T('12.345', 12.345, new RegExp);
-    T('101', 5, 2.02);
-    T('12.345', 12.345, 10.5);
-    T('12.345', 12.345, '1e1');
-    T('Infinity', 'Infinity', 2);
-    T('Infinity', Infinity, 10);
-    T('-Infinity', -Infinity, 36);
     T('-Infinity', '-Infinity', 10);
     T('101725686101180', '101725686101180', undefined);
     T('101725686101180', '101725686101180', 10);
@@ -10820,7 +10779,7 @@ var count = (function baseOut(BigNumber) {
     //     assert(expected, new BigNumber(value).toString(base))
     // }
 
-    BigNumber.config({ERRORS: true, ALPHABET: 'xy'});
+    BigNumber.config({ALPHABET: 'xy'});
 
     T('y', '1', 2);    // 1
     T('yx', 2, 2);     // 10           y0
@@ -10837,7 +10796,7 @@ var count = (function baseOut(BigNumber) {
     T('144', '144', 10);
 
     // TODO: more ALPHABET tests.
-    
+
     BigNumber.config({ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'});
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');

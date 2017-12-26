@@ -23,7 +23,7 @@ var count = (function random(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -36,7 +36,7 @@ var count = (function random(BigNumber) {
 
     log('\n Testing random...');
 
-    BigNumber.config({ ERRORS: true, CRYPTO: false });
+    BigNumber.config({ CRYPTO: false });
 
     for ( i = 0; i < 4994; i++ ) {
 
@@ -83,8 +83,8 @@ var count = (function random(BigNumber) {
 
     BigNumber.random(undefined);
     BigNumber.random(null);
-    BigNumber.random( new BigNumber(3) );
-    BigNumber.random( '    -0e+0   ' );
+    BigNumber.random(3);
+    BigNumber.random(0);
 
     assertException(function () { BigNumber.random(Infinity) }, 'Infinity');
     assertException(function () { BigNumber.random('-Infinity') }, "'-Infinity'");
@@ -92,14 +92,6 @@ var count = (function random(BigNumber) {
     assertException(function () { BigNumber.random('ugh') }, "'ugh'");
     assertException(function () { BigNumber.random(-1) }, "-1");
     assertException(function () { BigNumber.random({}) }, "{}");
-
-    BigNumber.config({ ERRORS: false });
-
-    BigNumber.random(Infinity);
-    BigNumber.random('-Infinity');
-    BigNumber.random(NaN);
-    BigNumber.random('ugh');
-    BigNumber.random(-1);
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];

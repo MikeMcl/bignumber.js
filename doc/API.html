@@ -75,7 +75,6 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
           <li><a href="#rounding-mode" >ROUNDING_MODE</a></li>
           <li><a href="#exponential-at">EXPONENTIAL_AT</a></li>
           <li><a href="#range"         >RANGE</a></li>
-          <li><a href="#errors"        >ERRORS</a></li>
           <li><a href="#crypto"        >CRYPTO</a></li>
           <li><a href="#modulo-mode"   >MODULO_MODE</a></li>
           <li><a href="#pow-precision" >POW_PRECISION</a></li>
@@ -198,7 +197,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       </dd>
       <dd>
         Values of type <em>number</em> with more than <code>15</code> significant digits are
-        considered invalid (if <a href='#errors'><code>ERRORS</code></a> is true) as calling
+        considered invalid as calling
         <code><a href='#toS'>toString</a></code> or <code><a href='#valueOf'>valueOf</a></code> on
         such numbers may not result in the intended value.
         <pre>console.log( 823456789123456.3 );    // 823456789123456.2</pre>
@@ -240,8 +239,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> configuration.
     </p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of an invalid <code>value</code> or
-      <code>base</code>.
+      Throws an invalid <code>value</code> or <code>base</code>. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = new BigNumber(9)                       // '9'
@@ -262,21 +260,14 @@ new BigNumber(-0b10110100.1)               // '-180.5'
 new BigNumber('123412421.234324', 5)       // '607236.557696'
 new BigNumber('ff.8', 16)                  // '255.5'
 new BigNumber('0xff.8')                    // '255.5'</pre>
-    <p>
-      The following throws <code>'not a base 2 number'</code> if
-      <a href='#errors'><code>ERRORS</code></a> is true, otherwise it returns a BigNumber with value
-      <code>NaN</code>.
-    </p>
+    <p>The following throws <code>'Not a base 2 number'</code>.</p>
     <pre>new BigNumber(9, 2)</pre>
     <p>
-      The following throws <code>'number type has more than 15 significant digits'</code> if
-      <a href='#errors'><code>ERRORS</code></a> is true, otherwise it returns a BigNumber with value
-      <code>96517860459076820</code>.
+      The following throws <code>'Number primitive has more than 15 significant digits'</code>.
     </p>
     <pre>new BigNumber(96517860459076817.4395)</pre>
     <p>
-      The following throws <code>'not a number'</code> if <a href='#errors'><code>ERRORS</code></a>
-      is true, otherwise it returns a BigNumber with value <code>NaN</code>.
+      The following throws <code>'Not a number'</code>.
     </p>
     <pre>new BigNumber('blurgh')</pre>
     <p>
@@ -294,14 +285,17 @@ new BigNumber(1.23456789, 10)              // '1.23457'</pre>
 
 
 
-    <h5 id="another">
-       another<code class='inset'>.another([obj]) <i>&rArr; BigNumber constructor</i></code>
+    <h5 id="another">another
+      <code class='inset'>.another([object]) <i>&rArr; BigNumber constructor</i></code>
     </h5>
-    <p><code>obj</code>: <i>object</i></p>
+    <p><code>object</code>: <i>object</i></p>
     <p>
       Returns a new independent BigNumber constructor with configuration as described by
-      <code>obj</code> (see <a href='#config'><code>config</code></a>), or with the default
-      configuration if <code>obj</code> is <code>null</code> or <code>undefined</code>.
+      <code>object</code> (see <a href='#config'><code>config</code></a>), or with the default
+      configuration if <code>object</code> is <code>null</code> or <code>undefined</code>.
+    </p>
+    <p>
+      Throws if <code>object</code> is not an object. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>BigNumber.config({ DECIMAL_PLACES: 5 })
 BN = BigNumber.another({ DECIMAL_PLACES: 9 })
@@ -318,12 +312,13 @@ BN.config({ DECIMAL_PLACES: 9 })</pre>
 
 
 
-    <h5 id="config">config<code class='inset'>set([obj]) <i>&rArr; object</i></code></h5>
+    <h5 id="config">config<code class='inset'>set([object]) <i>&rArr; object</i></code></h5>
     <p>
-      <code>obj</code>: <i>object</i>: an object that contains some or all of the following
+      <code>object</code>: <i>object</i>: an object that contains some or all of the following
       properties.
     </p>
     <p>Configures the settings for this particular BigNumber constructor.</p>
+
     <dl class='inset'>
       <dt id="decimal-places"><code><b>DECIMAL_PLACES</b></code></dt>
       <dd>
@@ -458,25 +453,9 @@ new BigNumber(0.0001)        // '0'          e is -4</pre>
 
 
 
-      <dt id="errors"><code><b>ERRORS</b></code></dt>
-      <dd>
-        <i>boolean|number</i>: <code>true</code>, <code>false</code>, <code>0</code> or
-        <code>1</code>.<br />
-        Default value: <code>true</code>
-      </dd>
-      <dd>
-        The value that determines whether BigNumber Errors are thrown.<br />
-        If <code>ERRORS</code> is false, no errors will be thrown.
-      </dd>
-      <dd>See <a href='#Errors'>Errors</a>.</dd>
-      <dd><pre>BigNumber.config({ ERRORS: false })</pre></dd>
-
-
-
       <dt id="crypto"><code><b>CRYPTO</b></code></dt>
       <dd>
-        <i>boolean|number</i>: <code>true</code>, <code>false</code>, <code>0</code> or
-        <code>1</code>.<br />
+        <i>boolean</i>: <code>true</code> or <code>false</code>.<br />
         Default value: <code>false</code>
       </dd>
       <dd>
@@ -491,8 +470,7 @@ new BigNumber(0.0001)        // '0'          e is -4</pre>
       </dd>
       <dd>
         If neither function is supported by the host environment then attempting to set
-        <code>CRYPTO</code> to <code>true</code> will fail, and if <code>ERRORS</code>
-        is <code>true</code> an exception will be thrown.
+        <code>CRYPTO</code> to <code>true</code> will fail and an exception will be thrown.
       </dd>
       <dd>
         If <code>CRYPTO</code> is <code>false</code> then the source of randomness used will be
@@ -658,17 +636,15 @@ x.toString(12)              // 'T'</pre>
     <br /><br />
     <p>Returns an object with the above properties and their current values.</p>
     <p>
-      If the value to be assigned to any of the above properties is <code>null</code> or
-      <code>undefined</code> it is ignored.
+      Throws if <code>object</code> is not an object, or if an invalid value is assigned to
+      one or more of the above properties. See <a href='#Errors'>Errors</a>.
     </p>
-    <p>See <a href='#Errors'>Errors</a> for the treatment of invalid values.</p>
     <pre>
 BigNumber.config({
     DECIMAL_PLACES: 40,
     ROUNDING_MODE: BigNumber.ROUND_HALF_CEIL,
     EXPONENTIAL_AT: [-10, 20],
     RANGE: [-500, 500],
-    ERRORS: true,
     CRYPTO: true,
     MODULO_MODE: BigNumber.ROUND_FLOOR,
     POW_PRECISION: 80,
@@ -681,8 +657,8 @@ BigNumber.config({
 });
 
 obj = BigNumber.config();
-obj.ERRORS       // true
-obj.RANGE        // [-500, 500]</pre>
+obj.DECIMAL_PLACES        // 40
+obj.RANGE                 // [-500, 500]</pre>
 
 
 
@@ -753,6 +729,9 @@ BigNumber.min(arr)                            // '-15.9999'</pre>
       If <a href='#crypto'><code>CRYPTO</code></a> is <code>true</code>, i.e. one of the
       <code>crypto</code> methods is to be used, the value of a returned BigNumber should be
       cryptographically-secure and statistically indistinguishable from a random value.
+    </p>
+    <p>
+      Throws if <code>dp</code> is invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>BigNumber.config({ DECIMAL_PLACES: 10 })
 BigNumber.random()              // '0.4117936847'
@@ -1252,14 +1231,15 @@ x.plus('0.1', 8)                // '0.225'</pre>
 
 
     <h5 id="sd">precision<code class='inset'>.sd([z]) <i>&rArr; number</i></code></h5>
-    <p>
-      <code>z</code>: <i>boolean|number</i>: <code>true</code>, <code>false</code>, <code>0</code>
-      or <code>1</code>
-    </p>
+    <p><code>z</code>: <i>boolean</i>: <code>true</code> or <code>false</code></p>
     <p>Returns the number of significant digits of the value of this BigNumber.</p>
     <p>
-      If <code>z</code> is <code>true</code> or <code>1</code> then any trailing zeros of the
-      integer part of a number are counted as significant digits, otherwise they are not.
+      If <code>z</code> is <code>true</code> then any trailing zeros of the integer part of a number
+      are counted as significant digits, otherwise they are not.
+    </p>
+     <p>
+      Throws if <code>z</code> is not <code>true</code> or <code>false</code>.
+      See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = new BigNumber(1.234)
@@ -1286,8 +1266,7 @@ y.sd(true)                      // 6</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or out of range
-      <code>dp</code> or <code>rm</code> values.
+      Throws if <code>dp</code> or <code>rm</code> are invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = 1234.56
@@ -1318,6 +1297,9 @@ y                                         // '1234.56'</pre>
       is negative or to the right if <code>n</code> is positive.
     </p>
     <p>The return value is always exact and unrounded.</p>
+    <p>
+      Throws if <code>n</code> is invalid. See <a href='#Errors'>Errors</a>.
+    </p>
     <pre>
 x = new BigNumber(1.23)
 x.shift(3)                      // '1230'
@@ -1362,7 +1344,7 @@ x.times('-a', 16)               // '-6'</pre>
 
 
     <h5 id="toD">
-      toDigits<code class='inset'>.toDigits([sd [, rm]]) <i>&rArr; BigNumber</i></code>
+      toDigits<code class='inset'>.toDigits(sd [, rm]) <i>&rArr; BigNumber</i></code>
     </h5>
     <p>
       <code>sd</code>: <i>number</i>: integer, <code>1</code> to <code>1e+9</code> inclusive.<br />
@@ -1373,20 +1355,14 @@ x.times('-a', 16)               // '-6'</pre>
       significant digits using rounding mode <code>rm</code>.
     </p>
     <p>
-      If <code>sd</code> is omitted or is <code>null</code> or <code>undefined</code>, the return
-      value will not be rounded.<br />
       If <code>rm</code> is omitted or is <code>null</code> or <code>undefined</code>,
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> will be used.
     </p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or out of range
-      <code>sd</code> or <code>rm</code> values.
+      Throws if <code>sd</code> or <code>rm</code> are invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
-BigNumber.config({ precision: 5, rounding: 4 })
 x = new BigNumber(9876.54321)
-
-x.toDigits()                          // '9876.5'
 x.toDigits(6)                         // '9876.54'
 x.toDigits(6, BigNumber.ROUND_UP)     // '9876.55'
 x.toDigits(2)                         // '9900'
@@ -1419,8 +1395,7 @@ x                                     // '9876.54321'</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or out of range
-      <code>dp</code> or <code>rm</code> values.
+      Throws if <code>dp</code> or <code>rm</code> are invalid. See <a href='#Errors'>Errors</a>.
     </p>
      <pre>
 x = 45.6
@@ -1468,8 +1443,7 @@ y.toExponential(3)              // '4.560e+1'</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or out of range
-      <code>dp</code> or <code>rm</code> values.
+      Throws if <code>dp</code> or <code>rm</code> are invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = 3.456
@@ -1509,8 +1483,7 @@ y.toFixed(5)                    // '3.45600'</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or out of range
-      <code>dp</code> or <code>rm</code> values.
+      Throws if <code>dp</code> or <code>rm</code> are invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 format = {
@@ -1564,8 +1537,7 @@ x.toFormat(6)                   // '12.34.56.789,123'</pre>
       number exactly.
     </p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or out of range
-      <code>max</code> values.
+      Throws if <code>max</code> is invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = new BigNumber(1.75)
@@ -1602,8 +1574,7 @@ JSON.parse(str, function (key, val) {
     <h5 id="toN">toNumber<code class='inset'>.toNumber() <i>&rArr; number</i></code></h5>
     <p>Returns the value of this BigNumber as a JavaScript number primitive.</p>
     <p>
-      Type coercion with, for example, the unary plus operator will also work, except that a
-      BigNumber with the value minus zero will be converted to positive zero.
+      This method is identical to using type coercion with the unary plus operator.
     </p>
     <pre>
 x = new BigNumber(456.789)
@@ -1614,8 +1585,8 @@ y = new BigNumber('45987349857634085409857349856430985')
 y.toNumber()                    // 4.598734985763409e+34
 
 z = new BigNumber(-0)
-1 / +z                          // Infinity
-1 / z.toNumber()                // -Infinity</pre>
+1 / z.toNumber()                // -Infinity
+1 / +z                          // -Infinity</pre>
 
 
 
@@ -1630,21 +1601,13 @@ z = new BigNumber(-0)
       <code>n</code>, and optionally modulo a modulus <code>m</code>.
     </p>
     <p>
+      Throws if <code>n</code> is not a primitive number, or is not an integer, or is out of range.
+      See <a href='#Errors'>Errors</a>.
+    </p>
+    <p>
       If <code>n</code> is negative the result is rounded according to the current
       <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> configuration.
-    </p>
-    <p>
-      If <code>n</code> is not an integer or is out of range:
-    </p>
-    <p class='inset'>
-      If <code>ERRORS</code> is <code>true</code> a BigNumber Error is thrown,<br />
-      else if <code>n</code> is greater than <code>9007199254740991</code>, it is interpreted as
-      <code>Infinity</code>;<br />
-      else if <code>n</code> is less than <code>-9007199254740991</code>, it is interpreted as
-      <code>-Infinity</code>;<br />
-      else if <code>n</code> is otherwise a number, it is truncated to an integer;<br />
-      else it is interpreted as <code>NaN</code>.
     </p>
     <p>
       As the number of digits of the result of the power operation can grow so large so quickly,
@@ -1700,8 +1663,7 @@ BigNumber(3).pow(-2)            // '0.11111111111111111111'</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or out of range
-      <code>sd</code> or <code>rm</code> values.
+      Throws if <code>sd</code> or <code>rm</code> are invalid. See <a href='#Errors'>Errors</a>.
     </p>
      <pre>
 x = 45.6
@@ -1747,8 +1709,7 @@ y.toPrecision(5)                // '45.600'</pre>
     </p>
     <p>If <code>base</code> is <code>null</code> or <code>undefined</code> it is ignored.</p>
     <p>
-      See <a href='#Errors'>Errors</a> for the treatment of other non-integer or out of range
-      <code>base</code> values.
+      Throws if <code>base</code> is invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = new BigNumber(750000)
@@ -1834,16 +1795,10 @@ y.valueOf()                     // '1.777e+457'</pre>
       be <code>null</code>.
     </p>
     <p>
-      From v2.0.0 of this library, the value of the coefficient of a BigNumber is stored in a
-      normalised base <code>100000000000000</code> floating point format, as opposed to the base
-      <code>10</code> format used in v1.x.x
-    </p>
-    <p>
-      This change means the properties of a BigNumber are now best considered to be read-only.
-      Previously it was acceptable to change the exponent of a BigNumber by writing to its exponent
-      property directly, but this is no longer recommended as the number of digits in the first
-      element of the coefficient array is dependent on the exponent, so the coefficient would also
-      need to be altered.
+      The above properties are best considered to be read-only. In early versions of this library it
+      was okay to change the exponent of a BigNumber by writing to its exponent property directly,
+      but this is no longer reliable as the value of the first element of the coefficient array is
+      now dependent on the exponent.
     </p>
     <p>
       Note that, as with JavaScript numbers, the original exponent and fractional trailing zeros are
@@ -1920,242 +1875,174 @@ y.s                             // -1</pre>
 
 
     <h4 id='Errors'>Errors</h4>
+    <p>The table below shows the errors that are thrown.</p>
     <p>
-      The errors that are thrown are generic <code>Error</code> objects with <code>name</code>
-      <i>BigNumber Error</i>.
-    </p>
-    <p>
-      The table below shows the errors that may be thrown if <code>ERRORS</code> is
-      <code>true</code>, and the action taken if <code>ERRORS</code> is <code>false</code>.
+      The errors are generic <code>Error</code> objects whose message begins
+      <code>'[BigNumber Error]'</code>.
     </p>
     <table class='error-table'>
       <tr>
-        <th>Method(s)</th>
-        <th>ERRORS: true<br />Throw BigNumber Error</th>
-        <th>ERRORS: false<br />Action on invalid argument</th>
+        <th>Method</th>
+        <th>Throws</th>
       </tr>
       <tr>
-        <td rowspan=5>
-          <code>
-            BigNumber<br />
-            comparedTo<br />
-            dividedBy<br />
-            dividedToIntegerBy<br />
-            equals<br />
-            greaterThan<br />
-            greaterThanOrEqualTo<br />
-            lessThan<br />
-            lessThanOrEqualTo<br />
-            minus<br />
-            modulo<br />
-            plus<br />
-            times
-          </code></td>
-        <td>number type has more than<br />15 significant digits</td>
-        <td>Accept.</td>
+        <td rowspan=6>
+          <code>BigNumber</code><br />
+          <code>comparedTo</code><br />
+          <code>dividedBy</code><br />
+          <code>dividedToIntegerBy</code><br />
+          <code>equals</code><br />
+          <code>greaterThan</code><br />
+          <code>greaterThanOrEqualTo</code><br />
+          <code>lessThan</code><br />
+          <code>lessThanOrEqualTo</code><br />
+          <code>minus</code><br />
+          <code>modulo</code><br />
+          <code>plus</code><br />
+          <code>times</code>
+        </td>
+        <td>Base not a primitive number</td>
       </tr>
       <tr>
-        <td>not a base... number</td>
-        <td>Substitute <code>NaN</code>.</td>
+        <td>Base not an integer</td>
       </tr>
       <tr>
-        <td>base not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td>Base out of range</td>
+      </tr>
+       <tr>
+        <td>Number primitive has more than 15 significant digits</td>
       </tr>
       <tr>
-        <td>base out of range</td>
-        <td>Ignore.</td>
+        <td>Not a base... number</td>
       </tr>
       <tr>
-        <td>not a number<sup>*</sup></td>
-        <td>Substitute <code>NaN</code>.</td>
+        <td>Not a number<sup>*</sup></td>
       </tr>
       <tr>
         <td><code>another</code></td>
-        <td>not an object</td>
-        <td>Ignore.</td>
+        <td>Object expected</td>
       </tr>
       <tr>
-        <td rowspan=17><code>config</code></td>
+        <td rowspan=24><code>config</code></td>
+        <td>Object expected</td>
+      </tr>
+      <tr>
+        <td><code>DECIMAL_PLACES</code> not a primitive number</td>
+      </tr>
+      <tr>
         <td><code>DECIMAL_PLACES</code> not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
         <td><code>DECIMAL_PLACES</code> out of range</td>
-        <td>Ignore.</td>
+      </tr>
+      <tr>
+        <td><code>ROUNDING_MODE</code> not a primitive number</td>
       </tr>
       <tr>
         <td><code>ROUNDING_MODE</code> not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
         <td><code>ROUNDING_MODE</code> out of range</td>
-        <td>Ignore.</td>
       </tr>
       <tr>
-        <td><code>EXPONENTIAL_AT</code> not an integer<br />or not [integer, integer]</td>
-        <td>Truncate to integer(s).<br />Ignore if not number(s).</td>
+        <td><code>EXPONENTIAL_AT</code> not a primitive number</td>
       </tr>
       <tr>
-        <td><code>EXPONENTIAL_AT</code> out of range<br />or not [negative, positive]</td>
-        <td>Ignore.</td>
+        <td><code>EXPONENTIAL_AT</code> not an integer</td>
       </tr>
       <tr>
-        <td><code>RANGE</code> not an integer<br />or not [integer, integer]</td>
-        <td> Truncate to integer(s).<br />Ignore if not number(s).</td>
+        <td><code>EXPONENTIAL_AT</code> out of range</td>
+      </tr>
+      <tr>
+        <td><code>RANGE</code> not a primitive number</td>
+      </tr>
+      <tr>
+        <td><code>RANGE</code> not an integer</td>
       </tr>
       <tr>
         <td><code>RANGE</code> cannot be zero</td>
-        <td>Ignore.</td>
       </tr>
       <tr>
-        <td><code>RANGE</code> out of range<br />or not [negative, positive]</td>
-        <td>Ignore.</td>
+        <td><code>RANGE</code> cannot be zero</td>
       </tr>
       <tr>
-        <td><code>ERRORS</code> not a boolean<br />or binary digit</td>
-        <td>Ignore.</td>
+        <td><code>CRYPTO</code> not true or false</td>
       </tr>
       <tr>
-        <td><code>CRYPTO</code> not a boolean<br />or binary digit</td>
-        <td>Ignore.</td>
+        <td><code>crypto</code> unavailable</td>
       </tr>
       <tr>
-        <td><code>CRYPTO</code> crypto unavailable</td>
-        <td>Ignore.</td>
+        <td><code>MODULO_MODE</code> not a primitive number</td>
       </tr>
       <tr>
         <td><code>MODULO_MODE</code> not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
         <td><code>MODULO_MODE</code> out of range</td>
-        <td>Ignore.</td>
+      </tr>
+      <tr>
+        <td><code>POW_PRECISION</code> not a primitive number</td>
       </tr>
       <tr>
         <td><code>POW_PRECISION</code> not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
       </tr>
       <tr>
         <td><code>POW_PRECISION</code> out of range</td>
-        <td>Ignore.</td>
       </tr>
       <tr>
         <td><code>FORMAT</code> not an object</td>
-        <td>Ignore.</td>
+      </tr>
+      <tr>
+        <td><code>ALPHABET</code> invalid</td>
       </tr>
       <tr>
         <td><code>precision</code></td>
-        <td>argument not a boolean<br />or binary digit</td>
-        <td>Ignore.</td>
+        <td>Argument not true or false</td>
       </tr>
       <tr>
-        <td rowspan=4><code>round</code></td>
-        <td>decimal places not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
-      </tr>
-      <tr>
-        <td>decimal places out of range</td>
-        <td>Ignore.</td>
-      </tr>
-      <tr>
-        <td>rounding mode not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
-      </tr>
-      <tr>
-        <td>rounding mode out of range</td>
-        <td>Ignore.</td>
-      </tr>
-      <tr>
-        <td rowspan=2><code>shift</code></td>
-        <td>argument not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
-      </tr>
-      <tr>
-        <td>argument out of range</td>
-        <td>Substitute &plusmn;<code>Infinity</code>.
-      </tr>
-      <tr>
-        <td rowspan=4>
+        <td rowspan=3>
+          <code>round</code><br />
+          <code>shift</code><br />
+          <code>toDigits</code><br />
           <code>toExponential</code><br />
           <code>toFixed</code><br />
           <code>toFormat</code>
+          <code>toPower</code>
+          <code>toPrecision</code>
         </td>
-        <td>decimal places not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td>Argument not a primitive number</td>
       </tr>
       <tr>
-        <td>decimal places out of range</td>
-        <td>Ignore.</td>
+        <td>Argument not an integer</td>
       </tr>
       <tr>
-        <td>rounding mode not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
-      </tr>
-      <tr>
-        <td>rounding mode out of range</td>
-        <td>Ignore.</td>
+        <td>Argument out of range</td>
       </tr>
       <tr>
         <td rowspan=2><code>toFraction</code></td>
-        <td>max denominator not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td>Argument not an integer</td>
       </tr>
       <tr>
-        <td>max denominator out of range</td>
-        <td>Ignore.</td>
+        <td>Argument out of range</td>
       </tr>
       <tr>
-        <td rowspan=4>
-          <code>toDigits</code><br />
-          <code>toPrecision</code>
-        </td>
-        <td>precision not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
+        <td rowspan=3><code>toString</code></td>
+        <td>Base not a primitive number</td>
       </tr>
       <tr>
-        <td>precision out of range</td>
-        <td>Ignore.</td>
+        <td>Base not an integer</td>
       </tr>
       <tr>
-        <td>rounding mode not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
-      </tr>
-      <tr>
-        <td>rounding mode out of range</td>
-        <td>Ignore.</td>
-      </tr>
-      <tr>
-        <td rowspan=2><code>toPower</code></td>
-        <td>exponent not an integer</td>
-        <td>Truncate to integer.<br />Substitute <code>NaN</code> if not a number.</td>
-      </tr>
-       <tr>
-        <td>exponent out of range</td>
-        <td>Substitute &plusmn;<code>Infinity</code>.
-        </td>
-      </tr>
-      <tr>
-        <td rowspan=2><code>toString</code></td>
-        <td>base not an integer</td>
-        <td>Truncate to integer.<br />Ignore if not a number.</td>
-      </tr>
-      <tr>
-        <td>base out of range</td>
-        <td>Ignore.</td>
+        <td>Base out of range</td>
       </tr>
     </table>
     <p><sup>*</sup>No error is thrown if the value is <code>NaN</code> or 'NaN'.</p>
-    <p>
-      The message of a <i>BigNumber Error</i> will also contain the name of the method from which
-      the error originated.
-    </p>
-    <p>To determine if an exception is a <i>BigNumber Error</i>:</p>
+    <p>To determine if an exception is a BigNumber Error:</p>
     <pre>
 try {
     // ...
 } catch (e) {
-    if ( e instanceof Error && e.name == 'BigNumber Error' ) {
+    if ( e instanceof Error && !e.message.indexOf('[BigNumber Error]') ) {
         // ...
     }
 }</pre>

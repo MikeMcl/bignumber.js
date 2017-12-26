@@ -49,8 +49,7 @@ var count = (function times(BigNumber) {
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
         EXPONENTIAL_AT: [-7, 21],
-        RANGE: 1E9,
-        ERRORS: false
+        RANGE: 1E9
     });
 
     assert(false, isMinusZero(new BigNumber(1).times(0)));
@@ -120,32 +119,10 @@ var count = (function times(BigNumber) {
     T(1, '3.345E-9', '3.345e-9');
     T(1, '-345.43e+4', '-3454300');
     T(1, '-94.12E+0', '-94.12');
-    T(1, '', N);
-    T(1, '    ', N);
-    T(1, '\t\t', N);
-    T(1, 'ertgrt546', N);
-    T(1, 'qweqwdewee', N);
-    T(1, true, N);
-    T(1, false, N);
-    T(1, 'e 4.3', N);
-    T(1, '4 .3', N);
-    T(1, '4.0 01e', N);
     T(1, ' 4.001', '4.001');
     T(1, '4.001 ', '4.001');
-    T(1, ' 4.001 ', '4.001');
-    T(1, '    4.001', '4.001');
-    T(1, ' 4.0 01', N);
-    T(1, '4. 001', N);
-    T(1, '4. 001 ', N);
-    T(1, '  4.001e ', N);
-    T(1, ' 4 .001 e ', N);
-    T(1, undefined, N);
-    T(1, null, N);
     T(1, Number.POSITIVE_INFINITY, I);
     T(1, Number.NEGATIVE_INFINITY, -I);
-    T(1, new Date(2012, 11, 4), N);
-    T(1, new Object(), N);
-    T(1, function () {}, N);
     T('0', 0, '0');
     T(0, '+0', '0');
     T('0', '0', '0');
@@ -182,18 +159,6 @@ var count = (function times(BigNumber) {
     T(-1, -0.1, '0.1');
     T(43534.5435, '0.054645', '2378.9451295575');
     T('99999', '1', '99999');
-    T('3e', 8, N);
-    T('-3..0', 13, N);
-    T('0 0', -0.4, N);
-    T(' +3e0', 4, '12');
-    T(9.9806, '+ 1', N);
-    T(' +2 0', '1e1', N);
-    T('e3', 4, N);
-    T(' ', 0, N);
-    T(323, null, N);
-    T(undefined, undefined, N);
-    T('undefined', undefined, N);
-    T(null, null, N);
 
     T('-19.851', '69.11', '-1371.90261');
     T('-0.0251', '-1.09821', '0.027565071');

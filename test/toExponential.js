@@ -40,7 +40,7 @@ var count = (function toExponential(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -60,7 +60,6 @@ var count = (function toExponential(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
-        ERRORS: true,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9
     });
@@ -760,14 +759,11 @@ var count = (function toExponential(BigNumber) {
     T('-5.00e-2', '-0.05', 2);
     T('1.00e-2', '0.01', 2);
 
-    T('1.23000000000e+2', '12.3e1', '1.1e1');
-    T('1.230e+2', '12.3e1', new BigNumber('3'));
+    T('1.23000000000e+2', '12.3e1', 11);
+    T('1.230e+2', '12.3e1', 3);
     T('1.230e+2', '12.3e1', 3);
     T('1.23e+2', '12.3e1', null);
     T('1.23e+2', '12.3e1', undefined);
-    T('1e+2', '12.3e1', '0');
-    T('1e+2', '12.3e1', '-0');
-    T('1e+2', '12.3e1', '-0.000000');
     T('1e+2', '12.3e1', 0);
     T('1e+2', '12.3e1', -0);
 
@@ -796,42 +792,6 @@ var count = (function toExponential(BigNumber) {
     assertException(function () {new BigNumber(12.3).toExponential('-1e-1')}, ".toExponential('-1e-1')");
     assertException(function () {new BigNumber(12.3).toExponential(Infinity)}, ".toExponential(Infinity)");
     assertException(function () {new BigNumber(12.3).toExponential('-Infinity')}, ".toExponential('-Infinity')");
-
-    BigNumber.config({ERRORS: false});
-
-    T('Infinity', Infinity, 0);
-    T('Infinity', Infinity, NaN);
-    T('Infinity', Infinity, null);
-    T('Infinity', Infinity, Infinity);
-    T('NaN', NaN, -Infinity);
-
-    T('1.230e+2', '12.3e1', BigNumber(3));
-    T('1.23e+2', '12.3e1', null);
-    T('1.23e+2', '12.3e1', undefined);
-    T('1.23e+2', '12.3e1', NaN);
-    T('1.23e+2', '12.3e1', 'NaN');
-    T('1.23e+2', '12.3e1', []);
-    T('1.23e+2', '12.3e1', {});
-    T('1.23e+2', '12.3e1', '');
-    T('1.23e+2', '12.3e1', ' ');
-    T('1.23e+2', '12.3e1', 'hello');
-    T('1.23e+2', '12.3e1', '\t');
-    T('1.23e+2', '12.3e1', ' ');
-    T('1.23e+2', '12.3e1', new Date);
-    T('1.23e+2', '12.3e1', new RegExp);
-
-    T('1e+2', '12.3e1', -0);
-    T('1.2e+2', '12.3e1', 1.999);
-    T('1.2300000e+2', '12.3e1', 7.5);
-    T('1.23000000000e+2', '12.3e1', '1.1e1');
-
-    T('1.23e+2', '12.3e1', '-1');
-    T('1.23e+2', '12.3e1', -23);
-    T('1.23e+2', '12.3e1', MAX + 1);
-    T('1e+2', '12.3e1', -0.01);
-    T('1e+2', '12.3e1', '-1e-1');
-    T('1.23e+2', '12.3e1', Infinity);
-    T('1.23e+2', '12.3e1', '-Infinity');
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];

@@ -39,7 +39,7 @@ var count = (function toDigits(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -59,18 +59,17 @@ var count = (function toDigits(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 7,
-        ERRORS: true,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9
     });
 
-    T(0, 0);
-    T(0.5, 0.5);
-    T(1, 1);
-    T(-1, -1);
-    T(Infinity, Infinity);
-    T(-Infinity, -Infinity);
-    T(NaN, NaN);
+    T(0, 0, 1);
+    T(0.5, 0.5, 1);
+    T(1, 1, 1);
+    T(-1, -1, 1);
+    T(Infinity, Infinity, 1);
+    T(-Infinity, -Infinity, 1);
+    T(NaN, NaN, 1);
 
     T('0', '0', 1);
     T('0', '-0', 1);
@@ -80,11 +79,11 @@ var count = (function toDigits(BigNumber) {
     T('0', '0', 10);
     T('0', '-0', 20);
 
-    T('123456789.12345678912346789', '123456789.12345678912346789');
+    T('123456789.12345678912346789', '123456789.12345678912346789', 26);
     BigNumber.config({ ROUNDING_MODE: 0 });
-    T('123456789.12345678912346789', '123456789.12345678912346789');
+    T('123456789.12345678912346789', '123456789.12345678912346789', 26);
     BigNumber.config({ ROUNDING_MODE: 1 });
-    T('123456789.12345678912346789', '123456789.12345678912346789');
+    T('123456789.12345678912346789', '123456789.12345678912346789', 26);
 
     T('4937809340236234102130.947044664011', '4937809340236234102130.947044664011', 35, 0);
     T('337528093391.5', '337528093391.493107', 13, 6);
@@ -3719,46 +3718,8 @@ var count = (function toDigits(BigNumber) {
     assertException(function () {new BigNumber('12.345').toDigits(Infinity)}, ".toDigits(Infinity)");
     assertException(function () {new BigNumber('12.345').toDigits('-Infinity')}, ".toDigits('-Infinity')");
 
-    T('12.3', '12.345', new BigNumber('3'));
-    T('12.345', '12.345', u, new BigNumber('2'));
-    T('12.345', '12.345', u, null);
-    T('12.345', '12.345', u, u);
-    T('12.345', '12.345', u, 0);
-    T('12.34567891', '12.3456789123456789', '  1e+1 ');
-
-    BigNumber.config({ ERRORS: false });
-
-    T('12.3', '12.345', new BigNumber('3'));
-    T('12.345', '12.345', null);
-    T('12.345', '12.345', u);
-    T('12.345', '12.345', NaN);
-    T('12.345', '12.345', 'NaN');
-    T('12.345', '12.345', []);
-    T('12.345', '12.345', {});
-    T('12.345', '12.345', '');
-    T('12.345', '12.345', ' ');
-    T('12.345', '12.345', 'hello');
-    T('12.345', '12.345', '\t');
-    T('12.345', '12.345', new Date);
-    T('12.345', '12.345', new RegExp);
-    T('12.345', '12.345', 0);
-    T('12.345', '12.345', 7.5);
-    T('10', '12.345', '11e-1');
-    T('12.345', '12.345', '-1');
-    T('12.345', '12.345', -23);
-    T('12.345', '12.345', MAX + 1);
-    T('12.345', '12.345', MAX + 0.1);
-    T('12.345', '12.345', '-0.01');
-    T('12.345', '12.345', '-1e-1');
-    T('12.345', '12.345', Infinity);
-    T('12.345', '12.345', '-Infinity');
-
-    BigNumber.config({ ERRORS: true });
-
-    T('12.345', '12.345', u, 0);
-    T('12.345', '12.345', u, new BigNumber('2'));
-    T('12.345', '12.345', u, null);
-    T('12.345', '12.345', u, u);
+    T('12.3', '12.345', 3);
+    T('12.34567891', '12.3456789123456789', 10);
 
     assertException(function () {new BigNumber('12.345').toDigits(u, NaN)}, ".toDigits(u, NaN)");
     assertException(function () {new BigNumber('12.345').toDigits(u, 'NaN')}, ".toDigits(u, 'NaN')");

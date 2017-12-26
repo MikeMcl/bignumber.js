@@ -1,6 +1,6 @@
 /*! bignumber.js v5.0.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
-;(function (globalObj) {
+;(function (globalObject) {
     'use strict';
 
 /*
@@ -14,11 +14,13 @@
 
     var BigNumber,
         isNumeric = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i,
+
         mathceil = Math.ceil,
         mathfloor = Math.floor,
-        notBool = ' not true or false',
-        roundingMode = 'rounding mode',
-        tooManyDigits = 'number type has more than 15 significant digits',
+
+        bignumberError = '[BigNumber Error] ',
+        tooManyDigits = bignumberError + 'Number primitive has more than 15 significant digits: ',
+
         BASE = 1e14,
         LOG_BASE = 14,
         MAX_SAFE_INTEGER = 0x1fffffffffffff,         // 2^53 - 1
@@ -28,19 +30,15 @@
 
         // EDITABLE
         // The limit on the value of DECIMAL_PLACES, TO_EXP_NEG, TO_EXP_POS, MIN_EXP, MAX_EXP, and
-        // the arguments to toExponential, toFixed, toFormat, and toPrecision, beyond which an
-        // exception is thrown (if ERRORS is true).
+        // the arguments to toExponential, toFixed, toFormat, and toPrecision.
         MAX = 1E9;                                   // 0 to MAX_INT32
 
 
     /*
      * Create and return a BigNumber constructor.
      */
-    function constructorFactory(config) {
+    function constructorFactory(configObject) {
         var div, convertBase, parseNumeric,
-
-            // id tracks the caller function, so its name can be included in error messages.
-            id = 0,
             P = BigNumber.prototype,
             ONE = new BigNumber(1),
 
@@ -49,7 +47,7 @@
 
 
             // The default values below must be integers within the inclusive ranges stated.
-            // The values can also be changed at run-time using BigNumber.config.
+            // The values can also be changed at run-time using BigNumber.set.
 
             // The maximum number of decimal places for operations involving division.
             DECIMAL_PLACES = 20,                     // 0 to MAX
@@ -87,12 +85,6 @@
             // Number type:  308  (1.7976931348623157e+308)
             // For MAX_EXP > 1e7, e.g. new BigNumber('1e100000000').plus(1) may be slow.
             MAX_EXP = 1e7,                           // 1 to MAX
-
-            // Whether BigNumber Errors are ever thrown.
-            ERRORS = true,                           // true or false
-
-            // Change to intValidatorNoErrors if ERRORS is false.
-            isValidInt = intValidatorWithErrors,     // intValidatorWithErrors/intValidatorNoErrors
 
             // Whether to use cryptographically-secure random number generation, if available.
             CRYPTO = false,                          // true or false
@@ -155,22 +147,19 @@
             // Enable constructor usage without new.
             if ( !( x instanceof BigNumber ) ) {
 
-                // 'BigNumber() constructor call without new: {n}'
-                // See GitHub issue: #81.
-                //if (ERRORS) raise( 26, 'constructor call without new', n );
+                // Don't throw on constructor call without new (#81).
+                // '[BigNumber Error] Constructor call without new: {n}'
+                //throw Error( bignumberError + ' Constructor call without new: ' + n );
                 return new BigNumber( n, b );
             }
 
-            // 'new BigNumber() base not an integer: {b}'
-            // 'new BigNumber() base out of range: {b}'
-            if ( b == null || !isValidInt( b, 2, ALPHABET.length, id, 'base' ) ) {
+            if ( b == null ) {
 
                 // Duplicate.
                 if ( n instanceof BigNumber ) {
                     x.s = n.s;
                     x.e = n.e;
                     x.c = ( n = n.c ) ? n.slice() : n;
-                    id = 0;
                     return;
                 }
 
@@ -178,7 +167,7 @@
 
                 if ( isNum && n * 0 == 0 ) {
 
-                    // To handle minus zero also.
+                    // Use `1 / n` to handle minus zero also.
                     x.s = 1 / n < 0 ? ( n = -n, -1 ) : 1;
 
                     // Faster path for integers.
@@ -186,7 +175,6 @@
                         for ( e = 0, i = n; i >= 10; i /= 10, e++ );
                         x.e = e;
                         x.c = [n];
-                        id = 0;
                         return;
                     }
 
@@ -195,14 +183,16 @@
                     if ( !isNumeric.test( str = n + '' ) ) return parseNumeric( x, str, isNum );
                     x.s = str.charCodeAt(0) == 45 ? ( str = str.slice(1), -1 ) : 1;
                 }
+
             } else {
-                b = b | 0;
+
+                // '[BigNumber Error] Base {not a primitive number|not an integer|out of range}: {b}'
+                intCheck( b, 2, ALPHABET.length, 'Base' );
                 str = n + '';
 
                 // Allow exponential notation to be used with base 10 argument, while
                 // also rounding to DECIMAL_PLACES as with other bases.
                 if ( b == 10 ) {
-
                     x = new BigNumber( n instanceof BigNumber ? n : str );
                     return round( x, DECIMAL_PLACES + x.e + 1, ROUNDING_MODE );
                 }
@@ -216,9 +206,10 @@
 
                     x.s = 1 / n < 0 ? ( str = str.slice(1), -1 ) : 1;
 
-                    // 'new BigNumber() number type has more than 15 significant digits: {n}'
-                    if ( ERRORS && str.replace( /^0\.0*|\./, '' ).length > 15 ) {
-                        raise( id, tooManyDigits, n );
+                    // '[BigNumber Error] Number primitive has more than 15 significant digits: {n}'
+                    if ( str.replace( /^0\.0*|\./, '' ).length > 15 ) {
+                        throw Error
+                          ( tooManyDigits + n );
                     }
 
                     // Prevent later check for length on converted number.
@@ -279,11 +270,10 @@
             if (str) {
                 len = str.length;
 
-                // Disallow numbers with over 15 significant digits if number type.
-                // 'new BigNumber() number type has more than 15 significant digits: {n}'
-                if ( isNum && ERRORS && len > 15 &&
-                  ( n > MAX_SAFE_INTEGER || n !== mathfloor(n) ) ) {
-                    raise( id, tooManyDigits, x.s * n );
+                // '[BigNumber Error] Number primitive has more than 15 significant digits: {n}'
+                if ( isNum && len > 15 && ( n > MAX_SAFE_INTEGER || n !== mathfloor(n) ) ) {
+                    throw Error
+                      ( tooManyDigits + ( x.s * n ) );
                 }
 
                 e = e - i - 1;
@@ -331,8 +321,6 @@
                 // Zero.
                 x.c = [ x.e = 0 ];
             }
-
-            id = 0;
         }
 
 
@@ -363,7 +351,6 @@
          *   ROUNDING_MODE   {number}           0 to 8
          *   EXPONENTIAL_AT  {number|number[]}  -MAX to MAX  or  [-MAX to 0, 0 to MAX]
          *   RANGE           {number|number[]}  -MAX to MAX (not zero)  or  [-MAX to -1, 1 to MAX]
-         *   ERRORS          {boolean}          true or false
          *   CRYPTO          {boolean}          true or false
          *   MODULO_MODE     {number}           0 to 9
          *   POW_PRECISION   {number}           0 to MAX
@@ -388,141 +375,134 @@
          * Return an object with the properties current values.
          */
         BigNumber.config = BigNumber.set = function (obj) {
-            var has, p, v;
+            var p, v;
 
             if ( obj != null ) {
 
                 if ( typeof obj == 'object' ) {
-                    has = function (s) {
-                        if ( obj.hasOwnProperty( p = s ) ) return ( v = obj[p] ) != null;
-                    };
 
                     // DECIMAL_PLACES {number} Integer, 0 to MAX inclusive.
-                    // 'config() DECIMAL_PLACES not an integer: {v}'
-                    // 'config() DECIMAL_PLACES out of range: {v}'
-                    if ( has('DECIMAL_PLACES') && isValidInt( v, 0, MAX, 2, p ) ) {
-                        DECIMAL_PLACES = v | 0;
+                    // '[BigNumber Error] DECIMAL_PLACES {not a primitive number|not an integer|out of range}: {v}'
+                    if ( obj.hasOwnProperty( p = 'DECIMAL_PLACES' ) ) {
+                        v = obj[p];
+                        intCheck( v, 0, MAX, p );
+                        DECIMAL_PLACES = v;
                     }
 
                     // ROUNDING_MODE {number} Integer, 0 to 8 inclusive.
-                    // 'config() ROUNDING_MODE not an integer: {v}'
-                    // 'config() ROUNDING_MODE out of range: {v}'
-                    if ( has('ROUNDING_MODE') && isValidInt( v, 0, 8, 2, p ) ) {
-                        ROUNDING_MODE = v | 0;
+                    // '[BigNumber Error] ROUNDING_MODE {not a primitive number|not an integer|out of range}: {v}'
+                    if ( obj.hasOwnProperty( p = 'ROUNDING_MODE' ) ) {
+                        v = obj[p];
+                        intCheck( v, 0, 8, p );
+                        ROUNDING_MODE = v;
                     }
 
                     // EXPONENTIAL_AT {number|number[]}
                     // Integer, -MAX to MAX inclusive or
                     // [integer -MAX to 0 inclusive, 0 to MAX inclusive].
-                    // 'config() EXPONENTIAL_AT not an integer: {v}'
-                    // 'config() EXPONENTIAL_AT out of range: {v}'
-                    if ( has('EXPONENTIAL_AT') ) {
-
+                    // '[BigNumber Error] EXPONENTIAL_AT {not a primitive number|not an integer|out of range}: {v}'
+                    if ( obj.hasOwnProperty( p = 'EXPONENTIAL_AT' ) ) {
+                        v = obj[p];
                         if ( isArray(v) ) {
-                            if ( isValidInt( v[0], -MAX, 0, 2, p ) &&
-                                 isValidInt( v[1], 0, MAX, 2, p ) ) {
-                                TO_EXP_NEG = v[0] | 0;
-                                TO_EXP_POS = v[1] | 0;
-                            }
-                        } else if ( isValidInt( v, -MAX, MAX, 2, p ) ) {
-                            TO_EXP_NEG = -( TO_EXP_POS = ( v < 0 ? -v : v ) | 0 );
+                            intCheck( v[0], -MAX, 0, p );
+                            intCheck( v[1], 0, MAX, p );
+                            TO_EXP_NEG = v[0];
+                            TO_EXP_POS = v[1];
+                        } else {
+                            intCheck( v, -MAX, MAX, p );
+                            TO_EXP_NEG = -( TO_EXP_POS = v < 0 ? -v : v );
                         }
                     }
 
                     // RANGE {number|number[]} Non-zero integer, -MAX to MAX inclusive or
                     // [integer -MAX to -1 inclusive, integer 1 to MAX inclusive].
-                    // 'config() RANGE not an integer: {v}'
-                    // 'config() RANGE cannot be zero: {v}'
-                    // 'config() RANGE out of range: {v}'
-                    if ( has('RANGE') ) {
-
+                    // '[BigNumber Error] RANGE {not a primitive number|not an integer|out of range|cannot be zero}: {v}'
+                    if ( obj.hasOwnProperty( p = 'RANGE' ) ) {
+                        v = obj[p];
                         if ( isArray(v) ) {
-                            if ( isValidInt( v[0], -MAX, -1, 2, p ) &&
-                              isValidInt( v[1], 1, MAX, 2, p ) ) {
-                                MIN_EXP = v[0] | 0;
-                                MAX_EXP = v[1] | 0;
+                            intCheck( v[0], -MAX, -1, p );
+                            intCheck( v[1], 1, MAX, p );
+                            MIN_EXP = v[0];
+                            MAX_EXP = v[1];
+                        } else {
+                            intCheck( v, -MAX, MAX, p );
+                            if (v) {
+                                MIN_EXP = -( MAX_EXP = v < 0 ? -v : v );
+                            } else {
+                                throw Error
+                                  ( bignumberError + p + ' cannot be zero: ' + v );
                             }
-                        } else if ( isValidInt( v, -MAX, MAX, 2, p ) ) {
-                            if ( v | 0 ) {
-                                MIN_EXP = -( MAX_EXP = ( v < 0 ? -v : v ) | 0 );
-                            } else if (ERRORS) {
-                                raise( 2, p + ' cannot be zero', v );
-                            }    
-                        }
-                    }
-
-                    // ERRORS {boolean} true or false.
-                    // 'config() ERRORS not true or false: {v}'
-                    if ( has('ERRORS') ) {
-
-                        if ( v === !!v ) {
-                            id = 0;
-                            ERRORS = v;
-                            isValidInt = v ? intValidatorWithErrors : intValidatorNoErrors;
-                        } else if (ERRORS) {
-                            raise( 2, p + notBool, v );
                         }
                     }
 
                     // CRYPTO {boolean} true or false.
-                    // 'config() CRYPTO not true or false: {v}'
-                    // 'config() crypto unavailable: {crypto}'
-                    if ( has('CRYPTO') ) {
-
+                    // '[BigNumber Error] CRYPTO not true or false: {v}'
+                    // '[BigNumber Error] crypto unavailable'
+                    if ( obj.hasOwnProperty( p = 'CRYPTO' ) ) {
+                        v = obj[p];
                         if ( v === !!v ) {
                             if (v) {
-                                v = typeof crypto == 'undefined';
-                                if ( !v && crypto &&
-                                  (crypto.getRandomValues || crypto.randomBytes)) {
-                                    CRYPTO = true;
-                                } else if (ERRORS) {
-                                    raise( 2, 'crypto unavailable', v ? void 0 : crypto );
+                                if ( typeof crypto != 'undefined' && crypto &&
+                                  (crypto.getRandomValues || crypto.randomBytes) ) {
+                                    CRYPTO = v;
                                 } else {
-                                    CRYPTO = false;
+                                    CRYPTO = !v;
+                                    throw Error
+                                      ( bignumberError + 'crypto unavailable' );
                                 }
                             } else {
-                                CRYPTO = false;
+                                CRYPTO = v;
                             }
-                        } else if (ERRORS) {
-                            raise( 2, p + notBool, v );
+                        } else {
+                            throw Error
+                              ( bignumberError + p + ' not true or false: ' + v );
                         }
                     }
 
                     // MODULO_MODE {number} Integer, 0 to 9 inclusive.
-                    // 'config() MODULO_MODE not an integer: {v}'
-                    // 'config() MODULO_MODE out of range: {v}'
-                    if ( has('MODULO_MODE') && isValidInt( v, 0, 9, 2, p ) ) {
-                        MODULO_MODE = v | 0;
+                    // '[BigNumber Error] MODULO_MODE {not a primitive number|not an integer|out of range}: {v}'
+                    if ( obj.hasOwnProperty( p = 'MODULO_MODE' ) ) {
+                        v = obj[p];
+                        intCheck( v, 0, 9, p );
+                        MODULO_MODE = v;
                     }
 
                     // POW_PRECISION {number} Integer, 0 to MAX inclusive.
-                    // 'config() POW_PRECISION not an integer: {v}'
-                    // 'config() POW_PRECISION out of range: {v}'
-                    if ( has('POW_PRECISION') && isValidInt( v, 0, MAX, 2, p ) ) {
-                        POW_PRECISION = v | 0;
+                    // '[BigNumber Error] POW_PRECISION {not a primitive number|not an integer|out of range}: {v}'
+                    if ( obj.hasOwnProperty( p = 'POW_PRECISION' ) ) {
+                        v = obj[p];
+                        intCheck( v, 0, MAX, p );
+                        POW_PRECISION = v;
                     }
 
                     // FORMAT {object}
-                    // 'config() FORMAT not an object: {v}'
-                    if ( has('FORMAT') ) {
+                    // '[BigNumber Error] FORMAT not an object: {v}'
+                    if ( obj.hasOwnProperty( p = 'FORMAT' ) ) {
+                        v = obj[p];
                         if ( typeof v == 'object' ) FORMAT = v;
-                        else if (ERRORS) raise( 2, p + ' not an object', v );
+                        else throw Error
+                          ( bignumberError + p + ' not an object: ' + v );
                     }
 
                     // ALPHABET {string}
-                    // 'config() ALPHABET invalid: {v}'
-                    if ( has('ALPHABET') ) {
+                    // '[BigNumber Error] ALPHABET invalid: {v}'
+                    if ( obj.hasOwnProperty( p = 'ALPHABET' ) ) {
+                        v = obj[p];
 
                         // Disallow if only one character, or contains '.' or a repeated character.
                         if ( typeof v == 'string' && !/^.$|\.|(.).*\1/.test(v) ) {
                             ALPHABET = v;
-                        } else if (ERRORS) {
-                            raise( 2, p + ' invalid', v );
+                        } else {
+                            throw Error
+                              ( bignumberError + p + ' invalid: ' + v );
                         }
                     }
 
-                } else if (ERRORS) {
-                    raise( 2, ' object expected', obj );
+                } else {
+
+                    // '[BigNumber Error] Object expected: {v}'
+                    throw Error
+                      ( bignumberError + 'Object expected: ' + obj );
                 }
             }
 
@@ -531,7 +511,6 @@
                 ROUNDING_MODE: ROUNDING_MODE,
                 EXPONENTIAL_AT: [ TO_EXP_NEG, TO_EXP_POS ],
                 RANGE: [ MIN_EXP, MAX_EXP ],
-                ERRORS: ERRORS,
                 CRYPTO: CRYPTO,
                 MODULO_MODE: MODULO_MODE,
                 POW_PRECISION: POW_PRECISION,
@@ -564,9 +543,8 @@
          *
          * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
          *
-         * 'random() decimal places not an integer: {dp}'
-         * 'random() decimal places out of range: {dp}'
-         * 'random() crypto unavailable: {crypto}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp}'
+         * '[BigNumber Error] crypto unavailable'
          */
         BigNumber.random = (function () {
             var pow2_53 = 0x20000000000000;
@@ -586,7 +564,9 @@
                     c = [],
                     rand = new BigNumber(ONE);
 
-                dp = dp == null || !isValidInt( dp, 0, MAX, 14 ) ? DECIMAL_PLACES : dp | 0;
+                if ( dp == null ) dp = DECIMAL_PLACES;
+                else intCheck( dp, 0, MAX );
+
                 k = mathceil( dp / LOG_BASE );
 
                 if (CRYPTO) {
@@ -652,7 +632,8 @@
                         i = k / 7;
                     } else {
                         CRYPTO = false;
-                        if (ERRORS) raise( 14, 'crypto unavailable', crypto );
+                        throw Error
+                          ( bignumberError + 'crypto unavailable' );
                     }
                 }
 
@@ -1116,24 +1097,25 @@
          * Return a string representing the value of BigNumber n in fixed-point or exponential
          * notation rounded to the specified decimal places or significant digits.
          *
-         * n is a BigNumber.
-         * i is the index of the last digit required (i.e. the digit that may be rounded up).
-         * rm is the rounding mode.
-         * caller is caller id: toExponential 19, toFixed 20, toFormat 21, toPrecision 24.
+         * n: a BigNumber.
+         * i: the index of the last digit required (i.e. the digit that may be rounded up).
+         * rm: the rounding mode.
+         * id: 1 (toExponential) or 2 (toPrecision).
          */
-        function format( n, i, rm, caller ) {
+        function format( n, i, rm, id ) {
             var c0, e, ne, len, str;
 
-            rm = rm != null && isValidInt( rm, 0, 8, caller, roundingMode )
-              ? rm | 0 : ROUNDING_MODE;
+            if ( rm == null ) rm = ROUNDING_MODE;
+            else intCheck( rm, 0, 8 );
 
             if ( !n.c ) return n.toString();
+
             c0 = n.c[0];
             ne = n.e;
 
             if ( i == null ) {
                 str = coeffToString( n.c );
-                str = caller == 19 || caller == 24 && ne <= TO_EXP_NEG
+                str = id == 1 || id == 2 && ne <= TO_EXP_NEG
                   ? toExponential( str, ne )
                   : toFixedPoint( str, ne, '0' );
             } else {
@@ -1150,7 +1132,7 @@
                 // part of the value in fixed-point notation.
 
                 // Exponential notation.
-                if ( caller == 19 || caller == 24 && ( i <= e || e <= TO_EXP_NEG ) ) {
+                if ( id == 1 || id == 2 && ( i <= e || e <= TO_EXP_NEG ) ) {
 
                     // Append zeros?
                     for ( ; len < i; str += '0', len++ );
@@ -1203,20 +1185,6 @@
 
 
         /*
-         * Return true if n is an integer in range, otherwise throw.
-         * Use for argument validation when ERRORS is true.
-         */
-        function intValidatorWithErrors( n, min, max, caller, name ) {
-            if ( n < min || n > max || n != truncate(n) ) {
-                raise( caller, ( name || 'decimal places' ) +
-                  ( n < min || n > max ? ' out of range' : ' not an integer' ), n );
-            }
-
-            return true;
-        }
-
-
-        /*
          * Strip trailing zeros, calculate base 10 exponent and check against MIN_EXP and MAX_EXP.
          * Called by minus, plus and times.
          */
@@ -1265,6 +1233,7 @@
                 // No exception on ±Infinity or NaN.
                 if ( isInfinityOrNaN.test(s) ) {
                     x.s = isNaN(s) ? null : s < 0 ? -1 : 1;
+                    x.c = x.e = null;
                 } else {
                     if ( !isNum ) {
 
@@ -1284,54 +1253,13 @@
                         if ( str != s ) return new BigNumber( s, base );
                     }
 
-                    // 'new BigNumber() not a number: {n}'
-                    // 'new BigNumber() not a base {b} number: {n}'
-                    if (ERRORS) raise( id, 'not a' + ( b ? ' base ' + b : '' ) + ' number', str );
-                    x.s = null;
+                    // '[BigNumber Error] Not a number: {n}'
+                    // '[BigNumber Error] Not a base {b} number: {n}'
+                    throw Error
+                      ( bignumberError + 'Not a' + ( b ? ' base ' + b : '' ) + ' number: ' + str );
                 }
-
-                x.c = x.e = null;
-                id = 0;
             }
         })();
-
-
-        // Throw a BigNumber Error.
-        function raise( caller, msg, val ) {
-            var error = new Error( [
-                'new BigNumber',     // 0
-                'cmp',               // 1
-                'config',            // 2
-                'div',               // 3
-                'divToInt',          // 4
-                'eq',                // 5
-                'gt',                // 6
-                'gte',               // 7
-                'lt',                // 8
-                'lte',               // 9
-                'minus',             // 10
-                'mod',               // 11
-                'plus',              // 12
-                'precision',         // 13
-                'random',            // 14
-                'round',             // 15
-                'shift',             // 16
-                'times',             // 17
-                'toDigits',          // 18
-                'toExponential',     // 19
-                'toFixed',           // 20
-                'toFormat',          // 21
-                'toFraction',        // 22
-                'pow',               // 23
-                'toPrecision',       // 24
-                'toString',          // 25
-                'BigNumber'          // 26
-            ][caller] + '() ' + msg + ': ' + val );
-
-            error.name = 'BigNumber Error';
-            id = 0;
-            throw error;
-        }
 
 
         /*
@@ -1526,7 +1454,6 @@
          * or null if the value of either is NaN.
          */
         P.comparedTo = P.cmp = function ( y, b ) {
-            id = 1;
             return compare( this, new BigNumber( y, b ) );
         };
 
@@ -1571,7 +1498,6 @@
          * BigNumber(y, b), rounded according to DECIMAL_PLACES and ROUNDING_MODE.
          */
         P.dividedBy = P.div = function ( y, b ) {
-            id = 3;
             return div( this, new BigNumber( y, b ), DECIMAL_PLACES, ROUNDING_MODE );
         };
 
@@ -1581,7 +1507,6 @@
          * BigNumber by the value of BigNumber(y, b).
          */
         P.dividedToIntegerBy = P.divToInt = function ( y, b ) {
-            id = 4;
             return div( this, new BigNumber( y, b ), 0, 1 );
         };
 
@@ -1591,7 +1516,6 @@
          * otherwise returns false.
          */
         P.equals = P.eq = function ( y, b ) {
-            id = 5;
             return compare( this, new BigNumber( y, b ) ) === 0;
         };
 
@@ -1610,7 +1534,6 @@
          * otherwise returns false.
          */
         P.greaterThan = P.gt = function ( y, b ) {
-            id = 6;
             return compare( this, new BigNumber( y, b ) ) > 0;
         };
 
@@ -1620,7 +1543,6 @@
          * BigNumber(y, b), otherwise returns false.
          */
         P.greaterThanOrEqualTo = P.gte = function ( y, b ) {
-            id = 7;
             return ( b = compare( this, new BigNumber( y, b ) ) ) === 1 || b === 0;
 
         };
@@ -1671,7 +1593,6 @@
          * otherwise returns false.
          */
         P.lessThan = P.lt = function ( y, b ) {
-            id = 8;
             return compare( this, new BigNumber( y, b ) ) < 0;
         };
 
@@ -1681,7 +1602,6 @@
          * BigNumber(y, b), otherwise returns false.
          */
         P.lessThanOrEqualTo = P.lte = function ( y, b ) {
-            id = 9;
             return ( b = compare( this, new BigNumber( y, b ) ) ) === -1 || b === 0;
         };
 
@@ -1711,7 +1631,6 @@
                 x = this,
                 a = x.s;
 
-            id = 10;
             y = new BigNumber( y, b );
             b = y.s;
 
@@ -1845,7 +1764,6 @@
             var q, s,
                 x = this;
 
-            id = 11;
             y = new BigNumber( y, b );
 
             // Return NaN if x is Infinity or NaN, or y is NaN or zero.
@@ -1910,7 +1828,6 @@
                 x = this,
                 a = x.s;
 
-            id = 12;
             y = new BigNumber( y, b );
             b = y.s;
 
@@ -1990,10 +1907,10 @@
                 x = this,
                 c = x.c;
 
-            // 'precision() argument not true or false: {z}'
+            // '[BigNumber Error] Argument not true or false: {z}'
             if ( z != null && z !== !!z ) {
-                if (ERRORS) raise( 13, 'argument' + notBool, z );
-                if ( z != !!z ) z = null;
+                throw Error
+                  ( bignumberError + 'Argument not true or false: ' + z );
             }
 
             if ( !c ) return null;
@@ -2023,20 +1940,14 @@
          * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
          * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
          *
-         * 'round() decimal places out of range: {dp}'
-         * 'round() decimal places not an integer: {dp}'
-         * 'round() rounding mode not an integer: {rm}'
-         * 'round() rounding mode out of range: {rm}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
          */
         P.round = function ( dp, rm ) {
             var n = new BigNumber(this);
-
-            if ( dp == null || isValidInt( dp, 0, MAX, 15 ) ) {
-                round( n, ~~dp + this.e + 1, rm == null ||
-                  !isValidInt( rm, 0, 8, 15, roundingMode ) ? ROUNDING_MODE : rm | 0 );
-            }
-
-            return n;
+            if ( dp != null ) intCheck( dp, 0, MAX );
+            if ( rm == null ) rm = ROUNDING_MODE;
+            else intCheck( rm, 0, 8 );
+            return round( n, ~~dp + n.e + 1, rm );
         };
 
 
@@ -2046,21 +1957,11 @@
          *
          * k {number} Integer, -MAX_SAFE_INTEGER to MAX_SAFE_INTEGER inclusive.
          *
-         * If k is out of range and ERRORS is false, the result will be ±0 if k < 0, or ±Infinity
-         * otherwise.
-         *
-         * 'shift() argument not an integer: {k}'
-         * 'shift() argument out of range: {k}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {k}'
          */
         P.shift = function (k) {
-            var n = this;
-            return isValidInt( k, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER, 16, 'argument' )
-
-              // k < 1e+21, or truncate(k) will produce exponential notation.
-              ? n.times( '1e' + truncate(k) )
-              : new BigNumber( n.c && n.c[0] && ( k < -MAX_SAFE_INTEGER || k > MAX_SAFE_INTEGER )
-                ? n.s * ( k < 0 ? 0 : 1 / 0 )
-                : n );
+            intCheck( k, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER );
+            return this.times( '1e' + k );
         };
 
 
@@ -2200,7 +2101,7 @@
                 base, sqrtBase,
                 x = this,
                 xc = x.c,
-                yc = ( id = 17, y = new BigNumber( y, b ) ).c;
+                yc = ( y = new BigNumber( y, b ) ).c;
 
             // Either NaN, ±Infinity or ±0?
             if ( !xc || !yc || !xc[0] || !yc[0] ) {
@@ -2270,19 +2171,16 @@
          * Return a new BigNumber whose value is the value of this BigNumber rounded to a maximum of
          * sd significant digits using rounding mode rm, or ROUNDING_MODE if rm is omitted.
          *
-         * [sd] {number} Significant digits. Integer, 1 to MAX inclusive.
+         * sd {number} Significant digits. Integer, 1 to MAX inclusive.
          * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
          *
-         * 'toDigits() precision out of range: {sd}'
-         * 'toDigits() precision not an integer: {sd}'
-         * 'toDigits() rounding mode not an integer: {rm}'
-         * 'toDigits() rounding mode out of range: {rm}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {sd|rm}'
          */
         P.toDigits = function ( sd, rm ) {
-            var n = new BigNumber(this);
-            sd = sd == null || !isValidInt( sd, 1, MAX, 18, 'precision' ) ? null : sd | 0;
-            rm = rm == null || !isValidInt( rm, 0, 8, 18, roundingMode ) ? ROUNDING_MODE : rm | 0;
-            return sd ? round( n, sd, rm ) : n;
+            intCheck( sd, 1, MAX );
+            if ( rm == null ) rm = ROUNDING_MODE;
+            else intCheck( rm, 0, 8 );
+            return round( new BigNumber(this), sd, rm );
         };
 
 
@@ -2293,14 +2191,14 @@
          * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
          * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
          *
-         * 'toExponential() decimal places not an integer: {dp}'
-         * 'toExponential() decimal places out of range: {dp}'
-         * 'toExponential() rounding mode not an integer: {rm}'
-         * 'toExponential() rounding mode out of range: {rm}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
          */
         P.toExponential = function ( dp, rm ) {
-            return format( this,
-              dp != null && isValidInt( dp, 0, MAX, 19 ) ? ~~dp + 1 : null, rm, 19 );
+            if ( dp != null ) {
+                intCheck( dp, 0, MAX );
+                dp++;
+            }
+            return format( this, dp, rm, 1 );
         };
 
 
@@ -2314,21 +2212,21 @@
          * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
          * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
          *
-         * 'toFixed() decimal places not an integer: {dp}'
-         * 'toFixed() decimal places out of range: {dp}'
-         * 'toFixed() rounding mode not an integer: {rm}'
-         * 'toFixed() rounding mode out of range: {rm}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
          */
         P.toFixed = function ( dp, rm ) {
-            return format( this, dp != null && isValidInt( dp, 0, MAX, 20 )
-              ? ~~dp + this.e + 1 : null, rm, 20 );
+            if ( dp != null ) {
+                intCheck( dp, 0, MAX );
+                dp = dp + this.e + 1;
+            }
+            return format( this, dp, rm );
         };
 
 
         /*
          * Return a string representing the value of this BigNumber in fixed-point notation rounded
          * using rm or ROUNDING_MODE to dp decimal places, and formatted according to the properties
-         * of the FORMAT object (see BigNumber.config).
+         * of the FORMAT object (see BigNumber.set).
          *
          * FORMAT = {
          *      decimalSeparator : '.',
@@ -2342,14 +2240,10 @@
          * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
          * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
          *
-         * 'toFormat() decimal places not an integer: {dp}'
-         * 'toFormat() decimal places out of range: {dp}'
-         * 'toFormat() rounding mode not an integer: {rm}'
-         * 'toFormat() rounding mode out of range: {rm}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
          */
         P.toFormat = function ( dp, rm ) {
-            var str = format( this, dp != null && isValidInt( dp, 0, MAX, 21 )
-              ? ~~dp + this.e + 1 : null, rm, 21 );
+            var str = this.toFixed( dp, rm );
 
             if ( this.c ) {
                 var i,
@@ -2398,37 +2292,28 @@
          *
          * [md] {number|string|BigNumber} Integer >= 1 and < Infinity. The maximum denominator.
          *
-         * 'toFraction() max denominator not an integer: {md}'
-         * 'toFraction() max denominator out of range: {md}'
+         * '[BigNumber Error] Argument {not an integer|out of range} : {md}'
          */
         P.toFraction = function (md) {
-            var arr, d0, d2, e, exp, n, n0, q, s,
-                k = ERRORS,
+            var arr, d, d0, d1, d2, e, exp, n, n0, n1, q, s,
                 x = this,
-                xc = x.c,
-                d = new BigNumber(ONE),
-                n1 = d0 = new BigNumber(ONE),
-                d1 = n0 = new BigNumber(ONE);
+                xc = x.c;
 
             if ( md != null ) {
-                ERRORS = false;
                 n = new BigNumber(md);
-                ERRORS = k;
 
-                if ( !( k = n.isInt() ) || n.lt(ONE) ) {
-
-                    if (ERRORS) {
-                        raise( 22,
-                          'max denominator ' + ( k ? 'out of range' : 'not an integer' ), md );
-                    }
-
-                    // ERRORS is false:
-                    // If md is a finite non-integer >= 1, round it to an integer and use it.
-                    md = !k && n.c && round( n, n.e + 1, 1 ).gte(ONE) ? n : null;
+                if ( !n.isInt() || n.lt(ONE) ) {
+                    throw Error
+                      ( bignumberError + 'Argument ' +
+                        ( n.isInt() ? 'out of range: ' : 'not an integer: ' ) + md );
                 }
             }
 
             if ( !xc ) return x.toString();
+
+            d = new BigNumber(ONE);
+            n1 = d0 = new BigNumber(ONE);
+            d1 = n0 = new BigNumber(ONE);
             s = coeffToString(xc);
 
             // Determine initial denominator.
@@ -2494,28 +2379,16 @@
          * n {number} Integer, -MAX_SAFE_INTEGER to MAX_SAFE_INTEGER inclusive.
          * [m] {number|string|BigNumber} The modulus.
          *
-         * 'pow() exponent not an integer: {n}'
-         * 'pow() exponent out of range: {n}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {n}'
          *
          * Performs 54 loop iterations for n of 9007199254740991.
          */
         P.toPower = P.pow = function ( n, m ) {
-            var k, y, z,
-                i = mathfloor( n < 0 ? -n : +n ),
+            var i, k, y, z,
                 x = this;
 
-            if ( m != null ) {
-                id = 23;
-                m = new BigNumber(m);
-            }
-
-            // Pass ±Infinity to Math.pow if exponent is out of range.
-            if ( !isValidInt( n, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER, 23, 'exponent' ) &&
-              ( !isFinite(n) || i > MAX_SAFE_INTEGER && ( n /= 0 ) ||
-                parseFloat(n) != n && !( n = NaN ) ) || n == 0 ) {
-                k = Math.pow( +x, n );
-                return new BigNumber( m ? k % m : k );
-            }
+            intCheck( n, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER );
+            if ( m != null ) m = new BigNumber(m);
 
             if (m) {
                 if ( n > 1 && x.gt(ONE) && x.isInt() && m.gt(ONE) && m.isInt() ) {
@@ -2531,13 +2404,13 @@
                 // Truncating each coefficient array to a length of k after each multiplication
                 // equates to truncating significant digits to POW_PRECISION + [28, 41],
                 // i.e. there will be a minimum of 28 guard digits retained.
-                // (Using + 1.5 would give [9, 21] guard digits.)
+                //k = mathceil( POW_PRECISION / LOG_BASE + 1.5 );   // gives [9, 21] guard digits.
                 k = mathceil( POW_PRECISION / LOG_BASE + 2 );
             }
 
             y = new BigNumber(ONE);
 
-            for ( ; ; ) {
+            for ( i = mathfloor( n < 0 ? -n : n ); ; ) {
                 if ( i % 2 ) {
                     y = y.times(x);
                     if ( !y.c ) break;
@@ -2574,14 +2447,11 @@
          * [sd] {number} Significant digits. Integer, 1 to MAX inclusive.
          * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
          *
-         * 'toPrecision() precision not an integer: {sd}'
-         * 'toPrecision() precision out of range: {sd}'
-         * 'toPrecision() rounding mode not an integer: {rm}'
-         * 'toPrecision() rounding mode out of range: {rm}'
+         * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {sd|rm}'
          */
         P.toPrecision = function ( sd, rm ) {
-            return format( this, sd != null && isValidInt( sd, 1, MAX, 24, 'precision' )
-              ? sd | 0 : null, rm, 24 );
+            if ( sd != null ) intCheck( sd, 1, MAX );
+            return format( this, sd, rm, 2 );
         };
 
 
@@ -2594,8 +2464,7 @@
          *
          * [b] {number} Integer, 2 to ALPHABET.length inclusive.
          *
-         * 'toString() base not an integer: {b}'
-         * 'toString() base out of range: {b}'
+         * '[BigNumber Error] Base {not a primitive number|not an integer|out of range}: {b}'
          */
         P.toString = function (b) {
             var str,
@@ -2615,12 +2484,13 @@
             } else {
                 str = coeffToString( n.c );
 
-                if ( b == null || !isValidInt( b, 2, ALPHABET.length, 25, 'base' ) ) {
+                if ( b == null ) {
                     str = e <= TO_EXP_NEG || e >= TO_EXP_POS
                       ? toExponential( str, e )
                       : toFixedPoint( str, e, '0' );
                 } else {
-                    str = convertBase( toFixedPoint( str, e, '0' ), 10, b | 0, s, true );
+                    intCheck( b, 2, ALPHABET.length, 'Base' );
+                    str = convertBase( toFixedPoint( str, e, '0' ), 10, b, s, true );
                 }
 
                 if ( s < 0 && n.c[0] ) str = '-' + str;
@@ -2662,7 +2532,7 @@
 
         P.isBigNumber = true;
 
-        if ( config != null ) BigNumber.config(config);
+        if ( configObject != null ) BigNumber.set(configObject);
 
         return BigNumber;
     }
@@ -2739,12 +2609,15 @@
 
 
     /*
-     * Return true if n is a valid number in range, otherwise false.
-     * Use for argument validation when ERRORS is false.
-     * Note: parseInt('1e+1') == 1 but parseFloat('1e+1') == 10.
+     * Check that n is a primitive number, an integer, and in range, otherwise throw.
      */
-    function intValidatorNoErrors( n, min, max ) {
-        return ( n = truncate(n) ) >= min && n <= max;
+    function intCheck( n, min, max, name ) {
+        if ( n < min || n > max || n !== ( n < 0 ? mathceil(n) : mathfloor(n) ) ) {
+            throw Error
+              ( bignumberError + ( name || 'Argument' ) + ( typeof n == 'number'
+                  ? n < min || n > max ? ' out of range: ' : ' not an integer: '
+                  : ' not a primitive number: ' ) + n );
+        }
     }
 
 
@@ -2786,12 +2659,6 @@
     }
 
 
-    function truncate(n) {
-        n = parseFloat(n);
-        return n < 0 ? mathceil(n) : mathfloor(n);
-    }
-
-
     // EXPORT
 
 
@@ -2809,7 +2676,10 @@
 
     // Browser.
     } else {
-        if ( !globalObj ) globalObj = typeof self != 'undefined' ? self : Function('return this')();
-        globalObj.BigNumber = BigNumber;
+        if ( !globalObject ) {
+            globalObject = typeof self != 'undefined' ? self : Function('return this')();
+        }
+        
+        globalObject.BigNumber = BigNumber;
     }
 })(this);

@@ -31,8 +31,7 @@ var count = (function sqrt(BigNumber) {
         }
     }
 
-    function T(root, value, dp, rm) {
-        BigNumber.config({ DECIMAL_PLACES: dp, ROUNDING_MODE: rm });
+    var T = function T(root, value) {
         assert(root, new BigNumber(value).sqrt().toString())
     }
 
@@ -45,7 +44,6 @@ var count = (function sqrt(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
-        ERRORS: true,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9
     });
@@ -62,15 +60,6 @@ var count = (function sqrt(BigNumber) {
 
     T('Infinity', Infinity);
     T('NaN', -Infinity);
-
-    BigNumber.config({ERRORS: false});
-
-    T('NaN', undefined);
-    T('NaN', null);
-    T('NaN', []);
-
-    BigNumber.config({ERRORS: true});
-
     T('NaN', -1);
     T('NaN', -35.999);
     T('NaN', '-0.00000000000001');
@@ -81,6 +70,11 @@ var count = (function sqrt(BigNumber) {
         j = Math.pow(j, 2);
         T(Math.sqrt(j).toString(), j.toString());
     }
+
+    T = function T(root, value, dp, rm) {
+        BigNumber.config({ DECIMAL_PLACES: dp, ROUNDING_MODE: rm });
+        assert(root, new BigNumber(value).sqrt().toString())
+    };
 
     // Initial rounding tests.
     T('11', '101', 0, 0);             // 10.04...

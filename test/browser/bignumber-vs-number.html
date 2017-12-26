@@ -19,12 +19,10 @@
     .size {width: 80%;}
     label {width: 10em; color: rgb(0, 0, 0); margin-left: 0.6em;}
     label {display: inline-block;}
-    span, .exLabel, pre {font-size: 0.9em;}
+    span, pre {font-size: 0.9em;}
 	pre {display: inline;}
-    .exLabel {display: inline; margin-left: 0; width: 2em;}
     .arg, .result, .dp {width: 5em; margin-right: 0.8em; margin-top: 1.2em;}
     .dp {width: auto;}
-    .exInput {margin-left: 1em;}
     .code {width: 60em; margin: 0 auto; font-family: Courier New, Courier,
         monospace; font-size: 0.8em;}
   </style>
@@ -116,11 +114,6 @@
       <div class='dpDiv'>
       <label class='dp' id='dpLabel' for='dp'>Decimal places:</label>
       <input type='text' id='dp' name='dp' size=20 />
-      <pre>             BigNumber ERRORS:</pre>
-      <input class='exInput' type='radio' id='exTrue' name=3/>
-      <label class='exLabel' for='exTrue'>true</label>
-      <input class='exInput' type='radio' id='exFalse' name=3/>
-      <label class='exLabel' for='exFalse'>false</label>
       </div>
       <label class='arg' for='input'>Input:</label>
       <input class='size' type='text' id='input' name='input' />
@@ -148,8 +141,6 @@
         $bignumber = $('bignumber'),
         $number = $('number'),
         $roundings = $('roundings'),
-        $exceptionsTrue = $('exTrue'),
-        $exceptionsFalse = $('exFalse'),
         $code = $('code'),
         $inputs = d.getElementsByTagName('input');
 
@@ -158,10 +149,7 @@
             dp = ($dp.value = $dp.value.replace(/\s+/g, '')),
             dpEmpty = dp === '',
             input = ($input.value = $input.value.replace(/\s+/g, '')),
-            exceptions = $exceptionsTrue.checked,
-            code = 'BigNumber.config({ERRORS: ' + exceptions;
-
-        BigNumber.config({ERRORS: exceptions});
+            code = 'BigNumber.config({';
 
         if (input) {
             for (i = 0; i < 15; i++) {
@@ -188,15 +176,16 @@
 
                 if (isSqrt && !dpEmpty) {
                     try {
-                        BigNumber.config(dp);
+                        BigNumber.config({DECIMAL_PLACES: dp, ROUNDING_MODE: mode});
                     } catch(e) {
                         $bignumber.value = e;
                         return;
                     }
-                    code += ', DECIMAL_PLACES: ' + dp;
-                }
-                BigNumber.config({ROUNDING_MODE: mode});
-                code += ', ROUNDING_MODE: ' + mode;
+                    code += 'DECIMAL_PLACES: ' + dp + ', ROUNDING_MODE: ' + mode;
+                } else {
+                    BigNumber.config({ROUNDING_MODE: mode});
+                    code += 'ROUNDING_MODE: ' + mode;
+                }    
             }
 
             code += "})<br>BigNumber('" + input + "')." + method + "(";
@@ -253,7 +242,6 @@
         ROUNDING_MODE: 4,
         EXPONENTIAL_AT: 1E9,
         RANGE: 1E9,
-        ERRORS: false,
         CRYPTO: false,
         POW_PRECISION: 100,
         MODULO_MODE: 1
@@ -289,13 +277,11 @@
         };
     }
 
-    $exceptionsTrue.onclick = $exceptionsFalse.onclick = round;
-
     $input.onfocus = $dp.onfocus = function () {
         lastFocus = this;
     };
 
-    $inputs[1].checked = $inputs[10].checked = $exceptionsTrue.checked = true;
+    $inputs[1].checked = $inputs[10].checked = true;
 
     document.onkeypress = function (e) {
         if ((e || window.event).keyCode == 13) {

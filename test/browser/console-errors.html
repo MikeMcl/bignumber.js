@@ -15,160 +15,185 @@
         ROUNDING_MODE: 4,
         EXPONENTIAL_AT: [-7, 21],
         RANGE: 1E9,
-        ERRORS: true,
         POW_PRECISION: 100
     });
 
-    // BigNumber constructor
+    console.log('BigNumber constructor');
 
     try {
-        n = new BigNumber(45324542.452466456546456);
+         n = new BigNumber(123, '5.6');
     } catch (e) {
-        // 'new BigNumber() number type has more than 15 significant digits: {n}'
-        console.error(e + '');
-    }
-    try {
-        n = new BigNumber(333, 2);
-    } catch (e) {
-        // 'new BigNumber() not a base {b} number: {str}'
         console.error(e + '');
     }
     try {
          n = new BigNumber(123, 5.6);
     } catch (e) {
-        // 'new BigNumber() base not an integer: {b}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(123, 65);
     } catch (e) {
-        // 'new BigNumber() base out of range: {b}'
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(333, 2);
+    } catch (e) {
         console.error(e + '');
     }
     try {
         n = new BigNumber('ugh');
     } catch (e) {
-        // 'new BigNumber() not a number: {n}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(1010101110011011, 2);
     } catch (e) {
-        // 'new BigNumber() number type has more than 15 significant digits: {n}'
         console.error(e + '');
     }
 
-    // config
+    console.log('config');
 
+    try {
+        BigNumber.config({ DECIMAL_PLACES: '10.3' });
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         BigNumber.config({ DECIMAL_PLACES: 10.3 });
     } catch (e) {
-        // 'config() DECIMAL_PLACES not an integer: {v}'
         console.error(e + '');
     }
     try {
         BigNumber.config({ DECIMAL_PLACES: -1 });
     } catch (e) {
-        // 'config() DECIMAL_PLACES out of range: {v}'
+        console.error(e + '');
+    }
+    try {
+        BigNumber.config({ ROUNDING_MODE: '4.3' });
+    } catch (e) {
         console.error(e + '');
     }
     try {
         BigNumber.config({ ROUNDING_MODE: 4.3 });
     } catch (e) {
-        // 'config() ROUNDING_MODE not an integer: {v}'
         console.error(e + '');
     }
     try {
         BigNumber.config({ ROUNDING_MODE: 10 });
     } catch (e) {
-        // 'config() ROUNDING_MODE out of range: {v}'
+        console.error(e + '');
+    }
+    try {
+        BigNumber.config({ EXPONENTIAL_AT: '10.3' });
+    } catch (e) {
         console.error(e + '');
     }
     try {
         BigNumber.config({ EXPONENTIAL_AT: 10.3 });
     } catch (e) {
-        // 'config() EXPONENTIAL_AT not an integer: {v}'
         console.error(e + '');
     }
     try {
         BigNumber.config({ EXPONENTIAL_AT: 1e99 });
     } catch (e) {
-        // 'config() EXPONENTIAL_AT out of range: {v}'
+        console.error(e + '');
+    }
+    try {
+        BigNumber.config({ RANGE: '1.999' });
+    } catch (e) {
         console.error(e + '');
     }
     try {
         BigNumber.config({ RANGE: 1.999 });
     } catch (e) {
-        // 'config() RANGE not an integer: {v}'
         console.error(e + '');
     }
     try {
         BigNumber.config({ RANGE: 0 });
     } catch (e) {
-        // 'config() RANGE cannot be zero: {v}'
         console.error(e + '');
     }
     try {
         BigNumber.config({ RANGE: 1e99 });
     } catch (e) {
-        // 'config() RANGE out of range: {v}'
-        console.error(e + '');
-    }
-    try {
-        BigNumber.config({ ERRORS: 'ugh' });
-    } catch (e) {
-        // 'config() ERRORS not a boolean or binary digit: {v}'
         console.error(e + '');
     }
     try {
         BigNumber.config({ FORMAT: 1 });
     } catch (e) {
-        // 'config() FORMAT not an object: {v}'
         console.error(e + '');
     }
     try {
         BigNumber.config({ CRYPTO: 'ugh' });
     } catch (e) {
-        // 'config() CRYPTO not a boolean or binary digit: {v}'
         console.error(e + '');
     }
     try {
-        BigNumber.config({ MODULO_MODE: 6.6  });
+        BigNumber.config({ MODULO_MODE: '6.6' });
     } catch (e) {
-        // 'config() MODULO_MODE not an integer: {v}'
         console.error(e + '');
     }
     try {
-        BigNumber.config({ MODULO_MODE: 1e99  });
+        BigNumber.config({ MODULO_MODE: 6.6 });
     } catch (e) {
-        // 'config() MODULO_MODE out of range: {v}'
+        console.error(e + '');
+    }
+    try {
+        BigNumber.config({ MODULO_MODE: 1e99 });
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        BigNumber.config({ POW_PRECISION: '1.1' });
+    } catch (e) {
         console.error(e + '');
     }
     try {
         BigNumber.config({ POW_PRECISION: 1.1  });
     } catch (e) {
-        // 'config() POW_PRECISION not an integer: {v}'
         console.error(e + '');
     }
     try {
         BigNumber.config({ POW_PRECISION: -1  });
     } catch (e) {
-        // 'config() POW_PRECISION out of range: {v}'
+        console.error(e + '');
+    }
+    try {
+        BigNumber.config({ ALPHABET: 'a'  });
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        BigNumber.config({ ALPHABET: 'abc.d'  });
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        BigNumber.config({ ALPHABET: 'abcdb'  });
+    } catch (e) {
         console.error(e + '');
     }
 
-    // random
+    console.log('random');
 
+    try {
+        n = BigNumber.random('10.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = BigNumber.random(10.3);
     } catch (e) {
-        // 'random() decimal places not an integer: {dp}'
         console.error(e + '');
     }
     try {
         n = BigNumber.random(-1);
     } catch (e) {
-        // 'random() decimal places out of range: {dp}'
         console.error(e + '');
     }
     try {
@@ -176,243 +201,284 @@
         BigNumber.config({ CRYPTO: true });
         n = BigNumber.random();
     } catch (e) {
-        //'random() crypto unavailable: {crypto}'
         console.error(e + '');
     }
 
+    console.log('pow');
 
-    // pow
-
+    try {
+        n = new BigNumber(2).pow('10.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = new BigNumber(2).pow(10.3);
     } catch (e) {
-        // 'pow() exponent not an integer: {n}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).pow(Infinity);
     } catch (e) {
-        // 'pow() exponent out of range: {n}'
         console.error(e + '');
     }
 
-    // round
+    console.log('round');
 
+    try {
+        n = new BigNumber(2).round('300.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = new BigNumber(2).round(300.3);
     } catch (e) {
-        // 'round() decimal places not an integer: {dp}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).round(1e99);
     } catch (e) {
-        // 'round() decimal places out of range: {dp}'
+        console.error(e + '');
+    }
+    try {
+       n = new BigNumber(2).round(2, '3.3');
+    } catch (e) {
         console.error(e + '');
     }
     try {
        n = new BigNumber(2).round(2, 3.3);
     } catch (e) {
-        // 'round() rounding mode not an integer: {rm}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).round(3, 9);
     } catch (e) {
-        // 'round() rounding mode out of range: {rm}'
         console.error(e + '');
     }
 
-    // toDigits
+    console.log('toDigits');
 
+    try {
+        n = new BigNumber(2).toDigits('300.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = new BigNumber(2).toDigits(300.3);
     } catch (e) {
-        // 'toDigits() precision not an integer: {sd}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toDigits(1e99);
     } catch (e) {
-        // 'toDigits() precision out of range: {sd}'
+        console.error(e + '');
+    }
+    try {
+       n = new BigNumber(2).toDigits(2, '3.3');
+    } catch (e) {
         console.error(e + '');
     }
     try {
        n = new BigNumber(2).toDigits(2, 3.3);
     } catch (e) {
-        // 'toDigits() rounding mode not an integer: {rm}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toDigits(3, 9);
     } catch (e) {
-        // 'toDigits() rounding mode out of range: {rm}'
         console.error(e + '');
     }
 
-    // shift
+    console.log('shift');
 
+    try {
+        n = new BigNumber(2).shift('300.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = new BigNumber(2).shift(300.3);
     } catch (e) {
-        // 'shift() argument not an integer: {sd}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).shift(1e99);
     } catch (e) {
-        // 'shift() argument out of range: {sd}'
         console.error(e + '');
     }
 
-    // toExponential
+    console.log('toExponential');
 
+    try {
+        n = new BigNumber(2).toExponential('300.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = new BigNumber(2).toExponential(300.3);
     } catch (e) {
-       // 'toExponential() decimal places not an integer: {dp}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toExponential(1e99);
     } catch (e) {
-        // 'toExponential() decimal places out of range: {dp}'
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(2).toExponential(3, '3.6');
+    } catch (e) {
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toExponential(3, 3.6);
     } catch (e) {
-        // 'toExponential() rounding mode not an integer: {v}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toExponential(2, 1e99);
     } catch (e) {
-        // 'toExponential() rounding mode out of range: {v}'
         console.error(e + '');
     }
 
-    // toFixed
+    console.log('toFixed');
 
+    try {
+        n = new BigNumber(2).toFixed('300.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = new BigNumber(2).toFixed(300.3);
     } catch (e) {
-        // 'toFixed() decimal places not an integer: {dp}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toFixed(1e99);
     } catch (e) {
-        // 'toFixed() decimal places out of range: {dp}'
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(2).toFixed(3, '3.6');
+    } catch (e) {
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toFixed(3, 3.6);
     } catch (e) {
-        // 'toFixed() rounding mode not an integer: {v}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toFixed(2, 1e99);
     } catch (e) {
-        // 'toFixed() rounding mode out of range: {v}'
         console.error(e + '');
     }
 
-    // toFormat
+    console.log('toFormat');
+
+    try {
+        n = new BigNumber(2).toFormat('300.3');
+    } catch (e) {
+        console.error(e + '');
+    }
 
     try {
         n = new BigNumber(2).toFormat(300.3);
     } catch (e) {
-        // 'toFormat() decimal places not an integer: {dp}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toFormat(1e99);
     } catch (e) {
-        // 'toFormat() decimal places out of range: {dp}'
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(2).toFormat(3, '3.6');
+    } catch (e) {
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toFormat(3, 3.6);
     } catch (e) {
-        // 'toFormat() rounding mode not an integer: {v}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toFormat(2, 1e99);
     } catch (e) {
-        // 'toFormat() rounding mode out of range: {v}'
         console.error(e + '');
     }
 
-    // toPrecision
+    console.log('toPrecision');
 
+    try {
+        n = new BigNumber(2).toPrecision('300.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = new BigNumber(2).toPrecision(300.3);
     } catch (e) {
-        // 'toPrecision() decimal places not an integer: {dp}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toPrecision(0);
     } catch (e) {
-        // 'toPrecision() decimal places out of range: {dp}'
+        console.error(e + '');
+    }
+     try {
+        n = new BigNumber(2).toPrecision(3, '3.6');
+    } catch (e) {
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toPrecision(3, 3.6);
     } catch (e) {
-        // 'toPrecision() rounding mode not an integer: {v}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toPrecision(2, 1e99);
     } catch (e) {
-        // 'toPrecision() rounding mode out of range: {v}'
         console.error(e + '');
     }
 
-    // toFraction
+    console.log('toFraction');
 
     try {
         n = new BigNumber(2).toFraction(300.3);
     } catch (e) {
-        // 'toFraction() max denominator not an integer: {maxD}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toFraction(-1);
     } catch (e) {
-        // 'toFraction() max denominator out of range: {maxD}'
         console.error(e + '');
     }
 
-    // precision
+    console.log('precision');
 
     try {
         n = new BigNumber(2).precision(2);
     } catch (e) {
-        // 'precision() argument not a boolean or binary digit: {z}'
         console.error(e + '');
     }
 
-    // toString
+    console.log('toString');
 
+    try {
+        n = new BigNumber(2).toString('3.3');
+    } catch (e) {
+        console.error(e + '');
+    }
     try {
         n = new BigNumber(2).toString(3.3);
     } catch (e) {
-        // 'toString() base not an integer: {b}'
         console.error(e + '');
     }
     try {
         n = new BigNumber(2).toString(1);
     } catch (e) {
-        // 'toString() base out of range: {b}'
         console.error(e + '');
     }
 
-    // cmp
+    console.log('cmp');
 
     try {
         n = new BigNumber(2).cmp(45324542.452466456546456);
@@ -445,7 +511,7 @@
         console.error(e + '');
     }
 
-    // div
+    console.log('div');
 
     try {
         n = new BigNumber(2).div(45324542.452466456546456);
@@ -478,7 +544,41 @@
         console.error(e + '');
     }
 
-    // eq
+    console.log('divToInt');
+
+    try {
+        n = new BigNumber(2).divToInt(45324542.452466456546456);
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(2).divToInt(333, 2);
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(2).divToInt(123, 5.6);
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(2).divToInt(123, 37);
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(2).divToInt('ugh');
+    } catch (e) {
+        console.error(e + '');
+    }
+    try {
+        n = new BigNumber(2).divToInt(8475698473265965);
+    } catch (e) {
+        console.error(e + '');
+    }
+
+
+    console.log('eq');
 
     try {
         n = new BigNumber(2).eq(45324542.452466456546456);
@@ -511,7 +611,7 @@
         console.error(e + '');
     }
 
-    // gt
+    console.log('gt');
 
     try {
         n = new BigNumber(2).gt(45324542.452466456546456);
@@ -544,7 +644,7 @@
         console.error(e + '');
     }
 
-    // gte
+    console.log('gte');
 
     try {
         n = new BigNumber(2).gte(45324542.452466456546456);
@@ -577,7 +677,7 @@
         console.error(e + '');
     }
 
-    // lt
+    console.log('lt');
 
     try {
         n = new BigNumber(2).lt(45324542.452466456546456);
@@ -610,7 +710,7 @@
         console.error(e + '');
     }
 
-    // lte
+    console.log('lte');
 
     try {
         n = new BigNumber(2).lte(45324542.452466456546456);
@@ -643,7 +743,7 @@
         console.error(e + '');
     }
 
-    // minus
+    console.log('minus');
 
     try {
         n = new BigNumber(2).minus(45324542.452466456546456);
@@ -676,7 +776,7 @@
         console.error(e + '');
     }
 
-    // mod
+    console.log('mod');
 
     try {
         n = new BigNumber(2).mod(45324542.452466456546456);
@@ -709,7 +809,7 @@
         console.error(e + '');
     }
 
-    // plus
+    console.log('plus');
 
     try {
         n = new BigNumber(2).plus(45324542.452466456546456);
@@ -742,7 +842,7 @@
         console.error(e + '');
     }
 
-    // pow
+    console.log('pow');
 
     try {
         n = new BigNumber(2).pow(45324542.452466456546456);
@@ -775,7 +875,7 @@
         console.error(e + '');
     }
 
-    // times
+    console.log('times');
 
     try {
         n = new BigNumber(2).times(45324542.452466456546456);

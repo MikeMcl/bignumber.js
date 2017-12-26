@@ -40,7 +40,7 @@ var count = (function round(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -60,7 +60,6 @@ var count = (function round(BigNumber) {
     BigNumber.config({
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 7,
-        ERRORS: true,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9
     });
@@ -2004,11 +2003,12 @@ var count = (function round(BigNumber) {
     T('361300718195583086529006200000000000000', '361300718195583086529006200000000000000.5', 0, 8);
     T('61381935060212901891392491994620938159434302730207737183495000000000000', '61381935060212901891392491994620938159434302730207737183495000000000000.5', 0, 8);
     T('17103494622240782188191669794453543590000000000000000000000000000000', '17103494622240782188191669794453543590000000000000000000000000000000.5', 0, 8);
-    T('12.35', '12.345', new BigNumber('2'));
+
+    T('12.35', '12.345', 2);
     T('12', '12.345', null);
     T('12', '12.345', u);
     T('12', '12.345', 0);
-    T('12', '12.345', '-0');
+    T('12', '12.345', -0);
 
     assertException(function () {new BigNumber('12.345').round(NaN)}, ".round(NaN)");
     assertException(function () {new BigNumber('12.345').round('NaN')}, ".round('NaN')");
@@ -2032,11 +2032,11 @@ var count = (function round(BigNumber) {
     assertException(function () {new BigNumber('12.345').round(Infinity)}, ".round(Infinity)");
     assertException(function () {new BigNumber('12.345').round('-Infinity')}, ".round('-Infinity')");
 
-    T('13', '12.345', u, new BigNumber('2'));
+    T('13', '12.345', u, 2);
     T('12', '12.345', u, null);
     T('12', '12.345', u, u);
     T('13', '12.345', u, 0);
-    T('13', '12.345', u, '-0');
+    T('13', '12.345', u, -0);
 
     assertException(function () {new BigNumber('12.345').round(u, NaN)}, ".round(0, NaN)");
     assertException(function () {new BigNumber('12.345').round(u, 'NaN')}, ".round(0, 'NaN')");
@@ -2060,63 +2060,6 @@ var count = (function round(BigNumber) {
     assertException(function () {new BigNumber('12.345').round(u, '-1e-1')}, ".round(0, '-1e-1')");
     assertException(function () {new BigNumber('12.345').round(u, Infinity)}, ".round(0, Infinity)");
     assertException(function () {new BigNumber('12.345').round(u, '-Infinity')}, ".round(0, '-Infinity')");
-
-    BigNumber.config({ERRORS: false});
-
-    T('12.35', '12.345', new BigNumber('2'));
-    T('12', '12.345', null);
-    T('12', '12.345', u);
-    T('12.345', '12.345', NaN);
-    T('12.345', '12.345', 'NaN');
-    T('12.345', '12.345', []);
-    T('12.345', '12.345', {});
-    T('12.345', '12.345', '');
-    T('12.345', '12.345', ' ');
-    T('12.345', '12.345', 'hello');
-    T('12.345', '12.345', '\t');
-    T('12.345', '12.345', new Date);
-    T('12.345', '12.345', new RegExp);
-    T('12', '12.345', 0);
-    T('12', '12.345', '-0');
-    T('12', '12.345', '0e+0');
-    T('12.3', '12.345', '1e+0');
-    T('12.3', '12.345', 1.5);
-    T('12.3', '12.345', '0.1e1');
-    T('12.345', '12.345', '1.1e1');
-    T('12.345', '12.345', '-1');
-    T('12.345', '12.345', -23);
-    T('12.345', '12.345', MAX + 1);
-    T('12.345', '12.345', MAX + 0.1);
-    T('12', '12.345', '-0.01');
-    T('12', '12.345', '-1e-1');
-    T('12.345', '12.345', Infinity);
-    T('12.345', '12.345', '-Infinity');
-
-    T('13', '12.345', u, new BigNumber('2'));
-    T('12', '12.345', u, null);
-    T('12', '12.345', u, u);
-    T('12', '12.345', u, NaN);
-    T('12', '12.345', u, 'NaN');
-    T('12', '12.345', u, []);
-    T('12', '12.345', u, {});
-    T('12', '12.345', u, '');
-    T('12', '12.345', u, ' ');
-    T('12', '12.345', u, 'hello');
-    T('12', '12.345', u, '\t');
-    T('12', '12.345', u, new Date);
-    T('12', '12.345', u, new RegExp);
-    T('13', '12.345', u, 0);
-    T('12', '12.345', u, 7.5);
-
-    T('12', '12.345', u, '-1');
-    T('12', '12.345', u, -23);
-    T('12', '12.345', u, 8.01);
-    T('12', '12.345', u, 9);
-    T('12', '12.345', u, -1);
-    T('13', '12.345', u, '-0.01');
-    T('13', '12.345', u, '-1e-1');
-    T('12', '12.345', u, Infinity);
-    T('12', '12.345', u, '-Infinity');
 
     log('\n ' + passed + ' of ' + total + ' tests passed in ' + (+new Date() - start) + ' ms \n');
     return [passed, total];;

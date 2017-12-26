@@ -39,7 +39,7 @@ var count = (function others(BigNumber) {
         } catch (e) {
             actual = e;
         }
-        if (actual && actual.name == 'BigNumber Error') {
+        if (actual && /^\[BigNumber Error\]/.test(actual.message)) {
             passed++;
             //log('\n Expected and actual: ' + actual);
         } else {
@@ -70,8 +70,7 @@ var count = (function others(BigNumber) {
         DECIMAL_PLACES: 20,
         ROUNDING_MODE: 4,
         EXPONENTIAL_AT: 1e+9,
-        RANGE: 1e+9,
-        ERRORS: true
+        RANGE: 1e+9
     });
 
     n = new BigNumber(1);
@@ -208,23 +207,6 @@ var count = (function others(BigNumber) {
     assert(false, n.lte(-1));
     assert(n.toString(), n.valueOf());
 
-    BigNumber.config({ ERRORS: false });
-
-    n = new BigNumber('hiya');
-    assert(false, n.isFinite());
-    assert(false, n.isInteger());
-    assert(true, n.isNaN());
-    assert(false, n.isNegative());
-    assert(false, n.isZero());
-    assert(false, n.equals(0));
-    assert(false, n.greaterThan(0));
-    assert(false, n.greaterThanOrEqualTo(-Infinity));
-    assert(false, n.lessThan(Infinity));
-    assert(false, n.lessThanOrEqualTo(0));
-    assert(n.toString(), n.valueOf());
-
-    BigNumber.config({ ERRORS: true });
-
     n = new BigNumber('-1.234e+2');
     assert(true, n.isFinite());
     assert(false, n.isInt());
@@ -261,36 +243,6 @@ var count = (function others(BigNumber) {
     assert(true, n.equals('1e+0'));
     assert(false, n.equals(-1));
     assert(false, n.equals(0.1));
-
-    BigNumber.config({ ERRORS: false });
-
-    assert(false, new BigNumber(NaN).equals(0));
-    assert(false, new BigNumber(null).equals(0));
-    assert(false, new BigNumber(undefined).equals(0));
-    assert(false, new BigNumber(Infinity).equals(0));
-    assert(false, new BigNumber([]).equals(0));
-    assert(false, new BigNumber([]).equals(0));
-    assert(false, new BigNumber({}).equals(0));
-    assert(false, new BigNumber('').equals(0));
-    assert(false, new BigNumber('   ').equals(0));
-    assert(false, new BigNumber('\t').equals(0));
-    assert(false, new BigNumber('gerg').equals(0));
-    assert(false, new BigNumber(new Date).equals(0));
-    assert(false, new BigNumber(new RegExp).equals(0));
-    assert(false, new BigNumber(0.1).equals(0));
-    assert(false, new BigNumber(1e9 + 1).equals(1e9));
-    assert(false, new BigNumber(1e9 - 1).equals(1e9));
-    assert(true, new BigNumber(1e9 + 1).equals(1e9 + 1));
-    assert(true, new BigNumber(1).equals(1));
-    assert(false, new BigNumber(1).equals(-1));
-    assert(false, new BigNumber(NaN).equals('efffe'));
-
-    assert(false, new BigNumber('b').greaterThan('a'));
-    assert(false, new BigNumber('a').lessThan('b', 10));
-    assert(true, new BigNumber('a', 16).lessThanOrEqualTo('ff', 16));
-    assert(true, new BigNumber('b', 16).greaterThanOrEqualTo(9, 16));
-
-    BigNumber.config({ ERRORS: true });
 
     assert(true, new BigNumber(10).greaterThan(10, 2));
     assert(true, new BigNumber(10).greaterThan(10, 3));
