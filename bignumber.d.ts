@@ -722,6 +722,11 @@ export class BigNumber {
     gte(n: number | string | BigNumber, base?: number): boolean;
 
     /**
+     * Always true, identifies BigNumber instances.
+     */
+    isBigNumber: true;
+
+    /**
      * Returns true if the value of this BigNumber is a finite number, otherwise returns false. The only possible
      * non-finite values of a BigNumber are `NaN`, `Infinity` and `-Infinity`.
      *
