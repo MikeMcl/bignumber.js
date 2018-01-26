@@ -31,7 +31,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "node ./test/every-test.js",
+    "test": "node test/test",
     "build": "uglifyjs bignumber.js --source-map bignumber.js.map -c -m -o bignumber.min.js --preamble \"/* bignumber.js v5.0.0 https://github.com/MikeMcl/bignumber.js/LICENCE */\""
   }
 }
