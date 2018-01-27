@@ -8,10 +8,10 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 ## Features
 
+  - Integers and decimals
+  - Simple API but full-featured
   - Faster, smaller, and perhaps easier to use than JavaScript versions of Java's BigDecimal
   - 8 KB minified and gzipped
-  - Simple API but full-featured
-  - Works with numbers with or without fraction digits in bases from 2 to 64 inclusive
   - Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of JavaScript's Number type
   - Includes a `toFraction` and a correctly-rounded `squareRoot` method
   - Supports cryptographically-secure pseudo-random number generation
@@ -78,7 +78,7 @@ z = new BigNumber(x)
 x.isEqualTo(y) && y.isEqualTo(z) && x.isEqualTo(z)      // true
 ```
 
-and a base from 2 to 36 inclusive can be specified.
+and a base from 2 to 36 can be specified (higher bases can also be used if a custom alphabet is provided).
 
 ```javascript
 x = new BigNumber(1011, 2)          // "11"
@@ -109,7 +109,7 @@ x.squareRoot().dividedBy(y).exponentiatedBy(3).isEqualTo( x.sqrt().div(y).pow(3)
 x.modulo(y).multipliedBy(z).eq( x.mod(y).times(z) )                                   // true
 ```
 
-Like JavaScript's number type, there are `toExponential`, `toFixed` and `toPrecision` methods
+Like JavaScript's Number type, there are `toExponential`, `toFixed` and `toPrecision` methods
 
 ```javascript
 x = new BigNumber(255.5)
