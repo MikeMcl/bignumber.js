@@ -1,3 +1,7 @@
+ 
+// Make sure all tests pass in with frozen global prototype
+Object.freeze( Object.prototype );
+
 var time = process.hrtime(),
   passed = 0,
   total = 0;

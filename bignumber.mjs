@@ -1474,6 +1474,12 @@ function clone(configObject) {
 
     // PROTOTYPE/INSTANCE METHODS
 
+    // Compatibility for frozen Object.prototype
+    Object.defineProperties( P, {
+        'toString' : { writable: true },
+        'valueOf' : { writable: true },
+    } );
+
 
     /*
      * Return a new BigNumber whose value is the absolute value of this BigNumber.
