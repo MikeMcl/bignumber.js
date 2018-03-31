@@ -580,4 +580,8 @@ Test('bigNumber', function () {
     // TODO: more ALPHABET tests.
 
     BigNumber.config({ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'});
+
+    // Test constants
+    t('0', BigNumber.ZERO);
+    t('1', BigNumber.ONE);
 });

@@ -374,6 +374,8 @@ function clone(configObject) {
     BigNumber.ROUND_HALF_FLOOR = 8;
     BigNumber.EUCLID = 9;
 
+    BigNumber.ZERO = new BigNumber(0);
+    BigNumber.ONE = new BigNumber(1);
 
     /*
      * Configure infrequently-changing library-wide settings.

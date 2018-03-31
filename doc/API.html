@@ -99,6 +99,8 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       <li><a href="#round-half-even" >ROUND_HALF_EVEN</a></li>
       <li><a href="#round-half-ceil" >ROUND_HALF_CEIL</a></li>
       <li><a href="#round-half-floor">ROUND_HALF_FLOOR</a></li>
+      <li><a href="#constant-zero">ZERO</a></li>
+      <li><a href="#constant-one">ONE</a></li>
     </ul>
 
     <b> INSTANCE </b>
@@ -840,6 +842,28 @@ BigNumber.random(20)            // '0.78193327636914089009'</pre>
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_CEIL })
 BigNumber.config({ ROUNDING_MODE: 2 })     // equivalent</pre>
 
+    <p>
+      Furthermore, the constructor provides some commonly used BigNumber constants as properties:
+    </p>
+    <table>
+      <tr>
+        <th>Property</th>
+        <th>Value</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td id="constant-zero"><b>ZERO</b></td>
+        <td class='centre'>0</td>
+        <td>The number zero.</td>
+      </tr>
+      <tr>
+        <td id="constant-one"><b>ONE</b></td>
+        <td class='centre'>1</td>
+        <td>The number one.</td>
+      </tr>
+    </table>
+    <pre>BigNumber.ZERO.plus(15)         // '15'
+BigNumber.ONE.times(15)         // '15'</pre>
 
     <h3>INSTANCE</h3>
 
