@@ -2717,7 +2717,7 @@
     // Browser.
     } else {
         if ( !globalObject ) {
-            globalObject = typeof self != 'undefined' ? self : Function('return this')();
+            globalScope = typeof self != 'undefined' && self ? self : window;
         }
 
         globalObject.BigNumber = BigNumber;
