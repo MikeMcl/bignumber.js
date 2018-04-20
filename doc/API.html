@@ -991,8 +991,7 @@ x.idiv('0.f', 16)               // '5'</pre>
       exponentiatedBy<code class='inset'>.pow(n [, m]) <i>&rArr; BigNumber</i></code>
     </h5>
     <p>
-      <code>n</code>: <i>number</i>: integer,
-      <code>-9007199254740991</code> to <code>9007199254740991</code> inclusive<br />
+      <code>n</code>: <i>number|string|BigNumber</i>: integer<br />
       <code>m</code>: <i>number|string|BigNumber</i>
     </p>
     <p>
@@ -1001,8 +1000,7 @@ x.idiv('0.f', 16)               // '5'</pre>
       <code>m</code>.
     </p>
     <p>
-      Throws if <code>n</code> is not a primitive number, or is not an integer, or is out of range.
-      See <a href='#Errors'>Errors</a>.
+      Throws if <code>n</code> is not an integer. See <a href='#Errors'>Errors</a>.
     </p>
     <p>
       If <code>n</code> is negative the result is rounded according to the current
@@ -1023,9 +1021,9 @@ x.idiv('0.f', 16)               // '5'</pre>
     </p>
     <p>
       If <code>m</code> is specified and the value of <code>m</code>, <code>n</code> and this
-      BigNumber are positive integers, then a fast modular exponentiation algorithm is used,
-      otherwise if any of the values is not a positive integer the operation will simply be
-      performed as <code>x.exponentiatedBy(n).modulo(m)</code> with a
+      BigNumber are integers, and <code>n</code> is positive, then a fast modular exponentiation
+      algorithm is used, otherwise the operation will be performed as
+      <code>x.exponentiatedBy(n).modulo(m)</code> with a
       <a href='#pow-precision'><code>POW_PRECISION</code></a> of <code>0</code>.
     </p>
     <pre>
@@ -1598,7 +1596,7 @@ x.toFormat(6)                   // '12.34.56.789,123'</pre>
       toFraction<code class='inset'>.toFraction([max]) <i>&rArr; [string, string]</i></code>
     </h5>
     <p>
-      <code>max</code>: <i>number|string|BigNumber</i>: integer &gt;= <code>1</code> and &lt;
+      <code>max</code>: <i>number|string|BigNumber</i>: integer &gt;= <code>1</code> and &lt;=
       <code>Infinity</code>
     </p>
     <p>
@@ -1992,7 +1990,6 @@ y.s                             // -1</pre>
       <tr>
         <td rowspan=3>
           <code>decimalPlaces</code><br />
-          <code>exponentiatedBy</code><br />
           <code>precision</code><br />
           <code>random</code><br />
           <code>shiftedBy</code><br />
@@ -2015,6 +2012,10 @@ y.s                             // -1</pre>
           <code>precision</code>
         </td>
         <td>Argument not true or false</td>
+      </tr>
+      <tr>
+        <td><code>exponentiatedBy</code></td>
+        <td>Argument not an integer</td>
       </tr>
       <tr>
         <td>

@@ -1,10 +1,9 @@
 if (typeof Test === 'undefined') require('../tester');
 
 Test('exponentiatedBy', function () {
-    var MAX_POWER = Math.pow(2, 53) - 1;
 
     var t = function (expected, n, exp) {
-        Test.areEqual(String(expected), String(new BigNumber(n).exponentiatedBy(exp)));
+        Test.areEqual(expected, new BigNumber(n).exponentiatedBy(exp).valueOf());
     };
 
     Test.areEqual(BigNumber.prototype.exponentiatedBy, BigNumber.prototype.pow);
@@ -17,60 +16,118 @@ Test('exponentiatedBy', function () {
         EXPONENTIAL_AT: [-7, 21]
     });
 
-    // Tests some of the special cases specified by ES 15.8.2.13
+    t('2', 2, 1);
+    t('4', 2, 2);
+    t('8', 2, 3);
+    t('16', 2, 4);
+    t('2048', 2, 11);
+    t('2147483648', 2, 31);
+    t('0.25', 2, -2);
+    t('0.0625', 2, -4);
+    t('1', 1, 100);
+    t('0', 0, 1000);
+    t('27', 3, 3);
+    t('0.0625', 0.5, 4);
+    t('0.0625', 2, -4);
 
-    t(4, 2, 2);
-    t(2147483648, 2, 31);
-    t(0.25, 2, -2);
-    t(0.0625, 2, -4);
-    t(1, 1, 100);
-    t(0, 0, 1000);
+    // 0
+    t('1', 0, +0);
+    t('1', 0, -0);
+    t('0', 0, 1);
+    t('0', 0, 2);
+    t('Infinity', 0, -1);
+    t('Infinity', 0, -2);
+    t('NaN', 0, NaN);
+    t('0', 0, Infinity);
+    t('Infinity', 0, -Infinity);
 
-    t(1, NaN, +0);
-    t(1, NaN, -0);
+    //-0
+    t('1', -0, +0);
+    t('1', -0, -0);
+    t('-0', -0, 1);
+    t('0', -0, 2);
+    t('-Infinity', -0, -1);
+    t('Infinity', -0, -2);
+    t('NaN', -0, NaN);
+    t('0', -0, Infinity);
+    t('Infinity', -0, -Infinity);
 
-    t(NaN, NaN, 2);
-    t(NaN, NaN, 1);
-    t(NaN, NaN, -1);
-    t(NaN, NaN, -2);
+    // 1
+    t('1', 1, +0);
+    t('1', 1, -0);
+    t('1', 1, 1);
+    t('1', 1, 2);
+    t('1', 1, -1);
+    t('1', 1, -2);
+    t('NaN', 1, NaN);
+    t('NaN', 1, Infinity);
+    t('NaN', 1, -Infinity);
 
-    t(Infinity, Infinity, 2);
-    t(+Infinity, 1/Infinity, -2);
-    t(Infinity, -Infinity, 2);
+    // 2
+    t('1', 2, +0);
+    t('1', 2, -0);
+    t('2', 2, 1);
+    t('4', 2, 2);
+    t('0.5', 2, -1);
+    t('0.25', 2, -2);
+    t('NaN', 2, NaN);
+    t('Infinity', 2, Infinity);
+    t('0', 2, -Infinity);
 
-    t(-Infinity, -Infinity, 3);
-    t(-Infinity, -Infinity, 13);
+    // -1
+    t('1', -1, +0);
+    t('1', -1, -0);
+    t('-1', -1, 1);
+    t('1', -1, 2);
+    t('-1', -1, -1);
+    t('1', -1, -2);
+    t('NaN', -1, NaN);
+    t('NaN', -1, Infinity);
+    t('NaN', -1, -Infinity);
 
-    t(-Infinity, 1/-Infinity, -3);
-    t(-Infinity, 1/-Infinity, -13);
-    t(-Infinity, 1/-0, 3);
-    t(-Infinity, 1/-0, 13);
+    // -2
+    t('1', -2, +0);
+    t('1', -2, -0);
+    t('-2', -2, 1);
+    t('4', -2, 2);
+    t('-0.5', -2, -1);
+    t('0.25', -2, -2);
+    t('NaN', -2, NaN);
+    t('Infinity', -2, Infinity);
+    t('0', -2, -Infinity);
 
-    t(-Infinity, -0, -3);
-    t(-Infinity, -0, -13);
-    t(-Infinity, -0, -1);
+    // NaN
+    t('1', NaN, +0);
+    t('1', NaN, -0);
+    t('NaN', NaN, 1);
+    t('NaN', NaN, 2);
+    t('NaN', NaN, -1);
+    t('NaN', NaN, -2);
+    t('NaN', NaN, NaN);
+    t('NaN', NaN, Infinity);
+    t('NaN', NaN, -Infinity);
 
-    t(+Infinity, 1/-Infinity, -2);
-    t(+Infinity, 1/+0, 1);
-    t(+Infinity, 1/+0, 2);
+    // Infinity
+    t('1', Infinity, +0);
+    t('1', Infinity, -0);
+    t('Infinity', Infinity, 1);
+    t('Infinity', Infinity, 2);
+    t('0', Infinity, -1);
+    t('0', Infinity, -2);
+    t('NaN', Infinity, NaN);
+    t('Infinity', Infinity, Infinity);
+    t('0', Infinity, -Infinity);
 
-    t(Infinity, +0, -1);
-    t(Infinity, +0, -2);
-
-    t(+Infinity, 1/-0, 2);
-    t(Infinity, -0, -2);
-
-    t(-0.00001, -0.00001, 1);
-    t(-100000, -0.00001, -1);
-
-    t(-Infinity, 1/-0, 1);
-    t(1, 1/-0, 0);
-    t(1, -0, -0);
-    t(1, Infinity, 0);
-    t(1, 1/Infinity, -0);
-
-    t(8, 2, 3);
-    t(16, 2, 4);
+    // -Infinity
+    t('1', -Infinity, +0);
+    t('1', -Infinity, -0);
+    t('-Infinity', -Infinity, 1);
+    t('Infinity', -Infinity, 2);
+    t('-0', -Infinity, -1);
+    t('0', -Infinity, -2);
+    t('NaN', -Infinity, NaN);
+    t('Infinity', -Infinity, Infinity);
+    t('0', -Infinity, -Infinity);
 
     t('4096', '8', 4);
     t('-1.331', '-1.1', 3);
@@ -765,11 +822,6 @@ Test('exponentiatedBy', function () {
 
     t('179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137216', 2, 1024);
 
-    t(2, 2, 1);
-    t(27, 3, 3);
-    t(2048, 2, 11);
-    t(0.0625, 0.5, 4);
-
     Test.isException(function () {new BigNumber(2).pow(4.4)}, ".pow(4.4)");
     Test.isException(function () {new BigNumber(2).pow('5.5')}, ".pow('5.5')");
     Test.isException(function () {new BigNumber(2).pow(-2.1)}, ".pow(-2.1)");
@@ -781,8 +833,6 @@ Test('exponentiatedBy', function () {
     Test.isException(function () {new BigNumber('12.345').pow(null)}, ".pow(null)");
     Test.isException(function () {new BigNumber('12.345').pow(true)}, ".pow(true)");
     Test.isException(function () {new BigNumber('12.345').pow(false)}, ".pow(false)");
-    Test.isException(function () {new BigNumber('12.345').pow(NaN)}, ".pow(NaN)");
-    Test.isException(function () {new BigNumber('12.345').pow('NaN')}, ".pow('NaN')");
     Test.isException(function () {new BigNumber('12.345').pow([])}, ".pow([])");
     Test.isException(function () {new BigNumber('12.345').pow({})}, ".pow({})");
     Test.isException(function () {new BigNumber('12.345').pow('')}, ".pow('')");
@@ -798,17 +848,6 @@ Test('exponentiatedBy', function () {
     Test.isException(function () {new BigNumber('12.345').pow('-1.123e1')}, ".pow('-1.123e1')");
     Test.isException(function () {new BigNumber('12.345').pow('-0.01')}, ".pow('-0.01')");
     Test.isException(function () {new BigNumber('12.345').pow('-1e-1')}, ".pow('-1e-1')");
-    Test.isException(function () {new BigNumber('12.345').pow(Infinity)}, ".pow(Infinity)");
-    Test.isException(function () {new BigNumber('12.345').pow('-Infinity')}, ".pow('-Infinity')");
-
-    Test.isException(function () {new BigNumber('2').pow(Infinity)}, ".pow(Infinity)");
-    Test.isException(function () {new BigNumber('2').pow('-Infinity')}, ".pow('-Infinity')");
-
-    Test.isException(function () {new BigNumber(1).pow(MAX_POWER + 1)}, ".pow(MAX_POWER + 1)");
-
-    t(1, 1, MAX_POWER);
-    t('16', 2, 4);
-    t('0.0625', 2, -4);
 
     // As negative exponents involve a division, the result depends on the decimal places and rounding mode specified:
 
@@ -839,7 +878,7 @@ Test('exponentiatedBy', function () {
     BigNumber.config({DECIMAL_PLACES: 40, ROUNDING_MODE: 1});
 
     t('0e+0', '41', -25);
-    t('0e+0', '-26403', -25);
+    t('-0e+0', '-26403', -25);
     t('-1.83965573171075e-25', '-28.5112', -17);
     t('1.3846500590693220280355384e-15', '72', -8);
     t('0e+0', '388528.736', -15);
@@ -863,7 +902,7 @@ Test('exponentiatedBy', function () {
 
     t('1e-2', '95636', -15);
     t('1e-2', '802.942', -28);
-    t('0e+0', '-31645', -27);
+    t('-0e+0', '-31645', -27);
     t('1e-2', '-839791.83', -2);
     t('1e-2', '-2.8383287', -6);
     t('1e-2', '61689855', -2);
@@ -875,12 +914,12 @@ Test('exponentiatedBy', function () {
     t('1e-2', '-21411.3', -8);
     t('1e-2', '-444', -8);
     t('1e-2', '-456', -26);
-    t('0e+0', '-84450.1821', -15);
-    t('0e+0', '-393', -15);
+    t('-0e+0', '-84450.1821', -15);
+    t('-0e+0', '-393', -15);
     t('2e-1', '5', -1);
-    t('0e+0', '-7902377.6', -27);
+    t('-0e+0', '-7902377.6', -27);
     t('1e-2', '4695.5', -19);
-    t('0e+0', '-198', -25);
+    t('-0e+0', '-198', -25);
 
     BigNumber.config({DECIMAL_PLACES: 50, ROUNDING_MODE: 3});
 
@@ -925,7 +964,7 @@ Test('exponentiatedBy', function () {
     t('-1.61732012052302022569648421623255682672403613813784e-51', '-8072.642', -13);
     t('9.226701330968798029567410873712667474511623e-59', '86', -30);
     t('-4.52671289980544818356121416933990316474525113390656357838131753149833770190909867e-21', '-805.966', -7);
-    t('0e+0', '-62548432.8', -25);
+    t('-0e+0', '-62548432.8', -25);
     t('1.2208830071779439347812238188621035387222053043582168736013775635140091964690008930489382362e-10', '-90503', -2);
 
     BigNumber.config({DECIMAL_PLACES: 77, ROUNDING_MODE: 5});
@@ -946,7 +985,7 @@ Test('exponentiatedBy', function () {
     t('-1.1560137793600081456221291815651129339464282155352978388454e-19', '-13', -17);
     t('5.58677799866283804991416971229e-48', '8664.361199', -12);
     t('2.279303152972397504104114985089222523674913654876994600999395e-17', '352695', -3);
-    t('0e+0', '-1058', -27);
+    t('-0e+0', '-1058', -27);
     t('-1.59341022326498995406233262095617818e-42', '-6306.5', -11);
     t('7.1812368392200578e-61', '-5741', -16);
     t('-4.13699730669298062229277514676940165486322151495730381776e-21', '-71.29', -11);
@@ -962,7 +1001,7 @@ Test('exponentiatedBy', function () {
     t('-2.69509379734942915218278341741127616464435811759556667850711208302182540858969514716020661667e-7', '-3710446', -1);
     t('0e+0', '186138.741', -19);
     t('4.37024265074487259941007405227545667043223030296145105953223847971330338431363825001208e-13', '-5.922', -16);
-    t('0e+0', '-68229265', -23);
+    t('-0e+0', '-68229265', -23);
     t('4.928268737732714614617566124770385834839673627880400464580256256e-35', '-522257', -6);
     t('-2.022506359274224265530332563554654257153128338531e-51', '-7935', -13);
     t('4.113745803364219006888865973815476523221392611155744131624798603545707151167823836246769e-12', '-79', -6);
@@ -974,12 +1013,12 @@ Test('exponentiatedBy', function () {
     t('-7.116521605575577249405567849234479247439447514e-54', '-804088', -9);
     t('8.903896183702542287639673e-75', '-294', -30);
     t('8.07793566946316088741610050849573099185363389551639556884765625e-28', '8', -30);
-    t('0e+0', '-81529053.21', -19);
+    t('-0e+0', '-81529053.21', -19);
     t('6.5536e-12', '-5', -16);
-    t('0e+0', '-393954461', -21);
+    t('-0e+0', '-393954461', -21);
     t('8.6647113997049045695e-80', '-80579504', -10);
     t('0e+0', '-148396', -20);
-    t('0e+0', '-9359', -27);
+    t('-0e+0', '-9359', -27);
     t('9.90263871916064254974009912780157486232613002968707056446243636671e-34', '-562.8', -12);
     t('4.3492544377486037018080360300067123809538178904353011549513518579352205e-29', '-53325', -6);
     t('-2.4321805935844144232493980416059793684e-61', '-323865', -11);
@@ -1034,35 +1073,35 @@ Test('exponentiatedBy', function () {
     BigNumber.config({EXPONENTIAL_AT: 1E9, DECIMAL_PLACES: 17, ROUNDING_MODE: 4});
 
     t = function (expected, n, exp, mod) {
-        Test.areEqual(String(expected), String(new BigNumber(n).exponentiatedBy(exp, mod)));
+        Test.areEqual(expected, new BigNumber(n).exponentiatedBy(exp, mod).valueOf());
     };
 
-    t('0', '-1', -1, '-1');
+    t('-0', '-1', -1, '-1');
     t('-1', '-1', -1, '-3');
     t('-1', '-1', -1, '-5.7');
     t('-1', '-1', -1, '-Infinity');
     t('NaN', '-1', -1, '0');
-    t('0', '-1', -1, '1');
+    t('-0', '-1', -1, '1');
     t('-1', '-1', -1, '3');
     t('-1', '-1', -1, '5.7');
     t('-1', '-1', -1, 'Infinity');
     t('NaN', '-1', -1, 'NaN');
-    t('0', '-1', -3, '-1');
+    t('-0', '-1', -3, '-1');
     t('-1', '-1', -3, '-3');
     t('-1', '-1', -3, '-5.7');
     t('-1', '-1', -3, '-Infinity');
     t('NaN', '-1', -3, '0');
-    t('0', '-1', -3, '1');
+    t('-0', '-1', -3, '1');
     t('-1', '-1', -3, '3');
     t('-1', '-1', -3, '5.7');
     t('-1', '-1', -3, 'Infinity');
     t('NaN', '-1', -3, 'NaN');
-    t('0', '-1', -5, '-1');
+    t('-0', '-1', -5, '-1');
     t('-1', '-1', -5, '-3');
     t('-1', '-1', -5, '-5.7');
     t('-1', '-1', -5, '-Infinity');
     t('NaN', '-1', -5, '0');
-    t('0', '-1', -5, '1');
+    t('-0', '-1', -5, '1');
     t('-1', '-1', -5, '3');
     t('-1', '-1', -5, '5.7');
     t('-1', '-1', -5, 'Infinity');
@@ -1077,32 +1116,32 @@ Test('exponentiatedBy', function () {
     t('1', '-1', 0, '5.7');
     t('1', '-1', 0, 'Infinity');
     t('NaN', '-1', 0, 'NaN');
-    t('0', '-1', 1, '-1');
+    t('-0', '-1', 1, '-1');
     t('-1', '-1', 1, '-3');
     t('-1', '-1', 1, '-5.7');
     t('-1', '-1', 1, '-Infinity');
     t('NaN', '-1', 1, '0');
-    t('0', '-1', 1, '1');
+    t('-0', '-1', 1, '1');
     t('-1', '-1', 1, '3');
     t('-1', '-1', 1, '5.7');
     t('-1', '-1', 1, 'Infinity');
     t('NaN', '-1', 1, 'NaN');
-    t('0', '-1', 3, '-1');
+    t('-0', '-1', 3, '-1');
     t('-1', '-1', 3, '-3');
     t('-1', '-1', 3, '-5.7');
     t('-1', '-1', 3, '-Infinity');
     t('NaN', '-1', 3, '0');
-    t('0', '-1', 3, '1');
+    t('-0', '-1', 3, '1');
     t('-1', '-1', 3, '3');
     t('-1', '-1', 3, '5.7');
     t('-1', '-1', 3, 'Infinity');
     t('NaN', '-1', 3, 'NaN');
-    t('0', '-1', 5, '-1');
+    t('-0', '-1', 5, '-1');
     t('-1', '-1', 5, '-3');
     t('-1', '-1', 5, '-5.7');
     t('-1', '-1', 5, '-Infinity');
     t('NaN', '-1', 5, '0');
-    t('0', '-1', 5, '1');
+    t('-0', '-1', 5, '1');
     t('-1', '-1', 5, '3');
     t('-1', '-1', 5, '5.7');
     t('-1', '-1', 5, 'Infinity');
@@ -1147,33 +1186,33 @@ Test('exponentiatedBy', function () {
     t('1', '-3', 0, '5.7');
     t('1', '-3', 0, 'Infinity');
     t('NaN', '-3', 0, 'NaN');
-    t('0', '-3', 1, '-1');
-    t('0', '-3', 1, '-3');
+    t('-0', '-3', 1, '-1');
+    t('-0', '-3', 1, '-3');
     t('-3', '-3', 1, '-5.7');
     t('-3', '-3', 1, '-Infinity');
     t('NaN', '-3', 1, '0');
-    t('0', '-3', 1, '1');
-    t('0', '-3', 1, '3');
+    t('-0', '-3', 1, '1');
+    t('-0', '-3', 1, '3');
     t('-3', '-3', 1, '5.7');
     t('-3', '-3', 1, 'Infinity');
     t('NaN', '-3', 1, 'NaN');
-    t('0', '-3', 3, '-1');
-    t('0', '-3', 3, '-3');
+    t('-0', '-3', 3, '-1');
+    t('-0', '-3', 3, '-3');
     t('-4.2', '-3', 3, '-5.7');
     t('-27', '-3', 3, '-Infinity');
     t('NaN', '-3', 3, '0');
-    t('0', '-3', 3, '1');
-    t('0', '-3', 3, '3');
+    t('-0', '-3', 3, '1');
+    t('-0', '-3', 3, '3');
     t('-4.2', '-3', 3, '5.7');
     t('-27', '-3', 3, 'Infinity');
     t('NaN', '-3', 3, 'NaN');
-    t('0', '-3', 5, '-1');
-    t('0', '-3', 5, '-3');
+    t('-0', '-3', 5, '-1');
+    t('-0', '-3', 5, '-3');
     t('-3.6', '-3', 5, '-5.7');
     t('-243', '-3', 5, '-Infinity');
     t('NaN', '-3', 5, '0');
-    t('0', '-3', 5, '1');
-    t('0', '-3', 5, '3');
+    t('-0', '-3', 5, '1');
+    t('-0', '-3', 5, '3');
     t('-3.6', '-3', 5, '5.7');
     t('-243', '-3', 5, 'Infinity');
     t('NaN', '-3', 5, 'NaN');
@@ -1219,12 +1258,12 @@ Test('exponentiatedBy', function () {
     t('NaN', '-5.7', 0, 'NaN');
     t('-0.7', '-5.7', 1, '-1');
     t('-2.7', '-5.7', 1, '-3');
-    t('0', '-5.7', 1, '-5.7');
+    t('-0', '-5.7', 1, '-5.7');
     t('-5.7', '-5.7', 1, '-Infinity');
     t('NaN', '-5.7', 1, '0');
     t('-0.7', '-5.7', 1, '1');
     t('-2.7', '-5.7', 1, '3');
-    t('0', '-5.7', 1, '5.7');
+    t('-0', '-5.7', 1, '5.7');
     t('-5.7', '-5.7', 1, 'Infinity');
     t('NaN', '-5.7', 1, 'NaN');
     t('-0.193', '-5.7', 3, '-1');
@@ -1247,35 +1286,35 @@ Test('exponentiatedBy', function () {
     t('-3.42057', '-5.7', 5, '5.7');
     t('-6016.92057', '-5.7', 5, 'Infinity');
     t('NaN', '-5.7', 5, 'NaN');
-    t('0', '-Infinity', -1, '-1');
-    t('0', '-Infinity', -1, '-3');
-    t('0', '-Infinity', -1, '-5.7');
-    t('0', '-Infinity', -1, '-Infinity');
+    t('-0', '-Infinity', -1, '-1');
+    t('-0', '-Infinity', -1, '-3');
+    t('-0', '-Infinity', -1, '-5.7');
+    t('-0', '-Infinity', -1, '-Infinity');
     t('NaN', '-Infinity', -1, '0');
-    t('0', '-Infinity', -1, '1');
-    t('0', '-Infinity', -1, '3');
-    t('0', '-Infinity', -1, '5.7');
-    t('0', '-Infinity', -1, 'Infinity');
+    t('-0', '-Infinity', -1, '1');
+    t('-0', '-Infinity', -1, '3');
+    t('-0', '-Infinity', -1, '5.7');
+    t('-0', '-Infinity', -1, 'Infinity');
     t('NaN', '-Infinity', -1, 'NaN');
-    t('0', '-Infinity', -3, '-1');
-    t('0', '-Infinity', -3, '-3');
-    t('0', '-Infinity', -3, '-5.7');
-    t('0', '-Infinity', -3, '-Infinity');
+    t('-0', '-Infinity', -3, '-1');
+    t('-0', '-Infinity', -3, '-3');
+    t('-0', '-Infinity', -3, '-5.7');
+    t('-0', '-Infinity', -3, '-Infinity');
     t('NaN', '-Infinity', -3, '0');
-    t('0', '-Infinity', -3, '1');
-    t('0', '-Infinity', -3, '3');
-    t('0', '-Infinity', -3, '5.7');
-    t('0', '-Infinity', -3, 'Infinity');
+    t('-0', '-Infinity', -3, '1');
+    t('-0', '-Infinity', -3, '3');
+    t('-0', '-Infinity', -3, '5.7');
+    t('-0', '-Infinity', -3, 'Infinity');
     t('NaN', '-Infinity', -3, 'NaN');
-    t('0', '-Infinity', -5, '-1');
-    t('0', '-Infinity', -5, '-3');
-    t('0', '-Infinity', -5, '-5.7');
-    t('0', '-Infinity', -5, '-Infinity');
+    t('-0', '-Infinity', -5, '-1');
+    t('-0', '-Infinity', -5, '-3');
+    t('-0', '-Infinity', -5, '-5.7');
+    t('-0', '-Infinity', -5, '-Infinity');
     t('NaN', '-Infinity', -5, '0');
-    t('0', '-Infinity', -5, '1');
-    t('0', '-Infinity', -5, '3');
-    t('0', '-Infinity', -5, '5.7');
-    t('0', '-Infinity', -5, 'Infinity');
+    t('-0', '-Infinity', -5, '1');
+    t('-0', '-Infinity', -5, '3');
+    t('-0', '-Infinity', -5, '5.7');
+    t('-0', '-Infinity', -5, 'Infinity');
     t('NaN', '-Infinity', -5, 'NaN');
     t('0', '-Infinity', 0, '-1');
     t('1', '-Infinity', 0, '-3');
@@ -1848,6 +1887,951 @@ Test('exponentiatedBy', function () {
     t('405167196487546464980337225371932484221676531564558020674296714011859111057380', '3400756652952034869667491286822430771347620199472', 26886850142633, '611549802518085362254974981183236948088206027646591513228667566697306287449399');
     t('7794452159255315351790298031593675', '3374396899581350491330711739601350455629429581990670970624900984868802087092615683985175', 4600499328250313, '9412479648183932289355382618210050');
 
+    t('36126', '6', '30313', '46770');
+    t('305633', '9', '492182', '595684');
+    t('1', '7641905', '7360346', '96');
+    t('0', '8102411', '30688840', '1');
+    t('0', '693992935', '451540849', '5');
+    t('6218780', '688520122', '2871742644', '8796707');
+    t('188', '6117', '12332568054', '197');
+    t('169', '48919674343', '683481923100', '686');
+    t('127963776', '246056', '9993177131270', '171031870');
+    t('44758997442869', '717', '49018334050029', '69390201825586');
+    t('185434090027004', '3204165044382', '177830725390829', '533879968467436');
+    t('1636361', '446', '1191585862541952', '2033593');
+    t('32876147411634979', '473417559', '41651896882701980', '98041110944345173');
+    t('36047604560818', '773294275250609', '386465744598168787', '50006210156471');
+    t('361137861593703', '13244255729639', '1911484136131299703', '662563068256582');
+    t('1', '609739021177711600', '72297886219104209891', '3');
+    t('70003587481041693', '6116577', '387527631298650918625', '73188864807228334');
+    t('59', '414707', '1311336295171970832319', '3834');
+    t('557222551695', '289971034958008', '72855336044532499166157', '1126587401089');
+    t('689', '4573992158612', '356143103736280634562673', '5429');
+    t('25407', '54249087', '6195599464066834683297493', '73920');
+    t('3785887454173764209502', '92006966552', '61565817333575715274034140', '61314028114281538772486');
+    t('1541435034857375759494843', '946399', '133610173441656552818672857', '4868620034450140054489972');
+    t('5398747450367028', '5115300314063699339178', '5632357854798566697113473917', '8379593179369140');
+    t('180370444832', '8', '79273223664738060453489483507', '1128783929036');
+    t('36241', '369', '474014470821066710327438847753', '75664');
+    t('3161951032076426124544', '6762109940816531', '1534263043482451766473278741858', '7423962065376631352231');
+    t('1281292887696886550187936197335', '30927801517', '51296625206724082475117595408996', '1829766164960161123900191315839');
+    t('515074912159', '34856033499', '680211532871487005592894533276371', '757248324190');
+    t('436358152', '946396882132401577278', '8836696379185696318009986585645395', '623395130');
+    t('16', '3310500965274958912524667', '47962935101128815165904036733909432', '17');
+    t('647888585530921', '5', '471891861800978235667401173790419366', '4641236461015776');
+    t('75472044635436', '6129966936', '5455884185341473747842521165846264735', '275718907361897');
+    t('3924733361393363824856369763847579', '42369471418756230809882131977', '42666120255589889046256535534890232647', '7932396854039017236651172522627067');
+    t('500297504643', '20', '508356366570258756297402522141566883041', '6483672361141');
+    t('8893902', '68759083071554', '7658087159877665775510099905346777315313', '18114658');
+
+    // % 0
+
+    // 0
+    t('NaN', 0, +0, 0);
+    t('NaN', 0, -0, 0);
+    t('NaN', 0, 1, 0);
+    t('NaN', 0, 2, 0);
+    t('NaN', 0, -1, 0);
+    t('NaN', 0, -2, 0);
+    t('NaN', 0, NaN, 0);
+    t('NaN', 0, Infinity, 0);
+    t('NaN', 0, -Infinity, 0);
+
+    //-0
+    t('NaN', -0, +0, 0);
+    t('NaN', -0, -0, 0);
+    t('NaN', -0, 1, 0);
+    t('NaN', -0, 2, 0);
+    t('NaN', -0, -1, 0);
+    t('NaN', -0, -2, 0);
+    t('NaN', -0, NaN, 0);
+    t('NaN', -0, Infinity, 0);
+    t('NaN', -0, -Infinity, 0);
+
+    // 1
+    t('NaN', 1, +0, 0);
+    t('NaN', 1, -0, 0);
+    t('NaN', 1, 1, 0);
+    t('NaN', 1, 2, 0);
+    t('NaN', 1, -1, 0);
+    t('NaN', 1, -2, 0);
+    t('NaN', 1, NaN, 0);
+    t('NaN', 1, Infinity, 0);
+    t('NaN', 1, -Infinity, 0);
+
+    // 2
+    t('NaN', 2, +0, 0);
+    t('NaN', 2, -0, 0);
+    t('NaN', 2, 1, 0);
+    t('NaN', 2, 2, 0);
+    t('NaN', 2, -1, 0);
+    t('NaN', 2, -2, 0);
+    t('NaN', 2, NaN, 0);
+    t('NaN', 2, Infinity, 0);
+    t('NaN', 2, -Infinity, 0);
+
+    // -1
+    t('NaN', -1, +0, 0);
+    t('NaN', -1, -0, 0);
+    t('NaN', -1, 1, 0);
+    t('NaN', -1, 2, 0);
+    t('NaN', -1, -1, 0);
+    t('NaN', -1, -2, 0);
+    t('NaN', -1, NaN, 0);
+    t('NaN', -1, Infinity, 0);
+    t('NaN', -1, -Infinity, 0);
+
+    // -2
+    t('NaN', -2, +0, 0);
+    t('NaN', -2, -0, 0);
+    t('NaN', -2, 1, 0);
+    t('NaN', -2, 2, 0);
+    t('NaN', -2, -1, 0);
+    t('NaN', -2, -2, 0);
+    t('NaN', -2, NaN, 0);
+    t('NaN', -2, Infinity, 0);
+    t('NaN', -2, -Infinity, 0);
+
+    // NaN
+    t('NaN', NaN, +0, 0);
+    t('NaN', NaN, -0, 0);
+    t('NaN', NaN, 1, 0);
+    t('NaN', NaN, 2, 0);
+    t('NaN', NaN, -1, 0);
+    t('NaN', NaN, -2, 0);
+    t('NaN', NaN, NaN, 0);
+    t('NaN', NaN, Infinity, 0);
+    t('NaN', NaN, -Infinity, 0);
+
+    // Infinity
+    t('NaN', Infinity, +0, 0);
+    t('NaN', Infinity, -0, 0);
+    t('NaN', Infinity, 1, 0);
+    t('NaN', Infinity, 2, 0);
+    t('NaN', Infinity, -1, 0);
+    t('NaN', Infinity, -2, 0);
+    t('NaN', Infinity, NaN, 0);
+    t('NaN', Infinity, Infinity, 0);
+    t('NaN', Infinity, -Infinity, 0);
+
+    // -Infinity
+    t('NaN', -Infinity, +0, 0);
+    t('NaN', -Infinity, -0, 0);
+    t('NaN', -Infinity, 1, 0);
+    t('NaN', -Infinity, 2, 0);
+    t('NaN', -Infinity, -1, 0);
+    t('NaN', -Infinity, -2, 0);
+    t('NaN', -Infinity, NaN, 0);
+    t('NaN', -Infinity, Infinity, 0);
+    t('NaN', -Infinity, -Infinity, 0);
+
+    // % -0
+
+    // 0
+    t('NaN', 0, +0, -0);
+    t('NaN', 0, -0, -0);
+    t('NaN', 0, 1, -0);
+    t('NaN', 0, 2, -0);
+    t('NaN', 0, -1, -0);
+    t('NaN', 0, -2, -0);
+    t('NaN', 0, NaN, -0);
+    t('NaN', 0, Infinity, -0);
+    t('NaN', 0, -Infinity, -0);
+
+    //-0
+    t('NaN', -0, +0, -0);
+    t('NaN', -0, -0, -0);
+    t('NaN', -0, 1, -0);
+    t('NaN', -0, 2, -0);
+    t('NaN', -0, -1, -0);
+    t('NaN', -0, -2, -0);
+    t('NaN', -0, NaN, -0);
+    t('NaN', -0, Infinity, -0);
+    t('NaN', -0, -Infinity, -0);
+
+    // 1
+    t('NaN', 1, +0, -0);
+    t('NaN', 1, -0, -0);
+    t('NaN', 1, 1, -0);
+    t('NaN', 1, 2, -0);
+    t('NaN', 1, -1, -0);
+    t('NaN', 1, -2, -0);
+    t('NaN', 1, NaN, -0);
+    t('NaN', 1, Infinity, -0);
+    t('NaN', 1, -Infinity, -0);
+
+    // 2
+    t('NaN', 2, +0, -0);
+    t('NaN', 2, -0, -0);
+    t('NaN', 2, 1, -0);
+    t('NaN', 2, 2, -0);
+    t('NaN', 2, -1, -0);
+    t('NaN', 2, -2, -0);
+    t('NaN', 2, NaN, -0);
+    t('NaN', 2, Infinity, -0);
+    t('NaN', 2, -Infinity, -0);
+
+    // -1
+    t('NaN', -1, +0, -0);
+    t('NaN', -1, -0, -0);
+    t('NaN', -1, 1, -0);
+    t('NaN', -1, 2, -0);
+    t('NaN', -1, -1, -0);
+    t('NaN', -1, -2, -0);
+    t('NaN', -1, NaN, -0);
+    t('NaN', -1, Infinity, -0);
+    t('NaN', -1, -Infinity, -0);
+
+    // -2
+    t('NaN', -2, +0, -0);
+    t('NaN', -2, -0, -0);
+    t('NaN', -2, 1, -0);
+    t('NaN', -2, 2, -0);
+    t('NaN', -2, -1, -0);
+    t('NaN', -2, -2, -0);
+    t('NaN', -2, NaN, -0);
+    t('NaN', -2, Infinity, -0);
+    t('NaN', -2, -Infinity, -0);
+
+    // NaN
+    t('NaN', NaN, +0, -0);
+    t('NaN', NaN, -0, -0);
+    t('NaN', NaN, 1, -0);
+    t('NaN', NaN, 2, -0);
+    t('NaN', NaN, -1, -0);
+    t('NaN', NaN, -2, -0);
+    t('NaN', NaN, NaN, -0);
+    t('NaN', NaN, Infinity, -0);
+    t('NaN', NaN, -Infinity, -0);
+
+    // Infinity
+    t('NaN', Infinity, +0, -0);
+    t('NaN', Infinity, -0, -0);
+    t('NaN', Infinity, 1, -0);
+    t('NaN', Infinity, 2, -0);
+    t('NaN', Infinity, -1, -0);
+    t('NaN', Infinity, -2, -0);
+    t('NaN', Infinity, NaN, -0);
+    t('NaN', Infinity, Infinity, -0);
+    t('NaN', Infinity, -Infinity, -0);
+
+    // -Infinity
+    t('NaN', -Infinity, +0, -0);
+    t('NaN', -Infinity, -0, -0);
+    t('NaN', -Infinity, 1, -0);
+    t('NaN', -Infinity, 2, -0);
+    t('NaN', -Infinity, -1, -0);
+    t('NaN', -Infinity, -2, -0);
+    t('NaN', -Infinity, NaN, -0);
+    t('NaN', -Infinity, Infinity, -0);
+    t('NaN', -Infinity, -Infinity, -0);
+
+    // % 1
+
+    // 0
+    t('0', 0, +0, 1);
+    t('0', 0, -0, 1);
+    t('0', 0, 1, 1);
+    t('0', 0, 2, 1);
+    t('NaN', 0, -1, 1);
+    t('NaN', 0, -2, 1);
+    t('NaN', 0, NaN, 1);
+    t('0', 0, Infinity, 1);
+    t('NaN', 0, -Infinity, 1);
+
+    //-0
+    t('0', -0, +0, 1);
+    t('0', -0, -0, 1);
+    t('-0', -0, 1, 1);
+    t('0', -0, 2, 1);
+    t('NaN', -0, -1, 1);
+    t('NaN', -0, -2, 1);
+    t('NaN', -0, NaN, 1);
+    t('0', -0, Infinity, 1);
+    t('NaN', -0, -Infinity, 1);
+
+    // 1
+    t('0', 1, +0, 1);
+    t('0', 1, -0, 1);
+    t('0', 1, 1, 1);
+    t('0', 1, 2, 1);
+    t('0', 1, -1, 1);
+    t('0', 1, -2, 1);
+    t('NaN', 1, NaN, 1);
+    t('NaN', 1, Infinity, 1);
+    t('NaN', 1, -Infinity, 1);
+
+    // 2
+    t('0', 2, +0, 1);
+    t('0', 2, -0, 1);
+    t('0', 2, 1, 1);
+    t('0', 2, 2, 1);
+    t('0.5', 2, -1, 1);
+    t('0.25', 2, -2, 1);
+    t('NaN', 2, NaN, 1);
+    t('NaN', 2, Infinity, 1);
+    t('0', 2, -Infinity, 1);
+
+    // -1
+    t('0', -1, +0, 1);
+    t('0', -1, -0, 1);
+    t('-0', -1, 1, 1);
+    t('0', -1, 2, 1);
+    t('-0', -1, -1, 1);
+    t('0', -1, -2, 1);
+    t('NaN', -1, NaN, 1);
+    t('NaN', -1, Infinity, 1);
+    t('NaN', -1, -Infinity, 1);
+
+    // -2
+    t('0', -2, +0, 1);
+    t('0', -2, -0, 1);
+    t('-0', -2, 1, 1);
+    t('0', -2, 2, 1);
+    t('-0.5', -2, -1, 1);
+    t('0.25', -2, -2, 1);
+    t('NaN', -2, NaN, 1);
+    t('NaN', -2, Infinity, 1);
+    t('0', -2, -Infinity, 1);
+
+    // NaN
+    t('0', NaN, +0, 1);
+    t('0', NaN, -0, 1);
+    t('NaN', NaN, 1, 1);
+    t('NaN', NaN, 2, 1);
+    t('NaN', NaN, -1, 1);
+    t('NaN', NaN, -2, 1);
+    t('NaN', NaN, NaN, 1);
+    t('NaN', NaN, Infinity, 1);
+    t('NaN', NaN, -Infinity, 1);
+
+    // Infinity
+    t('0', Infinity, +0, 1);
+    t('0', Infinity, -0, 1);
+    t('NaN', Infinity, 1, 1);
+    t('NaN', Infinity, 2, 1);
+    t('0', Infinity, -1, 1);
+    t('0', Infinity, -2, 1);
+    t('NaN', Infinity, NaN, 1);
+    t('NaN', Infinity, Infinity, 1);
+    t('0', Infinity, -Infinity, 1);
+
+    // -Infinity
+    t('0', -Infinity, +0, 1);
+    t('0', -Infinity, -0, 1);
+    t('NaN', -Infinity, 1, 1);
+    t('NaN', -Infinity, 2, 1);
+    t('-0', -Infinity, -1, 1);
+    t('0', -Infinity, -2, 1);
+    t('NaN', -Infinity, NaN, 1);
+    t('NaN', -Infinity, Infinity, 1);
+    t('0', -Infinity, -Infinity, 1);
+
+    // % 2
+
+    // 0
+    t('1', 0, +0, 2);
+    t('1', 0, -0, 2);
+    t('0', 0, 1, 2);
+    t('0', 0, 2, 2);
+    t('NaN', 0, -1, 2);
+    t('NaN', 0, -2, 2);
+    t('NaN', 0, NaN, 2);
+    t('0', 0, Infinity, 2);
+    t('NaN', 0, -Infinity, 2);
+
+    //-0
+    t('1', -0, +0, 2);
+    t('1', -0, -0, 2);
+    t('-0', -0, 1, 2);
+    t('0', -0, 2, 2);
+    t('NaN', -0, -1, 2);
+    t('NaN', -0, -2, 2);
+    t('NaN', -0, NaN, 2);
+    t('0', -0, Infinity, 2);
+    t('NaN', -0, -Infinity, 2);
+
+    // 1
+    t('1', 1, +0, 2);
+    t('1', 1, -0, 2);
+    t('1', 1, 1, 2);
+    t('1', 1, 2, 2);
+    t('1', 1, -1, 2);
+    t('1', 1, -2, 2);
+    t('NaN', 1, NaN, 2);
+    t('NaN', 1, Infinity, 2);
+    t('NaN', 1, -Infinity, 2);
+
+    // 2
+    t('1', 2, +0, 2);
+    t('1', 2, -0, 2);
+    t('0', 2, 1, 2);
+    t('0', 2, 2, 2);
+    t('0.5', 2, -1, 2);
+    t('0.25', 2, -2, 2);
+    t('NaN', 2, NaN, 2);
+    t('NaN', 2, Infinity, 2);
+    t('0', 2, -Infinity, 2);
+
+    // -1
+    t('1', -1, +0, 2);
+    t('1', -1, -0, 2);
+    t('-1', -1, 1, 2);
+    t('1', -1, 2, 2);
+    t('-1', -1, -1, 2);
+    t('1', -1, -2, 2);
+    t('NaN', -1, NaN, 2);
+    t('NaN', -1, Infinity, 2);
+    t('NaN', -1, -Infinity, 2);
+
+    // -2
+    t('1', -2, +0, 2);
+    t('1', -2, -0, 2);
+    t('-0', -2, 1, 2);
+    t('0', -2, 2, 2);
+    t('-0.5', -2, -1, 2);
+    t('0.25', -2, -2, 2);
+    t('NaN', -2, NaN, 2);
+    t('NaN', -2, Infinity, 2);
+    t('0', -2, -Infinity, 2);
+
+    // NaN
+    t('1', NaN, +0, 2);
+    t('1', NaN, -0, 2);
+    t('NaN', NaN, 1, 2);
+    t('NaN', NaN, 2, 2);
+    t('NaN', NaN, -1, 2);
+    t('NaN', NaN, -2, 2);
+    t('NaN', NaN, NaN, 2);
+    t('NaN', NaN, Infinity, 2);
+    t('NaN', NaN, -Infinity, 2);
+
+    // Infinity
+    t('1', Infinity, +0, 2);
+    t('1', Infinity, -0, 2);
+    t('NaN', Infinity, 1, 2);
+    t('NaN', Infinity, 2, 2);
+    t('0', Infinity, -1, 2);
+    t('0', Infinity, -2, 2);
+    t('NaN', Infinity, NaN, 2);
+    t('NaN', Infinity, Infinity, 2);
+    t('0', Infinity, -Infinity, 2);
+
+    // -Infinity
+    t('1', -Infinity, +0, 2);
+    t('1', -Infinity, -0, 2);
+    t('NaN', -Infinity, 1, 2);
+    t('NaN', -Infinity, 2, 2);
+    t('-0', -Infinity, -1, 2);
+    t('0', -Infinity, -2, 2);
+    t('NaN', -Infinity, NaN, 2);
+    t('NaN', -Infinity, Infinity, 2);
+    t('0', -Infinity, -Infinity, 2);
+
+    // % -1
+
+    // 0
+    t('0', 0, +0, -1);
+    t('0', 0, -0, -1);
+    t('0', 0, 1, -1);
+    t('0', 0, 2, -1);
+    t('NaN', 0, -1, -1);
+    t('NaN', 0, -2, -1);
+    t('NaN', 0, NaN, -1);
+    t('0', 0, Infinity, -1);
+    t('NaN', 0, -Infinity, -1);
+
+    //-0
+    t('0', -0, +0, -1);
+    t('0', -0, -0, -1);
+    t('-0', -0, 1, -1);
+    t('0', -0, 2, -1);
+    t('NaN', -0, -1, -1);
+    t('NaN', -0, -2, -1);
+    t('NaN', -0, NaN, -1);
+    t('0', -0, Infinity, -1);
+    t('NaN', -0, -Infinity, -1);
+
+    // 1
+    t('0', 1, +0, -1);
+    t('0', 1, -0, -1);
+    t('0', 1, 1, -1);
+    t('0', 1, 2, -1);
+    t('0', 1, -1, -1);
+    t('0', 1, -2, -1);
+    t('NaN', 1, NaN, -1);
+    t('NaN', 1, Infinity, -1);
+    t('NaN', 1, -Infinity, -1);
+
+    // 2
+    t('0', 2, +0, -1);
+    t('0', 2, -0, -1);
+    t('0', 2, 1, -1);
+    t('0', 2, 2, -1);
+    t('0.5', 2, -1, -1);
+    t('0.25', 2, -2, -1);
+    t('NaN', 2, NaN, -1);
+    t('NaN', 2, Infinity, -1);
+    t('0', 2, -Infinity, -1);
+
+    // -1
+    t('0', -1, +0, -1);
+    t('0', -1, -0, -1);
+    t('-0', -1, 1, -1);
+    t('0', -1, 2, -1);
+    t('-0', -1, -1, -1);
+    t('0', -1, -2, -1);
+    t('NaN', -1, NaN, -1);
+    t('NaN', -1, Infinity, -1);
+    t('NaN', -1, -Infinity, -1);
+
+    // -2
+    t('0', -2, +0, -1);
+    t('0', -2, -0, -1);
+    t('-0', -2, 1, -1);
+    t('0', -2, 2, -1);
+    t('-0.5', -2, -1, -1);
+    t('0.25', -2, -2, -1);
+    t('NaN', -2, NaN, -1);
+    t('NaN', -2, Infinity, -1);
+    t('0', -2, -Infinity, -1);
+
+    // NaN
+    t('0', NaN, +0, -1);
+    t('0', NaN, -0, -1);
+    t('NaN', NaN, 1, -1);
+    t('NaN', NaN, 2, -1);
+    t('NaN', NaN, -1, -1);
+    t('NaN', NaN, -2, -1);
+    t('NaN', NaN, NaN, -1);
+    t('NaN', NaN, Infinity, -1);
+    t('NaN', NaN, -Infinity, -1);
+
+    // Infinity
+    t('0', Infinity, +0, -1);
+    t('0', Infinity, -0, -1);
+    t('NaN', Infinity, 1, -1);
+    t('NaN', Infinity, 2, -1);
+    t('0', Infinity, -1, -1);
+    t('0', Infinity, -2, -1);
+    t('NaN', Infinity, NaN, -1);
+    t('NaN', Infinity, Infinity, -1);
+    t('0', Infinity, -Infinity, -1);
+
+    // -Infinity
+    t('0', -Infinity, +0, -1);
+    t('0', -Infinity, -0, -1);
+    t('NaN', -Infinity, 1, -1);
+    t('NaN', -Infinity, 2, -1);
+    t('-0', -Infinity, -1, -1);
+    t('0', -Infinity, -2, -1);
+    t('NaN', -Infinity, NaN, -1);
+    t('NaN', -Infinity, Infinity, -1);
+    t('0', -Infinity, -Infinity, -1);
+
+    // % -2
+
+    // 0
+    t('1', 0, +0, -2);
+    t('1', 0, -0, -2);
+    t('0', 0, 1, -2);
+    t('0', 0, 2, -2);
+    t('NaN', 0, -1, -2);
+    t('NaN', 0, -2, -2);
+    t('NaN', 0, NaN, -2);
+    t('0', 0, Infinity, -2);
+    t('NaN', 0, -Infinity, -2);
+
+    //-0
+    t('1', -0, +0, -2);
+    t('1', -0, -0, -2);
+    t('-0', -0, 1, -2);
+    t('0', -0, 2, -2);
+    t('NaN', -0, -1, -2);
+    t('NaN', -0, -2, -2);
+    t('NaN', -0, NaN, -2);
+    t('0', -0, Infinity, -2);
+    t('NaN', -0, -Infinity, -2);
+
+    // 1
+    t('1', 1, +0, -2);
+    t('1', 1, -0, -2);
+    t('1', 1, 1, -2);
+    t('1', 1, 2, -2);
+    t('1', 1, -1, -2);
+    t('1', 1, -2, -2);
+    t('NaN', 1, NaN, -2);
+    t('NaN', 1, Infinity, -2);
+    t('NaN', 1, -Infinity, -2);
+
+    // 2
+    t('1', 2, +0, -2);
+    t('1', 2, -0, -2);
+    t('0', 2, 1, -2);
+    t('0', 2, 2, -2);
+    t('0.5', 2, -1, -2);
+    t('0.25', 2, -2, -2);
+    t('NaN', 2, NaN, -2);
+    t('NaN', 2, Infinity, -2);
+    t('0', 2, -Infinity, -2);
+
+    // -1
+    t('1', -1, +0, -2);
+    t('1', -1, -0, -2);
+    t('-1', -1, 1, -2);
+    t('1', -1, 2, -2);
+    t('-1', -1, -1, -2);
+    t('1', -1, -2, -2);
+    t('NaN', -1, NaN, -2);
+    t('NaN', -1, Infinity, -2);
+    t('NaN', -1, -Infinity, -2);
+
+    // -2
+    t('1', -2, +0, -2);
+    t('1', -2, -0, -2);
+    t('-0', -2, 1, -2);
+    t('0', -2, 2, -2);
+    t('-0.5', -2, -1, -2);
+    t('0.25', -2, -2, -2);
+    t('NaN', -2, NaN, -2);
+    t('NaN', -2, Infinity, -2);
+    t('0', -2, -Infinity, -2);
+
+    // NaN
+    t('1', NaN, +0, -2);
+    t('1', NaN, -0, -2);
+    t('NaN', NaN, 1, -2);
+    t('NaN', NaN, 2, -2);
+    t('NaN', NaN, -1, -2);
+    t('NaN', NaN, -2, -2);
+    t('NaN', NaN, NaN, -2);
+    t('NaN', NaN, Infinity, -2);
+    t('NaN', NaN, -Infinity, -2);
+
+    // Infinity
+    t('1', Infinity, +0, -2);
+    t('1', Infinity, -0, -2);
+    t('NaN', Infinity, 1, -2);
+    t('NaN', Infinity, 2, -2);
+    t('0', Infinity, -1, -2);
+    t('0', Infinity, -2, -2);
+    t('NaN', Infinity, NaN, -2);
+    t('NaN', Infinity, Infinity, -2);
+    t('0', Infinity, -Infinity, -2);
+
+    // -Infinity
+    t('1', -Infinity, +0, -2);
+    t('1', -Infinity, -0, -2);
+    t('NaN', -Infinity, 1, -2);
+    t('NaN', -Infinity, 2, -2);
+    t('-0', -Infinity, -1, -2);
+    t('0', -Infinity, -2, -2);
+    t('NaN', -Infinity, NaN, -2);
+    t('NaN', -Infinity, Infinity, -2);
+    t('0', -Infinity, -Infinity, -2);
+
+    // % NaN
+
+    // 0
+    t('NaN', 0, +0, NaN);
+    t('NaN', 0, -0, NaN);
+    t('NaN', 0, 1, NaN);
+    t('NaN', 0, 2, NaN);
+    t('NaN', 0, -1, NaN);
+    t('NaN', 0, -2, NaN);
+    t('NaN', 0, NaN, NaN);
+    t('NaN', 0, Infinity, NaN);
+    t('NaN', 0, -Infinity, NaN);
+
+    //-0
+    t('NaN', -0, +0, NaN);
+    t('NaN', -0, -0, NaN);
+    t('NaN', -0, 1, NaN);
+    t('NaN', -0, 2, NaN);
+    t('NaN', -0, -1, NaN);
+    t('NaN', -0, -2, NaN);
+    t('NaN', -0, NaN, NaN);
+    t('NaN', -0, Infinity, NaN);
+    t('NaN', -0, -Infinity, NaN);
+
+    // 1
+    t('NaN', 1, +0, NaN);
+    t('NaN', 1, -0, NaN);
+    t('NaN', 1, 1, NaN);
+    t('NaN', 1, 2, NaN);
+    t('NaN', 1, -1, NaN);
+    t('NaN', 1, -2, NaN);
+    t('NaN', 1, NaN, NaN);
+    t('NaN', 1, Infinity, NaN);
+    t('NaN', 1, -Infinity, NaN);
+
+    // 2
+    t('NaN', 2, +0, NaN);
+    t('NaN', 2, -0, NaN);
+    t('NaN', 2, 1, NaN);
+    t('NaN', 2, 2, NaN);
+    t('NaN', 2, -1, NaN);
+    t('NaN', 2, -2, NaN);
+    t('NaN', 2, NaN, NaN);
+    t('NaN', 2, Infinity, NaN);
+    t('NaN', 2, -Infinity, NaN);
+
+    // -1
+    t('NaN', -1, +0, NaN);
+    t('NaN', -1, -0, NaN);
+    t('NaN', -1, 1, NaN);
+    t('NaN', -1, 2, NaN);
+    t('NaN', -1, -1, NaN);
+    t('NaN', -1, -2, NaN);
+    t('NaN', -1, NaN, NaN);
+    t('NaN', -1, Infinity, NaN);
+    t('NaN', -1, -Infinity, NaN);
+
+    // -2
+    t('NaN', -2, +0, NaN);
+    t('NaN', -2, -0, NaN);
+    t('NaN', -2, 1, NaN);
+    t('NaN', -2, 2, NaN);
+    t('NaN', -2, -1, NaN);
+    t('NaN', -2, -2, NaN);
+    t('NaN', -2, NaN, NaN);
+    t('NaN', -2, Infinity, NaN);
+    t('NaN', -2, -Infinity, NaN);
+
+    // NaN
+    t('NaN', NaN, +0, NaN);
+    t('NaN', NaN, -0, NaN);
+    t('NaN', NaN, 1, NaN);
+    t('NaN', NaN, 2, NaN);
+    t('NaN', NaN, -1, NaN);
+    t('NaN', NaN, -2, NaN);
+    t('NaN', NaN, NaN, NaN);
+    t('NaN', NaN, Infinity, NaN);
+    t('NaN', NaN, -Infinity, NaN);
+
+    // Infinity
+    t('NaN', Infinity, +0, NaN);
+    t('NaN', Infinity, -0, NaN);
+    t('NaN', Infinity, 1, NaN);
+    t('NaN', Infinity, 2, NaN);
+    t('NaN', Infinity, -1, NaN);
+    t('NaN', Infinity, -2, NaN);
+    t('NaN', Infinity, NaN, NaN);
+    t('NaN', Infinity, Infinity, NaN);
+    t('NaN', Infinity, -Infinity, NaN);
+
+    // -Infinity
+    t('NaN', -Infinity, +0, NaN);
+    t('NaN', -Infinity, -0, NaN);
+    t('NaN', -Infinity, 1, NaN);
+    t('NaN', -Infinity, 2, NaN);
+    t('NaN', -Infinity, -1, NaN);
+    t('NaN', -Infinity, -2, NaN);
+    t('NaN', -Infinity, NaN, NaN);
+    t('NaN', -Infinity, Infinity, NaN);
+    t('NaN', -Infinity, -Infinity, NaN);
+
+    // % Infinity
+
+    // 0
+    t('1', 0, +0, Infinity);
+    t('1', 0, -0, Infinity);
+    t('0', 0, 1, Infinity);
+    t('0', 0, 2, Infinity);
+    t('NaN', 0, -1, Infinity);
+    t('NaN', 0, -2, Infinity);
+    t('NaN', 0, NaN, Infinity);
+    t('0', 0, Infinity, Infinity);
+    t('NaN', 0, -Infinity, Infinity);
+
+    //-0
+    t('1', -0, +0, Infinity);
+    t('1', -0, -0, Infinity);
+    t('-0', -0, 1, Infinity);
+    t('0', -0, 2, Infinity);
+    t('NaN', -0, -1, Infinity);
+    t('NaN', -0, -2, Infinity);
+    t('NaN', -0, NaN, Infinity);
+    t('0', -0, Infinity, Infinity);
+    t('NaN', -0, -Infinity, Infinity);
+
+    // 1
+    t('1', 1, +0, Infinity);
+    t('1', 1, -0, Infinity);
+    t('1', 1, 1, Infinity);
+    t('1', 1, 2, Infinity);
+    t('1', 1, -1, Infinity);
+    t('1', 1, -2, Infinity);
+    t('NaN', 1, NaN, Infinity);
+    t('NaN', 1, Infinity, Infinity);
+    t('NaN', 1, -Infinity, Infinity);
+
+    // 2
+    t('1', 2, +0, Infinity);
+    t('1', 2, -0, Infinity);
+    t('2', 2, 1, Infinity);
+    t('4', 2, 2, Infinity);
+    t('0.5', 2, -1, Infinity);
+    t('0.25', 2, -2, Infinity);
+    t('NaN', 2, NaN, Infinity);
+    t('NaN', 2, Infinity, Infinity);
+    t('0', 2, -Infinity, Infinity);
+
+    // -1
+    t('1', -1, +0, Infinity);
+    t('1', -1, -0, Infinity);
+    t('-1', -1, 1, Infinity);
+    t('1', -1, 2, Infinity);
+    t('-1', -1, -1, Infinity);
+    t('1', -1, -2, Infinity);
+    t('NaN', -1, NaN, Infinity);
+    t('NaN', -1, Infinity, Infinity);
+    t('NaN', -1, -Infinity, Infinity);
+
+    // -2
+    t('1', -2, +0, Infinity);
+    t('1', -2, -0, Infinity);
+    t('-2', -2, 1, Infinity);
+    t('4', -2, 2, Infinity);
+    t('-0.5', -2, -1, Infinity);
+    t('0.25', -2, -2, Infinity);
+    t('NaN', -2, NaN, Infinity);
+    t('NaN', -2, Infinity, Infinity);
+    t('0', -2, -Infinity, Infinity);
+
+    // NaN
+    t('1', NaN, +0, Infinity);
+    t('1', NaN, -0, Infinity);
+    t('NaN', NaN, 1, Infinity);
+    t('NaN', NaN, 2, Infinity);
+    t('NaN', NaN, -1, Infinity);
+    t('NaN', NaN, -2, Infinity);
+    t('NaN', NaN, NaN, Infinity);
+    t('NaN', NaN, Infinity, Infinity);
+    t('NaN', NaN, -Infinity, Infinity);
+
+    // Infinity
+    t('1', Infinity, +0, Infinity);
+    t('1', Infinity, -0, Infinity);
+    t('NaN', Infinity, 1, Infinity);
+    t('NaN', Infinity, 2, Infinity);
+    t('0', Infinity, -1, Infinity);
+    t('0', Infinity, -2, Infinity);
+    t('NaN', Infinity, NaN, Infinity);
+    t('NaN', Infinity, Infinity, Infinity);
+    t('0', Infinity, -Infinity, Infinity);
+
+    // -Infinity
+    t('1', -Infinity, +0, Infinity);
+    t('1', -Infinity, -0, Infinity);
+    t('NaN', -Infinity, 1, Infinity);
+    t('NaN', -Infinity, 2, Infinity);
+    t('-0', -Infinity, -1, Infinity);
+    t('0', -Infinity, -2, Infinity);
+    t('NaN', -Infinity, NaN, Infinity);
+    t('NaN', -Infinity, Infinity, Infinity);
+    t('0', -Infinity, -Infinity, Infinity);
+
+    // % -Infinity
+
+    // 0
+    t('1', 0, +0, -Infinity);
+    t('1', 0, -0, -Infinity);
+    t('0', 0, 1, -Infinity);
+    t('0', 0, 2, -Infinity);
+    t('NaN', 0, -1, -Infinity);
+    t('NaN', 0, -2, -Infinity);
+    t('NaN', 0, NaN, -Infinity);
+    t('0', 0, Infinity, -Infinity);
+    t('NaN', 0, -Infinity, -Infinity);
+
+    //-0
+    t('1', -0, +0, -Infinity);
+    t('1', -0, -0, -Infinity);
+    t('-0', -0, 1, -Infinity);
+    t('0', -0, 2, -Infinity);
+    t('NaN', -0, -1, -Infinity);
+    t('NaN', -0, -2, -Infinity);
+    t('NaN', -0, NaN, -Infinity);
+    t('0', -0, Infinity, -Infinity);
+    t('NaN', -0, -Infinity, -Infinity);
+
+    // 1
+    t('1', 1, +0, -Infinity);
+    t('1', 1, -0, -Infinity);
+    t('1', 1, 1, -Infinity);
+    t('1', 1, 2, -Infinity);
+    t('1', 1, -1, -Infinity);
+    t('1', 1, -2, -Infinity);
+    t('NaN', 1, NaN, -Infinity);
+    t('NaN', 1, Infinity, -Infinity);
+    t('NaN', 1, -Infinity, -Infinity);
+
+    // 2
+    t('1', 2, +0, -Infinity);
+    t('1', 2, -0, -Infinity);
+    t('2', 2, 1, -Infinity);
+    t('4', 2, 2, -Infinity);
+    t('0.5', 2, -1, -Infinity);
+    t('0.25', 2, -2, -Infinity);
+    t('NaN', 2, NaN, -Infinity);
+    t('NaN', 2, Infinity, -Infinity);
+    t('0', 2, -Infinity, -Infinity);
+
+    // -1
+    t('1', -1, +0, -Infinity);
+    t('1', -1, -0, -Infinity);
+    t('-1', -1, 1, -Infinity);
+    t('1', -1, 2, -Infinity);
+    t('-1', -1, -1, -Infinity);
+    t('1', -1, -2, -Infinity);
+    t('NaN', -1, NaN, -Infinity);
+    t('NaN', -1, Infinity, -Infinity);
+    t('NaN', -1, -Infinity, -Infinity);
+
+    // -2
+    t('1', -2, +0, -Infinity);
+    t('1', -2, -0, -Infinity);
+    t('-2', -2, 1, -Infinity);
+    t('4', -2, 2, -Infinity);
+    t('-0.5', -2, -1, -Infinity);
+    t('0.25', -2, -2, -Infinity);
+    t('NaN', -2, NaN, -Infinity);
+    t('NaN', -2, Infinity, -Infinity);
+    t('0', -2, -Infinity, -Infinity);
+
+    // NaN
+    t('1', NaN, +0, -Infinity);
+    t('1', NaN, -0, -Infinity);
+    t('NaN', NaN, 1, -Infinity);
+    t('NaN', NaN, 2, -Infinity);
+    t('NaN', NaN, -1, -Infinity);
+    t('NaN', NaN, -2, -Infinity);
+    t('NaN', NaN, NaN, -Infinity);
+    t('NaN', NaN, Infinity, -Infinity);
+    t('NaN', NaN, -Infinity, -Infinity);
+
+    // Infinity
+    t('1', Infinity, +0, -Infinity);
+    t('1', Infinity, -0, -Infinity);
+    t('NaN', Infinity, 1, -Infinity);
+    t('NaN', Infinity, 2, -Infinity);
+    t('0', Infinity, -1, -Infinity);
+    t('0', Infinity, -2, -Infinity);
+    t('NaN', Infinity, NaN, -Infinity);
+    t('NaN', Infinity, Infinity, -Infinity);
+    t('0', Infinity, -Infinity, -Infinity);
+
+    // -Infinity
+    t('1', -Infinity, +0, -Infinity);
+    t('1', -Infinity, -0, -Infinity);
+    t('NaN', -Infinity, 1, -Infinity);
+    t('NaN', -Infinity, 2, -Infinity);
+    t('-0', -Infinity, -1, -Infinity);
+    t('0', -Infinity, -2, -Infinity);
+    t('NaN', -Infinity, NaN, -Infinity);
+    t('NaN', -Infinity, Infinity, -Infinity);
+    t('0', -Infinity, -Infinity, -Infinity);
 });
 
 
@@ -1857,47 +2841,34 @@ Notes:
 
   n to the power of 1 is n
   Anything to the power of 0 is 1
-  Math.pow(2, null) = 1                  // NaN for BigNumber
-  Math.pow(2, undefined) = NaN
-  Math.pow(2, NaN) = NaN
-  Math.pow(2, 'rferf') = NaN
-  Math.pow(2, []) = 1                    // NaN for BigNumber
-  Math.pow(2, {}) = NaN                  // NaN for BigNumber
-  Math.pow(2, 1e4) = Infinity
-  Math.pow(2, -1e4) = 0
-  Math.pow(2, 1e-16) = 1
-  Math.pow(2, -1e-17) = 1
   A negative number to a non-integer power is NaN
   0 to negative power is Infinity
 
   --------------------------------------------------------------------------------
 
-  http://es5.github.com/#x15.8.2.13
-  15.8.2.13 pow (x, y)
-  Returns an implementation-dependent approximation to the result of raising x to the power y.
+  If exponent is NaN, the result is NaN.
+  If exponent is +0, the result is 1, even if base is NaN.
+  If exponent is -0, the result is 1, even if base is NaN.
+  If base is NaN and exponent is nonzero, the result is NaN.
+  If abs(base) > 1 and exponent is +∞, the result is +∞.
+  If abs(base) > 1 and exponent is -∞, the result is +0.
+  If abs(base) is 1 and exponent is +∞, the result is NaN.
+  If abs(base) is 1 and exponent is -∞, the result is NaN.
+  If abs(base) < 1 and exponent is +∞, the result is +0.
+  If abs(base) < 1 and exponent is -∞, the result is +∞.
+  If base is +∞ and exponent > 0, the result is +∞.
+  If base is +∞ and exponent < 0, the result is +0.
+  If base is -∞ and exponent > 0 and exponent is an odd integer, the result is -∞.
+  If base is -∞ and exponent > 0 and exponent is not an odd integer, the result is +∞.
+  If base is -∞ and exponent < 0 and exponent is an odd integer, the result is -0.
+  If base is -∞ and exponent < 0 and exponent is not an odd integer, the result is +0.
+  If base is +0 and exponent > 0, the result is +0.
+  If base is +0 and exponent < 0, the result is +∞.
+  If base is -0 and exponent > 0 and exponent is an odd integer, the result is -0.
+  If base is -0 and exponent > 0 and exponent is not an odd integer, the result is +0.
+  If base is -0 and exponent < 0 and exponent is an odd integer, the result is -∞.
+  If base is -0 and exponent < 0 and exponent is not an odd integer, the result is +∞.
+  If base < 0 and base is finite and exponent is finite and exponent is not an integer, the result is NaN.
 
-  If y is NaN, the result is NaN.
-  If y is +0, the result is 1, even if x is NaN.
-  If y is -0, the result is 1, even if x is NaN.
-  If x is NaN and y is nonzero, the result is NaN.
-  If abs(x)>1 and y is +8, the result is +8.
-  If abs(x)>1 and y is -8, the result is +0.
-  If abs(x)==1 and y is +8, the result is NaN.
-  If abs(x)==1 and y is -8, the result is NaN.
-  If abs(x)<1 and y is +8, the result is +0.
-  If abs(x)<1 and y is -8, the result is +8.
-  If x is +8 and y>0, the result is +8.
-  If x is +8 and y<0, the result is +0.
-  If x is -8 and y>0 and y is an odd integer, the result is -8.
-  If x is -8 and y>0 and y is not an odd integer, the result is +8.
-  If x is -8 and y<0 and y is an odd integer, the result is -0.
-  If x is -8 and y<0 and y is not an odd integer, the result is +0.
-  If x is +0 and y>0, the result is +0.
-  If x is +0 and y<0, the result is +8.
-  If x is -0 and y>0 and y is an odd integer, the result is -0.
-  If x is -0 and y>0 and y is not an odd integer, the result is +0.
-  If x is -0 and y<0 and y is an odd integer, the result is -8.
-  If x is -0 and y<0 and y is not an odd integer, the result is +8.
-  If x<0 and x is finite and y is finite and y is not an integer, the result is NaN.
 
 */

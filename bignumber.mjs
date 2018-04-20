@@ -799,7 +799,6 @@ function clone(configObject) {
               ? ( alphabet = ALPHABET, decimal )
               : ( alphabet = decimal, ALPHABET ) );
 
-
             // xc now represents str as an integer and converted to baseOut. e is the exponent.
             e = k = xc.length;
 
@@ -924,6 +923,7 @@ function clone(configObject) {
                     }
                 }
             }
+
             return cmp;
         }
 
@@ -1568,11 +1568,131 @@ function clone(configObject) {
 
 
     /*
-     * Return true if the value of this BigNumber is equal to the value of BigNumber(y, b),
-     * otherwise return false.
+     * Return a BigNumber whose value is the value of this BigNumber exponentiated by n.
+     *
+     * If m is present, return the result modulo m.
+     * If n is negative round according to DECIMAL_PLACES and ROUNDING_MODE.
+     * If POW_PRECISION is non-zero and m is not present, round to POW_PRECISION using ROUNDING_MODE.
+     *
+     * The modular power operation works efficiently when x, n, and m are integers, otherwise it
+     * is equivalent to calculating x.exponentiatedBy(n).modulo(m) with a POW_PRECISION of 0.
+     *
+     * n {number|string|BigNumber} The exponent. An integer.
+     * [m] {number|string|BigNumber} The modulus.
+     *
+     * '[BigNumber Error] Exponent not an integer: {n}'
      */
-    P.isEqualTo = P.eq = function ( y, b ) {
-        return compare( this, new BigNumber( y, b ) ) === 0;
+    P.exponentiatedBy = P.pow = function ( n, m ) {
+        var half, isModExp, k, more, nIsBig, nIsNeg, nIsOdd, y,
+            x = this;
+
+        n = new BigNumber(n);
+
+        if ( n.c && !n.isInteger() ) {
+            throw Error
+                ( bignumberError + 'Exponent not an integer: ' + n );
+        }
+
+        if ( m != null ) m = new BigNumber(m);
+
+        // Exponent of MAX_SAFE_INTEGER is 15.
+        nIsBig = n.e > 14;
+
+        // If x is NaN, ±Infinity, ±0 or ±1, or n is ±Infinity, NaN or ±0.
+        if ( !x.c || !x.c[0] || x.c[0] == 1 && !x.e && x.c.length == 1 || !n.c || !n.c[0] ) {
+
+            // The sign of the result of pow when x is negative depends on the evenness of n.
+            // If +n overflows to ±Infinity, the evenness of n would be not be known.
+            y = new BigNumber( Math.pow( +x.valueOf(), nIsBig ? 2 - isOdd(n) : +n ) );
+            return m ? y.mod(m) : y;
+        }
+
+        nIsNeg = n.s < 0;
+
+        if (m) {
+
+            // x % m returns NaN if abs(m) is zero, or m is NaN.
+            if ( m.c ? !m.c[0] : !m.s ) return new BigNumber(NaN);
+
+            isModExp = !nIsNeg && x.isInteger() && m.isInteger();
+
+            if (isModExp) x = x.mod(m);
+
+        // Overflow to ±Infinity: >=2**1e10 or >=1.0000024**1e15.
+        // Underflow to ±0: <=0.79**1e10 or <=0.9999975**1e15.
+        } else if ( n.e > 9 && ( x.e > 0 || x.e < -1 || ( x.e == 0
+            // [ 1, 240000000 ]
+            ? x.c[0] > 1 || nIsBig && x.c[1] >= 24e7
+            // [ 80000000000000 ]  [ 99999750000000 ]
+            : x.c[0] < 8e13 || nIsBig && x.c[0] <= 9999975e7 ) ) ) {
+
+            // If x is negative and n is odd, k = -0, else k = 0.
+            k = x.s < 0 && isOdd(n) ? -0 : 0;
+
+            // If x >= 1, k = ±Infinity.
+            if ( x.e > -1 ) k = 1 / k;
+
+            // If n is negative return ±0, else return ±Infinity.
+            return new BigNumber( nIsNeg ? 1 / k : k );
+
+        } else if (POW_PRECISION) {
+
+            // Truncating each coefficient array to a length of k after each multiplication
+            // equates to truncating significant digits to POW_PRECISION + [28, 41],
+            // i.e. there will be a minimum of 28 guard digits retained.
+            k = mathceil( POW_PRECISION / LOG_BASE + 2 );
+        }
+
+        if (nIsBig) {
+            half = new BigNumber(0.5);
+            nIsOdd = isOdd(n);
+        } else {
+            nIsOdd = n % 2;
+        }
+
+        if (nIsNeg) n.s = 1;
+
+        y = new BigNumber(ONE);
+
+        // Performs 54 loop iterations for n of 9007199254740991.
+        for ( ; ; ) {
+
+            if (nIsOdd) {
+                y = y.times(x);
+                if ( !y.c ) break;
+
+                if (k) {
+                    if ( y.c.length > k ) y.c.length = k;
+                } else if (isModExp) {
+                    y = y.mod(m);    //y = y.minus( div( y, m, 0, MODULO_MODE ).times(m) );
+                }
+            }
+
+            if (nIsBig) {
+                n = n.times(half);
+                round( n, n.e + 1, 1 );
+                if ( !n.c[0] ) break;
+                nIsBig = n.e > 14;
+                nIsOdd = isOdd(n);
+            } else {
+                n = mathfloor( n / 2 );
+                if ( !n ) break;
+                nIsOdd = n % 2;
+            }
+
+            x = x.times(x);
+
+            if (k) {
+                if ( x.c && x.c.length > k ) x.c.length = k;
+            } else if (isModExp) {
+                x = x.mod(m);    //x = x.minus( div( x, m, 0, MODULO_MODE ).times(m) );
+            }
+        }
+
+        if (isModExp) return y;
+        if (nIsNeg) y = ONE.div(y);
+
+        return m ? y.mod(m) : k ? round( y, POW_PRECISION, ROUNDING_MODE, more ) : y;
     };
 
 
@@ -1589,6 +1709,23 @@ function clone(configObject) {
         if ( rm == null ) rm = ROUNDING_MODE;
         else intCheck( rm, 0, 8 );
         return round( n, n.e + 1, rm );
+    };
+
+
+    /*
+     * Return true if the value of this BigNumber is equal to the value of BigNumber(y, b),
+     * otherwise return false.
+     */
+    P.isEqualTo = P.eq = function ( y, b ) {
+        return compare( this, new BigNumber( y, b ) ) === 0;
+    };
+
+
+    /*
+     * Return true if the value of this BigNumber is a finite number, otherwise return false.
+     */
+    P.isFinite = function () {
+        return !!this.c;
     };
 
 
@@ -1612,18 +1749,28 @@ function clone(configObject) {
 
 
     /*
-     * Return true if the value of this BigNumber is a finite number, otherwise return false.
-     */
-    P.isFinite = function () {
-        return !!this.c;
-    };
-
-
-    /*
      * Return true if the value of this BigNumber is an integer, otherwise return false.
      */
     P.isInteger = function () {
         return !!this.c && bitFloor( this.e / LOG_BASE ) > this.c.length - 2;
+    };
+
+
+    /*
+     * Return true if the value of this BigNumber is less than the value of BigNumber(y, b),
+     * otherwise return false.
+     */
+    P.isLessThan = P.lt = function ( y, b ) {
+        return compare( this, new BigNumber( y, b ) ) < 0;
+    };
+
+
+    /*
+     * Return true if the value of this BigNumber is less than or equal to the value of
+     * BigNumber(y, b), otherwise return false.
+     */
+    P.isLessThanOrEqualTo = P.lte = function ( y, b ) {
+        return ( b = compare( this, new BigNumber( y, b ) ) ) === -1 || b === 0;
     };
 
 
@@ -1656,24 +1803,6 @@ function clone(configObject) {
      */
     P.isZero = function () {
         return !!this.c && this.c[0] == 0;
-    };
-
-
-    /*
-     * Return true if the value of this BigNumber is less than the value of BigNumber(y, b),
-     * otherwise return false.
-     */
-    P.isLessThan = P.lt = function ( y, b ) {
-        return compare( this, new BigNumber( y, b ) ) < 0;
-    };
-
-
-    /*
-     * Return true if the value of this BigNumber is less than or equal to the value of
-     * BigNumber(y, b), otherwise return false.
-     */
-    P.isLessThanOrEqualTo = P.lte = function ( y, b ) {
-        return ( b = compare( this, new BigNumber( y, b ) ) ) === -1 || b === 0;
     };
 
 
@@ -1859,7 +1988,12 @@ function clone(configObject) {
             q = div( x, y, 0, MODULO_MODE );
         }
 
-        return x.minus( q.times(y) );
+        y = x.minus( q.times(y) );
+
+        // To match JavaScript %, ensure sign of zero is sign of dividend.
+        if ( !y.c[0] && MODULO_MODE == 1 ) y.s = x.s;
+
+        return y;
     };
 
 
@@ -2336,7 +2470,7 @@ function clone(configObject) {
      * denominator is not specified, the denominator will be the lowest value necessary to
      * represent the number exactly.
      *
-     * [md] {number|string|BigNumber} Integer >= 1 and < Infinity. The maximum denominator.
+     * [md] {number|string|BigNumber} Integer >= 1, or Infinity. The maximum denominator.
      *
      * '[BigNumber Error] Argument {not an integer|out of range} : {md}'
      */
@@ -2348,10 +2482,11 @@ function clone(configObject) {
         if ( md != null ) {
             n = new BigNumber(md);
 
-            if ( !n.isInteger() || n.lt(ONE) ) {
+            // Throw if md is less than one or is not an integer, unless it is Infinity.
+            if ( !n.isInteger() && ( n.c || n.s !== 1 ) || n.lt(ONE) ) {
                 throw Error
-                  ( bignumberError + 'Argument ' +
-                    ( n.isInteger() ? 'out of range: ' : 'not an integer: ' ) + md );
+                    ( bignumberError + 'Argument ' +
+                        ( n.isInteger() ? 'out of range: ' : 'not an integer: ' ) + md );
             }
         }
 
@@ -2409,78 +2544,6 @@ function clone(configObject) {
      */
     P.toNumber = function () {
         return +this;
-    };
-
-
-    /*
-     * Return a BigNumber whose value is the value of this BigNumber exponentiated by n.
-     *
-     * If m is present, return the result modulo m.
-     * If n is negative round according to DECIMAL_PLACES and ROUNDING_MODE.
-     * If POW_PRECISION is non-zero and m is not present, round to POW_PRECISION using ROUNDING_MODE.
-     *
-     * The modular power operation works efficiently when x, n, and m are positive integers,
-     * otherwise it is equivalent to calculating x.exponentiatedBy(n).modulo(m) with a POW_PRECISION of 0.
-     *
-     * n {number} Integer, -MAX_SAFE_INTEGER to MAX_SAFE_INTEGER inclusive.
-     * [m] {number|string|BigNumber} The modulus.
-     *
-     * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {n}'
-     *
-     * Performs 54 loop iterations for n of 9007199254740991.
-     */
-    P.exponentiatedBy = P.pow = function ( n, m ) {
-        var i, k, y, z,
-            x = this;
-
-        intCheck( n, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER );
-        if ( m != null ) m = new BigNumber(m);
-
-        if (m) {
-            if ( n > 1 && x.gt(ONE) && x.isInteger() && m.gt(ONE) && m.isInteger() ) {
-                x = x.mod(m);
-            } else {
-                z = m;
-
-                // Nullify m so only a single mod operation is performed at the end.
-                m = null;
-            }
-        } else if (POW_PRECISION) {
-
-            // Truncating each coefficient array to a length of k after each multiplication
-            // equates to truncating significant digits to POW_PRECISION + [28, 41],
-            // i.e. there will be a minimum of 28 guard digits retained.
-            //k = mathceil( POW_PRECISION / LOG_BASE + 1.5 );   // gives [9, 21] guard digits.
-            k = mathceil( POW_PRECISION / LOG_BASE + 2 );
-        }
-
-        y = new BigNumber(ONE);
-
-        for ( i = mathfloor( n < 0 ? -n : n ); ; ) {
-            if ( i % 2 ) {
-                y = y.times(x);
-                if ( !y.c ) break;
-                if (k) {
-                    if ( y.c.length > k ) y.c.length = k;
-                } else if (m) {
-                    y = y.mod(m);
-                }
-            }
-
-            i = mathfloor( i / 2 );
-            if ( !i ) break;
-            x = x.times(x);
-            if (k) {
-                if ( x.c && x.c.length > k ) x.c.length = k;
-            } else if (m) {
-                x = x.mod(m);
-            }
-        }
-
-        if (m) return y;
-        if ( n < 0 ) y = ONE.div(y);
-
-        return z ? y.mod(z) : k ? round( y, POW_PRECISION, ROUNDING_MODE ) : y;
     };
 
 
@@ -2660,6 +2723,13 @@ function intCheck( n, min, max, name ) {
 
 function isArray(obj) {
     return Object.prototype.toString.call(obj) == '[object Array]';
+}
+
+
+// Assumes finite n.
+function isOdd(n) {
+    var k = n.c.length - 1;
+    return bitFloor( n.e / LOG_BASE ) == k && n.c[k] % 2 != 0;
 }
 
 
