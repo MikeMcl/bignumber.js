@@ -1738,6 +1738,16 @@ export declare class BigNumber {
    * See `MODULO_MODE`.
    */
   static readonly EUCLID: 9;
+
+  /**
+   * The number 0 (zero).
+   */
+  static readonly ZERO: BigNumber;
+
+  /**
+   * The number 1 (one).
+   */
+  static readonly ONE: BigNumber;
 }
 
 
