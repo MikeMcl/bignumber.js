@@ -5,7 +5,7 @@
 
 // Documentation: http://mikemcl.github.io/bignumber.js/
 //
-// Exports (available globally or when using import):
+// Exports:
 //
 //   class     BigNumber (default export)
 //   type      BigNumber.Constructor
@@ -35,7 +35,7 @@
 
 type BigNumberConstructor = typeof BigNumber;
 type BigNumberInstance = BigNumber;
-type BigNumberModuloMode = BigNumberRoundingMode | 9;
+type BigNumberModuloMode = 0 | 1 | 3 | 6 | 9;
 type BigNumberRoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 type BigNumberValue = string | number | BigNumber;
 
@@ -599,12 +599,11 @@ export declare class BigNumber {
    * digits will be calculated, and that the method's performance will decrease dramatically for
    * larger exponents.
    *
-   * If `m` is specified and the value of `m`, `n` and this BigNumber are positive integers, then a
-   * fast modular exponentiation algorithm is used, otherwise if any of the values is not a positive
-   * integer the operation will simply be performed as `x.exponentiatedBy(n).modulo(m)` with a
-   * `POW_PRECISION` of 0.
+   * If `m` is specified and the value of `m`, `n` and this BigNumber are integers and `n` is
+   * positive, then a fast modular exponentiation algorithm is used, otherwise the operation will
+   * be performed as `x.exponentiatedBy(n).modulo(m)` with a `POW_PRECISION` of 0.
    *
-   * Throws if `n` is not a primitive number, or is not an integer, or is out of range.
+   * Throws if `n` is not an integer.
    *
    * ```ts
    * Math.pow(0.7, 2)                    // 0.48999999999999994
@@ -613,8 +612,8 @@ export declare class BigNumber {
    * BigNumber(3).exponentiatedBy(-2)    // '0.11111111111111111111'
    * ```
    *
-   * @param n The exponent, an integer, -9007199254740991 to 9007199254740991.
-   * @param [m] The modulus, a positive integer.
+   * @param n The exponent, an integer.
+   * @param [m] The modulus.
    */
   exponentiatedBy(n: number, m?: BigNumberValue): BigNumber;
 
@@ -633,22 +632,21 @@ export declare class BigNumber {
    * digits will be calculated, and that the method's performance will decrease dramatically for
    * larger exponents.
    *
-   * If `m` is specified and the value of `m`, `n` and this BigNumber are positive integers, then a
-   * fast modular exponentiation algorithm is used, otherwise if any of the values is not a positive
-   * integer the operation will simply be performed as `x.exponentiatedBy(n).modulo(m)` with a
-   * `POW_PRECISION` of 0.
+   * If `m` is specified and the value of `m`, `n` and this BigNumber are integers and `n` is
+   * positive, then a fast modular exponentiation algorithm is used, otherwise the operation will
+   * be performed as `x.pow(n).modulo(m)` with a `POW_PRECISION` of 0.
    *
-   * Throws if `n` is not a primitive number or an integer, or is out of range.
+   * Throws if `n` is not an integer.
    *
    * ```ts
-   * Math.pow(0.7, 2)          // 0.48999999999999994
+   * Math.pow(0.7, 2)                   // 0.48999999999999994
    * x = new BigNumber(0.7)
-   * x.pow(2)                  // '0.49'
-   * BigNumber(3).pow(-2)      // '0.11111111111111111111'
+   * x.pow(2)                           // '0.49'
+   * BigNumber(3).pow(-2)               // '0.11111111111111111111'
    * ```
    *
-   * @param n The exponent, an integer, -9007199254740991 to 9007199254740991.
-   * @param [m] The modulus, a positive integer.
+   * @param n The exponent, an integer.
+   * @param [m] The modulus.
    */
   pow(n: number, m?: BigNumberValue): BigNumber;
 
@@ -1344,7 +1342,7 @@ export declare class BigNumber {
    * pi.toFraction(1)                // '3, 1'
    * ```
    *
-   * @param [max_denominator] The maximum denominator, integer, >= 1 and < Infinity.
+   * @param [max_denominator] The maximum denominator, integer > 0, or Infinity.
    */
   toFraction(max_denominator?: BigNumberValue): BigNumber[];
 
@@ -1755,7 +1753,6 @@ export namespace BigNumber {
 
 /**
  * Browsers.
- */
 declare global {
   const BigNumber: BigNumberConstructor;
   type BigNumber = BigNumberInstance;
@@ -1770,3 +1767,4 @@ declare global {
     type Value = BigNumberValue;
   }
 }
+ */
