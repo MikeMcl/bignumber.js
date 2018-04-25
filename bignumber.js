@@ -244,7 +244,7 @@
           x.s = 1 / n < 0 ? (str = str.slice(1), -1) : 1;
 
           // '[BigNumber Error] Number primitive has more than 15 significant digits: {n}'
-          if (str.replace(/^0\.0*|\./, '').length > 15) {
+          if (x.constructor.DEBUG && str.replace(/^0\.0*|\./, '').length > 15) {
             throw Error
              (tooManyDigits + n);
           }
@@ -302,15 +302,17 @@
 
       // Determine trailing zeros.
       for (len = str.length; str.charCodeAt(--len) === 48;);
-      str = str.slice(i, len + 1);
+
+      str = str.slice(i, ++len);
 
       if (str) {
-        len = str.length;
+        len -= i;
 
         // '[BigNumber Error] Number primitive has more than 15 significant digits: {n}'
-        if (isNum && len > 15 && (n > MAX_SAFE_INTEGER || n !== mathfloor(n))) {
-          throw Error
-           (tooManyDigits + (x.s * n));
+        if (isNum && x.constructor.DEBUG &&
+          len > 15 && (n > MAX_SAFE_INTEGER || n !== mathfloor(n))) {
+            throw Error
+             (tooManyDigits + (x.s * n));
         }
 
         e = e - i - 1;
@@ -1308,8 +1310,13 @@
 
           // '[BigNumber Error] Not a number: {n}'
           // '[BigNumber Error] Not a base {b} number: {n}'
-          throw Error
-           (bignumberError + 'Not a' + (b ? ' base ' + b : '') + ' number: ' + str);
+          if (x.constructor.DEBUG) {
+            throw Error
+              (bignumberError + 'Not a' + (b ? ' base ' + b : '') + ' number: ' + str);
+          }
+
+          // NaN
+          x.c = x.e = x.s = null;
         }
       }
     })();
@@ -1593,6 +1600,7 @@
 
       n = new BigNumber(n);
 
+      // Allow NaN and ±Infinity, but not other non-integers.
       if (n.c && !n.isInteger()) {
         throw Error
           (bignumberError + 'Exponent not an integer: ' + n);

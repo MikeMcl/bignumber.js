@@ -43,6 +43,7 @@ console.log('\n Testing bignumber.js\n');
   // Reset BigNumber for each method tested?
   //delete require.cache[require.resolve('../bignumber.js')];
   //BigNumber = require('../bignumber');
+  //BigNumber.DEBUG = true;
 });
 
 time = process.hrtime(time);

@@ -174,7 +174,7 @@ interface BigNumberConfig {
   CRYPTO?: boolean;
 
   /**
-   * An integer, 0 to 9. Default value: `BigNumber.ROUND_DOWN` (1).
+   * An integer, 0, 1, 3, 6 or 9. Default value: `BigNumber.ROUND_DOWN` (1).
    *
    * The modulo mode used when calculating the modulus: `a mod n`.
    * The quotient, `q = a / n`, is calculated according to the `ROUNDING_MODE` that corresponds to
@@ -338,69 +338,93 @@ export declare class BigNumber {
   readonly s: number;
 
   /**
-   * Returns a new instance of BigNumber with value `n`.
-   *
-   * Legitimate values for `n` include ±0, ±`Infinity` and `NaN`.
-   *
-   * Values of type number with more than 15 significant digits are considered invalid as calling
-   * `toString` or `valueOf` on such numbers may not result in the intended value.
+   * Returns a new instance of a BigNumber object with value `n`, where `n` is a numeric value in
+   * the specified `base`, or base 10 if `base` is omitted or is `null` or `undefined`.
    *
    * ```ts
-   * console.log( 823456789123456.3 );    // 823456789123456.2
+   * x = new BigNumber(123.4567)              // '123.4567'
+   * // 'new' is optional
+   * y = BigNumber(x)                         // '123.4567'
    * ```
    *
-   * There is no limit to the number of digits of a value of type string (other than that of
-   * JavaScript's maximum array size). Decimal string values may be in exponential, as well as
-   * normal (fixed-point) notation. Non-decimal values must be in normal notation.
-   *
-   * String values in hexadecimal literal form, e.g. '0xff', are valid, as are string values with
-   * the octal and binary prefixs '0o' and '0b'. String values in octal literal form without the
-   * prefix will be interpreted as decimals, e.g. '011' is interpreted as 11, not 9.
-   *
-   * Values in any base may have fraction digits.
-   *
-   * If a base is specified, `n` is rounded according to the current `DECIMAL_PLACES` and
-   * `ROUNDING_MODE` settings. If base is omitted, or is `null` or `undefined`, base 10 is assumed.
-   *
-   * Throws an invalid `value` or `base`.
+   * If `n` is a base 10 value it can be in normal (fixed-point) or exponential notation.
+   * Values in other bases must be in normal notation. Values in any base can have fraction digits,
+   * i.e. digits after the decimal point.
    *
    * ```ts
-   * x = new BigNumber(9)                       // '9'
-   * y = new BigNumber(x)                       // '9'
+   * new BigNumber(43210)                     // '43210'
+   * new BigNumber('4.321e+4')                // '43210'
+   * new BigNumber('-735.0918e-430')          // '-7.350918e-428'
+   * new BigNumber('123412421.234324', 5)     // '607236.557696'
+   * ```
    *
-   * // 'new' is optional
-   * BigNumber(435.345)                         // '435.345'
+   * Signed `0`, signed `Infinity` and `NaN` are supported.
    *
-   * new BigNumber('5032485723458348569331745.33434346346912144534543')
-   * new BigNumber('4.321e+4')                  // '43210'
-   * new BigNumber('-735.0918e-430')            // '-7.350918e-428'
-   * new BigNumber(Infinity)                    // 'Infinity'
-   * new BigNumber(NaN)                         // 'NaN'
-   * new BigNumber('.5')                        // '0.5'
-   * new BigNumber('+2')                        // '2'
-   * new BigNumber(-10110100.1, 2)              // '-180.5'
-   * new BigNumber(-0b10110100.1)               // '-180.5'
-   * new BigNumber('123412421.234324', 5)       // '607236.557696'
-   * new BigNumber('ff.8', 16)                  // '255.5'
-   * new BigNumber('0xff.8')                    // '255.5'
+   * ```ts
+   * new BigNumber('-Infinity')               // '-Infinity'
+   * new BigNumber(NaN)                       // 'NaN'
+   * new BigNumber(-0)                        // '0'
+   * new BigNumber('.5')                      // '0.5'
+   * new BigNumber('+2')                      // '2'
+   * ```
    *
-   * // The following throws 'Not a base 2 number'.
-   * new BigNumber(9, 2)
+   * String values in hexadecimal literal form, e.g. `'0xff'`, are valid, as are string values with
+   * the octal and binary prefixs `'0o'` and `'0b'`. String values in octal literal form without the
+   * prefix will be interpreted as decimals, e.g. `'011'` is interpreted as 11, not 9.
    *
-   * // The following throws 'Number primitive has more than 15 significant digits'.
-   * new BigNumber(96517860459076817.4395)
+   * ```ts
+   * new BigNumber(-10110100.1, 2)            // '-180.5'
+   * new BigNumber('-0b10110100.1')           // '-180.5'
+   * new BigNumber('ff.8', 16)                // '255.5'
+   * new BigNumber('0xff.8')                  // '255.5'
+   * ```
    *
-   * // The following throws 'Not a number'.
-   * new BigNumber('blurgh')
+   * If a base is specified, `n` is rounded according to the current `DECIMAL_PLACES` and
+   * `ROUNDING_MODE` settings. This includes base 10, so don't include a `base` parameter for decimal
+   * values unless this behaviour is desired.
    *
-   * // A value is only rounded by the constructor if a base is specified.
+   * ```ts
    * BigNumber.config({ DECIMAL_PLACES: 5 })
-   * new BigNumber(1.23456789)                  // '1.23456789'
-   * new BigNumber(1.23456789, 10)              // '1.23457'
+   * new BigNumber(1.23456789)                // '1.23456789'
+   * new BigNumber(1.23456789, 10)            // '1.23457'
+   * ```
+   *
+   * An error is thrown if `base` is invalid.
+   *
+   * There is no limit to the number of digits of a value of type string (other than that of
+   * JavaScript's maximum array size). See `RANGE` to set the maximum and minimum possible exponent
+   * value of a BigNumber.
+   *
+   * ```ts
+   * new BigNumber('5032485723458348569331745.33434346346912144534543')
+   * new BigNumber('4.321e10000000')
+   * ```
+   *
+   * BigNumber `NaN` is returned if `n` is invalid (unless `BigNumber.DEBUG` is `true`, see below).
+   *
+   * ```ts
+   * new BigNumber('.1*')                    // 'NaN'
+   * new BigNumber('blurgh')                 // 'NaN'
+   * new BigNumber(9, 2)                     // 'NaN'
+   * ```
+   *
+   * To aid in debugging, if `BigNumber.DEBUG` is `true` then an error will be thrown on an
+   * invalid `n`. An error will also be thrown if `n` is of type number with more than 15
+   * significant digits, as calling `toString` or `valueOf` on these numbers may not result in the
+   * intended value.
+   *
+   * ```ts
+   * console.log(823456789123456.3)          //  823456789123456.2
+   * new BigNumber(823456789123456.3)        // '823456789123456.2'
+   * BigNumber.DEBUG = true
+   * // 'Error: Number has more than 15 significant digits'
+   * new BigNumber(823456789123456.3)
+   * // 'Error: Not a base 2 number'
+   * new BigNumber(9, 2)
    * ```
    *
    * @param n A numeric value.
-   * @param base The base of n, integer, 2 to 36 (or `ALPHABET.length`, see `ALPHABET`).
+   * @param base The base of `n`, integer, 2 to 36 (or `ALPHABET.length`, see `ALPHABET`).
    */
   constructor(n: BigNumberValue, base?: number);
 
@@ -425,7 +449,7 @@ export declare class BigNumber {
    *
    * ```ts
    * x = new BigNumber(-0.8)
-   * x.abs()           // '0.8'
+   * x.abs()                     // '0.8'
    * ```
    */
   abs(): BigNumber;

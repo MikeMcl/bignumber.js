@@ -79,3 +79,5 @@ Test = (function () {
 
   return Test;
 })();
+
+BigNumber.DEBUG = true;

@@ -69,7 +69,7 @@ If a commented-out value is in quotes it means `toString` has been called on the
 
 The library exports a single function: `BigNumber`, the constructor of BigNumber instances.
 
-It accepts a value of type number *(up to 15 significant digits only)*, string or BigNumber object,
+It accepts a value of type number, string or BigNumber object,
 
 ```javascript
 x = new BigNumber(123.4567)
@@ -78,7 +78,7 @@ z = new BigNumber(x)
 x.isEqualTo(y) && y.isEqualTo(z) && x.isEqualTo(z)      // true
 ```
 
-and a base from 2 to 36 can be specified (higher bases can also be used if a custom alphabet is provided).
+and a base from 2 to 36 can be specified (higher bases can be used if a custom alphabet is provided).
 
 ```javascript
 x = new BigNumber(1011, 2)          // "11"
