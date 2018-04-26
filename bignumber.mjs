@@ -1,5 +1,5 @@
 /*
- *      bignumber.js v6.0.0
+ *      bignumber.js v7.0.0
  *      A JavaScript library for arbitrary-precision arithmetic.
  *      https://github.com/MikeMcl/bignumber.js
  *      Copyright (c) 2018 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -73,7 +73,7 @@ var BigNumber,
  */
 function clone(configObject) {
   var div, convertBase, parseNumeric,
-    P = BigNumber.prototype,
+    P = BigNumber.prototype = { constructor: BigNumber, toString: null, valueOf: null },
     ONE = new BigNumber(1),
 
 
@@ -241,7 +241,7 @@ function clone(configObject) {
         x.s = 1 / n < 0 ? (str = str.slice(1), -1) : 1;
 
         // '[BigNumber Error] Number primitive has more than 15 significant digits: {n}'
-        if (x.constructor.DEBUG && str.replace(/^0\.0*|\./, '').length > 15) {
+        if (BigNumber.DEBUG && str.replace(/^0\.0*|\./, '').length > 15) {
           throw Error
            (tooManyDigits + n);
         }
@@ -306,7 +306,7 @@ function clone(configObject) {
       len -= i;
 
       // '[BigNumber Error] Number primitive has more than 15 significant digits: {n}'
-      if (isNum && x.constructor.DEBUG &&
+      if (isNum && BigNumber.DEBUG &&
         len > 15 && (n > MAX_SAFE_INTEGER || n !== mathfloor(n))) {
           throw Error
            (tooManyDigits + (x.s * n));
@@ -1307,7 +1307,7 @@ function clone(configObject) {
 
         // '[BigNumber Error] Not a number: {n}'
         // '[BigNumber Error] Not a base {b} number: {n}'
-        if (x.constructor.DEBUG) {
+        if (BigNumber.DEBUG) {
           throw Error
             (bignumberError + 'Not a' + (b ? ' base ' + b : '') + ' number: ' + str);
         }
