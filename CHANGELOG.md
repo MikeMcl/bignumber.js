@@ -1,3 +1,7 @@
+#### 7.0.1
+* 26/04/2018
+* #158 Fix global object variable name typo.
+
 #### 7.0.0
 * 26/04/2018
 * #143 Remove global BigNumber from typings.
