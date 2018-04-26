@@ -32,288 +32,291 @@
 //
 // The use of compiler option `--strictNullChecks` is recommended.
 
+export default BigNumber;
 
-type BigNumberConstructor = typeof BigNumber;
-type BigNumberInstance = BigNumber;
-type BigNumberModuloMode = 0 | 1 | 3 | 6 | 9;
-type BigNumberRoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-type BigNumberValue = string | number | BigNumber;
-
-/**
- * See `BigNumber.config` and `BigNumber.clone`.
- */
-interface BigNumberConfig {
+export namespace BigNumber {
 
   /**
-   * An integer, 0 to 1e+9. Default value: 20.
-   *
-   * The maximum number of decimal places of the result of operations involving division, i.e.
-   * division, square root and base conversion operations, and exponentiation when the exponent is
-   * negative.
-   *
-   * ```ts
-   * BigNumber.config({ DECIMAL_PLACES: 5 })
-   * BigNumber.set({ DECIMAL_PLACES: 5 })
-   * ```
+   * See `BigNumber.config` and `BigNumber.clone`.
    */
-  DECIMAL_PLACES?: number;
+  export interface Config {
+
+    /**
+     * An integer, 0 to 1e+9. Default value: 20.
+     *
+     * The maximum number of decimal places of the result of operations involving division, i.e.
+     * division, square root and base conversion operations, and exponentiation when the exponent is
+     * negative.
+     *
+     * ```ts
+     * BigNumber.config({ DECIMAL_PLACES: 5 })
+     * BigNumber.set({ DECIMAL_PLACES: 5 })
+     * ```
+     */
+    DECIMAL_PLACES?: number;
+
+    /**
+     * An integer, 0 to 8. Default value: `BigNumber.ROUND_HALF_UP` (4).
+     *
+     * The rounding mode used in operations that involve division (see `DECIMAL_PLACES`) and the
+     * default rounding mode of the `decimalPlaces`, `precision`, `toExponential`, `toFixed`,
+     * `toFormat` and `toPrecision` methods.
+     *
+     * The modes are available as enumerated properties of the BigNumber constructor.
+     *
+     * ```ts
+     * BigNumber.config({ ROUNDING_MODE: 0 })
+     * BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_UP })
+     * ```
+     */
+    ROUNDING_MODE?: BigNumber.RoundingMode;
+
+    /**
+     * An integer, 0 to 1e+9, or an array, [-1e+9 to 0, 0 to 1e+9].
+     * Default value: `[-7, 20]`.
+     *
+     * The exponent value(s) at which `toString` returns exponential notation.
+     *
+     * If a single number is assigned, the value is the exponent magnitude.
+     *
+     * If an array of two numbers is assigned then the first number is the negative exponent value at
+     * and beneath which exponential notation is used, and the second number is the positive exponent
+     * value at and above which exponential notation is used.
+     *
+     * For example, to emulate JavaScript numbers in terms of the exponent values at which they begin
+     * to use exponential notation, use `[-7, 20]`.
+     *
+     * ```ts
+     * BigNumber.config({ EXPONENTIAL_AT: 2 })
+     * new BigNumber(12.3)         // '12.3'        e is only 1
+     * new BigNumber(123)          // '1.23e+2'
+     * new BigNumber(0.123)        // '0.123'       e is only -1
+     * new BigNumber(0.0123)       // '1.23e-2'
+     *
+     * BigNumber.config({ EXPONENTIAL_AT: [-7, 20] })
+     * new BigNumber(123456789)    // '123456789'   e is only 8
+     * new BigNumber(0.000000123)  // '1.23e-7'
+     *
+     * // Almost never return exponential notation:
+     * BigNumber.config({ EXPONENTIAL_AT: 1e+9 })
+     *
+     * // Always return exponential notation:
+     * BigNumber.config({ EXPONENTIAL_AT: 0 })
+     * ```
+     *
+     * Regardless of the value of `EXPONENTIAL_AT`, the `toFixed` method will always return a value in
+     * normal notation and the `toExponential` method will always return a value in exponential form.
+     * Calling `toString` with a base argument, e.g. `toString(10)`, will also always return normal
+     * notation.
+     */
+    EXPONENTIAL_AT?: number|[number, number];
+
+    /**
+     * An integer, magnitude 1 to 1e+9, or an array, [-1e+9 to -1, 1 to 1e+9].
+     * Default value: `[-1e+9, 1e+9]`.
+     *
+     * The exponent value(s) beyond which overflow to Infinity and underflow to zero occurs.
+     *
+     * If a single number is assigned, it is the maximum exponent magnitude: values wth a positive
+     * exponent of greater magnitude become Infinity and those with a negative exponent of greater
+     * magnitude become zero.
+     *
+     * If an array of two numbers is assigned then the first number is the negative exponent limit and
+     * the second number is the positive exponent limit.
+     *
+     * For example, to emulate JavaScript numbers in terms of the exponent values at which they
+     * become zero and Infinity, use [-324, 308].
+     *
+     * ```ts
+     * BigNumber.config({ RANGE: 500 })
+     * BigNumber.config().RANGE     // [ -500, 500 ]
+     * new BigNumber('9.999e499')   // '9.999e+499'
+     * new BigNumber('1e500')       // 'Infinity'
+     * new BigNumber('1e-499')      // '1e-499'
+     * new BigNumber('1e-500')      // '0'
+     *
+     * BigNumber.config({ RANGE: [-3, 4] })
+     * new BigNumber(99999)         // '99999'      e is only 4
+     * new BigNumber(100000)        // 'Infinity'   e is 5
+     * new BigNumber(0.001)         // '0.01'       e is only -3
+     * new BigNumber(0.0001)        // '0'          e is -4
+     * ```
+     * The largest possible magnitude of a finite BigNumber is 9.999...e+1000000000.
+     * The smallest possible magnitude of a non-zero BigNumber is 1e-1000000000.
+     */
+    RANGE?: number|[number, number];
+
+    /**
+     * A boolean: `true` or `false`. Default value: `false`.
+     *
+     * The value that determines whether cryptographically-secure pseudo-random number generation is
+     * used. If `CRYPTO` is set to true then the random method will generate random digits using
+     * `crypto.getRandomValues` in browsers that support it, or `crypto.randomBytes` if using a
+     * version of Node.js that supports it.
+     *
+     * If neither function is supported by the host environment then attempting to set `CRYPTO` to
+     * `true` will fail and an exception will be thrown.
+     *
+     * If `CRYPTO` is `false` then the source of randomness used will be `Math.random` (which is
+     * assumed to generate at least 30 bits of randomness).
+     *
+     * See `BigNumber.random`.
+     *
+     * ```ts
+     * BigNumber.config({ CRYPTO: true })
+     * BigNumber.config().CRYPTO       // true
+     * BigNumber.random()              // 0.54340758610486147524
+     * ```
+     */
+    CRYPTO?: boolean;
+
+    /**
+     * An integer, 0, 1, 3, 6 or 9. Default value: `BigNumber.ROUND_DOWN` (1).
+     *
+     * The modulo mode used when calculating the modulus: `a mod n`.
+     * The quotient, `q = a / n`, is calculated according to the `ROUNDING_MODE` that corresponds to
+     * the chosen `MODULO_MODE`.
+     * The remainder, `r`, is calculated as: `r = a - n * q`.
+     *
+     * The modes that are most commonly used for the modulus/remainder operation are shown in the
+     * following table. Although the other rounding modes can be used, they may not give useful
+     * results.
+     *
+     * Property           | Value | Description
+     * :------------------|:------|:------------------------------------------------------------------
+     *  `ROUND_UP`        |   0   | The remainder is positive if the dividend is negative.
+     *  `ROUND_DOWN`      |   1   | The remainder has the same sign as the dividend.
+     *                    |       | Uses 'truncating division' and matches JavaScript's `%` operator .
+     *  `ROUND_FLOOR`     |   3   | The remainder has the same sign as the divisor.
+     *                    |       | This matches Python's `%` operator.
+     *  `ROUND_HALF_EVEN` |   6   | The IEEE 754 remainder function.
+     *  `EUCLID`          |   9   | The remainder is always positive.
+     *                    |       | Euclidian division: `q = sign(n) * floor(a / abs(n))`
+     *
+     * The rounding/modulo modes are available as enumerated properties of the BigNumber constructor.
+     *
+     * See `modulo`.
+     *
+     * ```ts
+     * BigNumber.config({ MODULO_MODE: BigNumber.EUCLID })
+     * BigNumber.set({ MODULO_MODE: 9 })          // equivalent
+     * ```
+     */
+    MODULO_MODE?: BigNumber.ModuloMode;
+
+    /**
+     * An integer, 0 to 1e+9. Default value: 0.
+     *
+     * The maximum precision, i.e. number of significant digits, of the result of the power operation
+     * - unless a modulus is specified.
+     *
+     * If set to 0, the number of significant digits will not be limited.
+     *
+     * See `exponentiatedBy`.
+     *
+     * ```ts
+     * BigNumber.config({ POW_PRECISION: 100 })
+     * ```
+     */
+    POW_PRECISION?: number;
+
+    /**
+     * An object including any number of the properties shown below.
+     *
+     * The object configures the format of the string returned by the `toFormat` method.
+     * The example below shows the properties of the object that are recognised, and
+     * their default values.
+     *
+     * Unlike the other configuration properties, the values of the properties of the `FORMAT` object
+     * will not be checked for validity - the existing object will simply be replaced by the object
+     * that is passed in.
+     *
+     * See `toFormat`.
+     *
+     * ```ts
+     * BigNumber.config({
+     *   FORMAT: {
+     *     // the decimal separator
+     *     decimalSeparator: '.',
+     *     // the grouping separator of the integer part
+     *     groupSeparator: ',',
+     *     // the primary grouping size of the integer part
+     *     groupSize: 3,
+     *     // the secondary grouping size of the integer part
+     *     secondaryGroupSize: 0,
+     *     // the grouping separator of the fraction part
+     *     fractionGroupSeparator: ' ',
+     *     // the grouping size of the fraction part
+     *     fractionGroupSize: 0
+     *   }
+     * })
+     * ```
+     */
+    FORMAT?: BigNumber.Format;
+
+    /**
+     * A string representing the alphabet used for base conversion.
+     * Default value: `'0123456789abcdefghijklmnopqrstuvwxyz'`.
+     *
+     * The length of the alphabet corresponds to the maximum value of the base argument that can be
+     * passed to the BigNumber constructor or `toString`. There is no maximum length, but it must be
+     * at least 2 characters long, and it must not contain a repeated character, or `'.'` - the
+     * decimal separator for all values whatever their base.
+     *
+     * ```ts
+     * // duodecimal (base 12)
+     * BigNumber.config({ ALPHABET: '0123456789TE' })
+     * x = new BigNumber('T', 12)
+     * x.toString()                // '10'
+     * x.toString(12)              // 'T'
+     * ```
+     */
+    ALPHABET?: string;
+  }
+
+  export type Constructor = typeof BigNumber;
 
   /**
-   * An integer, 0 to 8. Default value: `BigNumber.ROUND_HALF_UP` (4).
-   *
-   * The rounding mode used in operations that involve division (see `DECIMAL_PLACES`) and the
-   * default rounding mode of the `decimalPlaces`, `precision`, `toExponential`, `toFixed`,
-   * `toFormat` and `toPrecision` methods.
-   *
-   * The modes are available as enumerated properties of the BigNumber constructor.
-   *
-   * ```ts
-   * BigNumber.config({ ROUNDING_MODE: 0 })
-   * BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_UP })
-   * ```
+   * See `FORMAT` and `toFormat`.
    */
-  ROUNDING_MODE?: BigNumberRoundingMode;
+  export interface Format {
 
-  /**
-   * An integer, 0 to 1e+9, or an array, [-1e+9 to 0, 0 to 1e+9].
-   * Default value: `[-7, 20]`.
-   *
-   * The exponent value(s) at which `toString` returns exponential notation.
-   *
-   * If a single number is assigned, the value is the exponent magnitude.
-   *
-   * If an array of two numbers is assigned then the first number is the negative exponent value at
-   * and beneath which exponential notation is used, and the second number is the positive exponent
-   * value at and above which exponential notation is used.
-   *
-   * For example, to emulate JavaScript numbers in terms of the exponent values at which they begin
-   * to use exponential notation, use `[-7, 20]`.
-   *
-   * ```ts
-   * BigNumber.config({ EXPONENTIAL_AT: 2 })
-   * new BigNumber(12.3)         // '12.3'        e is only 1
-   * new BigNumber(123)          // '1.23e+2'
-   * new BigNumber(0.123)        // '0.123'       e is only -1
-   * new BigNumber(0.0123)       // '1.23e-2'
-   *
-   * BigNumber.config({ EXPONENTIAL_AT: [-7, 20] })
-   * new BigNumber(123456789)    // '123456789'   e is only 8
-   * new BigNumber(0.000000123)  // '1.23e-7'
-   *
-   * // Almost never return exponential notation:
-   * BigNumber.config({ EXPONENTIAL_AT: 1e+9 })
-   *
-   * // Always return exponential notation:
-   * BigNumber.config({ EXPONENTIAL_AT: 0 })
-   * ```
-   *
-   * Regardless of the value of `EXPONENTIAL_AT`, the `toFixed` method will always return a value in
-   * normal notation and the `toExponential` method will always return a value in exponential form.
-   * Calling `toString` with a base argument, e.g. `toString(10)`, will also always return normal
-   * notation.
-   */
-  EXPONENTIAL_AT?: number|[number, number];
+    /**
+     * The decimal separator.
+     */
+    decimalSeparator?: string;
 
-  /**
-   * An integer, magnitude 1 to 1e+9, or an array, [-1e+9 to -1, 1 to 1e+9].
-   * Default value: `[-1e+9, 1e+9]`.
-   *
-   * The exponent value(s) beyond which overflow to Infinity and underflow to zero occurs.
-   *
-   * If a single number is assigned, it is the maximum exponent magnitude: values wth a positive
-   * exponent of greater magnitude become Infinity and those with a negative exponent of greater
-   * magnitude become zero.
-   *
-   * If an array of two numbers is assigned then the first number is the negative exponent limit and
-   * the second number is the positive exponent limit.
-   *
-   * For example, to emulate JavaScript numbers in terms of the exponent values at which they
-   * become zero and Infinity, use [-324, 308].
-   *
-   * ```ts
-   * BigNumber.config({ RANGE: 500 })
-   * BigNumber.config().RANGE     // [ -500, 500 ]
-   * new BigNumber('9.999e499')   // '9.999e+499'
-   * new BigNumber('1e500')       // 'Infinity'
-   * new BigNumber('1e-499')      // '1e-499'
-   * new BigNumber('1e-500')      // '0'
-   *
-   * BigNumber.config({ RANGE: [-3, 4] })
-   * new BigNumber(99999)         // '99999'      e is only 4
-   * new BigNumber(100000)        // 'Infinity'   e is 5
-   * new BigNumber(0.001)         // '0.01'       e is only -3
-   * new BigNumber(0.0001)        // '0'          e is -4
-   * ```
-   * The largest possible magnitude of a finite BigNumber is 9.999...e+1000000000.
-   * The smallest possible magnitude of a non-zero BigNumber is 1e-1000000000.
-   */
-  RANGE?: number|[number, number];
+    /**
+     * The grouping separator of the integer part.
+     */
+    groupSeparator?: string;
 
-  /**
-   * A boolean: `true` or `false`. Default value: `false`.
-   *
-   * The value that determines whether cryptographically-secure pseudo-random number generation is
-   * used. If `CRYPTO` is set to true then the random method will generate random digits using
-   * `crypto.getRandomValues` in browsers that support it, or `crypto.randomBytes` if using a
-   * version of Node.js that supports it.
-   *
-   * If neither function is supported by the host environment then attempting to set `CRYPTO` to
-   * `true` will fail and an exception will be thrown.
-   *
-   * If `CRYPTO` is `false` then the source of randomness used will be `Math.random` (which is
-   * assumed to generate at least 30 bits of randomness).
-   *
-   * See `BigNumber.random`.
-   *
-   * ```ts
-   * BigNumber.config({ CRYPTO: true })
-   * BigNumber.config().CRYPTO       // true
-   * BigNumber.random()              // 0.54340758610486147524
-   * ```
-   */
-  CRYPTO?: boolean;
+    /**
+     * The primary grouping size of the integer part.
+     */
+    groupSize?: number;
 
-  /**
-   * An integer, 0, 1, 3, 6 or 9. Default value: `BigNumber.ROUND_DOWN` (1).
-   *
-   * The modulo mode used when calculating the modulus: `a mod n`.
-   * The quotient, `q = a / n`, is calculated according to the `ROUNDING_MODE` that corresponds to
-   * the chosen `MODULO_MODE`.
-   * The remainder, `r`, is calculated as: `r = a - n * q`.
-   *
-   * The modes that are most commonly used for the modulus/remainder operation are shown in the
-   * following table. Although the other rounding modes can be used, they may not give useful
-   * results.
-   *
-   * Property           | Value | Description
-   * :------------------|:------|:------------------------------------------------------------------
-   *  `ROUND_UP`        |   0   | The remainder is positive if the dividend is negative.
-   *  `ROUND_DOWN`      |   1   | The remainder has the same sign as the dividend.
-   *                    |       | Uses 'truncating division' and matches JavaScript's `%` operator .
-   *  `ROUND_FLOOR`     |   3   | The remainder has the same sign as the divisor.
-   *                    |       | This matches Python's `%` operator.
-   *  `ROUND_HALF_EVEN` |   6   | The IEEE 754 remainder function.
-   *  `EUCLID`          |   9   | The remainder is always positive.
-   *                    |       | Euclidian division: `q = sign(n) * floor(a / abs(n))`
-   *
-   * The rounding/modulo modes are available as enumerated properties of the BigNumber constructor.
-   *
-   * See `modulo`.
-   *
-   * ```ts
-   * BigNumber.config({ MODULO_MODE: BigNumber.EUCLID })
-   * BigNumber.set({ MODULO_MODE: 9 })          // equivalent
-   * ```
-   */
-  MODULO_MODE?: BigNumberModuloMode;
+    /**
+     * The secondary grouping size of the integer part.
+     */
+    secondaryGroupSize?: number;
 
-  /**
-   * An integer, 0 to 1e+9. Default value: 0.
-   *
-   * The maximum precision, i.e. number of significant digits, of the result of the power operation
-   * - unless a modulus is specified.
-   *
-   * If set to 0, the number of significant digits will not be limited.
-   *
-   * See `exponentiatedBy`.
-   *
-   * ```ts
-   * BigNumber.config({ POW_PRECISION: 100 })
-   * ```
-   */
-  POW_PRECISION?: number;
+    /**
+     * The grouping separator of the fraction part.
+     */
+    fractionGroupSeparator?: string;
 
-  /**
-   * An object including any number of the properties shown below.
-   *
-   * The object configures the format of the string returned by the `toFormat` method.
-   * The example below shows the properties of the object that are recognised, and
-   * their default values.
-   *
-   * Unlike the other configuration properties, the values of the properties of the `FORMAT` object
-   * will not be checked for validity - the existing object will simply be replaced by the object
-   * that is passed in.
-   *
-   * See `toFormat`.
-   *
-   * ```ts
-   * BigNumber.config({
-   *   FORMAT: {
-   *     // the decimal separator
-   *     decimalSeparator: '.',
-   *     // the grouping separator of the integer part
-   *     groupSeparator: ',',
-   *     // the primary grouping size of the integer part
-   *     groupSize: 3,
-   *     // the secondary grouping size of the integer part
-   *     secondaryGroupSize: 0,
-   *     // the grouping separator of the fraction part
-   *     fractionGroupSeparator: ' ',
-   *     // the grouping size of the fraction part
-   *     fractionGroupSize: 0
-   *   }
-   * })
-   * ```
-   */
-  FORMAT?: BigNumberFormat;
+    /**
+     * The grouping size of the fraction part.
+     */
+    fractionGroupSize?: number;
+  }
 
-  /**
-   * A string representing the alphabet used for base conversion.
-   * Default value: `'0123456789abcdefghijklmnopqrstuvwxyz'`.
-   *
-   * The length of the alphabet corresponds to the maximum value of the base argument that can be
-   * passed to the BigNumber constructor or `toString`. There is no maximum length, but it must be
-   * at least 2 characters long, and it must not contain a repeated character, or `'.'` - the
-   * decimal separator for all values whatever their base.
-   *
-   * ```ts
-   * // duodecimal (base 12)
-   * BigNumber.config({ ALPHABET: '0123456789TE' })
-   * x = new BigNumber('T', 12)
-   * x.toString()                // '10'
-   * x.toString(12)              // 'T'
-   * ```
-   */
-  ALPHABET?: string;
+  export type Instance = BigNumber;
+  export type ModuloMode = 0 | 1 | 3 | 6 | 9;
+  export type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  export type Value = string | number | BigNumber;
 }
-
-
-/**
- * See `FORMAT` and `toFormat`.
- */
-interface BigNumberFormat {
-
-  /**
-   * The decimal separator.
-   */
-  decimalSeparator?: string;
-
-  /**
-   * The grouping separator of the integer part.
-   */
-  groupSeparator?: string;
-
-  /**
-   * The primary grouping size of the integer part.
-   */
-  groupSize?: number;
-
-  /**
-   * The secondary grouping size of the integer part.
-   */
-  secondaryGroupSize?: number;
-
-  /**
-   * The grouping separator of the fraction part.
-   */
-  fractionGroupSeparator?: string;
-
-  /**
-   * The grouping size of the fraction part.
-   */
-  fractionGroupSize?: number;
-}
-
 
 export declare class BigNumber {
 
@@ -426,7 +429,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param base The base of `n`, integer, 2 to 36 (or `ALPHABET.length`, see `ALPHABET`).
    */
-  constructor(n: BigNumberValue, base?: number);
+  constructor(n: BigNumber.Value, base?: number);
 
   /**
    * Returns a BigNumber whose value is the absolute value, i.e. the magnitude, of the value of this
@@ -474,7 +477,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  comparedTo(n: BigNumberValue, base?: number): number;
+  comparedTo(n: BigNumber.Value, base?: number): number;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
@@ -506,7 +509,7 @@ export declare class BigNumber {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  decimalPlaces(decimalPlaces?: number, roundingMode?: BigNumberRoundingMode): BigNumber;
+  decimalPlaces(decimalPlaces?: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
@@ -538,7 +541,7 @@ export declare class BigNumber {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  dp(decimalPlaces?: number, roundingMode?: BigNumberRoundingMode): BigNumber;
+  dp(decimalPlaces?: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber divided by `n`, rounded
@@ -555,7 +558,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  dividedBy(n: BigNumberValue, base?: number): BigNumber;
+  dividedBy(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber divided by `n`, rounded
@@ -572,7 +575,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  div(n: BigNumberValue, base?: number): BigNumber;
+  div(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the integer part of dividing the value of this BigNumber by
@@ -589,7 +592,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  dividedToIntegerBy(n: BigNumberValue, base?: number): BigNumber;
+  dividedToIntegerBy(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the integer part of dividing the value of this BigNumber by
@@ -606,7 +609,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  idiv(n: BigNumberValue, base?: number): BigNumber;
+  idiv(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber exponentiated by `n`, i.e.
@@ -639,7 +642,7 @@ export declare class BigNumber {
    * @param n The exponent, an integer.
    * @param [m] The modulus.
    */
-  exponentiatedBy(n: number, m?: BigNumberValue): BigNumber;
+  exponentiatedBy(n: number, m?: BigNumber.Value): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber exponentiated by `n`, i.e.
@@ -672,7 +675,7 @@ export declare class BigNumber {
    * @param n The exponent, an integer.
    * @param [m] The modulus.
    */
-  pow(n: number, m?: BigNumberValue): BigNumber;
+  pow(n: number, m?: BigNumber.Value): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber rounded to an integer using
@@ -691,9 +694,9 @@ export declare class BigNumber {
    * x.integerValue(BigNumber.ROUND_DOWN)    // '-12'
    * ```
    *
-   * @param {BigNumberRoundingMode} [rm] The roundng mode, an integer, 0 to 8.
+   * @param {BigNumber.RoundingMode} [rm] The roundng mode, an integer, 0 to 8.
    */
-  integerValue(rm?: BigNumberRoundingMode): BigNumber;
+  integerValue(rm?: BigNumber.RoundingMode): BigNumber;
 
   /**
    * Returns `true` if the value of this BigNumber is equal to the value of `n`, otherwise returns
@@ -715,7 +718,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  isEqualTo(n: BigNumberValue, base?: number): boolean;
+  isEqualTo(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is equal to the value of `n`, otherwise returns
@@ -737,7 +740,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  eq(n: BigNumberValue, base?: number): boolean;
+  eq(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is a finite number, otherwise returns `false`.
@@ -768,7 +771,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  isGreaterThan(n: BigNumberValue, base?: number): boolean;
+  isGreaterThan(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is greater than the value of `n`, otherwise
@@ -785,7 +788,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  gt(n: BigNumberValue, base?: number): boolean;
+  gt(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is greater than or equal to the value of `n`,
@@ -802,7 +805,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  isGreaterThanOrEqualTo(n: BigNumberValue, base?: number): boolean;
+  isGreaterThanOrEqualTo(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is greater than or equal to the value of `n`,
@@ -819,7 +822,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  gte(n: BigNumberValue, base?: number): boolean;
+  gte(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is an integer, otherwise returns `false`.
@@ -848,7 +851,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  isLessThan(n: BigNumberValue, base?: number): boolean;
+  isLessThan(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is less than the value of `n`, otherwise returns
@@ -865,7 +868,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  lt(n: BigNumberValue, base?: number): boolean;
+  lt(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is less than or equal to the value of `n`,
@@ -882,7 +885,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  isLessThanOrEqualTo(n: BigNumberValue, base?: number): boolean;
+  isLessThanOrEqualTo(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is less than or equal to the value of `n`,
@@ -899,7 +902,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  lte(n: BigNumberValue, base?: number): boolean;
+  lte(n: BigNumber.Value, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is `NaN`, otherwise returns `false`.
@@ -962,7 +965,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  minus(n: BigNumberValue, base?: number): BigNumber;
+  minus(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber modulo `n`, i.e. the integer
@@ -988,7 +991,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  modulo(n: BigNumberValue, base?: number): BigNumber;
+  modulo(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber modulo `n`, i.e. the integer
@@ -1014,7 +1017,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  mod(n: BigNumberValue, base?: number): BigNumber;
+  mod(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber multiplied by `n`.
@@ -1032,7 +1035,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  multipliedBy(n: BigNumberValue, base?: number) : BigNumber;
+  multipliedBy(n: BigNumber.Value, base?: number) : BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber multiplied by `n`.
@@ -1050,7 +1053,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  times(n: BigNumberValue, base?: number): BigNumber;
+  times(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber negated, i.e. multiplied by -1.
@@ -1080,7 +1083,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  plus(n: BigNumberValue, base?: number): BigNumber;
+  plus(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns the number of significant digits of the value of this BigNumber, or `null` if the value
@@ -1123,7 +1126,7 @@ export declare class BigNumber {
    * @param significantDigits Significant digits, integer, 1 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  precision(significantDigits: number, roundingMode?: BigNumberRoundingMode): BigNumber;
+  precision(significantDigits: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
    * Returns the number of significant digits of the value of this BigNumber,
@@ -1167,7 +1170,7 @@ export declare class BigNumber {
    * @param significantDigits Significant digits, integer, 1 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  sd(significantDigits: number, roundingMode?: BigNumberRoundingMode): BigNumber;
+  sd(significantDigits: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber shifted by `n` places.
@@ -1254,7 +1257,7 @@ export declare class BigNumber {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  toExponential(decimalPlaces?: number, roundingMode?: BigNumberRoundingMode): string;
+  toExponential(decimalPlaces?: number, roundingMode?: BigNumber.RoundingMode): string;
 
   /**
    * Returns a string representing the value of this BigNumber in normal (fixed-point) notation
@@ -1291,7 +1294,7 @@ export declare class BigNumber {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  toFixed(decimalPlaces?: number, roundingMode?: BigNumberRoundingMode): string;
+  toFixed(decimalPlaces?: number, roundingMode?: BigNumber.RoundingMode): string;
 
   /**
    * Returns a string representing the value of this BigNumber in normal (fixed-point) notation
@@ -1341,7 +1344,7 @@ export declare class BigNumber {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  toFormat(decimalPlaces?: number, roundingMode?: BigNumberRoundingMode): string;
+  toFormat(decimalPlaces?: number, roundingMode?: BigNumber.RoundingMode): string;
 
   /**
    * Returns a string array representing the value of this BigNumber as a simple fraction with an
@@ -1368,7 +1371,7 @@ export declare class BigNumber {
    *
    * @param [max_denominator] The maximum denominator, integer > 0, or Infinity.
    */
-  toFraction(max_denominator?: BigNumberValue): BigNumber[];
+  toFraction(max_denominator?: BigNumber.Value): BigNumber[];
 
   /**
    * As `valueOf`.
@@ -1425,7 +1428,7 @@ export declare class BigNumber {
    * @param [significantDigits] Significant digits, integer, 1 to 1e+9.
    * @param [roundingMode] Rounding mode, integer 0 to 8.
    */
-  toPrecision(significantDigits?: number, roundingMode?: BigNumberRoundingMode): string;
+  toPrecision(significantDigits?: number, roundingMode?: BigNumber.RoundingMode): string;
 
   /**
    * Returns a string representing the value of this BigNumber in base `base`, or base 10 if `base`
@@ -1504,7 +1507,7 @@ export declare class BigNumber {
    *
    * @param [object] The configuration object.
    */
-  static clone(object?: BigNumberConfig): BigNumberConstructor;
+  static clone(object?: BigNumber.Config): BigNumber.Constructor;
 
   /**
    * Configures the settings that apply to this BigNumber constructor.
@@ -1539,7 +1542,7 @@ export declare class BigNumber {
    *
    * @param object The configuration object.
    */
-  static config(object: BigNumberConfig): BigNumberConfig;
+  static config(object: BigNumber.Config): BigNumber.Config;
 
   /**
    * Returns `true` if `value` is a BigNumber instance, otherwise returns `false`.
@@ -1580,7 +1583,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static maximum(...n: BigNumberValue[]): BigNumber;
+  static maximum(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the maximum of the arguments.
@@ -1599,7 +1602,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static max(...n: BigNumberValue[]): BigNumber;
+  static max(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the minimum of the arguments.
@@ -1618,7 +1621,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static minimum(...n: BigNumberValue[]): BigNumber;
+  static minimum(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the minimum of the arguments.
@@ -1637,7 +1640,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static min(...n: BigNumberValue[]): BigNumber;
+  static min(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a new BigNumber with a pseudo-random value equal to or greater than 0 and less than 1.
@@ -1699,17 +1702,17 @@ export declare class BigNumber {
    *
    * @param object The configuration object.
    */
-  static set(object: BigNumberConfig): BigNumberConfig;
+  static set(object: BigNumber.Config): BigNumber.Config;
 
   /**
    * Helps ES6 import.
    */
-  private static readonly default?: BigNumberConstructor;
+  private static readonly default?: BigNumber.Constructor;
 
   /**
    * Helps ES6 import.
    */
-  private static readonly BigNumber?: BigNumberConstructor;
+  private static readonly BigNumber?: BigNumber.Constructor;
 
   /**
    * Rounds away from zero.
@@ -1760,35 +1763,33 @@ export declare class BigNumber {
    * See `MODULO_MODE`.
    */
   static readonly EUCLID: 9;
+
+  /**
+   * To aid in debugging, if a `BigNumber.DEBUG` property is `true` then an error will be thrown
+   * on an invalid `BigNumber.Value`.
+   * 
+   * ```ts
+   * // No error, and BigNumber NaN is returned.
+   * new BigNumber('blurgh')    // 'NaN'
+   * new BigNumber(9, 2)        // 'NaN'
+   * BigNumber.DEBUG = true
+   * new BigNumber('blurgh')    // '[BigNumber Error] Not a number'
+   * new BigNumber(9, 2)        // '[BigNumber Error] Not a base 2 number'
+   * ```
+   * 
+   * An error will also be thrown if a `BigNumber.Value` is of type number with more than 15
+   * significant digits, as calling `toString` or `valueOf` on such numbers may not result
+   * in the intended value.
+   * 
+   * ```ts
+   * console.log(823456789123456.3)       //  823456789123456.2
+   * // No error, and the returned BigNumber does not have the same value as the number literal.
+   * new BigNumber(823456789123456.3)     // '823456789123456.2'
+   * BigNumber.DEBUG = true
+   * new BigNumber(823456789123456.3)     
+   * // '[BigNumber Error] Number primitive has more than 15 significant digits'
+   * ```
+   * 
+   */
+  static DEBUG?: boolean;
 }
-
-
-export default BigNumber;
-
-export namespace BigNumber {
-  export type Config = BigNumberConfig;
-  export type Constructor = BigNumberConstructor;
-  export type Format = BigNumberFormat;
-  export type Instance = BigNumberInstance;
-  export type ModuloMode = BigNumberModuloMode;
-  export type RoundingMode = BigNumberRoundingMode;
-  export type Value = BigNumberValue;
-}
-
-/**
- * Browsers.
-declare global {
-  const BigNumber: BigNumberConstructor;
-  type BigNumber = BigNumberInstance;
-
-  namespace BigNumber {
-    type Config = BigNumberConfig;
-    type Constructor = BigNumberConstructor;
-    type Format = BigNumberFormat;
-    type Instance = BigNumberInstance;
-    type ModuloMode = BigNumberModuloMode;
-    type RoundingMode = BigNumberRoundingMode;
-    type Value = BigNumberValue;
-  }
-}
- */
