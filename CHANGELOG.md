@@ -1,3 +1,15 @@
+#### 7.0.0
+* 26/04/2018
+* #143 Remove global BigNumber from typings.
+* #144 Enable compatibility with `Object.freeze(Object.prototype)`.
+* #148 #123 #11 Only throw on a number primitive with more than 15 significant digits if `BigNumber.DEBUG` is `true`.
+* Only throw on an invalid BigNumber value if `BigNumber.DEBUG` is `true`. Return BigNumber `NaN` instead.
+* #154 `exponentiatedBy`: allow BigNumber exponent.
+* #156 Prevent Content Security Policy *unsafe-eval* issue.
+* `toFraction`: allow `Infinity` maximum denominator.
+* Comment-out some excess tests to reduce test time.
+* Amend indentation and other spacing.
+
 #### 6.0.0
 * 26/01/2018
 * #137 Implement `APLHABET` configuration option.
