@@ -509,7 +509,8 @@ export declare class BigNumber {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  decimalPlaces(decimalPlaces?: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
+  decimalPlaces(): number;
+  decimalPlaces(decimalPlaces: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
@@ -541,7 +542,8 @@ export declare class BigNumber {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  dp(decimalPlaces?: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
+  dp(): number;
+  dp(decimalPlaces: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber divided by `n`, rounded
