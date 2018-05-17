@@ -178,7 +178,7 @@
      * [b] {number} The base of n. Integer, 2 to ALPHABET.length inclusive.
      */
     function BigNumber(n, b) {
-      var alphabet, c, e, i, isNum, len, str,
+      var alphabet, c, caseChanged, e, i, isNum, len, str,
         x = this;
 
       // Enable constructor usage without new.
@@ -221,6 +221,22 @@
           x.s = str.charCodeAt(0) == 45 ? (str = str.slice(1), -1) : 1;
         }
 
+        // Decimal point?
+        if ((e = str.indexOf('.')) > -1) str = str.replace('.', '');
+
+        // Exponential form?
+        if ((i = str.search(/e/i)) > 0) {
+
+          // Determine exponent.
+          if (e < 0) e = i;
+          e += +str.slice(i + 1);
+          str = str.substring(0, i);
+        } else if (e < 0) {
+
+          // Integer.
+          e = str.length;
+        }
+
       } else {
 
         // '[BigNumber Error] Base {not a primitive number|not an integer|out of range}: {b}'
@@ -253,9 +269,6 @@
           isNum = false;
         } else {
           x.s = str.charCodeAt(0) === 45 ? (str = str.slice(1), -1) : 1;
-
-          // Allow e.g. hexadecimal 'FF' as well as 'ff'.
-          if (b > 10 && b < 37) str = str.toLowerCase();
         }
 
         alphabet = ALPHABET.slice(0, b);
@@ -272,6 +285,16 @@
                 e = len;
                 continue;
               }
+            } else if (!caseChanged) {
+
+              // Allow e.g. hexadecimal 'FF' as well as 'ff'.
+              if (str == str.toUpperCase() && (str = str.toLowerCase()) ||
+                  str == str.toLowerCase() && (str = str.toUpperCase())) {
+                caseChanged = true;
+                i = -1;
+                e = 0;
+                continue;
+              }
             }
 
             return parseNumeric(x, n + '', isNum, b);
@@ -279,22 +302,10 @@
         }
 
         str = convertBase(str, b, 10, x.s);
-      }
 
-      // Decimal point?
-      if ((e = str.indexOf('.')) > -1) str = str.replace('.', '');
-
-      // Exponential form?
-      if ((i = str.search(/e/i)) > 0) {
-
-        // Determine exponent.
-        if (e < 0) e = i;
-        e += +str.slice(i + 1);
-        str = str.substring(0, i);
-      } else if (e < 0) {
-
-        // Integer.
-        e = str.length;
+        // Decimal point?
+        if ((e = str.indexOf('.')) > -1) str = str.replace('.', '');
+        else e = str.length;
       }
 
       // Determine leading zeros.
@@ -393,9 +404,8 @@
      *   CRYPTO           {boolean}          true or false
      *   MODULO_MODE      {number}           0 to 9
      *   POW_PRECISION       {number}           0 to MAX
-     *   ALPHABET         {string}           A string of two or more unique characters, and not
-     *                                       containing '.'. The empty string, null or undefined
-     *                                       resets the alphabet to its default value.
+     *   ALPHABET         {string}           A string of two or more unique characters which does
+     *                                       not contain '.'.
      *   FORMAT           {object}           An object with some of the following properties:
      *      decimalSeparator       {string}
      *      groupSeparator         {string}
