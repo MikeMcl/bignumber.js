@@ -43,20 +43,20 @@ Browser:
 $ npm install --save bignumber.js
 ```
 
-```js
+```javascript
 var BigNumber = require('bignumber.js');
 ```
 
 ES6 module (*bignumber.mjs*):
 
-```js
+```javascript
 //import BigNumber from 'bignumber.js';
 import {BigNumber} from 'bignumber.js';
 ```
 
 AMD loader libraries such as [requireJS](http://requirejs.org/):
 
-```js
+```javascript
 require(['bignumber'], function(BigNumber) {
     // Use BigNumber here in local scope. No global BigNumber.
 });
@@ -69,7 +69,7 @@ If a commented-out value is in quotes it means `toString` has been called on the
 
 The library exports a single function: `BigNumber`, the constructor of BigNumber instances.
 
-It accepts a value of type number, string or BigNumber object,
+It accepts a value of type Number, String or BigNumber,
 
 ```javascript
 x = new BigNumber(123.4567)
@@ -78,12 +78,34 @@ z = new BigNumber(x)
 x.isEqualTo(y) && y.isEqualTo(z) && x.isEqualTo(z)      // true
 ```
 
-and a base from 2 to 36 can be specified (higher bases can be used if a custom alphabet is provided).
+and a base can be specified.
 
 ```javascript
-x = new BigNumber(1011, 2)          // "11"
-y = new BigNumber('zz.9', 36)       // "1295.25"
-z = x.plus(y)                       // "1306.25"
+a = new BigNumber(1011, 2)          // "11"
+b = new BigNumber('zz.9', 36)       // "1295.25"
+c = x.plus(y)                       // "1306.25"
+```
+
+Note that a BigNumber is created from a Number's decimal `toString()` value not from its underlying binary value. If the latter is required, then pass the Number's `toString(2)` value and specify base 2.
+
+```javascript
+new BigNumber(Number.MAX_VALUE.toString(2), 2)
+``` 
+
+If the limited precision of Number values is not well understood, **it is recommended to pass String values rather than Number values** to avoid a potential loss of precision.
+
+```javascript
+// Precision loss from using numeric literals with more than 15 significant digits.   
+new BigNumber(1.0000000000000001);                 // '1'
+new BigNumber(88259496234518.57);                  // '88259496234518.56'
+new BigNumber(99999999999999999999);               // '100000000000000000000'
+
+// Precision loss from using numeric literals outside the range of Number values.
+new BigNumber(2e+308);                             // 'Infinity'
+new BigNumber(1e-324);                             // '0'
+
+// Precision loss from the unexpected result of arithmetic with Number values.
+new BigNumber(0.7 + 0.1);                          // '0.7999999999999999' 
 ```
 
 A BigNumber is immutable in the sense that it is not changed by its methods.
@@ -109,14 +131,14 @@ x.squareRoot().dividedBy(y).exponentiatedBy(3).isEqualTo( x.sqrt().div(y).pow(3)
 x.modulo(y).multipliedBy(z).eq( x.mod(y).times(z) )                                   // true
 ```
 
-Like JavaScript's Number type, there are `toExponential`, `toFixed` and `toPrecision` methods
+As with JavaScript's Number type, there are `toExponential`, `toFixed` and `toPrecision` methods
 
 ```javascript
 x = new BigNumber(255.5)
 x.toExponential(5)                  // "2.55500e+2"
 x.toFixed(5)                        // "255.50000"
 x.toPrecision(5)                    // "255.50"
-x.toNumber()                        // 255.5
+x.toNumber()                        //  255.5
 ```
 
  and a base can be specified for `toString`.
