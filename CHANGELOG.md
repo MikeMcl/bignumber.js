@@ -1,3 +1,7 @@
+#### 7.1.0
+* 18/05/2018
+* Add `module` field to *package.json* for *bignumber.mjs*.
+
 #### 7.0.2
 * 17/05/2018
 * #165 Bugfix: upper-case letters for bases 11-36 in a custom alphabet.
