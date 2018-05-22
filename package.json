@@ -20,7 +20,7 @@
     "type": "git",
     "url": "https://github.com/MikeMcl/bignumber.js.git"
   },
-  "main": "bignumber.js",
+  "main": "bignumber",
   "module": "bignumber.mjs",
   "types": "bignumber.d.ts",
   "author": {
