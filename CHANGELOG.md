@@ -1,3 +1,7 @@
+#### 7.2.0
+* 22/05/2018
+* #166 Correct *.mjs* file. Remove extension from `main` field in *package.json*.
+
 #### 7.1.0
 * 18/05/2018
 * Add `module` field to *package.json* for *bignumber.mjs*.
