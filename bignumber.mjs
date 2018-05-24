@@ -1,5 +1,5 @@
 /*
- *      bignumber.js v7.2.0
+ *      bignumber.js v7.2.1
  *      A JavaScript library for arbitrary-precision arithmetic.
  *      https://github.com/MikeMcl/bignumber.js
  *      Copyright (c) 2018 Michael Mclaughlin <M8ch88l@gmail.com>

@@ -1,3 +1,7 @@
+#### 7.2.1
+* 24/05/2018
+* Add `browser` field to *package.json*.
+
 #### 7.2.0
 * 22/05/2018
 * #166 Correct *.mjs* file. Remove extension from `main` field in *package.json*.
