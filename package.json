@@ -22,6 +22,7 @@
   },
   "main": "bignumber",
   "module": "bignumber.mjs",
+  "browser": "bignumber.js",
   "types": "bignumber.d.ts",
   "author": {
     "name": "Michael Mclaughlin",
