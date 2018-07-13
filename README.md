@@ -83,7 +83,7 @@ and a base can be specified.
 ```javascript
 a = new BigNumber(1011, 2)          // "11"
 b = new BigNumber('zz.9', 36)       // "1295.25"
-c = x.plus(y)                       // "1306.25"
+c = a.plus(b)                       // "1306.25"
 ```
 
 Note that a BigNumber is created from a Number's decimal `toString()` value not from its underlying binary value. If the latter is required, then pass the Number's `toString(2)` value and specify base 2.
