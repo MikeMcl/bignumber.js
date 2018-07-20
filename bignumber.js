@@ -1378,7 +1378,7 @@
                 i %= LOG_BASE;
                 j = i - LOG_BASE + 1;
               } else {
-                break out;
+                return;
               }
             } else {
               n = k = xc[ni];
