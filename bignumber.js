@@ -584,11 +584,12 @@
      * arguments {number|string|BigNumber}
      */
     BigNumber.sum = function () {
-      var zero = new BigNumber(0);
+      var sum = new BigNumber(0);
       var args = Array.prototype.slice.call(arguments);
-      return args.reduce(function (sum, num) {
-        return sum.plus(num);
-      }, zero);
+      for (var i = 0; i < args.length; i++) {
+        sum = sum.plus(args[i]);
+      }
+      return sum;
     }
 
 
