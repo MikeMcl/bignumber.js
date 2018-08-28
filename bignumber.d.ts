@@ -1373,7 +1373,7 @@ export declare class BigNumber {
    *
    * @param [max_denominator] The maximum denominator, integer > 0, or Infinity.
    */
-  toFraction(max_denominator?: BigNumber.Value): BigNumber[];
+  toFraction(max_denominator?: BigNumber.Value): string[];
 
   /**
    * As `valueOf`.
