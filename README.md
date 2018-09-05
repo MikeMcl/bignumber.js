@@ -3,6 +3,8 @@
 A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 [![Build Status](https://travis-ci.org/MikeMcl/bignumber.js.svg)](https://travis-ci.org/MikeMcl/bignumber.js)
+[![Code Quality: Javascript](https://img.shields.io/lgtm/grade/javascript/g/MikeMcl/bignumber.js.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MikeMcl/bignumber.js/context:javascript)
+[![Total Alerts](https://img.shields.io/lgtm/alerts/g/MikeMcl/bignumber.js.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/MikeMcl/bignumber.js/alerts)
 
 <br />
 
