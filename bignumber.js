@@ -2352,7 +2352,7 @@
           t = r;
           r = half.times(t.plus(div(x, t, dp, 1)));
 
-          if (coeffToString(t.c  ).slice(0, s) === (n =
+          if (coeffToString(t.c).slice(0, s) === (n =
              coeffToString(r.c)).slice(0, s)) {
 
             // The exponent of r may here be one less than the final result exponent,
@@ -2668,6 +2668,11 @@
 
 
     P._isBigNumber = true;
+
+    if (typeof Symbol == 'function' && typeof Symbol.iterator == 'symbol') {
+      P[Symbol.toStringTag] = 'BigNumber';
+      P[Symbol.for('nodejs.util.inspect.custom')] = P.valueOf;
+    }
 
     if (configObject != null) BigNumber.set(configObject);
 

@@ -571,7 +571,7 @@ function clone(configObject) {
    * v {any}
    */
   BigNumber.isBigNumber = function (v) {
-    return v instanceof BigNumber || v && v._isBigNumber === true || false;
+    return Object.prototype.toString.call(v) == '[object BigNumber]';
   };
 
 
@@ -2632,7 +2632,7 @@ function clone(configObject) {
    * Return as toString, but do not accept a base argument, and include the minus sign for
    * negative zero.
    */
-  P.valueOf = P.toJSON = function () {
+  P.valueOf = P.toJSON = P[Symbol.for('nodejs.util.inspect.custom')] = function () {
     var str,
       n = this,
       e = n.e;
@@ -2649,7 +2649,7 @@ function clone(configObject) {
   };
 
 
-  P._isBigNumber = true;
+  P[Symbol.toStringTag] = 'BigNumber';
 
   if (configObject != null) BigNumber.set(configObject);
 

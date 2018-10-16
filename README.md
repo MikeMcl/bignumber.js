@@ -90,12 +90,12 @@ Note that a BigNumber is created from a Number's decimal `toString()` value not 
 
 ```javascript
 new BigNumber(Number.MAX_VALUE.toString(2), 2)
-``` 
+```
 
 If the limited precision of Number values is not well understood, **it is recommended to pass String values rather than Number values** to avoid a potential loss of precision.
 
 ```javascript
-// Precision loss from using numeric literals with more than 15 significant digits.   
+// Precision loss from using numeric literals with more than 15 significant digits.
 new BigNumber(1.0000000000000001);                 // '1'
 new BigNumber(88259496234518.57);                  // '88259496234518.56'
 new BigNumber(99999999999999999999);               // '100000000000000000000'
@@ -105,7 +105,7 @@ new BigNumber(2e+308);                             // 'Infinity'
 new BigNumber(1e-324);                             // '0'
 
 // Precision loss from the unexpected result of arithmetic with Number values.
-new BigNumber(0.7 + 0.1);                          // '0.7999999999999999' 
+new BigNumber(0.7 + 0.1);                          // '0.7999999999999999'
 ```
 
 A BigNumber is immutable in the sense that it is not changed by its methods.
@@ -211,6 +211,12 @@ y = new BN(1)
 
 x.div(3)                            // '0.3333333333'
 y.div(3)                            // '0.33333'
+```
+
+To avoid having to call `toString` or `valueOf` on a BigNumber to get its value in the Node.js REPL or when using `console.log` use
+
+```javascript
+BigNumber.prototype[require('util').inspect.custom] = BigNumber.prototype.valueOf;
 ```
 
 For futher information see the [API](http://mikemcl.github.io/bignumber.js/) reference in the *doc* directory.
