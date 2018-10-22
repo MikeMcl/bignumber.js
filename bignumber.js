@@ -158,8 +158,8 @@
         fractionGroupSize: 0
       },
 
-      // The alphabet used for base conversion.
-      // It must be at least 2 characters long, with no '.' or repeated character.
+      // The alphabet used for base conversion. It must be at least 2 characters long, with no '+',
+      // '-', '.', whitespace, or repeated character.
       // '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_'
       ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
 
@@ -538,8 +538,9 @@
           if (obj.hasOwnProperty(p = 'ALPHABET')) {
             v = obj[p];
 
-            // Disallow if only one character, or contains '.' or a repeated character.
-            if (typeof v == 'string' && !/^.$|\.|(.).*\1/.test(v)) {
+            // Disallow if only one character,
+            // or if it contains '+', '-', '.', whitespace, or a repeated character.
+            if (typeof v == 'string' && !/^.$|[+-.\s]|(.).*\1/.test(v)) {
               ALPHABET = v;
             } else {
               throw Error

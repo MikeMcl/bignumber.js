@@ -610,8 +610,8 @@ BigNumber.config({
       </dd>
       <dd>
         There is no maximum length for the alphabet, but it must be at least 2 characters long, and
-        it must not contain a repeated character, or <code>'.'</code>, as that is used as the
-        decimal separator for all values whatever their base.
+        it must not contain whitespace or a repeated character, or the sign indicators
+        <code>'+'</code> and <code>'-'</code>, or the decimal separator <code>'.'</code>.
       </dd>
       <dd>
         <pre>// duodecimal (base 12)
@@ -1223,7 +1223,7 @@ y.isNaN()                       // false</pre>
 
     <h5 id="isNeg">isNegative<code class='inset'>.isNegative() <i>&rArr; boolean</i></code></h5>
     <p>
-      Returns <code>true</code> if the value of this BigNumber is negative, otherwise returns
+      Returns <code>true</code> if the sign of this BigNumber is negative, otherwise returns
       <code>false</code>.
     </p>
     <pre>
@@ -1237,7 +1237,7 @@ y.isNegative()                  // false</pre>
 
     <h5 id="isPos">isPositive<code class='inset'>.isPositive() <i>&rArr; boolean</i></code></h5>
     <p>
-      Returns <code>true</code> if the value of this BigNumber is positive, otherwise returns
+      Returns <code>true</code> if the sign of this BigNumber is positive, otherwise returns
       <code>false</code>.
     </p>
     <pre>
