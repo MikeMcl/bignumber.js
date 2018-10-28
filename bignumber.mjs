@@ -211,9 +211,10 @@ function clone(configObject) {
           return;
         }
 
-        str = n + '';
+        str = String(n);
       } else {
-        if (!isNumeric.test(str = n + '')) return parseNumeric(x, str, isNum);
+        str = String(n);
+        if (!isNumeric.test(str)) return parseNumeric(x, str, isNum);
         x.s = str.charCodeAt(0) == 45 ? (str = str.slice(1), -1) : 1;
       }
 
@@ -237,7 +238,7 @@ function clone(configObject) {
 
       // '[BigNumber Error] Base {not a primitive number|not an integer|out of range}: {b}'
       intCheck(b, 2, ALPHABET.length, 'Base');
-      str = n + '';
+      str = String(n);
 
       // Allow exponential notation to be used with base 10 argument, while
       // also rounding to DECIMAL_PLACES as with other bases.
@@ -293,7 +294,7 @@ function clone(configObject) {
             }
           }
 
-          return parseNumeric(x, n + '', isNum, b);
+          return parseNumeric(x, String(n), isNum, b);
         }
       }
 
@@ -858,8 +859,7 @@ function clone(configObject) {
       if (d < 1 || !xc[0]) {
 
         // 1^-dp or 0
-        str = r ? toFixedPoint(alphabet.charAt(1), -dp, alphabet.charAt(0))
-            : alphabet.charAt(0);
+        str = r ? toFixedPoint(alphabet.charAt(1), -dp, alphabet.charAt(0)) : alphabet.charAt(0);
       } else {
 
         // Truncate xc to the required number of decimal places.
@@ -1491,6 +1491,22 @@ function clone(configObject) {
   }
 
 
+  function valueOf(n) {
+    var str,
+      e = n.e;
+
+    if (e === null) return n.toString();
+
+    str = coeffToString(n.c);
+
+    str = e <= TO_EXP_NEG || e >= TO_EXP_POS
+      ? toExponential(str, e)
+      : toFixedPoint(str, e, '0');
+
+    return n.s < 0 ? '-' + str : str;
+  }
+
+
   // PROTOTYPE/INSTANCE METHODS
 
 
@@ -1602,7 +1618,7 @@ function clone(configObject) {
    * '[BigNumber Error] Exponent not an integer: {n}'
    */
   P.exponentiatedBy = P.pow = function (n, m) {
-    var half, isModExp, k, more, nIsBig, nIsNeg, nIsOdd, y,
+    var half, isModExp, i, k, more, nIsBig, nIsNeg, nIsOdd, y,
       x = this;
 
     n = new BigNumber(n);
@@ -1610,7 +1626,7 @@ function clone(configObject) {
     // Allow NaN and ±Infinity, but not other non-integers.
     if (n.c && !n.isInteger()) {
       throw Error
-        (bignumberError + 'Exponent not an integer: ' + n);
+        (bignumberError + 'Exponent not an integer: ' + valueOf(n));
     }
 
     if (m != null) m = new BigNumber(m);
@@ -1623,7 +1639,7 @@ function clone(configObject) {
 
       // The sign of the result of pow when x is negative depends on the evenness of n.
       // If +n overflows to ±Infinity, the evenness of n would be not be known.
-      y = new BigNumber(Math.pow(+x.valueOf(), nIsBig ? 2 - isOdd(n) : +n));
+      y = new BigNumber(Math.pow(+valueOf(x), nIsBig ? 2 - isOdd(n) : +valueOf(n)));
       return m ? y.mod(m) : y;
     }
 
@@ -1665,12 +1681,12 @@ function clone(configObject) {
 
     if (nIsBig) {
       half = new BigNumber(0.5);
+      if (nIsNeg) n.s = 1;
       nIsOdd = isOdd(n);
     } else {
-      nIsOdd = n % 2;
+      i = Math.abs(+valueOf(n));
+      nIsOdd = i % 2;
     }
-
-    if (nIsNeg) n.s = 1;
 
     y = new BigNumber(ONE);
 
@@ -1688,16 +1704,21 @@ function clone(configObject) {
         }
       }
 
-      if (nIsBig) {
+      if (i) {
+        i = mathfloor(i / 2);
+        if (i === 0) break;
+        nIsOdd = i % 2;
+      } else {
         n = n.times(half);
         round(n, n.e + 1, 1);
-        if (!n.c[0]) break;
-        nIsBig = n.e > 14;
-        nIsOdd = isOdd(n);
-      } else {
-        n = mathfloor(n / 2);
-        if (!n) break;
-        nIsOdd = n % 2;
+
+        if (n.e > 14) {
+          nIsOdd = isOdd(n);
+        } else {
+          i = +valueOf(n);
+          if (i === 0) break;
+          nIsOdd = i % 2;
+        }
       }
 
       x = x.times(x);
@@ -2299,14 +2320,14 @@ function clone(configObject) {
     }
 
     // Initial estimate.
-    s = Math.sqrt(+x);
+    s = Math.sqrt(+valueOf(x));
 
     // Math.sqrt underflow/overflow?
     // Pass x to Math.sqrt as integer, then adjust the exponent of the result.
     if (s == 0 || s == 1 / 0) {
       n = coeffToString(c);
       if ((n.length + e) % 2 == 0) n += '0';
-      s = Math.sqrt(n);
+      s = Math.sqrt(+n);
       e = bitFloor((e + 1) / 2) - (e < 0 || e % 2);
 
       if (s == 1 / 0) {
@@ -2335,8 +2356,7 @@ function clone(configObject) {
         t = r;
         r = half.times(t.plus(div(x, t, dp, 1)));
 
-        if (coeffToString(t.c  ).slice(0, s) === (n =
-           coeffToString(r.c)).slice(0, s)) {
+        if (coeffToString(t.c).slice(0, s) === (n = coeffToString(r.c)).slice(0, s)) {
 
           // The exponent of r may here be one less than the final result exponent,
           // e.g 0.0009999 (e-4) --> 0.001 (e-3), so adjust s so the rounding digits
@@ -2506,7 +2526,7 @@ function clone(configObject) {
       if (!n.isInteger() && (n.c || n.s !== 1) || n.lt(ONE)) {
         throw Error
           (bignumberError + 'Argument ' +
-            (n.isInteger() ? 'out of range: ' : 'not an integer: ') + md);
+            (n.isInteger() ? 'out of range: ' : 'not an integer: ') + valueOf(n));
       }
     }
 
@@ -2546,7 +2566,7 @@ function clone(configObject) {
     n0 = n0.plus(d2.times(n1));
     d0 = d0.plus(d2.times(d1));
     n0.s = n1.s = x.s;
-    e *= 2;
+    e = e * 2;
 
     // Determine which fraction is closer to x, n0/d0 or n1/d1
     arr = div(n1, d1, e, ROUNDING_MODE).minus(x).abs().comparedTo(
@@ -2563,7 +2583,7 @@ function clone(configObject) {
    * Return the value of this BigNumber converted to a number primitive.
    */
   P.toNumber = function () {
-    return +this;
+    return +valueOf(this);
   };
 
 
@@ -2634,21 +2654,8 @@ function clone(configObject) {
    * negative zero.
    */
   P.valueOf = P.toJSON = P[Symbol.for('nodejs.util.inspect.custom')] = function () {
-    var str,
-      n = this,
-      e = n.e;
-
-    if (e === null) return n.toString();
-
-    str = coeffToString(n.c);
-
-    str = e <= TO_EXP_NEG || e >= TO_EXP_POS
-      ? toExponential(str, e)
-      : toFixedPoint(str, e, '0');
-
-    return n.s < 0 ? '-' + str : str;
+    return valueOf(this);
   };
-
 
   P[Symbol.toStringTag] = 'BigNumber';
 
@@ -2736,7 +2743,7 @@ function intCheck(n, min, max, name) {
     throw Error
      (bignumberError + (name || 'Argument') + (typeof n == 'number'
        ? n < min || n > max ? ' out of range: ' : ' not an integer: '
-       : ' not a primitive number: ') + n);
+       : ' not a primitive number: ') + String(n));
   }
 }
 
@@ -2786,7 +2793,7 @@ function toFixedPoint(str, e, z) {
 }
 
 
-// EXPORTS
+// EXPORT
 
 
 export var BigNumber = clone();
