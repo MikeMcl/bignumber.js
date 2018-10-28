@@ -2522,18 +2522,18 @@
 
 
     /*
-     * Return a string array representing the value of this BigNumber as a simple fraction with
-     * an integer numerator and an integer denominator. The denominator will be a positive
-     * non-zero value less than or equal to the specified maximum denominator. If a maximum
-     * denominator is not specified, the denominator will be the lowest value necessary to
-     * represent the number exactly.
+     * Return an array of two BigNumbers representing the value of this BigNumber as a simple
+     * fraction with an integer numerator and an integer denominator.
+     * The denominator will be a positive non-zero value less than or equal to the specified
+     * maximum denominator. If a maximum denominator is not specified, the denominator will be
+     * the lowest value necessary to represent the number exactly.
      *
      * [md] {number|string|BigNumber} Integer >= 1, or Infinity. The maximum denominator.
      *
      * '[BigNumber Error] Argument {not an integer|out of range} : {md}'
      */
     P.toFraction = function (md) {
-      var arr, d, d0, d1, d2, e, exp, n, n0, n1, q, s,
+      var d, d0, d1, d2, e, exp, n, n0, n1, q, r, s,
         x = this,
         xc = x.c;
 
@@ -2548,7 +2548,7 @@
         }
       }
 
-      if (!xc) return x.toString();
+      if (!xc) return new BigNumber(x);
 
       d = new BigNumber(ONE);
       n1 = d0 = new BigNumber(ONE);
@@ -2587,13 +2587,12 @@
       e = e * 2;
 
       // Determine which fraction is closer to x, n0/d0 or n1/d1
-      arr = div(n1, d1, e, ROUNDING_MODE).minus(x).abs().comparedTo(
-         div(n0, d0, e, ROUNDING_MODE).minus(x).abs()) < 1
-          ? [n1.toString(), d1.toString()]
-          : [n0.toString(), d0.toString()];
+      r = div(n1, d1, e, ROUNDING_MODE).minus(x).abs().comparedTo(
+          div(n0, d0, e, ROUNDING_MODE).minus(x).abs()) < 1 ? [n1, d1] : [n0, d0];
 
       MAX_EXP = exp;
-      return arr;
+
+      return r;
     };
 
 

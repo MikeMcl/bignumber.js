@@ -1605,24 +1605,26 @@ x.toFormat(6)                   // '12.34.56.789,123'</pre>
 
 
     <h5 id="toFr">
-      toFraction<code class='inset'>.toFraction([max]) <i>&rArr; [string, string]</i></code>
+      toFraction<code class='inset'>.toFraction([maximum_denominator])
+      <i>&rArr; [BigNumber, BigNumber]</i></code>
     </h5>
     <p>
-      <code>max</code>: <i>number|string|BigNumber</i>: integer &gt;= <code>1</code> and &lt;=
+      <code>maximum_denominator</code>: 
+      <i>number|string|BigNumber</i>: integer &gt;= <code>1</code> and &lt;=
       <code>Infinity</code>
     </p>
     <p>
-      Returns a string array representing the value of this BigNumber as a simple fraction with an
-      integer numerator and an integer denominator. The denominator will be a positive non-zero
-      value less than or equal to <code>max</code>.
+      Returns an array of two BigNumbers representing the value of this BigNumber as a simple
+      fraction with an integer numerator and an integer denominator. The denominator will be a
+      positive non-zero value less than or equal to <code>maximum_denominator</code>.
     </p>
     <p>
-      If a maximum denominator, <code>max</code>, is not specified, or is <code>null</code> or
+      If a <code>maximum_denominator</code> is not specified, or is <code>null</code> or
       <code>undefined</code>, the denominator will be the lowest value necessary to represent the
       number exactly.
     </p>
     <p>
-      Throws if <code>max</code> is invalid. See <a href='#Errors'>Errors</a>.
+      Throws if <code>maximum_denominator</code> is invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = new BigNumber(1.75)
@@ -1639,7 +1641,7 @@ pi.toFraction(1)                // '3, 1'</pre>
 
 
     <h5 id="toJSON">toJSON<code class='inset'>.toJSON() <i>&rArr; string</i></code></h5>
-    <p>As <code>valueOf</code>.</p>
+    <p>As <a href='#valueOf'><code>valueOf</code></a>.</p>
     <pre>
 x = new BigNumber('177.7e+457')
 y = new BigNumber(235.4325)
@@ -1765,8 +1767,8 @@ z.toString(10)                  // '1.2346'</pre>
 
     <h5 id="valueOf">valueOf<code class='inset'>.valueOf() <i>&rArr; string</i></code></h5>
     <p>
-      As <code>toString</code>, but does not accept a base argument and includes the minus sign
-      for negative zero.
+      As <a href='#toS'><code>toString</code></a>, but does not accept a base argument and includes
+      the minus sign for negative zero.
     </p>
     <pre>
 x = new BigNumber('-0')
