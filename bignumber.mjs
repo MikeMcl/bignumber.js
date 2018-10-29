@@ -146,12 +146,14 @@ function clone(configObject) {
 
     // The format specification used by the BigNumber.prototype.toFormat method.
     FORMAT = {
-      decimalSeparator: '.',
-      groupSeparator: ',',
+      prefix: '',
       groupSize: 3,
       secondaryGroupSize: 0,
+      groupSeparator: ',',
+      decimalSeparator: '.',
+      fractionGroupSize: 0,
       fractionGroupSeparator: '\xA0',      // non-breaking space
-      fractionGroupSize: 0
+      suffix: ''
     },
 
     // The alphabet used for base conversion. It must be at least 2 characters long, with no '+',
@@ -404,12 +406,14 @@ function clone(configObject) {
    *   ALPHABET         {string}           A string of two or more unique characters which does
    *                                     not contain '.'.
    *   FORMAT           {object}           An object with some of the following properties:
-   *      decimalSeparator       {string}
-   *      groupSeparator         {string}
-   *      groupSize              {number}
-   *      secondaryGroupSize     {number}
-   *      fractionGroupSeparator {string}
-   *      fractionGroupSize      {number}
+   *     prefix                 {string}
+   *     groupSize              {number}
+   *     secondaryGroupSize     {number}
+   *     groupSeparator         {string}
+   *     decimalSeparator       {string}
+   *     fractionGroupSize      {number}
+   *     fractionGroupSeparator {string}
+   *     suffix                 {string}
    *
    * (The values assigned to the above FORMAT object properties are not checked for validity.)
    *
@@ -2451,12 +2455,14 @@ function clone(configObject) {
    * The formatting object may contain some or all of the properties shown below.
    *
    * FORMAT = {
-   *   decimalSeparator : '.',
-   *   groupSeparator : ',',
-   *   groupSize : 3,
-   *   secondaryGroupSize : 0,
-   *   fractionGroupSeparator : '\xA0',    // non-breaking space
-   *   fractionGroupSize : 0
+   *   prefix: '',
+   *   groupSize: 3,
+   *   secondaryGroupSize: 0,
+   *   groupSeparator: ',',
+   *   decimalSeparator: '.',
+   *   fractionGroupSize: 0,
+   *   fractionGroupSeparator: '\xA0',      // non-breaking space
+   *   suffix: ''
    * };
    *
    * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
@@ -2492,7 +2498,7 @@ function clone(configObject) {
         arr = str.split('.'),
         g1 = +format.groupSize,
         g2 = +format.secondaryGroupSize,
-        groupSeparator = format.groupSeparator,
+        groupSeparator = format.groupSeparator || '',
         intPart = arr[0],
         fractionPart = arr[1],
         isNeg = x.s < 0,
@@ -2504,24 +2510,20 @@ function clone(configObject) {
       if (g1 > 0 && len > 0) {
         i = len % g1 || g1;
         intPart = intDigits.substr(0, i);
-
-        for (; i < len; i += g1) {
-          intPart += groupSeparator + intDigits.substr(i, g1);
-        }
-
+        for (; i < len; i += g1) intPart += groupSeparator + intDigits.substr(i, g1);
         if (g2 > 0) intPart += groupSeparator + intDigits.slice(i);
         if (isNeg) intPart = '-' + intPart;
       }
 
       str = fractionPart
-       ? intPart + format.decimalSeparator + ((g2 = +format.fractionGroupSize)
+       ? intPart + (format.decimalSeparator || '') + ((g2 = +format.fractionGroupSize)
         ? fractionPart.replace(new RegExp('\\d{' + g2 + '}\\B', 'g'),
-         '$&' + format.fractionGroupSeparator)
+         '$&' + (format.fractionGroupSeparator || ''))
         : fractionPart)
        : intPart;
     }
 
-    return str;
+    return (format.prefix || '') + str + (format.suffix || '');
   };
 
 

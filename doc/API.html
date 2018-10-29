@@ -583,18 +583,22 @@ BigNumber.config({ MODULO_MODE: 9 })          // equivalent</pre>
       <pre>
 BigNumber.config({
   FORMAT: {
-    // the decimal separator
+    // string to prepend
+    prefix: '',
+    // decimal separator
     decimalSeparator: '.',
-    // the grouping separator of the integer part
+    // grouping separator of the integer part
     groupSeparator: ',',
-    // the primary grouping size of the integer part
+    // primary grouping size of the integer part
     groupSize: 3,
-    // the secondary grouping size of the integer part
+    // secondary grouping size of the integer part
     secondaryGroupSize: 0,
-    // the grouping separator of the fraction part
+    // grouping separator of the fraction part
     fractionGroupSeparator: ' ',
-    // the grouping size of the fraction part
-    fractionGroupSize: 0
+    // grouping size of the fraction part
+    fractionGroupSize: 0,
+    // string to append
+    suffix: ''
   }
 });</pre>
       </dd>
@@ -1577,12 +1581,14 @@ y.toFixed(5)                    // '3.45600'</pre>
     </p>
     <pre>
 fmt = {
+  prefix = '',
   decimalSeparator: '.',
   groupSeparator: ',',
   groupSize: 3,
   secondaryGroupSize: 0,
   fractionGroupSeparator: ' ',
-  fractionGroupSize: 0
+  fractionGroupSize: 0,
+  suffix = ''
 }
 
 x = new BigNumber('123456789.123456789')
@@ -1601,6 +1607,7 @@ x.toFormat()                              // '123 456 789.12345 6789'
 
 // Alternatively, pass a format object as an argument
 fmt = {
+  prefix: '=> ',
   decimalSeparator: ',',
   groupSeparator: '.',
   groupSize: 3,
@@ -1608,9 +1615,9 @@ fmt = {
 }
 
 x.toFormat()                              // '123 456 789.12345 6789'
-x.toFormat(fmt)                           // '12.34.56.789,123456789'
-x.toFormat(2, fmt)                        // '12.34.56.789,12'
-x.toFormat(3, BigNumber.ROUND_UP, fmt)    // '12.34.56.789,124'</pre>
+x.toFormat(fmt)                           // '=> 12.34.56.789,123456789'
+x.toFormat(2, fmt)                        // '=> 12.34.56.789,12'
+x.toFormat(3, BigNumber.ROUND_UP, fmt)    // '=> 12.34.56.789,124'</pre>
 
 
 
@@ -2053,6 +2060,12 @@ y.s                             // -1</pre>
           <code>random</code>
         </td>
         <td>crypto unavailable</td>
+      </tr>
+      <tr>
+        <td>
+          <code>toFormat</code>
+        </td>
+        <td>Argument not an object</td>
       </tr>
       <tr>
         <td rowspan=2><code>toFraction</code></td>
