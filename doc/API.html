@@ -582,20 +582,20 @@ BigNumber.config({ MODULO_MODE: 9 })          // equivalent</pre>
       <dd>
       <pre>
 BigNumber.config({
-    FORMAT: {
-        // the decimal separator
-        decimalSeparator: '.',
-        // the grouping separator of the integer part
-        groupSeparator: ',',
-        // the primary grouping size of the integer part
-        groupSize: 3,
-        // the secondary grouping size of the integer part
-        secondaryGroupSize: 0,
-        // the grouping separator of the fraction part
-        fractionGroupSeparator: ' ',
-        // the grouping size of the fraction part
-        fractionGroupSize: 0
-    }
+  FORMAT: {
+    // the decimal separator
+    decimalSeparator: '.',
+    // the grouping separator of the integer part
+    groupSeparator: ',',
+    // the primary grouping size of the integer part
+    groupSize: 3,
+    // the secondary grouping size of the integer part
+    secondaryGroupSize: 0,
+    // the grouping separator of the fraction part
+    fractionGroupSeparator: ' ',
+    // the grouping size of the fraction part
+    fractionGroupSize: 0
+  }
 });</pre>
       </dd>
 
@@ -636,19 +636,19 @@ x.toString(12)              // 'T'</pre>
     </p>
     <pre>
 BigNumber.config({
-    DECIMAL_PLACES: 40,
-    ROUNDING_MODE: BigNumber.ROUND_HALF_CEIL,
-    EXPONENTIAL_AT: [-10, 20],
-    RANGE: [-500, 500],
-    CRYPTO: true,
-    MODULO_MODE: BigNumber.ROUND_FLOOR,
-    POW_PRECISION: 80,
-    FORMAT: {
-        groupSize: 3,
-        groupSeparator: ' ',
-        decimalSeparator: ','
-    },
-    ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_'
+  DECIMAL_PLACES: 40,
+  ROUNDING_MODE: BigNumber.ROUND_HALF_CEIL,
+  EXPONENTIAL_AT: [-10, 20],
+  RANGE: [-500, 500],
+  CRYPTO: true,
+  MODULO_MODE: BigNumber.ROUND_FLOOR,
+  POW_PRECISION: 80,
+  FORMAT: {
+    groupSize: 3,
+    groupSeparator: ' ',
+    decimalSeparator: ','
+  },
+  ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_'
 });
 
 obj = BigNumber.config();
@@ -1545,62 +1545,72 @@ y.toFixed(5)                    // '3.45600'</pre>
 
 
     <h5 id="toFor">
-      toFormat<code class='inset'>.toFormat([dp [, rm]]) <i>&rArr; string</i></code>
+      toFormat<code class='inset'>.toFormat([dp [, rm[, format]]]) <i>&rArr; string</i></code>
     </h5>
     <p>
       <code>dp</code>: <i>number</i>: integer, <code>0</code> to <code>1e+9</code> inclusive<br />
-      <code>rm</code>: <i>number</i>: integer, <code>0</code> to <code>8</code> inclusive
+      <code>rm</code>: <i>number</i>: integer, <code>0</code> to <code>8</code> inclusive<br />
+      <code>format</code>: <i>object</i>: see <a href='#format'><code>FORMAT</code></a>
     </p>
     <p>
       <p>
       Returns a string representing the value of this BigNumber in normal (fixed-point) notation
       rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>, and formatted
-      according to the properties of the <a href='#format'><code>FORMAT</code></a> object.
+      according to the properties of the <code>format</code> object.
     </p>
     <p>
-      See the examples below for the properties of the
-      <a href='#format'><code>FORMAT</code></a> object, their types and their usage.
+      See <a href='#format'><code>FORMAT</code></a> and the examples below for the properties of the
+      <code>format</code> object, their types, and their usage. A formatting object may contain
+      some or all of the recognised properties.
     </p>
     <p>
       If <code>dp</code> is omitted or is <code>null</code> or <code>undefined</code>, then the
       return value is not rounded to a fixed number of decimal places.<br />
       If <code>rm</code> is omitted or is <code>null</code> or <code>undefined</code>,
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.<br />
+      If <code>format</code> is omitted or is <code>null</code> or <code>undefined</code>, the
+      <a href='#format'><code>FORMAT</code></a> object is used.
     </p>
     <p>
-      Throws if <code>dp</code> or <code>rm</code> is invalid. See <a href='#Errors'>Errors</a>.
+      Throws if <code>dp</code>, <code>rm</code> or <code>format</code> is invalid. See
+      <a href='#Errors'>Errors</a>.
     </p>
     <pre>
-format = {
-    decimalSeparator: '.',
-    groupSeparator: ',',
-    groupSize: 3,
-    secondaryGroupSize: 0,
-    fractionGroupSeparator: ' ',
-    fractionGroupSize: 0
+fmt = {
+  decimalSeparator: '.',
+  groupSeparator: ',',
+  groupSize: 3,
+  secondaryGroupSize: 0,
+  fractionGroupSeparator: ' ',
+  fractionGroupSize: 0
 }
-BigNumber.config({ FORMAT: format })
 
 x = new BigNumber('123456789.123456789')
-x.toFormat()                    // '123,456,789.123456789'
-x.toFormat(1)                   // '123,456,789.1'
+
+// Set the format object globally
+BigNumber.config({ FORMAT: fmt })
+
+x.toFormat()                              // '123,456,789.123456789'
+x.toFormat(3)                             // '123,456,789.123'
 
 // If a reference to the object assigned to FORMAT has been retained,
 // the format properties can be changed directly
-format.groupSeparator = ' '
-format.fractionGroupSize = 5
-x.toFormat()                    // '123 456 789.12345 6789'
+fmt.groupSeparator = ' '
+fmt.fractionGroupSize = 5
+x.toFormat()                              // '123 456 789.12345 6789'
 
-BigNumber.config({
-    FORMAT: {
-        decimalSeparator: ',',
-        groupSeparator: '.',
-        groupSize: 3,
-        secondaryGroupSize: 2
-    }
-})
+// Alternatively, pass a format object as an argument
+fmt = {
+  decimalSeparator: ',',
+  groupSeparator: '.',
+  groupSize: 3,
+  secondaryGroupSize: 2
+}
 
-x.toFormat(6)                   // '12.34.56.789,123'</pre>
+x.toFormat()                              // '123 456 789.12345 6789'
+x.toFormat(fmt)                           // '12.34.56.789,123456789'
+x.toFormat(2, fmt)                        // '12.34.56.789,12'
+x.toFormat(3, BigNumber.ROUND_UP, fmt)    // '12.34.56.789,124'</pre>
 
 
 
@@ -1609,7 +1619,7 @@ x.toFormat(6)                   // '12.34.56.789,123'</pre>
       <i>&rArr; [BigNumber, BigNumber]</i></code>
     </h5>
     <p>
-      <code>maximum_denominator</code>: 
+      <code>maximum_denominator</code>:
       <i>number|string|BigNumber</i>: integer &gt;= <code>1</code> and &lt;=
       <code>Infinity</code>
     </p>

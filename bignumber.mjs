@@ -2446,34 +2446,56 @@ function clone(configObject) {
   /*
    * Return a string representing the value of this BigNumber in fixed-point notation rounded
    * using rm or ROUNDING_MODE to dp decimal places, and formatted according to the properties
-   * of the FORMAT object (see BigNumber.set).
+   * of the format or FORMAT object (see BigNumber.set).
+   *
+   * The formatting object may contain some or all of the properties shown below.
    *
    * FORMAT = {
-   *      decimalSeparator : '.',
-   *      groupSeparator : ',',
-   *      groupSize : 3,
-   *      secondaryGroupSize : 0,
-   *      fractionGroupSeparator : '\xA0',    // non-breaking space
-   *      fractionGroupSize : 0
+   *   decimalSeparator : '.',
+   *   groupSeparator : ',',
+   *   groupSize : 3,
+   *   secondaryGroupSize : 0,
+   *   fractionGroupSeparator : '\xA0',    // non-breaking space
+   *   fractionGroupSize : 0
    * };
    *
    * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
    * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
+   * [format] {object} See FORMAT object above.
    *
    * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
+   * '[BigNumber Error] Argument not an object: {format}'
    */
-  P.toFormat = function (dp, rm) {
-    var str = this.toFixed(dp, rm);
+  P.toFormat = function (dp, rm, format) {
+    var str,
+      x = this;
 
-    if (this.c) {
+    if (format == null) {
+      if (dp != null && rm && typeof rm == 'object') {
+        format = rm;
+        rm = null;
+      } else if (dp && typeof dp == 'object') {
+        format = dp;
+        dp = rm = null;
+      } else {
+        format = FORMAT;
+      }
+    } else if (typeof format != 'object') {
+      throw Error
+        (bignumberError + 'Argument not an object: ' + format);
+    }
+
+    str = x.toFixed(dp, rm);
+
+    if (x.c) {
       var i,
         arr = str.split('.'),
-        g1 = +FORMAT.groupSize,
-        g2 = +FORMAT.secondaryGroupSize,
-        groupSeparator = FORMAT.groupSeparator,
+        g1 = +format.groupSize,
+        g2 = +format.secondaryGroupSize,
+        groupSeparator = format.groupSeparator,
         intPart = arr[0],
         fractionPart = arr[1],
-        isNeg = this.s < 0,
+        isNeg = x.s < 0,
         intDigits = isNeg ? intPart.slice(1) : intPart,
         len = intDigits.length;
 
@@ -2492,9 +2514,9 @@ function clone(configObject) {
       }
 
       str = fractionPart
-       ? intPart + FORMAT.decimalSeparator + ((g2 = +FORMAT.fractionGroupSize)
+       ? intPart + format.decimalSeparator + ((g2 = +format.fractionGroupSize)
         ? fractionPart.replace(new RegExp('\\d{' + g2 + '}\\B', 'g'),
-         '$&' + FORMAT.fractionGroupSeparator)
+         '$&' + format.fractionGroupSeparator)
         : fractionPart)
        : intPart;
     }
