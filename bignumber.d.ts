@@ -1565,7 +1565,7 @@ export declare class BigNumber {
    *
    * @param value The value to test.
    */
-  static isBigNumber(value: any): boolean;
+  static isBigNumber(value: any): value is BigNumber;
 
   /**
    *
