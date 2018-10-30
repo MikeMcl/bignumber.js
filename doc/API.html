@@ -151,6 +151,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
 
     <a href="#zero-nan-infinity">Zero, NaN &amp; Infinity</a>
     <a href="#Errors">Errors</a>
+    <a href="#type-coercion">Type coercion</a>
     <a class='end' href="#faq">FAQ</a>
 
   </div>
@@ -2095,6 +2096,30 @@ try {
         // ...
     }
 }</pre>
+
+
+
+    <h4 id="type-coercion">Type coercion</h4>
+    <p>
+      To prevent the accidental use of a BigNumber in primitive number operations, or the
+      accidental addition of a BigNumber to a string, the <code>valueOf</code> method can be safely
+      overwritten as shown below.
+    </p>
+    <p>
+      The <a href='#valueOf'><code>valueOf</code></a> method is the same as the
+      <a href='#toJSON'><code>toJSON</code></a> method, and both are the same as the
+      <a href='#toS'><code>toString</code></a> method except they do not take a <code>base</code>
+      argument and they include the minus sign for negative zero.
+    </p>
+    <pre>
+BigNumber.prototype.valueOf = function () {
+  throw Error('valueOf called!')
+}
+
+x = new BigNumber(1)
+x / 2                    // '[BigNumber Error] valueOf called!'
+x + 'abc'                // '[BigNumber Error] valueOf called!'
+</pre>
 
 
 
