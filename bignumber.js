@@ -22,10 +22,10 @@
  *      isGreaterThan            gt     |      FORMAT
  *      isGreaterThanOrEqualTo   gte    |      ALPHABET
  *      isInteger                       |  isBigNumber
- *      isLessThan               lt     |  maximum              max
- *      isLessThanOrEqualTo      lte    |  minimum              min
- *      isNaN                           |  random
- *      isNegative                      |
+ *      isLessThan               lt     |  sum
+ *      isLessThanOrEqualTo      lte    |  maximum              max
+ *      isNaN                           |  minimum              min
+ *      isNegative                      |  random
  *      isPositive                      |
  *      isZero                          |
  *      minus                           |
@@ -577,6 +577,20 @@
     BigNumber.isBigNumber = function (v) {
       return v instanceof BigNumber || v && v._isBigNumber === true || false;
     };
+    
+    /*
+     * Return a new BigNumber whose value is the sum of the arguments.
+     *
+     * arguments {number|string|BigNumber}
+     */
+    BigNumber.sum = function () {
+      var sum = new BigNumber(0);
+      var args = Array.prototype.slice.call(arguments);
+      for (var i = 0; i < args.length; i++) {
+        sum = sum.plus(args[i]);
+      }
+      return sum;
+    }
 
 
     /*
