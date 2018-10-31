@@ -2467,7 +2467,7 @@ function clone(configObject) {
    *
    * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
    * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
-   * [format] {object} See FORMAT object above.
+   * [format] {object} Formatting options. See FORMAT pbject above.
    *
    * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
    * '[BigNumber Error] Argument not an object: {format}'

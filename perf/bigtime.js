@@ -9,7 +9,7 @@ var arg, i, j, max, method, methodIndex, decimalPlaces, rounding, reps, start,
     bdMs = ['add', 'subtract', 'multiply', 'divide', 'remainder',
             'compareTo', 'pow', 'negate', 'abs'],
     bnMs1 = ['plus', 'minus', 'multipliedBy', 'dividedBy', 'modulo',
-             'comparedTo', 'exponentiatedBy', 'negated', 'absoluteValue']
+             'comparedTo', 'exponentiatedBy', 'negated', 'absoluteValue'],
     bnMs2 = ['', '', '', 'div', 'mod', '', '', '', ''],
     Ms = [bdMs, bnMs1, bnMs2],
     allMs = [].concat.apply([], Ms),

@@ -86,6 +86,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       <li><a href="#max"        >maximum</a><span>max</span></li>
       <li><a href="#min"        >minimum</a><span>min</span></li>
       <li><a href="#random"     >random</a></li>
+      <li><a href="#sum"        >sum</a></li>
     </ul>
 
     <a href="#constructor-properties">Properties</a>
@@ -684,18 +685,15 @@ BigNumber.isBigNumber(z)             // true</pre>
 
 
 
-    <h5 id="max">
-      maximum<code class='inset'>.max([arg1 [, arg2, ...]]) <i>&rArr; BigNumber</i></code>
-    </h5>
+    <h5 id="max">maximum<code class='inset'>.max(n...) <i>&rArr; BigNumber</i></code></h5>
     <p>
-      <code>arg1</code>, <code>arg2</code>, ...: <i>number|string|BigNumber</i><br />
+      <code>n</code>: <i>number|string|BigNumber</i><br />
       <i>See <code><a href="#bignumber">BigNumber</a></code> for further parameter details.</i>
     </p>
     <p>
-      Returns a BigNumber whose value is the maximum of <code>arg1</code>,
-      <code>arg2</code>,... .
+      Returns a BigNumber whose value is the maximum of the arguments, or of the array elements if
+      an array is passed.
     </p>
-    <p>The argument to this method can also be an array of values.</p>
     <p>The return value is always exact and unrounded.</p>
     <pre>x = new BigNumber('3257869345.0378653')
 BigNumber.maximum(4e9, x, '123456789.9')      // '4000000000'
@@ -705,18 +703,15 @@ BigNumber.max(arr)                            // '14'</pre>
 
 
 
-    <h5 id="min">
-      minimum<code class='inset'>.min([arg1 [, arg2, ...]]) <i>&rArr; BigNumber</i></code>
-    </h5>
+    <h5 id="min">minimum<code class='inset'>.min(n...) <i>&rArr; BigNumber</i></code></h5>
     <p>
-      <code>arg1</code>, <code>arg2</code>, ...: <i>number|string|BigNumber</i><br />
+      <code>n</code>: <i>number|string|BigNumber</i><br />
       <i>See <code><a href="#bignumber">BigNumber</a></code> for further parameter details.</i>
     </p>
     <p>
-      Returns a BigNumber whose value is the minimum of <code>arg1</code>,
-      <code>arg2</code>,... .
+      Returns a BigNumber whose value is the minimum of the arguments, or of the array elements if
+      an array is passed.
     </p>
-    <p>The argument to this method can also be an array of values.</p>
     <p>The return value is always exact and unrounded.</p>
     <pre>x = new BigNumber('3257869345.0378653')
 BigNumber.minimum(4e9, x, '123456789.9')      // '123456789.9'
@@ -763,6 +758,24 @@ BigNumber.min(arr)                            // '-15.9999'</pre>
     <pre>BigNumber.config({ DECIMAL_PLACES: 10 })
 BigNumber.random()              // '0.4117936847'
 BigNumber.random(20)            // '0.78193327636914089009'</pre>
+
+
+
+    <h5 id="sum">sum<code class='inset'>.sum(n...) <i>&rArr; BigNumber</i></code></h5>
+    <p>
+      <code>n</code>: <i>number|string|BigNumber</i><br />
+      <i>See <code><a href="#bignumber">BigNumber</a></code> for further parameter details.</i>
+    </p>
+    <p>
+      Returns a BigNumber whose value is the sum of the arguments, or of the array elements if an
+      array is passed.
+    </p>
+    <p>The return value is always exact and unrounded.</p>
+    <pre>x = new BigNumber('3257869345.0378653')
+BigNumber.sum(4e9, x, '123456789.9')      // '7381326134.9378653'
+
+arr = [2, new BigNumber(14), '15.9999', 12]
+BigNumber.sum(arr)                        // '43.9999'</pre>
 
 
 
@@ -1594,7 +1607,7 @@ fmt = {
 
 x = new BigNumber('123456789.123456789')
 
-// Set the format object globally
+// Set the global formatting options
 BigNumber.config({ FORMAT: fmt })
 
 x.toFormat()                              // '123,456,789.123456789'
@@ -1606,7 +1619,7 @@ fmt.groupSeparator = ' '
 fmt.fractionGroupSize = 5
 x.toFormat()                              // '123 456 789.12345 6789'
 
-// Alternatively, pass a format object as an argument
+// Alternatively, pass the formatting options as an argument
 fmt = {
   prefix: '=> ',
   decimalSeparator: ',',
