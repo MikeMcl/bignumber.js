@@ -85,8 +85,8 @@ Test('minimum and maximum', function () {
     t(new BigNumber(2).eq(BigNumber.max(2, 0, 1)));
 
     t = function (min, max, arr) {
-        Test.isTrue(new BigNumber(min).eq(BigNumber.min(arr)));
-        Test.isTrue(new BigNumber(max).eq(BigNumber.max(arr)));
+        Test.isTrue(new BigNumber(min).eq(BigNumber.min.apply(null, arr)));
+        Test.isTrue(new BigNumber(max).eq(BigNumber.max.apply(null, arr)));
     }
 
     t(-2, 0, [-2, -1, 0]);

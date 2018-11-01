@@ -22,10 +22,10 @@
  *      isGreaterThan            gt     |      FORMAT
  *      isGreaterThanOrEqualTo   gte    |      ALPHABET
  *      isInteger                       |  isBigNumber
- *      isLessThan               lt     |  sum
- *      isLessThanOrEqualTo      lte    |  maximum              max
- *      isNaN                           |  minimum              min
- *      isNegative                      |  random
+ *      isLessThan               lt     |  maximum              max
+ *      isLessThanOrEqualTo      lte    |  minimum              min
+ *      isNaN                           |  random
+ *      isNegative                      |  sum
  *      isPositive                      |
  *      isZero                          |
  *      minus                           |
@@ -457,7 +457,7 @@
           // '[BigNumber Error] EXPONENTIAL_AT {not a primitive number|not an integer|out of range}: {v}'
           if (obj.hasOwnProperty(p = 'EXPONENTIAL_AT')) {
             v = obj[p];
-            if (isArray(v)) {
+            if (v && v.pop) {
               intCheck(v[0], -MAX, 0, p);
               intCheck(v[1], 0, MAX, p);
               TO_EXP_NEG = v[0];
@@ -473,7 +473,7 @@
           // '[BigNumber Error] RANGE {not a primitive number|not an integer|out of range|cannot be zero}: {v}'
           if (obj.hasOwnProperty(p = 'RANGE')) {
             v = obj[p];
-            if (isArray(v)) {
+            if (v && v.pop) {
               intCheck(v[0], -MAX, -1, p);
               intCheck(v[1], 1, MAX, p);
               MIN_EXP = v[0];
@@ -583,20 +583,6 @@
     BigNumber.isBigNumber = function (v) {
       return v instanceof BigNumber || v && v._isBigNumber === true || false;
     };
-    
-    /*
-     * Return a new BigNumber whose value is the sum of the arguments.
-     *
-     * arguments {number|string|BigNumber}
-     */
-    BigNumber.sum = function () {
-      var sum = new BigNumber(0);
-      var args = Array.prototype.slice.call(arguments);
-      for (var i = 0; i < args.length; i++) {
-        sum = sum.plus(args[i]);
-      }
-      return sum;
-    }
 
 
     /*
@@ -761,6 +747,20 @@
         return rand;
       };
     })();
+
+
+    /*
+     * Return a BigNumber whose value is the sum of the arguments.
+     *
+     * arguments {number|string|BigNumber}
+     */
+    BigNumber.sum = function () {
+      var i = 1,
+        args = arguments,
+        sum = new BigNumber(args[0]);
+      for (; i < args.length;) sum = sum.plus(args[i++]);
+      return sum;
+    };
 
 
     // PRIVATE FUNCTIONS
@@ -1246,13 +1246,11 @@
 
     // Handle BigNumber.max and BigNumber.min.
     function maxOrMin(args, method) {
-      var m, n,
-        i = 0;
+      var n,
+        i = 1,
+        m = new BigNumber(args[0]);
 
-      if (isArray(args[0])) args = args[0];
-      m = new BigNumber(args[0]);
-
-      for (; ++i < args.length;) {
+      for (; i < args.length; i++) {
         n = new BigNumber(args[i]);
 
         // If any number is NaN, return NaN.
@@ -2664,7 +2662,6 @@
 
       // Infinity or NaN?
       if (e === null) {
-
         if (s) {
           str = 'Infinity';
           if (s < 0) str = '-' + str;
@@ -2703,6 +2700,7 @@
 
     if (typeof Symbol == 'function' && typeof Symbol.iterator == 'symbol') {
       P[Symbol.toStringTag] = 'BigNumber';
+      // Node.js v10.12.0+
       P[Symbol.for('nodejs.util.inspect.custom')] = P.valueOf;
     }
 
@@ -2737,6 +2735,7 @@
 
     // Determine trailing zeros.
     for (j = r.length; r.charCodeAt(--j) === 48;);
+
     return r.slice(0, j + 1 || 1);
   }
 
@@ -2792,11 +2791,6 @@
          ? n < min || n > max ? ' out of range: ' : ' not an integer: '
          : ' not a primitive number: ') + String(n));
     }
-  }
-
-
-  function isArray(obj) {
-    return Object.prototype.toString.call(obj) == '[object Array]';
   }
 
 

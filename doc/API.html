@@ -691,15 +691,14 @@ BigNumber.isBigNumber(z)             // true</pre>
       <i>See <code><a href="#bignumber">BigNumber</a></code> for further parameter details.</i>
     </p>
     <p>
-      Returns a BigNumber whose value is the maximum of the arguments, or of the array elements if
-      an array is passed.
+      Returns a BigNumber whose value is the maximum of the arguments.
     </p>
     <p>The return value is always exact and unrounded.</p>
     <pre>x = new BigNumber('3257869345.0378653')
 BigNumber.maximum(4e9, x, '123456789.9')      // '4000000000'
 
 arr = [12, '13', new BigNumber(14)]
-BigNumber.max(arr)                            // '14'</pre>
+BigNumber.max.apply(null, arr)                // '14'</pre>
 
 
 
@@ -709,15 +708,14 @@ BigNumber.max(arr)                            // '14'</pre>
       <i>See <code><a href="#bignumber">BigNumber</a></code> for further parameter details.</i>
     </p>
     <p>
-      Returns a BigNumber whose value is the minimum of the arguments, or of the array elements if
-      an array is passed.
+      Returns a BigNumber whose value is the minimum of the arguments.
     </p>
     <p>The return value is always exact and unrounded.</p>
     <pre>x = new BigNumber('3257869345.0378653')
 BigNumber.minimum(4e9, x, '123456789.9')      // '123456789.9'
 
 arr = [2, new BigNumber(-14), '-15.9999', -12]
-BigNumber.min(arr)                            // '-15.9999'</pre>
+BigNumber.min.apply(null, arr)                // '-15.9999'</pre>
 
 
 
@@ -766,16 +764,13 @@ BigNumber.random(20)            // '0.78193327636914089009'</pre>
       <code>n</code>: <i>number|string|BigNumber</i><br />
       <i>See <code><a href="#bignumber">BigNumber</a></code> for further parameter details.</i>
     </p>
-    <p>
-      Returns a BigNumber whose value is the sum of the arguments, or of the array elements if an
-      array is passed.
-    </p>
+    <p>Returns a BigNumber whose value is the sum of the arguments.</p>
     <p>The return value is always exact and unrounded.</p>
     <pre>x = new BigNumber('3257869345.0378653')
 BigNumber.sum(4e9, x, '123456789.9')      // '7381326134.9378653'
 
 arr = [2, new BigNumber(14), '15.9999', 12]
-BigNumber.sum(arr)                        // '43.9999'</pre>
+BigNumber.sum.apply(null, arr)            // '43.9999'</pre>
 
 
 
