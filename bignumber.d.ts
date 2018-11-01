@@ -1610,7 +1610,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static maximum(...n: BigNumber.Value): BigNumber;
+  static maximum(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the maximum of the arguments.
@@ -1627,7 +1627,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static max(...n: BigNumber.Value): BigNumber;
+  static max(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the minimum of the arguments.
@@ -1644,7 +1644,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static minimum(...n: BigNumber.Value): BigNumber;
+  static minimum(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the minimum of the arguments.
@@ -1661,7 +1661,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static min(...n: BigNumber.Value): BigNumber;
+  static min(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a new BigNumber with a pseudo-random value equal to or greater than 0 and less than 1.
@@ -1712,7 +1712,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static sum(...n: BigNumber.Value): BigNumber;
+  static sum(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Configures the settings that apply to this BigNumber constructor.
