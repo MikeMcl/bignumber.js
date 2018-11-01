@@ -40,11 +40,11 @@ Browser:
 [Node.js](http://nodejs.org):
 
 ```bash
-$ npm install --save bignumber.js
+$ npm install bignumber.js
 ```
 
 ```javascript
-var BigNumber = require('bignumber.js');
+const BigNumber = require('bignumber.js');
 ```
 
 ES6 module (*bignumber.mjs*):

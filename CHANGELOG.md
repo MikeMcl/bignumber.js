@@ -1,3 +1,7 @@
+#### 8.0.1
+* 01/11/2018
+* Rest parameter must be array type in *bignumber.d.ts*.
+
 #### 8.0.0
 * 01/11/2018
 * [NEW FEATURE] Add `BigNumber.sum` method.
