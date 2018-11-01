@@ -163,6 +163,9 @@ export namespace BigNumber {
      * See `BigNumber.random`.
      *
      * ```ts
+     * // Node.js
+     * global.crypto = require('crypto')
+     *
      * BigNumber.config({ CRYPTO: true })
      * BigNumber.config().CRYPTO       // true
      * BigNumber.random()              // 0.54340758610486147524
@@ -236,6 +239,8 @@ export namespace BigNumber {
      * ```ts
      * BigNumber.config({
      *   FORMAT: {
+     *     // string to prepend
+     *     prefix: '',
      *     // the decimal separator
      *     decimalSeparator: '.',
      *     // the grouping separator of the integer part
@@ -247,7 +252,9 @@ export namespace BigNumber {
      *     // the grouping separator of the fraction part
      *     fractionGroupSeparator: ' ',
      *     // the grouping size of the fraction part
-     *     fractionGroupSize: 0
+     *     fractionGroupSize: 0,
+     *     // string to append
+     *     suffix: ''
      *   }
      * })
      * ```
@@ -255,13 +262,14 @@ export namespace BigNumber {
     FORMAT?: BigNumber.Format;
 
     /**
-     * A string representing the alphabet used for base conversion.
+     * The alphabet used for base conversion. The length of the alphabet corresponds to the maximum
+     * value of the base argument that can be passed to the BigNumber constructor or `toString`.
+     *  
      * Default value: `'0123456789abcdefghijklmnopqrstuvwxyz'`.
      *
-     * The length of the alphabet corresponds to the maximum value of the base argument that can be
-     * passed to the BigNumber constructor or `toString`. There is no maximum length, but it must be
-     * at least 2 characters long, and it must not contain a repeated character, or `'.'` - the
-     * decimal separator for all values whatever their base.
+     * There is no maximum length for the alphabet, but it must be at least 2 characters long,
+     * and it must not contain whitespace or a repeated character, or the sign indicators '+' and
+     * '-', or the decimal separator '.'. 
      *
      * ```ts
      * // duodecimal (base 12)
@@ -1610,7 +1618,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static maximum(...n: BigNumber.Value): BigNumber;
+  static maximum(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the maximum of the arguments.
@@ -1627,7 +1635,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static max(...n: BigNumber.Value): BigNumber;
+  static max(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the minimum of the arguments.
@@ -1644,7 +1652,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static minimum(...n: BigNumber.Value): BigNumber;
+  static minimum(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the minimum of the arguments.
@@ -1661,7 +1669,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static min(...n: BigNumber.Value): BigNumber;
+  static min(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Returns a new BigNumber with a pseudo-random value equal to or greater than 0 and less than 1.
@@ -1712,7 +1720,7 @@ export declare class BigNumber {
    *
    * @param n A numeric value.
    */
-  static sum(...n: BigNumber.Value): BigNumber;
+  static sum(...n: BigNumber.Value[]): BigNumber;
 
   /**
    * Configures the settings that apply to this BigNumber constructor.
