@@ -1,4 +1,4 @@
-// Type definitions for bignumber.js >=6.0.0
+// Type definitions for bignumber.js >=8.0.0
 // Project: https://github.com/MikeMcl/bignumber.js
 // Definitions by: Michael Mclaughlin <https://github.com/MikeMcl>
 // Definitions: https://github.com/MikeMcl/bignumber.js

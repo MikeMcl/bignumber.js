@@ -1,3 +1,18 @@
+#### 8.0.0
+* 01/11/2018
+* Add `BigNumber.sum` method.
+* `toFormat`: add `prefix` and `suffix` options.
+* #178 Pass custom formatting to `toFormat`.
+* #184 `toFraction`: return array of BigNumbers not strings.
+* #185 Enable overwrite of `valueOf` to prevent accidental addition to string.
+* #183 Add Node.js `crypto` requirement to documentation.
+* #198 Disallow signs and whitespace in custom alphabet.
+* #188 Implement `util.inspect.custom` for Node.js REPL.
+* #170 Make `isBigNumber` a type guard in *bignumber.d.ts*.
+* `BigNumber.min` and `BigNumber.max`: don't accept an array.
+* Update *.travis.yml*.
+* Remove *bower.json*.
+
 #### 7.2.1
 * 24/05/2018
 * Add `browser` field to *package.json*.
