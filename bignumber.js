@@ -1199,7 +1199,7 @@
 
       if (i == null) {
         str = coeffToString(n.c);
-        str = id == 1 || id == 2 && ne <= TO_EXP_NEG
+        str = id == 1 || id == 2 && (ne <= TO_EXP_NEG || ne >= TO_EXP_POS)
          ? toExponential(str, ne)
          : toFixedPoint(str, ne, '0');
       } else {
