@@ -2669,15 +2669,16 @@
           str = 'NaN';
         }
       } else {
-        str = coeffToString(n.c);
-
         if (b == null) {
           str = e <= TO_EXP_NEG || e >= TO_EXP_POS
-           ? toExponential(str, e)
-           : toFixedPoint(str, e, '0');
+           ? toExponential(coeffToString(n.c), e)
+           : toFixedPoint(coeffToString(n.c), e, '0');
+        } else if (b === 10) {
+          n = round(new BigNumber(n), DECIMAL_PLACES + e + 1, ROUNDING_MODE);
+          str = toFixedPoint(coeffToString(n.c), n.e, '0');
         } else {
           intCheck(b, 2, ALPHABET.length, 'Base');
-          str = convertBase(toFixedPoint(str, e, '0'), 10, b, s, true);
+          str = convertBase(toFixedPoint(coeffToString(n.c), e, '0'), 10, b, s, true);
         }
 
         if (s < 0 && n.c[0]) str = '-' + str;
