@@ -47,11 +47,10 @@ $ npm install bignumber.js
 const BigNumber = require('bignumber.js');
 ```
 
-ES6 module (*bignumber.mjs*):
+ES6 module:
 
 ```javascript
-//import BigNumber from 'bignumber.js';
-import {BigNumber} from 'bignumber.js';
+import BigNumber from "./bignumber.mjs"
 ```
 
 AMD loader libraries such as [requireJS](http://requirejs.org/):
@@ -64,21 +63,48 @@ require(['bignumber'], function(BigNumber) {
 
 ## Use
 
-*In all examples below, `var`, semicolons and `toString` calls are not shown.
-If a commented-out value is in quotes it means `toString` has been called on the preceding expression.*
-
-The library exports a single function: `BigNumber`, the constructor of BigNumber instances.
-
-It accepts a value of type Number, String or BigNumber,
+The library exports a single constructor function, [`BigNumber`](http://mikemcl.github.io/bignumber.js/#bignumber), which accepts a value of type Number, String or BigNumber,
 
 ```javascript
-x = new BigNumber(123.4567)
-y = BigNumber('123456.7e-3')
-z = new BigNumber(x)
-x.isEqualTo(y) && y.isEqualTo(z) && x.isEqualTo(z)      // true
+let x = new BigNumber(123.4567);
+let y = BigNumber('123456.7e-3');
+let z = new BigNumber(x);
+x.isEqualTo(y) && y.isEqualTo(z) && x.isEqualTo(z);      // true
 ```
 
-and a base can be specified.
+To get the string value of a BigNumber use [`toString()`](http://mikemcl.github.io/bignumber.js/#toS) or [`toFixed()`](http://mikemcl.github.io/bignumber.js/#toFix). Using `toFixed()` prevents exponential notation being returned, no matter how large or small the value.
+
+```javascript
+let x = new BigNumber('1111222233334444555566');
+x.toString();                       // "1.111222233334444555566e+21"
+x.toFixed();                        // "1111222233334444555566"
+```
+
+If the limited precision of Number values is not well understood, it is recommended to create BigNumbers from String values rather than Number values to avoid a potential loss of precision.
+
+*In all further examples below, `let`, semicolons and `toString` calls are not shown. If a commented-out value is in quotes it means `toString` has been called on the preceding expression.*
+
+```javascript
+// Precision loss from using numeric literals with more than 15 significant digits.
+new BigNumber(1.0000000000000001)         // '1'
+new BigNumber(88259496234518.57)          // '88259496234518.56'
+new BigNumber(99999999999999999999)       // '100000000000000000000'
+
+// Precision loss from using numeric literals outside the range of Number values.
+new BigNumber(2e+308)                     // 'Infinity'
+new BigNumber(1e-324)                     // '0'
+
+// Precision loss from the unexpected result of arithmetic with Number values.
+new BigNumber(0.7 + 0.1)                  // '0.7999999999999999'
+```
+
+When creating a BigNumber from a Number, note that a BigNumber is created from a Number's decimal `toString()` value not from its underlying binary value. If the latter is required, then pass the Number's `toString(2)` value and specify base 2.
+
+```javascript
+new BigNumber(Number.MAX_VALUE.toString(2), 2)
+```
+
+BigNumbers can be created from values in bases from 2 to 36. See [`ALPHABET`](http://mikemcl.github.io/bignumber.js/#alphabet) to extend this range.
 
 ```javascript
 a = new BigNumber(1011, 2)          // "11"
@@ -86,27 +112,7 @@ b = new BigNumber('zz.9', 36)       // "1295.25"
 c = a.plus(b)                       // "1306.25"
 ```
 
-Note that a BigNumber is created from a Number's decimal `toString()` value not from its underlying binary value. If the latter is required, then pass the Number's `toString(2)` value and specify base 2.
-
-```javascript
-new BigNumber(Number.MAX_VALUE.toString(2), 2)
-```
-
-If the limited precision of Number values is not well understood, **it is recommended to pass String values rather than Number values** to avoid a potential loss of precision.
-
-```javascript
-// Precision loss from using numeric literals with more than 15 significant digits.
-new BigNumber(1.0000000000000001);                 // '1'
-new BigNumber(88259496234518.57);                  // '88259496234518.56'
-new BigNumber(99999999999999999999);               // '100000000000000000000'
-
-// Precision loss from using numeric literals outside the range of Number values.
-new BigNumber(2e+308);                             // 'Infinity'
-new BigNumber(1e-324);                             // '0'
-
-// Precision loss from the unexpected result of arithmetic with Number values.
-new BigNumber(0.7 + 0.1);                          // '0.7999999999999999'
-```
+Performance is better if base 10 is NOT specified for decimal values. Only specify base 10 when it is desired that the number of decimal places of the input value be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.
 
 A BigNumber is immutable in the sense that it is not changed by its methods.
 
@@ -127,11 +133,11 @@ x.times('1.23456780123456789e+9').plus(9876.5432321).dividedBy('4444562598.11177
 Some of the longer method names have a shorter alias.
 
 ```javascript
-x.squareRoot().dividedBy(y).exponentiatedBy(3).isEqualTo( x.sqrt().div(y).pow(3) )    // true
-x.modulo(y).multipliedBy(z).eq( x.mod(y).times(z) )                                   // true
+x.squareRoot().dividedBy(y).exponentiatedBy(3).isEqualTo(x.sqrt().div(y).pow(3))    // true
+x.modulo(y).multipliedBy(z).eq(x.mod(y).times(z))                                   // true
 ```
 
-As with JavaScript's Number type, there are `toExponential`, `toFixed` and `toPrecision` methods
+As with JavaScript's Number type, there are [`toExponential`](http://mikemcl.github.io/bignumber.js/#toE), [`toFixed`](http://mikemcl.github.io/bignumber.js/#toFix) and [`toPrecision`](http://mikemcl.github.io/bignumber.js/#toP) methods.
 
 ```javascript
 x = new BigNumber(255.5)
@@ -141,28 +147,28 @@ x.toPrecision(5)                    // "255.50"
 x.toNumber()                        //  255.5
 ```
 
- and a base can be specified for `toString`.
+ A base can be specified for [`toString`](http://mikemcl.github.io/bignumber.js/#toS). Performance is better if base 10 is NOT specified, i.e. use `toString()` not `toString(10)`. Only specify base 10 when it is desired that the number of decimal places be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.
 
  ```javascript
  x.toString(16)                     // "ff.8"
  ```
 
-There is also a `toFormat` method which may be useful for internationalisation
+There is a [`toFormat`](http://mikemcl.github.io/bignumber.js/#toFor) method which may be useful for internationalisation.
 
 ```javascript
 y = new BigNumber('1234567.898765')
 y.toFormat(2)                       // "1,234,567.90"
 ```
 
-The maximum number of decimal places of the result of an operation involving division (i.e. a division, square root, base conversion or negative power operation) is set using the `config` method of the `BigNumber` constructor.
+The maximum number of decimal places of the result of an operation involving division (i.e. a division, square root, base conversion or negative power operation) is set using the `set` or `config` method of the `BigNumber` constructor.
 
 The other arithmetic operations always give the exact result.
 
 ```javascript
-BigNumber.config({ DECIMAL_PLACES: 10, ROUNDING_MODE: 4 })
+BigNumber.set({ DECIMAL_PLACES: 10, ROUNDING_MODE: 4 })
 
-x = new BigNumber(2);
-y = new BigNumber(3);
+x = new BigNumber(2)
+y = new BigNumber(3)
 z = x.dividedBy(y)                        // "0.6666666667"
 z.squareRoot()                            // "0.8164965809"
 z.exponentiatedBy(-3)                     // "3.3749999995"
@@ -171,7 +177,7 @@ z.multipliedBy(z)                         // "0.44444444448888888889"
 z.multipliedBy(z).decimalPlaces(10)       // "0.4444444445"
 ```
 
-There is a `toFraction` method with an optional *maximum denominator* argument
+There is a [`toFraction`](http://mikemcl.github.io/bignumber.js/#toFr) method with an optional *maximum denominator* argument
 
 ```javascript
 y = new BigNumber(355)
@@ -180,7 +186,7 @@ pi.toFraction()                     // [ "7853982301", "2500000000" ]
 pi.toFraction(1000)                 // [ "355", "113" ]
 ```
 
-and `isNaN` and `isFinite` methods, as `NaN` and `Infinity` are valid `BigNumber` values.
+and [`isNaN`](http://mikemcl.github.io/bignumber.js/#isNaN) and [`isFinite`](http://mikemcl.github.io/bignumber.js/#isF) methods, as `NaN` and `Infinity` are valid `BigNumber` values.
 
 ```javascript
 x = new BigNumber(NaN)                                           // "NaN"
@@ -197,11 +203,11 @@ x.e                                 // 2                        exponent
 x.s                                 // -1                       sign
 ```
 
-For advanced usage, multiple BigNumber constructors can be created, each with their own independent configuration which applies to all BigNumber's created from it.
+For advanced usage, multiple BigNumber constructors can be created, each with their own independent configuration.
 
 ```javascript
 // Set DECIMAL_PLACES for the original BigNumber constructor
-BigNumber.config({ DECIMAL_PLACES: 10 })
+BigNumber.set({ DECIMAL_PLACES: 10 })
 
 // Create another BigNumber constructor, optionally passing in a configuration object
 BN = BigNumber.clone({ DECIMAL_PLACES: 5 })
@@ -219,7 +225,7 @@ To avoid having to call `toString` or `valueOf` on a BigNumber to get its value 
 BigNumber.prototype[require('util').inspect.custom] = BigNumber.prototype.valueOf;
 ```
 
-For futher information see the [API](http://mikemcl.github.io/bignumber.js/) reference in the *doc* directory.
+For further information see the [API](http://mikemcl.github.io/bignumber.js/) reference in the *doc* directory.
 
 ## Test
 
@@ -238,10 +244,6 @@ To test a single method, use, for example
     $ node test/methods/toFraction
 
 For the browser, open *test/test.html*.
-
-## Performance
-
-See the [README](https://github.com/MikeMcl/bignumber.js/tree/master/perf) in the *perf* directory.
 
 ## Build
 
