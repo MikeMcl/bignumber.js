@@ -1,3 +1,14 @@
+#### 8.0.2
+* 13/01/2019
+* #209 `toPrecision` without argument should follow `toString`.
+* Improve *Use* section of *README*.
+* Optimise `toString(10)`.
+* Add verson number to API doc.
+
+#### 8.0.1
+* 01/11/2018
+* Rest parameter must be array type in *bignumber.d.ts*.
+
 #### 8.0.1
 * 01/11/2018
 * Rest parameter must be array type in *bignumber.d.ts*.
