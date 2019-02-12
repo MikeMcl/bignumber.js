@@ -199,6 +199,9 @@ Test('bigNumber', function () {
     t('-102', new BigNumber('-0o146').toString());
     t('0.5', new BigNumber('0o0.4').toString());
 
+    t('100002222.2222333322', new BigNumber({ s: 1, e: 8, c: [100002222, 22223333220000] }).toString())
+    t('7777777777.123123123', new BigNumber({ s: 1, e: 9, c: [7777777777, 12312312300000] }).toString())
+
     // Base-conversion tests
 
     //var alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_';

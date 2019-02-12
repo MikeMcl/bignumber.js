@@ -185,7 +185,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       BigNumber<code class='inset'>BigNumber(n [, base]) <i>&rArr; BigNumber</i></code>
     </h5>
     <p>
-      <code>n</code>: <i>number|string|BigNumber</i><br />
+      <code>n</code>: <i>number|string|BigNumber|BigNumberData</i><br />
       <code>base</code>: <i>number</i>: integer, <code>2</code> to <code>36</code> inclusive. (See
       <a href='#alphabet'><code>ALPHABET</code></a> to extend this range).
     </p>
@@ -268,6 +268,10 @@ BigNumber.DEBUG = true
 new BigNumber(823456789123456.3)
 // '[BigNumber Error] Not a base 2 number'
 new BigNumber(9, 2)</pre>
+    <p>
+      As a way to interact with other modules that are using BigNumber you can use BigNumberData directly
+    </p>
+    <pre>new BigNumber({ s: 1, e: 2, c: [ 777, 12300000000000 ] })    // '777.123'</pre>
 
 
 

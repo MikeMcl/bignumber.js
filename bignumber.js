@@ -195,7 +195,8 @@
       if (b == null) {
 
         // Duplicate.
-        if (n instanceof BigNumber) {
+        if (n instanceof BigNumber 
+          || (n != null && n.s != null && n.e != null && n.c != null)) {
           x.s = n.s;
           x.e = n.e;
           x.c = (n = n.c) ? n.slice() : n;

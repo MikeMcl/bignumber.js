@@ -109,7 +109,7 @@ export namespace BigNumber {
      * Calling `toString` with a base argument, e.g. `toString(10)`, will also always return normal
      * notation.
      */
-    EXPONENTIAL_AT?: number|[number, number];
+    EXPONENTIAL_AT?: number | [number, number];
 
     /**
      * An integer, magnitude 1 to 1e+9, or an array, [-1e+9 to -1, 1 to 1e+9].
@@ -144,7 +144,7 @@ export namespace BigNumber {
      * The largest possible magnitude of a finite BigNumber is 9.999...e+1000000000.
      * The smallest possible magnitude of a non-zero BigNumber is 1e-1000000000.
      */
-    RANGE?: number|[number, number];
+    RANGE?: number | [number, number];
 
     /**
      * A boolean: `true` or `false`. Default value: `false`.
@@ -330,10 +330,28 @@ export namespace BigNumber {
     suffix?: string;
   }
 
+  export interface BigNumberData {
+    /**
+     * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers.
+     */
+    readonly c: number[];
+
+    /**
+     * The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000.
+     */
+    readonly e: number;
+
+    /**
+     * The sign of the value of this BigNumber, -1 or 1.
+     */
+    readonly s: number;
+
+    [key: string]: any;
+  }
   export type Instance = BigNumber;
   export type ModuloMode = 0 | 1 | 3 | 6 | 9;
   export type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-  export type Value = string | number | BigNumber;
+  export type Value = string | number | BigNumber | BigNumberData;
 }
 
 export declare class BigNumber {
@@ -1057,7 +1075,7 @@ export declare class BigNumber {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  multipliedBy(n: BigNumber.Value, base?: number) : BigNumber;
+  multipliedBy(n: BigNumber.Value, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber multiplied by `n`.
