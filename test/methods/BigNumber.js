@@ -201,6 +201,7 @@ Test('bigNumber', function () {
 
     t('100002222.2222333322', new BigNumber({ s: 1, e: 8, c: [100002222, 22223333220000] }).toString())
     t('7777777777.123123123', new BigNumber({ s: 1, e: 9, c: [7777777777, 12312312300000] }).toString())
+    t('NaN', new BigNumber({ s: null, e: null, c: null }).toString())
 
     // Base-conversion tests
 

@@ -196,7 +196,7 @@
 
         // Duplicate.
         if (n instanceof BigNumber 
-          || (n != null && n.s != null && n.e != null && n.c != null)) {
+          || (n && typeof n.s !== 'undefined' && typeof n.e !== 'undefined' && typeof n.c !== 'undefined')) {
           x.s = n.s;
           x.e = n.e;
           x.c = (n = n.c) ? n.slice() : n;
