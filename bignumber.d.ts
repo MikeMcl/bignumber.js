@@ -330,7 +330,7 @@ export namespace BigNumber {
     suffix?: string;
   }
 
-  export interface BigNumberData {
+  export interface Object {
     /**
      * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers.
      */
@@ -351,7 +351,7 @@ export namespace BigNumber {
   export type Instance = BigNumber;
   export type ModuloMode = 0 | 1 | 3 | 6 | 9;
   export type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-  export type Value = string | number | BigNumber | BigNumberData;
+  export type Value = string | number | BigNumber | BigNumber.Object;
 }
 
 export declare class BigNumber {
