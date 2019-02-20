@@ -330,7 +330,7 @@ export namespace BigNumber {
     suffix?: string;
   }
 
-  export interface Object {
+  interface RegularNumberObject {
     /**
      * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers.
      */
@@ -346,8 +346,9 @@ export namespace BigNumber {
      */
     readonly s: number;
 
-    [key: string]: any;
   }
+  type NaNObject = { readonly c: null, readonly e: null, readonly s: null };
+  export type Object = RegularNumberObject | NaNObject;
   export type Instance = BigNumber;
   export type ModuloMode = 0 | 1 | 3 | 6 | 9;
   export type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
