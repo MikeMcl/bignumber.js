@@ -345,8 +345,8 @@ export namespace BigNumber {
      * The sign of the value of this BigNumber, -1 or 1.
      */
     readonly s: number;
-
   }
+
   type NaNObject = { readonly c: null, readonly e: null, readonly s: null };
   export type Object = RegularNumberObject | NaNObject;
   export type Instance = BigNumber;
