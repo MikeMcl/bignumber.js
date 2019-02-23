@@ -58,8 +58,8 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
 
   <div class="nav">
 
-    <b>v8.0.2</b>
-	
+    <b>v8.1.0</b>
+
 	<a class='nav-title' href="#">API</a>
 
     <b> CONSTRUCTOR </b>
@@ -102,6 +102,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       <li><a href="#round-half-even" >ROUND_HALF_EVEN</a></li>
       <li><a href="#round-half-ceil" >ROUND_HALF_CEIL</a></li>
       <li><a href="#round-half-floor">ROUND_HALF_FLOOR</a></li>
+      <li><a href="#debug"           >DEBUG</a></li>
     </ul>
 
     <b> INSTANCE </b>
@@ -185,7 +186,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       BigNumber<code class='inset'>BigNumber(n [, base]) <i>&rArr; BigNumber</i></code>
     </h5>
     <p>
-      <code>n</code>: <i>number|string|BigNumber|BigNumberData</i><br />
+      <code>n</code>: <i>number|string|BigNumber</i><br />
       <code>base</code>: <i>number</i>: integer, <code>2</code> to <code>36</code> inclusive. (See
       <a href='#alphabet'><code>ALPHABET</code></a> to extend this range).
     </p>
@@ -269,9 +270,10 @@ new BigNumber(823456789123456.3)
 // '[BigNumber Error] Not a base 2 number'
 new BigNumber(9, 2)</pre>
     <p>
-      As a way to interact with other modules that are using BigNumber you can use BigNumberData directly
+      A BigNumber can also be created from an object literal.
+      Use <code><a href='#isBigNumber'>isBigNumber</a></code> to check that it is well-formed.
     </p>
-    <pre>new BigNumber({ s: 1, e: 2, c: [ 777, 12300000000000 ] })    // '777.123'</pre>
+    <pre>new BigNumber({ s: 1, e: 2, c: [ 777, 12300000000000 ], _isBigNumber: true })    // '777.123'</pre>
 
 
 
@@ -677,7 +679,7 @@ obj.RANGE                 // [-500, 500]</pre>
       Returns <code>true</code> if <code>value</code> is a BigNumber instance, otherwise returns
       <code>false</code>.
     </p>
-      <pre>x = 42
+    <pre>x = 42
 y = new BigNumber(x)
 
 BigNumber.isBigNumber(x)             // false
@@ -688,6 +690,30 @@ BN = BigNumber.clone();
 z = new BN(x)
 z instanceof BigNumber               // false
 BigNumber.isBigNumber(z)             // true</pre>
+    <p>
+      If <code>value</code> is a BigNumber instance and <code>BigNumber.DEBUG</code> is <code>true</code>,
+      then this method will also check if <code>value</code> is well-formed, and throw if it is not.
+      See <a href='#Errors'>Errors</a>.
+    </p>
+    <p>
+      The check can be useful if creating a BigNumber from an object literal.
+      See <a href='#bignumber'>BigNumber</a>.
+    </p>
+    <pre>
+x = new BigNumber(10)
+
+// Change x.c to an illegitimate value.
+x.c = NaN
+
+BigNumber.DEBUG = false
+
+// No error.
+BigNumber.isBigNumber(x)    // true
+
+BigNumber.DEBUG = true
+
+// Error.
+BigNumber.isBigNumber(x)    // '[BigNumber Error] Invalid BigNumber'</pre>
 
 
 
@@ -860,8 +886,24 @@ BigNumber.sum.apply(null, arr)            // '43.9999'</pre>
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_CEIL })
 BigNumber.config({ ROUNDING_MODE: 2 })     // equivalent</pre>
 
+    <h5 id="debug">DEBUG</h5>
+    <p><i>undefined|false|true</i></p>
+    <p>
+      If <code>BigNumber.DEBUG</code> is set <code>true</code> then an error will be thrown
+      if this <a href='#bignumber'>BigNumber</a> constructor receives an invalid value, such as
+      a value of type <em>number</em> with more than <code>15</code> significant digits.
+      See <a href='#bignumber'>BigNumber</a>.
+    </p>
+    <p>
+      An error will also be thrown if the <code><a href='#isBigNumber'>isBigNumber</a></code>
+      method receives a BigNumber that is not well-formed.
+      See <code><a href='#isBigNumber'>isBigNumber</a></code>.
+    </p>
+    <pre>BigNumber.DEBUG = true</pre>
+
 
     <h3>INSTANCE</h3>
+
 
     <h4 id="prototype-methods">Methods</h4>
     <p>The methods inherited by a BigNumber instance from its constructor's prototype object.</p>
@@ -1283,7 +1325,7 @@ y.isPositive()                  // true</pre>
     </p>
     <pre>
 x = new BigNumber(-0)
-x.isZero() && x.isneg()         // true
+x.isZero() && x.isNegative()         // true
 y = new BigNumber(Infinity)
 y.isZero()                      // false</pre>
     <p>Note: <code>n == 0</code> can be used if <code>n &gt;= Number.MIN_VALUE</code>.</p>
@@ -2064,6 +2106,10 @@ y.s                             // -1</pre>
         <td>Argument not an integer</td>
       </tr>
       <tr>
+        <td><code>isBigNumber</code></td>
+        <td>Invalid BigNumber<sup>*</sup></td>
+      </tr>
+      <tr>
         <td>
           <code>minimum</code><br />
           <code>maximum</code>
@@ -2104,11 +2150,11 @@ y.s                             // -1</pre>
     <p>To determine if an exception is a BigNumber Error:</p>
     <pre>
 try {
-    // ...
+  // ...
 } catch (e) {
-    if (e instanceof Error && e.message.indexOf('[BigNumber Error]') === 0) {
-        // ...
-    }
+  if (e instanceof Error && e.message.indexOf('[BigNumber Error]') === 0) {
+      // ...
+  }
 }</pre>
 
 

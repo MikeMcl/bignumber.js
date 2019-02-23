@@ -219,12 +219,6 @@ x.div(3)                            // '0.3333333333'
 y.div(3)                            // '0.33333'
 ```
 
-To avoid having to call `toString` or `valueOf` on a BigNumber to get its value in the Node.js REPL or when using `console.log` use
-
-```javascript
-BigNumber.prototype[require('util').inspect.custom] = BigNumber.prototype.valueOf;
-```
-
 For further information see the [API](http://mikemcl.github.io/bignumber.js/) reference in the *doc* directory.
 
 ## Test

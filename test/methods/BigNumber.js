@@ -3,7 +3,7 @@ if (typeof Test === 'undefined') require('../tester');
 Test('bigNumber', function () {
 
     var t = function (expected, value){
-        Test.areEqual(expected, value);
+        Test.areEqual(expected, String(value));
     }
 
     function tx(fn, msg){
@@ -20,24 +20,26 @@ Test('bigNumber', function () {
 
     // Parsing tests
 
-    t('Infinity', new BigNumber('1e10000000000').toString());
-    t('-Infinity', new BigNumber('-1e10000000000').toString());
-    t('0', new BigNumber('1e-10000000000').toString());
-    t('0', new BigNumber('-1e-10000000000').toString());
+    t('Infinity', new BigNumber('1e10000000000'));
+    t('-Infinity', new BigNumber('-1e10000000000'));
+    t('0', new BigNumber('1e-10000000000'));
+    t('0', new BigNumber('-1e-10000000000'));
 
-    t('NaN', new BigNumber(NaN).toString());
-    t('NaN', new BigNumber('NaN').toString());
-    t('NaN', new BigNumber(' NaN').toString());
-    t('NaN', new BigNumber('NaN ').toString());
-    t('NaN', new BigNumber(' NaN ').toString());
-    t('NaN', new BigNumber('+NaN').toString());
-    t('NaN', new BigNumber(' +NaN').toString());
-    t('NaN', new BigNumber('+NaN ').toString());
-    t('NaN', new BigNumber(' +NaN ').toString());
-    t('NaN', new BigNumber('-NaN').toString());
-    t('NaN', new BigNumber(' -NaN').toString());
-    t('NaN', new BigNumber('-NaN ').toString());
-    t('NaN', new BigNumber(' -NaN ').toString());
+    t('NaN', new BigNumber(NaN));
+    t('NaN', new BigNumber(-NaN));
+    t('NaN', new BigNumber(+NaN));
+    t('NaN', new BigNumber('NaN'));
+    t('NaN', new BigNumber(' NaN'));
+    t('NaN', new BigNumber('NaN '));
+    t('NaN', new BigNumber(' NaN '));
+    t('NaN', new BigNumber('+NaN'));
+    t('NaN', new BigNumber(' +NaN'));
+    t('NaN', new BigNumber('+NaN '));
+    t('NaN', new BigNumber(' +NaN '));
+    t('NaN', new BigNumber('-NaN'));
+    t('NaN', new BigNumber(' -NaN'));
+    t('NaN', new BigNumber('-NaN '));
+    t('NaN', new BigNumber(' -NaN '));
 
     tx(function () {new BigNumber('+ NaN')}, "+ NaN");
     tx(function () {new BigNumber('- NaN')}, "- NaN");
@@ -49,19 +51,21 @@ Test('bigNumber', function () {
     tx(function () {new BigNumber('-.NaN')}, "-.NaN");
     tx(function () {new BigNumber('+.NaN')}, "+.NaN");
 
-    t('Infinity', new BigNumber(Infinity).toString());
-    t('Infinity', new BigNumber('Infinity').toString());
-    t('Infinity', new BigNumber(' Infinity').toString());
-    t('Infinity', new BigNumber('Infinity ').toString());
-    t('Infinity', new BigNumber(' Infinity ').toString());
-    t('Infinity', new BigNumber('+Infinity').toString());
-    t('Infinity', new BigNumber(' +Infinity').toString());
-    t('Infinity', new BigNumber('+Infinity ').toString());
-    t('Infinity', new BigNumber(' +Infinity ').toString());
-    t('-Infinity', new BigNumber('-Infinity').toString());
-    t('-Infinity', new BigNumber(' -Infinity').toString());
-    t('-Infinity', new BigNumber('-Infinity ').toString());
-    t('-Infinity', new BigNumber(' -Infinity ').toString());
+    t('Infinity', new BigNumber(Infinity));
+    t('-Infinity', new BigNumber(-Infinity));
+    t('Infinity', new BigNumber(+Infinity));
+    t('Infinity', new BigNumber('Infinity'));
+    t('Infinity', new BigNumber(' Infinity'));
+    t('Infinity', new BigNumber('Infinity '));
+    t('Infinity', new BigNumber(' Infinity '));
+    t('Infinity', new BigNumber('+Infinity'));
+    t('Infinity', new BigNumber(' +Infinity'));
+    t('Infinity', new BigNumber('+Infinity '));
+    t('Infinity', new BigNumber(' +Infinity '));
+    t('-Infinity', new BigNumber('-Infinity'));
+    t('-Infinity', new BigNumber(' -Infinity'));
+    t('-Infinity', new BigNumber('-Infinity '));
+    t('-Infinity', new BigNumber(' -Infinity '));
 
     tx(function () {new BigNumber('+ Infinity')}, "+ Infinity");
     tx(function () {new BigNumber(' + Infinity')}, " + Infinity");
@@ -74,24 +78,24 @@ Test('bigNumber', function () {
     tx(function () {new BigNumber('-.Infinity')}, "-.Infinity");
     tx(function () {new BigNumber('+.Infinity')}, "+.Infinity");
 
-    t('0', new BigNumber(0).toString());
-    t('0', new BigNumber(-0).toString());
-    t('0', new BigNumber('.0').toString());
-    t('0', new BigNumber('0.').toString());
-    t('0', new BigNumber('-0.').toString());
-    t('0', new BigNumber('+0.').toString());
-    t('0', new BigNumber('+0').toString());
-    t('0', new BigNumber('-0').toString());
-    t('0', new BigNumber(' +0').toString());
-    t('0', new BigNumber(' -0').toString());
-    t('0', new BigNumber(' +0 ').toString());
-    t('0', new BigNumber(' -0 ').toString());
-    t('0', new BigNumber('+.0').toString());
-    t('0', new BigNumber('-.0').toString());
-    t('0', new BigNumber(' +.0').toString());
-    t('0', new BigNumber(' -.0').toString());
-    t('0', new BigNumber(' +.0 ').toString());
-    t('0', new BigNumber(' -.0 ').toString());
+    t('0', new BigNumber(0));
+    t('0', new BigNumber(-0));
+    t('0', new BigNumber('.0'));
+    t('0', new BigNumber('0.'));
+    t('0', new BigNumber('-0.'));
+    t('0', new BigNumber('+0.'));
+    t('0', new BigNumber('+0'));
+    t('0', new BigNumber('-0'));
+    t('0', new BigNumber(' +0'));
+    t('0', new BigNumber(' -0'));
+    t('0', new BigNumber(' +0 '));
+    t('0', new BigNumber(' -0 '));
+    t('0', new BigNumber('+.0'));
+    t('0', new BigNumber('-.0'));
+    t('0', new BigNumber(' +.0'));
+    t('0', new BigNumber(' -.0'));
+    t('0', new BigNumber(' +.0 '));
+    t('0', new BigNumber(' -.0 '));
 
     tx(function () {new BigNumber('+-0')}, "+-0");
     tx(function () {new BigNumber('-+0')}, "-+0");
@@ -107,22 +111,22 @@ Test('bigNumber', function () {
     tx(function () {new BigNumber('+. 0')}, "+. 0");
     tx(function () {new BigNumber('-. 0')}, "-. 0");
 
-    t('2', new BigNumber('+2').toString());
-    t('-2', new BigNumber('-2').toString());
-    t('2', new BigNumber(' +2').toString());
-    t('-2', new BigNumber(' -2').toString());
-    t('2', new BigNumber(' +2 ').toString());
-    t('-2', new BigNumber(' -2 ').toString());
-    t('0.2', new BigNumber('.2').toString());
-    t('2', new BigNumber('2.').toString());
-    t('-2', new BigNumber('-2.').toString());
-    t('2', new BigNumber('+2.').toString());
-    t('0.2', new BigNumber('+.2').toString());
-    t('-0.2', new BigNumber('-.2').toString());
-    t('0.2', new BigNumber(' +.2').toString());
-    t('-0.2', new BigNumber(' -.2').toString());
-    t('0.2', new BigNumber(' +.2 ').toString());
-    t('-0.2', new BigNumber(' -.2 ').toString());
+    t('2', new BigNumber('+2'));
+    t('-2', new BigNumber('-2'));
+    t('2', new BigNumber(' +2'));
+    t('-2', new BigNumber(' -2'));
+    t('2', new BigNumber(' +2 '));
+    t('-2', new BigNumber(' -2 '));
+    t('0.2', new BigNumber('.2'));
+    t('2', new BigNumber('2.'));
+    t('-2', new BigNumber('-2.'));
+    t('2', new BigNumber('+2.'));
+    t('0.2', new BigNumber('+.2'));
+    t('-0.2', new BigNumber('-.2'));
+    t('0.2', new BigNumber(' +.2'));
+    t('-0.2', new BigNumber(' -.2'));
+    t('0.2', new BigNumber(' +.2 '));
+    t('-0.2', new BigNumber(' -.2 '));
 
     tx(function () {new BigNumber('+-2')}, "+-2");
     tx(function () {new BigNumber('-+2')}, "-+2");
@@ -179,29 +183,79 @@ Test('bigNumber', function () {
     tx(function () {new BigNumber('+-2')}, "+-2");
     tx(function () {new BigNumber('0 0')}, "0 0");
 
-    t('15', new BigNumber('0xf', 16).toString());
-    t('-10', new BigNumber('-0xa').toString());
-    t('255', new BigNumber('0xff').toString());
-    t('-3294', new BigNumber('-0xcde').toString());
-    t('15.5', new BigNumber('0xf.8').toString());
+    t('15', new BigNumber('0xf', 16));
+    t('-10', new BigNumber('-0xa'));
+    t('255', new BigNumber('0xff'));
+    t('-3294', new BigNumber('-0xcde'));
+    t('15.5', new BigNumber('0xf.8'));
 
-    t('1', new BigNumber('0b1.', 2).toString());
-    t('0', new BigNumber('0b0').toString());
-    t('-1', new BigNumber('-0b1').toString());
-    t('3', new BigNumber('0b11').toString());
-    t('-11', new BigNumber('-0b1011').toString());
-    t('1.5', new BigNumber('0b1.1').toString());
+    t('1', new BigNumber('0b1.', 2));
+    t('0', new BigNumber('0b0'));
+    t('-1', new BigNumber('-0b1'));
+    t('3', new BigNumber('0b11'));
+    t('-11', new BigNumber('-0b1011'));
+    t('1.5', new BigNumber('0b1.1'));
 
-    t('-1', new BigNumber('   -0o1  ', 8).toString());
-    t('0', new BigNumber('-0o0').toString());
-    t('1', new BigNumber('0o1').toString());
-    t('63', new BigNumber('0o77').toString());
-    t('-102', new BigNumber('-0o146').toString());
-    t('0.5', new BigNumber('0o0.4').toString());
+    t('-1', new BigNumber('   -0o1  ', 8));
+    t('0', new BigNumber('-0o0'));
+    t('1', new BigNumber('0o1'));
+    t('63', new BigNumber('0o77'));
+    t('-102', new BigNumber('-0o146'));
+    t('0.5', new BigNumber('0o0.4'));
 
-    t('100002222.2222333322', new BigNumber({ s: 1, e: 8, c: [100002222, 22223333220000] }).toString())
-    t('7777777777.123123123', new BigNumber({ s: 1, e: 9, c: [7777777777, 12312312300000] }).toString())
-    t('NaN', new BigNumber({ s: null, e: null, c: null }).toString())
+    t('0', new BigNumber({ s: 1, e: 0, c: [0], _isBigNumber: true }));
+    t('0', new BigNumber({ s: -1, e: 0, c: [0], _isBigNumber: true }));
+    t('1', new BigNumber({ s: 1, e: 0, c: [1], _isBigNumber: true }));
+    t('-1', new BigNumber({ s: -1, e: 0, c: [1], _isBigNumber: true }));
+
+    t('99999999999999', new BigNumber({ s: 1, e: 13, c: [99999999999999], _isBigNumber: true }));
+    t('-99999999999999', new BigNumber({ s: -1, e: 13, c: [99999999999999], _isBigNumber: true }));
+    t('100000000000000', new BigNumber({ s: 1, e: 14, c: [1], _isBigNumber: true }));
+    t('-100000000000000', new BigNumber({ s: -1, e: 14, c: [1], _isBigNumber: true }));
+
+    t('99999999999999.9', new BigNumber({ s: 1, e: 13, c: [99999999999999, 90000000000000], _isBigNumber: true }));
+    t('99999999999999.99', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99000000000000], _isBigNumber: true }));
+    t('99999999999999.999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99900000000000], _isBigNumber: true }));
+    t('99999999999999.9999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99990000000000], _isBigNumber: true }));
+    t('99999999999999.99999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999000000000], _isBigNumber: true }));
+    t('99999999999999.999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999900000000], _isBigNumber: true }));
+    t('99999999999999.9999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999990000000], _isBigNumber: true }));
+    t('99999999999999.99999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999999000000], _isBigNumber: true }));
+    t('99999999999999.999999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999999900000], _isBigNumber: true }));
+    t('99999999999999.9999999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999999990000], _isBigNumber: true }));
+    t('99999999999999.99999999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999999999000], _isBigNumber: true }));
+    t('99999999999999.999999999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999999999900], _isBigNumber: true }));
+    t('99999999999999.9999999999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999999999990], _isBigNumber: true }));
+    t('99999999999999.99999999999999', new BigNumber({ s: 1, e: 13, c: [99999999999999, 99999999999999], _isBigNumber: true }));
+    t('99999999999999.00000000000009', new BigNumber({ s: 1, e: 13, c: [99999999999999,               9], _isBigNumber: true }));
+
+    t('99999999999999.123456789876543', new BigNumber({ s: 1, e: 13, c: [99999999999999, 12345678987654, 30000000000000], _isBigNumber: true }));
+
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [99999999999999, 12345678987654, 30000000000000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [9999999999999, 91234567898765, 43000000000000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [999999999999, 99123456789876, 54300000000000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [99999999999, 99912345678987, 65430000000000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [9999999999, 99991234567898, 76543000000000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [999999999, 99999123456789, 87654300000000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [99999999, 99999912345678, 98765430000000], _isBigNumber: true }));  // malformed
+
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [9999999, 99999991234567, 89876543000000], _isBigNumber: true }));  // well-formed
+
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [999999, 99999999123456, 78987654300000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [99999, 99999999912345, 67898765430000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [9999, 99999999991234, 56789876543000], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [999, 99999999999123, 45678987654300], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [99, 99999999999912, 34567898765430], _isBigNumber: true }));  // malformed
+    t('9999999.9999999123456789876543', new BigNumber({ s: 1, e: 6, c: [9, 99999999999991, 23456789876543], _isBigNumber: true }));  // malformed
+
+    t('9999999999999912345678.9876543', new BigNumber({ s: 1, e: 21, c: [99999999, 99999912345678, 98765430000000], _isBigNumber: true }));  // well-formed
+
+    t('100002222.2222333322', new BigNumber({ s: 1, e: 8, c: [100002222, 22223333220000], _isBigNumber: true }));
+    t('7777777777.123123123', new BigNumber({ s: 1, e: 9, c: [7777777777, 12312312300000], _isBigNumber: true }));
+
+    t('NaN', new BigNumber({ s: null, e: null, c: null, _isBigNumber: true }))
+    t('Infinity', new BigNumber({ s: 1, e: null, c: null, _isBigNumber: true }))
+    t('-Infinity', new BigNumber({ s: -1, e: null, c: null, _isBigNumber: true }))
 
     // Base-conversion tests
 

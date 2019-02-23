@@ -2,7 +2,7 @@
   'use strict';
 
 /*
- *      bignumber.js v8.0.2
+ *      bignumber.js v8.1.0
  *      A JavaScript library for arbitrary-precision arithmetic.
  *      https://github.com/MikeMcl/bignumber.js
  *      Copyright (c) 2019 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -51,6 +51,7 @@
 
   var BigNumber,
     isNumeric = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i,
+    hasSymbol = typeof Symbol == 'function' && typeof Symbol.iterator == 'symbol',
 
     mathceil = Math.ceil,
     mathfloor = Math.floor,
@@ -176,52 +177,57 @@
      * The BigNumber constructor and exported function.
      * Create and return a new instance of a BigNumber object.
      *
-     * n {number|string|BigNumber} A numeric value.
-     * [b] {number} The base of n. Integer, 2 to ALPHABET.length inclusive.
+     * v {number|string|BigNumber} A numeric value.
+     * [b] {number} The base of v. Integer, 2 to ALPHABET.length inclusive.
      */
-    function BigNumber(n, b) {
+    function BigNumber(v, b) {
       var alphabet, c, caseChanged, e, i, isNum, len, str,
         x = this;
 
-      // Enable constructor usage without new.
-      if (!(x instanceof BigNumber)) {
-
-        // Don't throw on constructor call without new (#81).
-        // '[BigNumber Error] Constructor call without new: {n}'
-        //throw Error(bignumberError + ' Constructor call without new: ' + n);
-        return new BigNumber(n, b);
-      }
+      // Enable constructor call without `new`.
+      if (!(x instanceof BigNumber)) return new BigNumber(v, b);
 
       if (b == null) {
 
-        // Duplicate.
-        if (n instanceof BigNumber 
-          || (n && typeof n.s !== 'undefined' && typeof n.e !== 'undefined' && typeof n.c !== 'undefined')) {
-          x.s = n.s;
-          x.e = n.e;
-          x.c = (n = n.c) ? n.slice() : n;
+        if (v && v._isBigNumber === true) {
+          x.s = v.s;
+
+          if (!v.c || v.e > MAX_EXP) {
+            x.c = x.e = null;
+          } else if (v.e < MIN_EXP) {
+            x.c = [x.e = 0];
+          } else {
+            x.e = v.e;
+            x.c = v.c.slice();
+          }
+
           return;
         }
 
-        isNum = typeof n == 'number';
-
-        if (isNum && n * 0 == 0) {
+        if ((isNum = typeof v == 'number') && v * 0 == 0) {
 
           // Use `1 / n` to handle minus zero also.
-          x.s = 1 / n < 0 ? (n = -n, -1) : 1;
+          x.s = 1 / v < 0 ? (v = -v, -1) : 1;
 
-          // Faster path for integers.
-          if (n === ~~n) {
-            for (e = 0, i = n; i >= 10; i /= 10, e++);
-            x.e = e;
-            x.c = [n];
+          // Fast path for integers, where n < 2147483648 (2**31).
+          if (v === ~~v) {
+            for (e = 0, i = v; i >= 10; i /= 10, e++);
+
+            if (e > MAX_EXP) {
+              x.c = x.e = null;
+            } else {
+              x.e = e;
+              x.c = [v];
+            }
+
             return;
           }
 
-          str = String(n);
+          str = String(v);
         } else {
-          str = String(n);
-          if (!isNumeric.test(str)) return parseNumeric(x, str, isNum);
+
+          if (!isNumeric.test(str = String(v))) return parseNumeric(x, str, isNum);
+
           x.s = str.charCodeAt(0) == 45 ? (str = str.slice(1), -1) : 1;
         }
 
@@ -245,32 +251,28 @@
 
         // '[BigNumber Error] Base {not a primitive number|not an integer|out of range}: {b}'
         intCheck(b, 2, ALPHABET.length, 'Base');
-        str = String(n);
 
         // Allow exponential notation to be used with base 10 argument, while
         // also rounding to DECIMAL_PLACES as with other bases.
         if (b == 10) {
-          x = new BigNumber(n instanceof BigNumber ? n : str);
+          x = new BigNumber(v);
           return round(x, DECIMAL_PLACES + x.e + 1, ROUNDING_MODE);
         }
 
-        isNum = typeof n == 'number';
+        str = String(v);
 
-        if (isNum) {
+        if (isNum = typeof v == 'number') {
 
           // Avoid potential interpretation of Infinity and NaN as base 44+ values.
-          if (n * 0 != 0) return parseNumeric(x, str, isNum, b);
+          if (v * 0 != 0) return parseNumeric(x, str, isNum, b);
 
-          x.s = 1 / n < 0 ? (str = str.slice(1), -1) : 1;
+          x.s = 1 / v < 0 ? (str = str.slice(1), -1) : 1;
 
           // '[BigNumber Error] Number primitive has more than 15 significant digits: {n}'
           if (BigNumber.DEBUG && str.replace(/^0\.0*|\./, '').length > 15) {
             throw Error
-             (tooManyDigits + n);
+             (tooManyDigits + v);
           }
-
-          // Prevent later check for length on converted number.
-          isNum = false;
         } else {
           x.s = str.charCodeAt(0) === 45 ? (str = str.slice(1), -1) : 1;
         }
@@ -279,7 +281,7 @@
         e = i = 0;
 
         // Check that str is a valid base b number.
-        // Don't use RegExp so alphabet can contain special characters.
+        // Don't use RegExp, so alphabet can contain special characters.
         for (len = str.length; i < len; i++) {
           if (alphabet.indexOf(c = str.charAt(i)) < 0) {
             if (c == '.') {
@@ -301,10 +303,12 @@
               }
             }
 
-            return parseNumeric(x, String(n), isNum, b);
+            return parseNumeric(x, String(v), isNum, b);
           }
         }
 
+        // Prevent later check for length on converted number.
+        isNum = false;
         str = convertBase(str, b, 10, x.s);
 
         // Decimal point?
@@ -318,22 +322,18 @@
       // Determine trailing zeros.
       for (len = str.length; str.charCodeAt(--len) === 48;);
 
-      str = str.slice(i, ++len);
-
-      if (str) {
+      if (str = str.slice(i, ++len)) {
         len -= i;
 
         // '[BigNumber Error] Number primitive has more than 15 significant digits: {n}'
         if (isNum && BigNumber.DEBUG &&
-          len > 15 && (n > MAX_SAFE_INTEGER || n !== mathfloor(n))) {
+          len > 15 && (v > MAX_SAFE_INTEGER || v !== mathfloor(v))) {
             throw Error
-             (tooManyDigits + (x.s * n));
+             (tooManyDigits + (x.s * v));
         }
 
-        e = e - i - 1;
-
          // Overflow?
-        if (e > MAX_EXP) {
+        if ((e = e - i - 1) > MAX_EXP) {
 
           // Infinity.
           x.c = x.e = null;
@@ -352,7 +352,7 @@
           // e is the base 10 exponent.
           // i is where to slice str to get the first element of the coefficient array.
           i = (e + 1) % LOG_BASE;
-          if (e < 0) i += LOG_BASE;
+          if (e < 0) i += LOG_BASE;  // i < 1
 
           if (i < len) {
             if (i) x.c.push(+str.slice(0, i));
@@ -361,8 +361,7 @@
               x.c.push(+str.slice(i, i += LOG_BASE));
             }
 
-            str = str.slice(i);
-            i = LOG_BASE - str.length;
+            i = LOG_BASE - (str = str.slice(i)).length;
           } else {
             i -= len;
           }
@@ -579,10 +578,56 @@
     /*
      * Return true if v is a BigNumber instance, otherwise return false.
      *
+     * If BigNumber.DEBUG is true, throw if a BigNumber instance is not well-formed.
+     *
      * v {any}
+     *
+     * '[BigNumber Error] Invalid BigNumber: {v}'
      */
     BigNumber.isBigNumber = function (v) {
-      return v instanceof BigNumber || v && v._isBigNumber === true || false;
+      if (!v || v._isBigNumber !== true) return false;
+      if (!BigNumber.DEBUG) return true;
+
+      var i, n,
+        c = v.c,
+        e = v.e,
+        s = v.s;
+
+      out: if ({}.toString.call(c) == '[object Array]') {
+
+        if ((s === 1 || s === -1) && e >= -MAX && e <= MAX && e === mathfloor(e)) {
+
+          // If the first element is zero, the BigNumber value must be zero.
+          if (c[0] === 0) {
+            if (e === 0 && c.length === 1) return true;
+            break out;
+          }
+
+          // Calculate number of digits that c[0] should have, based on the exponent.
+          i = (e + 1) % LOG_BASE;
+          if (i < 1) i += LOG_BASE;
+
+          // Calculate number of digits of c[0].
+          //if (Math.ceil(Math.log(c[0] + 1) / Math.LN10) == i) {
+          if (String(c[0]).length == i) {
+
+            for (i = 0; i < c.length; i++) {
+              n = c[i];
+              if (n < 0 || n >= BASE || n !== mathfloor(n)) break out;
+            }
+
+            // Last element cannot be zero, unless it is the only element.
+            if (n !== 0) return true;
+          }
+        }
+
+      // Infinity/NaN
+      } else if (c === null && e === null && (s === null || s === 1 || s === -1)) {
+        return true;
+      }
+
+      throw Error
+        (bignumberError + 'Invalid BigNumber: ' + v);
     };
 
 
@@ -1316,7 +1361,6 @@
         // No exception on ±Infinity or NaN.
         if (isInfinityOrNaN.test(s)) {
           x.s = isNaN(s) ? null : s < 0 ? -1 : 1;
-          x.c = x.e = null;
         } else {
           if (!isNum) {
 
@@ -1344,8 +1388,10 @@
           }
 
           // NaN
-          x.c = x.e = x.s = null;
+          x.s = null;
         }
+
+        x.c = x.e = null;
       }
     })();
 
@@ -2700,8 +2746,9 @@
 
     P._isBigNumber = true;
 
-    if (typeof Symbol == 'function' && typeof Symbol.iterator == 'symbol') {
+    if (hasSymbol) {
       P[Symbol.toStringTag] = 'BigNumber';
+
       // Node.js v10.12.0+
       P[Symbol.for('nodejs.util.inspect.custom')] = P.valueOf;
     }
@@ -2713,6 +2760,9 @@
 
 
   // PRIVATE HELPER FUNCTIONS
+
+  // These functions don't need access to variables,
+  // e.g. DECIMAL_PLACES, in the scope of the `clone` function above.
 
 
   function bitFloor(n) {
@@ -2787,7 +2837,7 @@
    * Check that n is a primitive number, an integer, and in range, otherwise throw.
    */
   function intCheck(n, min, max, name) {
-    if (n < min || n > max || n !== (n < 0 ? mathceil(n) : mathfloor(n))) {
+    if (n < min || n > max || n !== mathfloor(n)) {
       throw Error
        (bignumberError + (name || 'Argument') + (typeof n == 'number'
          ? n < min || n > max ? ' out of range: ' : ' not an integer: '

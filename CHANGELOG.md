@@ -1,3 +1,12 @@
+#### 8.1.0
+* 23/02/2019
+* [NEW FEATURE] #220 Create a BigNumber using `{s, e, c}`.
+* [NEW FEATURE] `isBigNumber`: if `BigNumber.DEBUG` is `true`, also check that the BigNumber instance is well-formed.
+* Remove `instanceof` checks; just use `_isBigNumber` to identify a BigNumber instance. 
+* Add `_isBigNumber` to prototype in *bignumber.mjs*.
+* Add tests for BigNumber creation from object.
+* Update *API.html*. 
+
 #### 8.0.2
 * 13/01/2019
 * #209 `toPrecision` without argument should follow `toString`.
