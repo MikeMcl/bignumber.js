@@ -145,6 +145,8 @@ Test('config', function () {
 
     // RANGE
 
+    BigNumber.config({EXPONENTIAL_AT: [-7, 21], RANGE: [-324, 308]});
+
     t(-324, obj.RANGE[0]);
     t(308, obj.RANGE[1]);
 
@@ -167,6 +169,10 @@ Test('config', function () {
     t(-324, obj.RANGE[0]);
     t(308, obj.RANGE[1]);
 
+    var hundred = new BigNumber(100);
+    t('100', hundred.toString());
+    t('100', new BigNumber(hundred).toString());
+
     t(1, BigNumber.config({RANGE: 1}).RANGE[1]);
     t(-1, BigNumber.config({RANGE: 1}).RANGE[0]);
 
@@ -175,6 +181,19 @@ Test('config', function () {
 
     obj = BigNumber.config({RANGE: -1});
     Test.isTrue(obj.RANGE[0] === -1 && obj.RANGE[1] === 1);
+
+    t('1', new BigNumber(1).toString());
+    t('99', new BigNumber(99).toString());
+    t('-99', new BigNumber(-99).toString());
+    t('Infinity', new BigNumber(100).toString());
+    t('-Infinity', new BigNumber(-100).toString());
+    t('0.99', new BigNumber(0.99).toString());
+    t('0.1', new BigNumber(0.1).toString());
+    t('0', new BigNumber(0.09).toString());
+    t('-0', new BigNumber(-0.09).valueOf());
+    t('100', hundred.toString());
+    t('Infinity', new BigNumber(hundred).toString());
+    t('-Infinity', hundred.negated().toString());
 
     // FORMAT
 

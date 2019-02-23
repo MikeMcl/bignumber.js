@@ -1,4 +1,4 @@
-// Type definitions for bignumber.js >=8.0.0
+// Type definitions for bignumber.js >=8.1.0
 // Project: https://github.com/MikeMcl/bignumber.js
 // Definitions by: Michael Mclaughlin <https://github.com/MikeMcl>
 // Definitions: https://github.com/MikeMcl/bignumber.js
@@ -9,14 +9,14 @@
 //
 //   class     BigNumber (default export)
 //   type      BigNumber.Constructor
-//   type      BigNumber.Instance
 //   type      BigNumber.ModuloMode
 //   type      BigNumber.RoundingMOde
 //   type      BigNumber.Value
 //   interface BigNumber.Config
 //   interface BigNumber.Format
+//   interface BigNumber.Instance
 //
-// Example (alternative syntax commented-out):
+// Example:
 //
 //   import {BigNumber} from "bignumber.js"
 //   //import BigNumber from "bignumber.js"
@@ -28,7 +28,6 @@
 //
 //   let v: BigNumber.Value = '12345.6789';
 //   let b: BigNumber = new BigNumber(v);
-//   //let b: BigNumber.Instance = new BigNumber(v);
 //
 // The use of compiler option `--strictNullChecks` is recommended.
 
@@ -264,12 +263,12 @@ export namespace BigNumber {
     /**
      * The alphabet used for base conversion. The length of the alphabet corresponds to the maximum
      * value of the base argument that can be passed to the BigNumber constructor or `toString`.
-     *  
+     *
      * Default value: `'0123456789abcdefghijklmnopqrstuvwxyz'`.
      *
      * There is no maximum length for the alphabet, but it must be at least 2 characters long,
      * and it must not contain whitespace or a repeated character, or the sign indicators '+' and
-     * '-', or the decimal separator '.'. 
+     * '-', or the decimal separator '.'.
      *
      * ```ts
      * // duodecimal (base 12)
@@ -281,8 +280,6 @@ export namespace BigNumber {
      */
     ALPHABET?: string;
   }
-
-  export type Constructor = typeof BigNumber;
 
   /**
    * See `FORMAT` and `toFormat`.
@@ -330,52 +327,50 @@ export namespace BigNumber {
     suffix?: string;
   }
 
-  interface RegularNumberObject {
+  export interface Instance {
     /**
-     * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers.
+     * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers, or null.
      */
-    readonly c: number[];
+    readonly c: number[] | null;
 
     /**
-     * The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000.
+     * The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000, or null.
      */
-    readonly e: number;
+    readonly e: number | null;
 
     /**
-     * The sign of the value of this BigNumber, -1 or 1.
+     * The sign of the value of this BigNumber, -1, 1, or null.
      */
-    readonly s: number;
+    readonly s: number | null;
   }
 
-  type NaNObject = { readonly c: null, readonly e: null, readonly s: null };
-  export type Object = RegularNumberObject | NaNObject;
-  export type Instance = BigNumber;
+  export type Constructor = typeof BigNumber;
   export type ModuloMode = 0 | 1 | 3 | 6 | 9;
   export type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-  export type Value = string | number | BigNumber | BigNumber.Object;
+  export type Value = string | number | BigNumber | Instance;
 }
 
 export declare class BigNumber {
 
   /**
-   * Used internally by the `BigNumber.isBigNumber` method.
+   * Used internally to identify a BigNumber instance.
    */
   private readonly _isBigNumber: true;
 
   /**
-   * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers.
+   * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers, or null.
    */
-  readonly c: number[];
+  readonly c: number[] | null;
 
   /**
-   * The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000.
+   * The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000, or null.
    */
-  readonly e: number;
+  readonly e: number | null;
 
   /**
-   * The sign of the value of this BigNumber, -1 or 1.
+   * The sign of the value of this BigNumber, -1, 1, or null.
    */
-  readonly s: number;
+  readonly s: number | null;
 
   /**
    * Returns a new instance of a BigNumber object with value `n`, where `n` is a numeric value in
@@ -461,6 +456,13 @@ export declare class BigNumber {
    * new BigNumber(823456789123456.3)
    * // 'Error: Not a base 2 number'
    * new BigNumber(9, 2)
+   * ```
+   *
+   * A BigNumber can also be created from an object literal.
+   * Use `isBigNumber` to check that it is well-formed.
+   *
+   * ```ts
+   * new BigNumber({ s: 1, e: 2, c: [ 777, 12300000000000 ], _isBigNumber: true })    // '777.123'
    * ```
    *
    * @param n A numeric value.
@@ -1191,7 +1193,7 @@ export declare class BigNumber {
    */
   sd(includeZeros?: boolean): number;
 
-  /*
+  /**
    * Returns a BigNumber whose value is the value of this BigNumber rounded to a precision of
    * `significantDigits` significant digits using rounding mode `roundingMode`.
    *
@@ -1542,6 +1544,110 @@ export declare class BigNumber {
   valueOf(): string;
 
   /**
+  * Helps ES6 import.
+  */
+  private static readonly default?: BigNumber.Constructor;
+
+  /**
+   * Helps ES6 import.
+   */
+  private static readonly BigNumber?: BigNumber.Constructor;
+
+  /**
+   * Rounds away from zero.
+   */
+  static readonly ROUND_UP: 0;
+
+  /**
+   * Rounds towards zero.
+   */
+  static readonly ROUND_DOWN: 1;
+
+  /**
+   * Rounds towards Infinity.
+   */
+  static readonly ROUND_CEIL: 2;
+
+  /**
+   * Rounds towards -Infinity.
+   */
+  static readonly ROUND_FLOOR: 3;
+
+  /**
+   * Rounds towards nearest neighbour. If equidistant, rounds away from zero .
+   */
+  static readonly ROUND_HALF_UP: 4;
+
+  /**
+   * Rounds towards nearest neighbour. If equidistant, rounds towards zero.
+   */
+  static readonly ROUND_HALF_DOWN: 5;
+
+  /**
+   * Rounds towards nearest neighbour. If equidistant, rounds towards even neighbour.
+   */
+  static readonly ROUND_HALF_EVEN: 6;
+
+  /**
+   * Rounds towards nearest neighbour. If equidistant, rounds towards Infinity.
+   */
+  static readonly ROUND_HALF_CEIL: 7;
+
+  /**
+   * Rounds towards nearest neighbour. If equidistant, rounds towards -Infinity.
+   */
+  static readonly ROUND_HALF_FLOOR: 8;
+
+  /**
+   * See `MODULO_MODE`.
+   */
+  static readonly EUCLID: 9;
+
+  /**
+   * To aid in debugging, if a `BigNumber.DEBUG` property is `true` then an error will be thrown
+   * if the BigNumber constructor receives an invalid `BigNumber.Value`, or if `BigNumber.isBigNumber`
+   * receives a BigNumber instance that is malformed.
+   *
+   * ```ts
+   * // No error, and BigNumber NaN is returned.
+   * new BigNumber('blurgh')    // 'NaN'
+   * new BigNumber(9, 2)        // 'NaN'
+   * BigNumber.DEBUG = true
+   * new BigNumber('blurgh')    // '[BigNumber Error] Not a number'
+   * new BigNumber(9, 2)        // '[BigNumber Error] Not a base 2 number'
+   * ```
+   *
+   * An error will also be thrown if a `BigNumber.Value` is of type number with more than 15
+   * significant digits, as calling `toString` or `valueOf` on such numbers may not result
+   * in the intended value.
+   *
+   * ```ts
+   * console.log(823456789123456.3)       //  823456789123456.2
+   * // No error, and the returned BigNumber does not have the same value as the number literal.
+   * new BigNumber(823456789123456.3)     // '823456789123456.2'
+   * BigNumber.DEBUG = true
+   * new BigNumber(823456789123456.3)
+   * // '[BigNumber Error] Number primitive has more than 15 significant digits'
+   * ```
+   *
+   * Check that a BigNumber instance is well-formed:
+   *
+   * ```ts
+   * x = new BigNumber(10)
+   *
+   * BigNumber.DEBUG = false
+   * // Change x.c to an illegitimate value.
+   * x.c = NaN
+   * // No error, as BigNumber.DEBUG is false.
+   * BigNumber.isBigNumber(x)    // true
+   *
+   * BigNumber.DEBUG = true
+   * BigNumber.isBigNumber(x)    // '[BigNumber Error] Invalid BigNumber'
+   * ```
+   */
+  static DEBUG?: boolean;
+
+  /**
    * Returns a new independent BigNumber constructor with configuration as described by `object`, or
    * with the default configuration if object is `null` or `undefined`.
    *
@@ -1603,6 +1709,8 @@ export declare class BigNumber {
 
   /**
    * Returns `true` if `value` is a BigNumber instance, otherwise returns `false`.
+   *
+   * If `BigNumber.DEBUG` is `true`, throws if a BigNumber instance is not well-formed.
    *
    * ```ts
    * x = 42
@@ -1775,93 +1883,4 @@ export declare class BigNumber {
    * @param object The configuration object.
    */
   static set(object: BigNumber.Config): BigNumber.Config;
-
-  /**
-   * Helps ES6 import.
-   */
-  private static readonly default?: BigNumber.Constructor;
-
-  /**
-   * Helps ES6 import.
-   */
-  private static readonly BigNumber?: BigNumber.Constructor;
-
-  /**
-   * Rounds away from zero.
-   */
-  static readonly ROUND_UP: 0;
-
-  /**
-   * Rounds towards zero.
-   */
-  static readonly ROUND_DOWN: 1;
-
-  /**
-   * Rounds towards Infinity.
-   */
-  static readonly ROUND_CEIL: 2;
-
-  /**
-   * Rounds towards -Infinity.
-   */
-  static readonly ROUND_FLOOR: 3;
-
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds away from zero .
-   */
-  static readonly ROUND_HALF_UP: 4;
-
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds towards zero.
-   */
-  static readonly ROUND_HALF_DOWN: 5;
-
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds towards even neighbour.
-   */
-  static readonly ROUND_HALF_EVEN: 6;
-
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds towards Infinity.
-   */
-  static readonly ROUND_HALF_CEIL: 7;
-
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds towards -Infinity.
-   */
-  static readonly ROUND_HALF_FLOOR: 8;
-
-  /**
-   * See `MODULO_MODE`.
-   */
-  static readonly EUCLID: 9;
-
-  /**
-   * To aid in debugging, if a `BigNumber.DEBUG` property is `true` then an error will be thrown
-   * on an invalid `BigNumber.Value`.
-   *
-   * ```ts
-   * // No error, and BigNumber NaN is returned.
-   * new BigNumber('blurgh')    // 'NaN'
-   * new BigNumber(9, 2)        // 'NaN'
-   * BigNumber.DEBUG = true
-   * new BigNumber('blurgh')    // '[BigNumber Error] Not a number'
-   * new BigNumber(9, 2)        // '[BigNumber Error] Not a base 2 number'
-   * ```
-   *
-   * An error will also be thrown if a `BigNumber.Value` is of type number with more than 15
-   * significant digits, as calling `toString` or `valueOf` on such numbers may not result
-   * in the intended value.
-   *
-   * ```ts
-   * console.log(823456789123456.3)       //  823456789123456.2
-   * // No error, and the returned BigNumber does not have the same value as the number literal.
-   * new BigNumber(823456789123456.3)     // '823456789123456.2'
-   * BigNumber.DEBUG = true
-   * new BigNumber(823456789123456.3)
-   * // '[BigNumber Error] Number primitive has more than 15 significant digits'
-   * ```
-   *
-   */
-  static DEBUG?: boolean;
 }
