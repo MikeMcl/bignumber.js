@@ -35,10 +35,8 @@ export default BigNumber;
 
 export namespace BigNumber {
 
-  /**
-   * See `BigNumber.config` and `BigNumber.clone`.
-   */
-  export interface Config {
+  /** See `BigNumber.config` (alias `BigNumber.set`) and `BigNumber.clone`. */
+  interface Config {
 
     /**
      * An integer, 0 to 1e+9. Default value: 20.
@@ -281,95 +279,66 @@ export namespace BigNumber {
     ALPHABET?: string;
   }
 
-  /**
-   * See `FORMAT` and `toFormat`.
-   */
-  export interface Format {
+  /** See `FORMAT` and `toFormat`. */
+  interface Format {
 
-    /**
-     * The string to prepend.
-     */
+    /** The string to prepend. */
     prefix?: string;
 
-    /**
-     * The decimal separator.
-     */
+    /** The decimal separator. */
     decimalSeparator?: string;
 
-    /**
-     * The grouping separator of the integer part.
-     */
+    /** The grouping separator of the integer part. */
     groupSeparator?: string;
 
-    /**
-     * The primary grouping size of the integer part.
-     */
+    /** The primary grouping size of the integer part. */
     groupSize?: number;
 
-    /**
-     * The secondary grouping size of the integer part.
-     */
+    /** The secondary grouping size of the integer part. */
     secondaryGroupSize?: number;
 
-    /**
-     * The grouping separator of the fraction part.
-     */
+    /** The grouping separator of the fraction part. */
     fractionGroupSeparator?: string;
 
-    /**
-     * The grouping size of the fraction part.
-     */
+    /** The grouping size of the fraction part. */
     fractionGroupSize?: number;
 
-    /**
-     * The string to append.
-     */
+    /** The string to append. */
     suffix?: string;
   }
 
-  export interface Instance {
-    /**
-     * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers, or null.
-     */
+  interface Instance {
+
+    /** The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers, or null. */
     readonly c: number[] | null;
 
-    /**
-     * The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000, or null.
-     */
+    /** The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000, or null. */
     readonly e: number | null;
 
-    /**
-     * The sign of the value of this BigNumber, -1, 1, or null.
-     */
+    /** The sign of the value of this BigNumber, -1, 1, or null. */
     readonly s: number | null;
+
+    [key: string]: any;
   }
 
-  export type Constructor = typeof BigNumber;
-  export type ModuloMode = 0 | 1 | 3 | 6 | 9;
-  export type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-  export type Value = string | number | BigNumber | Instance;
+  type Constructor = typeof BigNumber;
+  type ModuloMode = 0 | 1 | 3 | 6 | 9;
+  type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  type Value = string | number | Instance;
 }
 
-export declare class BigNumber {
+export declare class BigNumber implements BigNumber.Instance {
 
-  /**
-   * Used internally to identify a BigNumber instance.
-   */
+  /** Used internally to identify a BigNumber instance. */
   private readonly _isBigNumber: true;
 
-  /**
-   * The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers, or null.
-   */
+  /** The coefficient of the value of this BigNumber, an array of base 1e14 integer numbers, or null. */
   readonly c: number[] | null;
 
-  /**
-   * The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000, or null.
-   */
+  /** The exponent of the value of this BigNumber, an integer number, -1000000000 to 1000000000, or null. */
   readonly e: number | null;
 
-  /**
-   * The sign of the value of this BigNumber, -1, 1, or null.
-   */
+  /** The sign of the value of this BigNumber, -1, 1, or null. */
   readonly s: number | null;
 
   /**
@@ -1431,9 +1400,7 @@ export declare class BigNumber {
    */
   toFraction(max_denominator?: BigNumber.Value): [BigNumber, BigNumber];
 
-  /**
-   * As `valueOf`.
-   */
+  /** As `valueOf`. */
   toJSON(): string;
 
   /**
@@ -1543,64 +1510,40 @@ export declare class BigNumber {
    */
   valueOf(): string;
 
-  /**
-  * Helps ES6 import.
-  */
+  /** Helps ES6 import. */
   private static readonly default?: BigNumber.Constructor;
 
-  /**
-   * Helps ES6 import.
-   */
+  /** Helps ES6 import. */
   private static readonly BigNumber?: BigNumber.Constructor;
 
-  /**
-   * Rounds away from zero.
-   */
+  /** Rounds away from zero. */
   static readonly ROUND_UP: 0;
 
-  /**
-   * Rounds towards zero.
-   */
+  /** Rounds towards zero. */
   static readonly ROUND_DOWN: 1;
 
-  /**
-   * Rounds towards Infinity.
-   */
+  /** Rounds towards Infinity. */
   static readonly ROUND_CEIL: 2;
 
-  /**
-   * Rounds towards -Infinity.
-   */
+  /** Rounds towards -Infinity. */
   static readonly ROUND_FLOOR: 3;
 
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds away from zero .
-   */
+  /** Rounds towards nearest neighbour. If equidistant, rounds away from zero . */
   static readonly ROUND_HALF_UP: 4;
 
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds towards zero.
-   */
+  /** Rounds towards nearest neighbour. If equidistant, rounds towards zero. */
   static readonly ROUND_HALF_DOWN: 5;
 
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds towards even neighbour.
-   */
+  /** Rounds towards nearest neighbour. If equidistant, rounds towards even neighbour. */
   static readonly ROUND_HALF_EVEN: 6;
 
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds towards Infinity.
-   */
+  /** Rounds towards nearest neighbour. If equidistant, rounds towards Infinity. */
   static readonly ROUND_HALF_CEIL: 7;
 
-  /**
-   * Rounds towards nearest neighbour. If equidistant, rounds towards -Infinity.
-   */
+  /** Rounds towards nearest neighbour. If equidistant, rounds towards -Infinity. */
   static readonly ROUND_HALF_FLOOR: 8;
 
-  /**
-   * See `MODULO_MODE`.
-   */
+  /** See `MODULO_MODE`. */
   static readonly EUCLID: 9;
 
   /**
