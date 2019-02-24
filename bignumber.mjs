@@ -46,7 +46,7 @@
  */
 
 
-var BigNumber,
+var
   isNumeric = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i,
 
   mathceil = Math.ceil,
@@ -2883,6 +2883,6 @@ function toFixedPoint(str, e, z) {
 // EXPORT
 
 
-export BigNumber = clone();
+export var BigNumber = clone();
 
 export default BigNumber;
