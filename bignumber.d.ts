@@ -1742,6 +1742,22 @@ export declare class BigNumber implements BigNumber.Instance {
   static min(...n: BigNumber.Value[]): BigNumber;
 
   /**
+   * Returns parsed JSON with all numbers in the result replaced by BigNumber instances.
+   *
+   * JSON has arbitrary precision numbers, which can lose precision when parsed with JSON.parse
+   * This returns parsed JSON with numbers always exact and unrounded.
+   *
+   * ```ts
+   * BigNumber.parseJSON( '7290.9817309441811021231245' )      // '7290.9817309441811021231245'
+   * BigNumber.parseJSON( '{"x":0.492984168922526525206}' ).x  // '0.492984168922526525206'
+   * BigNumber.parseJSON( '[10,41432809811874693461783]' )     // ['10','41432809811874693461783']
+   * ```
+   *
+   * @param json
+   */
+  static parseJSON(json: string): any;
+
+  /**
    * Returns a new BigNumber with a pseudo-random value equal to or greater than 0 and less than 1.
    *
    * The return value will have `decimalPlaces` decimal places, or less if trailing zeros are

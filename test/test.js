@@ -22,6 +22,7 @@ console.log('\n Testing bignumber.js\n');
   'multipliedBy',
   'negated',
   'isMethods',
+  'parseJSON',
   'plus',
   'precision',
   'random',

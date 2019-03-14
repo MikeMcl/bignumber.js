@@ -24,9 +24,9 @@
  *      isInteger                       |  isBigNumber
  *      isLessThan               lt     |  maximum              max
  *      isLessThanOrEqualTo      lte    |  minimum              min
- *      isNaN                           |  random
- *      isNegative                      |  sum
- *      isPositive                      |
+ *      isNaN                           |  parseJSON
+ *      isNegative                      |  random
+ *      isPositive                      |  sum
  *      isZero                          |
  *      minus                           |
  *      modulo                   mod    |
@@ -648,6 +648,25 @@
      */
     BigNumber.minimum = BigNumber.min = function () {
       return maxOrMin(arguments, P.gt);
+    };
+
+
+    /*
+     * Parse a JSON string, but replace each number in the result with a BigNumber
+     *
+     * arguments {string}
+     */
+    BigNumber.parseJSON = function (str) {
+      if ( ! JSON || ! JSON.parse )
+        throw Error( 'Requires JSON.parse' );
+
+      var prefix = '^ba38f1629191d^BigNumber.parseJSON^';
+      var pre_decode = str.replace(/((?:[^"]*?(?:"(?:[^"\\]|\\.)*?")?)*?)((?:[:,\[]|^)[\s\n]*)(-?(0|([1-9]\d*))(\.\d+)?([eE][-+]?\d*)?)/gsy, '$1$2"' + prefix + '$3"');
+      return JSON.parse(pre_decode, function (key, value) {
+        if (typeof value !== 'string' || value.indexOf(prefix) !== 0)
+          return value;
+        return new BigNumber(value.substr(prefix.length));
+      });
     };
 
 
