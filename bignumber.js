@@ -51,8 +51,6 @@
 
   var BigNumber,
     isNumeric = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i,
-    hasSymbol = typeof Symbol == 'function' && typeof Symbol.iterator == 'symbol',
-
     mathceil = Math.ceil,
     mathfloor = Math.floor,
 
@@ -2745,13 +2743,6 @@
 
 
     P._isBigNumber = true;
-
-    if (hasSymbol) {
-      P[Symbol.toStringTag] = 'BigNumber';
-
-      // Node.js v10.12.0+
-      P[Symbol.for('nodejs.util.inspect.custom')] = P.valueOf;
-    }
 
     if (configObject != null) BigNumber.set(configObject);
 
