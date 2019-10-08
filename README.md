@@ -23,7 +23,7 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 If a smaller and simpler library is required see [big.js](https://github.com/MikeMcl/big.js/).
 It's less than half the size but only works with decimal numbers and only has half the methods.
-It also does not allow `NaN` or `Infinity`, or have the configuration options of this library.
+It also does not allow `NaN` or `Infinity`, nor it has the configuration options of this library.
 
 See also [decimal.js](https://github.com/MikeMcl/decimal.js/), which among other things adds support for non-integer powers, and performs all operations to a specified number of significant digits.
 
@@ -98,7 +98,7 @@ new BigNumber(1e-324)                     // '0'
 new BigNumber(0.7 + 0.1)                  // '0.7999999999999999'
 ```
 
-When creating a BigNumber from a Number, note that a BigNumber is created from a Number's decimal `toString()` value not from its underlying binary value. If the latter is required, then pass the Number's `toString(2)` value and specify base 2.
+When creating a BigNumber from a Number, note that the BigNumber will be created from the Number's decimal `toString()` value, not from its underlying binary value. If the latter is required, then pass the Number's `toString(2)` value and specify base 2.
 
 ```javascript
 new BigNumber(Number.MAX_VALUE.toString(2), 2)
@@ -112,7 +112,7 @@ b = new BigNumber('zz.9', 36)       // "1295.25"
 c = a.plus(b)                       // "1306.25"
 ```
 
-Performance is better if base 10 is NOT specified for decimal values. Only specify base 10 when it is desired that the number of decimal places of the input value be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.
+Performance is better if base 10 is NOT specified for decimal values. Only specify base 10 when it is desired the number of decimal places of the input value to be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.
 
 A BigNumber is immutable in the sense that it is not changed by its methods.
 
@@ -147,7 +147,7 @@ x.toPrecision(5)                    // "255.50"
 x.toNumber()                        //  255.5
 ```
 
- A base can be specified for [`toString`](http://mikemcl.github.io/bignumber.js/#toS). Performance is better if base 10 is NOT specified, i.e. use `toString()` not `toString(10)`. Only specify base 10 when it is desired that the number of decimal places be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.
+ A base can be specified for [`toString`](http://mikemcl.github.io/bignumber.js/#toS). Performance is better if base 10 is NOT specified, i.e. use `toString()` not `toString(10)`. Only specify base 10 when it is desired the number of decimal places of the input value to be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.
 
  ```javascript
  x.toString(16)                     // "ff.8"
@@ -203,7 +203,7 @@ x.e                                 // 2                        exponent
 x.s                                 // -1                       sign
 ```
 
-For advanced usage, multiple BigNumber constructors can be created, each with their own independent configuration.
+For advanced usage, multiple BigNumber constructors can be created, each with its own independent configuration.
 
 ```javascript
 // Set DECIMAL_PLACES for the original BigNumber constructor
