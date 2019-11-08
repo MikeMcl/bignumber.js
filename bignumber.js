@@ -543,7 +543,7 @@
 
             // Disallow if only one character,
             // or if it contains '+', '-', '.', whitespace, or a repeated character.
-            if (typeof v == 'string' && !/^.$|[+-.\s]|(.).*\1/.test(v)) {
+            if (typeof v == 'string' && !/^.$|[+\-.\s]|(.).*\1/.test(v)) {
               ALPHABET = v;
             } else {
               throw Error
