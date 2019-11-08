@@ -226,6 +226,9 @@ Test('config', function () {
     tx(function () {BigNumber.config({ALPHABET: ',.'})}, "ALPHABET: ',.'");
     tx(function () {BigNumber.config({ALPHABET: '0123456789.'})}, "ALPHABET: '0123456789.'");
 
+    BigNumber.config({ALPHABET: '0,'});
+    t('0,', BigNumber.config().ALPHABET);
+
     BigNumber.config({ALPHABET: 'xy'});
     t('xy', BigNumber.config().ALPHABET);
 
