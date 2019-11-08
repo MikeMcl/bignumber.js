@@ -223,7 +223,9 @@ Test('config', function () {
     tx(function () {BigNumber.config({ALPHABET: 2})}, "ALPHABET: 2");
     tx(function () {BigNumber.config({ALPHABET: true})}, "ALPHABET: true");
     tx(function () {BigNumber.config({ALPHABET: 'aba'})}, "ALPHABET: 'aba'");
-    tx(function () {BigNumber.config({ALPHABET: ',.'})}, "ALPHABET: ',.'");
+    tx(function () {BigNumber.config({ALPHABET: '0.'})}, "ALPHABET: '0.'");
+    tx(function () {BigNumber.config({ALPHABET: '0-'})}, "ALPHABET: '0-'");
+    tx(function () {BigNumber.config({ALPHABET: '0+'})}, "ALPHABET: '0+'");
     tx(function () {BigNumber.config({ALPHABET: '0123456789.'})}, "ALPHABET: '0123456789.'");
 
     BigNumber.config({ALPHABET: '0,'});
