@@ -541,9 +541,9 @@
           if (obj.hasOwnProperty(p = 'ALPHABET')) {
             v = obj[p];
 
-            // Disallow if only one character,
+            // Disallow if less than two characters,
             // or if it contains '+', '-', '.', whitespace, or a repeated character.
-            if (typeof v == 'string' && !/^.$|[+-.\s]|(.).*\1/.test(v)) {
+            if (typeof v == 'string' && !/^.?$|[+\-.\s]|(.).*\1/.test(v)) {
               ALPHABET = v;
             } else {
               throw Error

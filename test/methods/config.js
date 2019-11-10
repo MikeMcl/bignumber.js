@@ -219,12 +219,18 @@ Test('config', function () {
 
     BigNumber.config({ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'});
 
+    tx(function () {BigNumber.config({ALPHABET: ''})}, "ALPHABET: ''");
     tx(function () {BigNumber.config({ALPHABET: '1'})}, "ALPHABET: '1'");
     tx(function () {BigNumber.config({ALPHABET: 2})}, "ALPHABET: 2");
     tx(function () {BigNumber.config({ALPHABET: true})}, "ALPHABET: true");
     tx(function () {BigNumber.config({ALPHABET: 'aba'})}, "ALPHABET: 'aba'");
-    tx(function () {BigNumber.config({ALPHABET: ',.'})}, "ALPHABET: ',.'");
+    tx(function () {BigNumber.config({ALPHABET: '0.'})}, "ALPHABET: '0.'");
+    tx(function () {BigNumber.config({ALPHABET: '0-'})}, "ALPHABET: '0-'");
+    tx(function () {BigNumber.config({ALPHABET: '0+'})}, "ALPHABET: '0+'");
     tx(function () {BigNumber.config({ALPHABET: '0123456789.'})}, "ALPHABET: '0123456789.'");
+
+    BigNumber.config({ALPHABET: '0,'});
+    t('0,', BigNumber.config().ALPHABET);
 
     BigNumber.config({ALPHABET: 'xy'});
     t('xy', BigNumber.config().ALPHABET);
