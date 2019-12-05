@@ -1,3 +1,5 @@
+> Note: JavaScript now has a built-in `BigInt` object which you may be interested in. Check its [browser support](https://caniuse.com/#feat=bigint) first.
+
 ![bignumber.js](https://raw.githubusercontent.com/MikeMcl/bignumber.js/gh-pages/bignumberjs.png)
 
 A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
