@@ -257,9 +257,9 @@ A source map will also be created in the root directory.
 
 Open an issue, or email
 
-Michael
+AtOmXpLuS
 
-<a href="mailto:M8ch88l@gmail.com">M8ch88l@gmail.com</a>
+<a href="mailto:durgutkoray@gmail.com">durgutkoray@gmail.com</a>
 
 ## Licence
 
