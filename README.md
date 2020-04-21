@@ -50,7 +50,7 @@ const BigNumber = require('bignumber.js');
 ES6 module:
 
 ```javascript
-import BigNumber from "./bignumber.mjs"
+import BigNumber from "bignumber.mjs"
 ```
 
 AMD loader libraries such as [requireJS](http://requirejs.org/):
