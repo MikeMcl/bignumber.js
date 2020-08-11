@@ -1088,7 +1088,7 @@ export declare class BigNumber implements BigNumber.Instance {
    * 0.1 + 0.2                       // 0.30000000000000004
    * x = new BigNumber(0.1)
    * y = x.plus(0.2)                 // '0.3'
-   * BigNumber(0.7).plus(x).plus(y)  // '1'
+   * BigNumber(0.7).plus(x).plus(y)  // '1.1'
    * x.plus('0.1', 8)                // '0.225'
    * ```
    *
