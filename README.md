@@ -65,7 +65,7 @@ $ npm install @types/bignumber.js --save-dev
 ```
 
 ```javascript
-import BigNumber from 'bignumber.js'
+import BigNumber from "bignumber.js"
 ```
 
 AMD loader libraries such as [requireJS](http://requirejs.org/):
