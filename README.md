@@ -40,7 +40,7 @@ Browser:
 [Node.js](http://nodejs.org):
 
 ```bash
-$ npm install bignumber.js
+$ npm install bignumber.js --save
 ```
 
 ```javascript
@@ -49,8 +49,23 @@ const BigNumber = require('bignumber.js');
 
 ES6 module:
 
+```bash
+$ npm install bignumber.js --save
+```
+
 ```javascript
-import BigNumber from "./bignumber.mjs"
+import BigNumber from "bignumber.mjs"
+```
+
+Typescript:
+
+```bash
+$ npm install bignumber.js --save
+$ npm install @types/bignumber.js --save-dev
+```
+
+```javascript
+import BigNumber from 'bignumber.js'
 ```
 
 AMD loader libraries such as [requireJS](http://requirejs.org/):
