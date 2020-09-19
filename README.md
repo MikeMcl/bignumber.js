@@ -36,7 +36,9 @@ The library is the single JavaScript file *bignumber.js* or as an ES module *big
 ```html
 <script src='path/to/bignumber.js'></script>
 ```
+
 > ES module
+
 ```html
 <script type="module">
 import BigNumber from './path/to/bignumber.mjs';
@@ -49,10 +51,13 @@ import BigNumber from './path/to/bignumber.mjs';
 ```bash
 $ npm install bignumber.js
 ```
+
 ```javascript
 const BigNumber = require('bignumber.js');
 ```
+
 > ES module
+
 ```javascript
 import BigNumber from "bignumber.js";
 // or
@@ -110,7 +115,7 @@ b = new BigNumber('zz.9', 36)       // "1295.25"
 c = a.plus(b)                       // "1306.25"
 ```
 
-> Performance is better if base 10 is NOT specified for decimal values. Only specify base 10 when it is desired that the number of decimal places of the input value be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.
+*Performance is better if base 10 is NOT specified for decimal values. Only specify base 10 when it is desired that the number of decimal places of the input value be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.*
 
 A BigNumber is immutable in the sense that it is not changed by its methods.
 
@@ -147,7 +152,7 @@ x.toNumber()                        //  255.5
 
  A base can be specified for [`toString`](http://mikemcl.github.io/bignumber.js/#toS).
  
-> Performance is better if base 10 is NOT specified, i.e. use `toString()` not `toString(10)`. Only specify base 10 when it is desired that the number of decimal places be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.
+*Performance is better if base 10 is NOT specified, i.e. use `toString()` not `toString(10)`. Only specify base 10 when it is desired that the number of decimal places be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.*
 
  ```javascript
  x.toString(16)                     // "ff.8"
@@ -217,6 +222,12 @@ y = new BN(1)
 
 x.div(3)                            // '0.3333333333'
 y.div(3)                            // '0.33333'
+```
+
+To avoid having to call `toString` or `valueOf` on a BigNumber to get its value in the Node.js REPL or when using `console.log` use
+
+```javascript
+BigNumber.prototype[require('util').inspect.custom] = BigNumber.prototype.valueOf;
 ```
 
 For further information see the [API](http://mikemcl.github.io/bignumber.js/) reference in the *doc* directory.
