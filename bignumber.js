@@ -2396,7 +2396,7 @@
         e = bitFloor((e + 1) / 2) - (e < 0 || e % 2);
 
         if (s == 1 / 0) {
-          n = '1e' + e;
+          n = '5e' + e;
         } else {
           n = s.toExponential();
           n = n.slice(0, n.indexOf('e') + 1) + e;
