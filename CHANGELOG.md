@@ -1,3 +1,8 @@
+#### 9.0.1
+* 28/09/20
+* [BUGFIX] #276 Correct `sqrt` initial estimate.
+* Update *.travis.yml*, *LICENCE.md* and *README.md*.
+
 #### 9.0.0
 * 27/05/2019
 * For compatibility with legacy browsers, remove `Symbol` references.

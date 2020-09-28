@@ -2,22 +2,24 @@
 
 A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
-[![Build Status](https://travis-ci.org/MikeMcl/bignumber.js.svg)](https://travis-ci.org/MikeMcl/bignumber.js)
+[![npm version](https://img.shields.io/npm/v/bignumber.js.svg)](https://www.npmjs.com/package/bignumber.js)
+[![npm downloads](https://img.shields.io/npm/dw/bignumber.js)](https://www.npmjs.com/package/bignumber.js)
+[![build status](https://travis-ci.org/MikeMcl/bignumber.js.svg)](https://travis-ci.org/MikeMcl/bignumber.js)
 
 <br />
 
 ## Features
 
-  - Integers and decimals
-  - Simple API but full-featured
-  - Faster, smaller, and perhaps easier to use than JavaScript versions of Java's BigDecimal
-  - 8 KB minified and gzipped
-  - Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of JavaScript's Number type
-  - Includes a `toFraction` and a correctly-rounded `squareRoot` method
-  - Supports cryptographically-secure pseudo-random number generation
-  - No dependencies
-  - Wide platform compatibility: uses JavaScript 1.5 (ECMAScript 3) features only
-  - Comprehensive [documentation](http://mikemcl.github.io/bignumber.js/) and test set
+- Integers and decimals
+- Simple API but full-featured
+- Faster, smaller, and perhaps easier to use than JavaScript versions of Java's BigDecimal
+- 8 KB minified and gzipped
+- Replicates the `toExponential`, `toFixed`, `toPrecision` and `toString` methods of JavaScript's Number type
+- Includes a `toFraction` and a correctly-rounded `squareRoot` method
+- Supports cryptographically-secure pseudo-random number generation
+- No dependencies
+- Wide platform compatibility: uses JavaScript 1.5 (ECMAScript 3) features only
+- Comprehensive [documentation](http://mikemcl.github.io/bignumber.js/) and test set
 
 ![API](https://raw.githubusercontent.com/MikeMcl/bignumber.js/gh-pages/API.png)
 
@@ -29,7 +31,7 @@ See also [decimal.js](https://github.com/MikeMcl/decimal.js/), which among other
 
 ## Load
 
-The library is the single JavaScript file *bignumber.js* or as an ES module *bignumber.mjs*.
+The library is the single JavaScript file *bignumber.js* or ES module *bignumber.mjs*.
 
 ### Browser:
 
@@ -42,7 +44,7 @@ The library is the single JavaScript file *bignumber.js* or as an ES module *big
 ```html
 <script type="module">
 import BigNumber from './path/to/bignumber.mjs';
-... 
+...
 </script>
 ```
 
@@ -151,7 +153,7 @@ x.toNumber()                        //  255.5
 ```
 
  A base can be specified for [`toString`](http://mikemcl.github.io/bignumber.js/#toS).
- 
+
 *Performance is better if base 10 is NOT specified, i.e. use `toString()` not `toString(10)`. Only specify base 10 when it is desired that the number of decimal places be limited to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.*
 
  ```javascript
