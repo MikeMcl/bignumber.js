@@ -1128,8 +1128,8 @@ y.integerValue(BigNumber.ROUND_DOWN)    // '-12'</pre>
       <code> BigNumber.ROUND_DOWN</code> respectively.
     </p>
     <pre>
-BigNumber.prototype.round = function (n) {
-  return n.integerValue(BigNumber.ROUND_HALF_CEIL);
+BigNumber.prototype.round = function () {
+  return this.integerValue(BigNumber.ROUND_HALF_CEIL);
 };
 x.round()                               // '123'</pre>
 
