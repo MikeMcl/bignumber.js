@@ -1180,7 +1180,6 @@ BigNumber.prototype.round = function () {
 x.round()                               // '123'</pre>
 
 
-
     <h5 id="eq">isEqualTo<code class='inset'>.eq(n [, base]) <i>&rArr; boolean</i></code></h5>
     <p>
       <code>n</code>: <i>number|string|BigNumber</i><br />
@@ -1278,6 +1277,48 @@ x = new BigNumber(1)
 x.isInteger()                   // true
 y = new BigNumber(123.456)
 y.isInteger()                   // false</pre>
+
+
+
+    <h5 id="lt">isLessThan<code class='inset'>.lt(n [, base]) <i>&rArr; boolean</i></code></h5>
+    <p>
+      <code>n</code>: <i>number|string|BigNumber</i><br />
+      <code>base</code>: <i>number</i><br />
+      <i>See <a href="#bignumber">BigNumber</a> for further parameter details.</i>
+    </p>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber is less than the value of
+      <code>n</code>, otherwise returns <code>false</code>.
+    </p>
+     <p>Note: This method uses the <a href='#cmp'><code>comparedTo</code></a> method internally.</p>
+    <pre>
+(0.3 - 0.2) &lt; 0.1                       // true
+x = new BigNumber(0.3).minus(0.2)
+x.isLessThan(0.1)                       // false
+BigNumber(0).lt(x)                      // true
+BigNumber(11.1, 2).lt(11, 3)            // true</pre>
+
+
+
+    <h5 id="lte">
+      isLessThanOrEqualTo<code class='inset'>.lte(n [, base]) <i>&rArr; boolean</i></code>
+    </h5>
+    <p>
+      <code>n</code>: <i>number|string|BigNumber</i><br />
+      <code>base</code>: <i>number</i><br />
+      <i>See <a href="#bignumber">BigNumber</a> for further parameter details.</i>
+    </p>
+    <p>
+      Returns <code>true</code> if the value of this BigNumber is less than or equal to the value of
+      <code>n</code>, otherwise returns <code>false</code>.
+    </p>
+    <p>Note: This method uses the <a href='#cmp'><code>comparedTo</code></a> method internally.</p>
+    <pre>
+0.1 &lt;= (0.3 - 0.2)                                // false
+x = new BigNumber(0.1)
+x.isLessThanOrEqualTo(BigNumber(0.3).minus(0.2))  // true
+BigNumber(-1).lte(x)                              // true
+BigNumber(10, 18).lte('i', 36)                    // true</pre>
 
 
 
