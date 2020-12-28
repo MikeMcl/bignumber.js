@@ -8,9 +8,9 @@ var arg, i, j, max, method, methodIndex, decimalPlaces, rounding, reps, start,
     BigNumber = require('../bignumber'),
     bdMs = ['add', 'subtract', 'multiply', 'divide', 'remainder',
             'compareTo', 'pow', 'negate', 'abs'],
-    bnMs1 = ['plus', 'minus', 'times', 'dividedBy', 'modulo',
-             'comparedTo', 'toPower', 'negated', 'abs'],
-    bnMs2 = ['', '', '', 'div', 'mod', 'cmp', '', 'neg', ''],
+    bnMs1 = ['plus', 'minus', 'multipliedBy', 'dividedBy', 'modulo',
+             'comparedTo', 'exponentiatedBy', 'negated', 'absoluteValue'],
+    bnMs2 = ['', '', '', 'div', 'mod', '', '', '', ''],
     Ms = [bdMs, bnMs1, bnMs2],
     allMs = [].concat.apply([], Ms),
     bdTotal = 0,
@@ -117,9 +117,9 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
             '\n METHOD: The method to be timed and compared with the' +
             '\n \t corresponding method from BigDecimal or BigNumber\n' +
             '\n   BigDecimal: add subtract multiply divide remainder' +
-            ' compareTo pow\n\t\tnegate abs\n\n   BigNumber: plus minus times' +
-            ' dividedBy modulo comparedTo toPower\n\t\tnegated abs' +
-            ' (div mod cmp pow neg)' +
+            ' compareTo pow\n\t\tnegate abs\n\n   BigNumber: plus minus multipliedBy' +
+            ' dividedBy modulo comparedTo exponentiatedBy\n\t\tnegated absoluteValue' +
+            ' (div mod pow)' +
             '\n\n METHOD CALLS: The number of method calls to be timed' +
             '\n\n MAX DIGITS: The maximum number of digits of the random ' +
             '\n\t\tnumbers used in the method calls\n\n ' +
@@ -194,7 +194,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     if (bdM == 'divide') {
         rounding = Math.floor(Math.random() * 7);
         console.log('\n Decimal places: %d\n Rounding mode: %d', decimalPlaces, rounding);
-        BigNumber.config(decimalPlaces, rounding);
+        BigNumber.config({ DECIMAL_PLACES: decimalPlaces, ROUNDING_MODE: rounding });
     }
 
     process.stdout.write('\n Testing started');
@@ -224,7 +224,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
         getMemory();
 
 
-        // BIGDECIMAL
+        // BigDecimal
 
         if (bdM == 'divide') {
 
@@ -264,7 +264,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
         getMemory(BD);
 
 
-        // BIGNUMBER
+        // BigNumber
 
         if (bdM == 'pow') {
 

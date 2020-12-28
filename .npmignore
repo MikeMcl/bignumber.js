@@ -1,4 +1,6 @@
 test
 perf
 coverage
+.*
+
 

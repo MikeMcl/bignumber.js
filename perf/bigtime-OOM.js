@@ -9,8 +9,8 @@ var arg, i, max, method, methodIndex, decimalPlaces,
     BigDecimal = require('./lib/bigdecimal_GWT/bigdecimal').BigDecimal,
     BigNumber = require('../bignumber'),
     bdMs = ['add', 'subtract', 'multiply', 'divide', 'remainder', 'compareTo', 'pow'],
-    bnMs1 = ['plus', 'minus', 'times', 'dividedBy', 'modulo', 'comparedTo', 'toPower'],
-    bnMs2 = ['', '', '', 'div', 'mod', 'cmp', ''],
+    bnMs1 = ['plus', 'minus', 'multipliedBy', 'dividedBy', 'modulo', 'comparedTo', 'exponentiatedBy'],
+    bnMs2 = ['', '', '', 'div', 'mod', '', ''],
     Ms = [bdMs, bnMs1, bnMs2],
     allMs = [].concat.apply([], Ms),
     expTotal = 0,
@@ -102,8 +102,8 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     '\n METHOD: The method to be timed and compared with the automatically' +
     '\n         chosen corresponding method from BigDecimal or BigNumber\n' +
     '\n BigDecimal: add  subtract multiply divide remainder compareTo pow' +
-    '\n BigNumber:  plus minus times dividedBy modulo comparedTo toPower' +
-    '\n             (div mod cmp pow)' +
+    '\n BigNumber:  plus minus multipliedBy dividedBy modulo comparedTo exponentiatedBy' +
+    '\n             (div mod pow)' +
     '\n\n METHOD CALLS: The number of method calls to be timed' +
     '\n\n MAX DIGITS: The maximum number of digits of the random ' +
     '\n             numbers used in the method calls' +
@@ -117,8 +117,8 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     '\n                 DECIMAL PLACES: ' + DEFAULT_PLACES + '\n' +
     '\n E.g.s node bigtime-OOM\n       node bigtime-OOM minus' +
     '\n       node bigtime-OOM add 100000' +
-    '\n       node bigtime-OOM times 20000 100' +
-    '\n       node bigtime-OOM div 100000 50 20' +
+    '\n       node bigtime-OOM multipliedBy 20000 100' +
+    '\n       node bigtime-OOM dividedBy 100000 50 20' +
     '\n       node bigtime-OOM 9000' +
     '\n       node bigtime-OOM 1000000 20\n' +
     '\n To show memory usage include an argument m or -m' +
@@ -181,7 +181,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     if (bdM == 'divide') {
         rounding = Math.floor(Math.random() * 7);
         console.log('\n Decimal places: %d\n Rounding mode: %d', decimalPlaces, rounding);
-        BigNumber.config(decimalPlaces, rounding);
+        BigNumber.config({ DECIMAL_PLACES: decimalPlaces, ROUNDING_MODE: rounding });
     }
 
     if (showMemory) {
@@ -193,9 +193,9 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     }
 
 
-    // CREATE RANDOM NUMBERS
+    // Create random numbers
 
-    // POW: BigDecimal requires JS Number type for exponent argument
+    // pow: BigDecimal requires JS Number type for exponent argument
     if (bdM == 'pow') {
 
         process.stdout.write('\n Creating ' + reps +
@@ -219,7 +219,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
         showMemoryChange();
 
 
-        // POW: TIME CREATION OF BIGDECIMALS
+        // pow: time creation of BigDecimals
 
         process.stdout.write('\n Creating BigDecimals...  ');
 
@@ -234,7 +234,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
         showMemoryChange();
 
 
-        // POW: TIME CREATION OF BIGNUMBERS
+        // pow: time creation of BigNumbers
 
         process.stdout.write(' Creating BigNumbers...   ');
 
@@ -247,7 +247,6 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
         console.log('done. Time taken: %s ms', bnOT || '<1');
 
 
-    // NOT POW
     } else {
 
         process.stdout.write('\n Creating ' + (reps * 2) +
@@ -264,7 +263,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
         showMemoryChange();
 
 
-        // TIME CREATION OF BIGDECIMALS
+        // Time creation of BigDecimals
 
         process.stdout.write('\n Creating BigDecimals...  ');
 
@@ -280,7 +279,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
         showMemoryChange();
 
 
-        // TIME CREATION OF BIGNUMBERS
+        // Time creation of BigNumbers
 
         process.stdout.write(' Creating BigNumbers...   ');
 
@@ -299,7 +298,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     console.log('\n Object creation: %s\n', getFastest(bnOT, bdOT));
 
 
-    // TIME BIGDECIMAL METHOD CALLS
+    // Time BigDecimal method calls
 
     process.stdout.write(pad(' BigDecimal ' + bdM));
 
@@ -316,7 +315,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     console.log('done. Time taken: %s ms', bdMT || '<1');
 
 
-    // TIME BIGNUMBER METHOD CALLS
+    // Time BigNumber method calls
 
     i = reps;
     process.stdout.write(pad(' BigNumber  ' + bnM));
@@ -328,7 +327,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
     console.log('done. Time taken: %s ms', bnMT || '<1');
 
 
-    // TIMINGS SUMMARY
+    // Timings summary
 
     console.log('\n Method calls:    %s', getFastest(bnMT, bdMT));
 
@@ -339,7 +338,7 @@ if (arg = args[0], typeof arg != 'undefined' && !isFinite(arg) &&
 
 
 
-    // CHECK FOR MISMATCHES
+    // Check for mismatches
 
     process.stdout.write('\n Checking for mismatches... ');
 
