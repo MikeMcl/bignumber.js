@@ -2770,8 +2770,8 @@
 
 
     /*
-     * Returns a one in each bit position for which the corresponding bits of this and {a} are
-     * ones.
+     * Returns a one in each bit position for which the corresponding bits of the integer part
+     * of this BigNumber and {a} are ones.
      */
     P.and = function (a) {
       var aBN = new BigNumber(a);
@@ -2795,7 +2795,7 @@
 
     /*
      * Returns a one in each bit position for which the corresponding bits of either, or both,
-     *  the integer part of this BigNumber or {a} are ones.
+     * the integer part of this BigNumber or {a} are ones.
      */
     P.or = function (a) {
       var aBN = new BigNumber(a);
