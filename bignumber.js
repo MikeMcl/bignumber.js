@@ -2763,7 +2763,7 @@
       var dec = this.modulo(1);
       var int = this.integerValue();
       var bits = int.toString(2);
-      bits = bits.slice(0, Math.max(bits.length, -n));
+      bits = bits.slice(0, Math.max(bits.length - n, 0));
       if (bits === '-') bits = '0'
       return new BigNumber(bits, 2).plus(dec);
     };
