@@ -1932,7 +1932,7 @@
      * Return a new BigNumber whose value is the value of this BigNumber minus the value of
      * BigNumber(y, b).
      */
-    P.minus = function (y, b) {
+    P.minus = P.sub = function (y, b) {
       var i, j, t, xLTy,
         x = this,
         a = x.s;
@@ -2123,7 +2123,7 @@
      * Return a new BigNumber whose value is the value of this BigNumber multiplied by the value
      * of BigNumber(y, b).
      */
-    P.multipliedBy = P.times = function (y, b) {
+    P.multipliedBy = P.times = P.mul = function (y, b) {
       var c, e, i, j, k, m, xcL, xlo, xhi, ycL, ylo, yhi, zc,
         base, sqrtBase,
         x = this,
@@ -2225,7 +2225,7 @@
      * Return a new BigNumber whose value is the value of this BigNumber plus the value of
      * BigNumber(y, b).
      */
-    P.plus = function (y, b) {
+    P.plus = P.add = function (y, b) {
       var t,
         x = this,
         a = x.s;
