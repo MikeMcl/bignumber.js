@@ -238,6 +238,8 @@ export namespace BigNumber {
      *   FORMAT: {
      *     // string to prepend
      *     prefix: '',
+     *     // string sign for negative value
+     *     minusSign: '-',
      *     // the decimal separator
      *     decimalSeparator: '.',
      *     // the grouping separator of the integer part
@@ -284,6 +286,9 @@ export namespace BigNumber {
 
     /** The string to prepend. */
     prefix?: string;
+
+    /** The string sign for negative value. */
+    minusSign?: string;
 
     /** The decimal separator. */
     decimalSeparator?: string;

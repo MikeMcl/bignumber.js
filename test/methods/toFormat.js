@@ -7,6 +7,7 @@ Test('toFormat', function () {
     }
 
     var format = {
+        minusSign: '-',
         decimalSeparator: '.',
         groupSeparator: ',',
         groupSize: 3,
@@ -68,6 +69,21 @@ Test('toFormat', function () {
 
     t('76,852.342091', '7.6852342091e+4');
 
+    format.minusSign = '−';
+    
+    t('1', 1);
+    t('−1', -1);
+    t('123.456', 123.456);
+    t('−123.456', -123.456);
+    t('76,852.342091', '7.6852342091e+4');
+    t('−76,852.342091', '-7.6852342091e+4');
+    t('999,999,999,999,999', 999999999999999);
+    t('−999,999,999,999,999', -999999999999999);
+    t('NaN', NaN);
+    t('Infinity', 1/0);
+    t('−Infinity', -1/0);
+
+    format.minusSign = '-';
     format.groupSeparator = ' ';
 
     t('76 852.34', '7.6852342091e+4', 2);

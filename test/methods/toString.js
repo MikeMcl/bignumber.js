@@ -13,8 +13,23 @@ Test('toString', function () {
         ROUNDING_MODE: 4,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9,
-        ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'
+        ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz',
+        FORMAT: {minusSign: '−'}
     });
+	
+    t('NaN', NaN);
+    t('Infinity', 1/0);
+    t('−Infinity', -1/0);
+	t('1', 1);
+    t('−1', -1);
+    t('123.456', 123.456);
+    t('−123.456', -123.456);
+    t('76852.342091', '7.6852342091e+4');
+    t('−76852.342091', '-7.6852342091e+4');
+    t('999999999999999', 999999999999999);
+    t('−999999999999999', -999999999999999);
+	
+	BigNumber.config({FORMAT: {minusSign: '-'}});
 
     t('NaN', NaN);
     t('Infinity', 1/0);

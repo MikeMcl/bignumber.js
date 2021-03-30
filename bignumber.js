@@ -150,6 +150,7 @@
       // The format specification used by the BigNumber.prototype.toFormat method.
       FORMAT = {
         prefix: '',
+        minusSign: '-',
         groupSize: 3,
         secondaryGroupSize: 0,
         groupSeparator: ',',
@@ -409,6 +410,7 @@
      *                                       not contain '.'.
      *   FORMAT           {object}           An object with some of the following properties:
      *     prefix                 {string}
+     *     minusSign              {string}
      *     groupSize              {number}
      *     secondaryGroupSize     {number}
      *     groupSeparator         {string}
@@ -2517,6 +2519,7 @@
      *
      * FORMAT = {
      *   prefix: '',
+     *   minusSign: '-',
      *   groupSize: 3,
      *   secondaryGroupSize: 0,
      *   groupSeparator: ',',
@@ -2559,6 +2562,7 @@
           arr = str.split('.'),
           g1 = +format.groupSize,
           g2 = +format.secondaryGroupSize,
+          minusSign = format.minusSign || '-',
           groupSeparator = format.groupSeparator || '',
           intPart = arr[0],
           fractionPart = arr[1],
@@ -2573,7 +2577,7 @@
           intPart = intDigits.substr(0, i);
           for (; i < len; i += g1) intPart += groupSeparator + intDigits.substr(i, g1);
           if (g2 > 0) intPart += groupSeparator + intDigits.slice(i);
-          if (isNeg) intPart = '-' + intPart;
+          if (isNeg) intPart = minusSign + intPart;
         }
 
         str = fractionPart
@@ -2709,7 +2713,7 @@
       if (e === null) {
         if (s) {
           str = 'Infinity';
-          if (s < 0) str = '-' + str;
+          if (s < 0) str = (FORMAT.minusSign || '-') + str;
         } else {
           str = 'NaN';
         }
@@ -2726,7 +2730,7 @@
           str = convertBase(toFixedPoint(coeffToString(n.c), e, '0'), 10, b, s, true);
         }
 
-        if (s < 0 && n.c[0]) str = '-' + str;
+        if (s < 0 && n.c[0]) str = (FORMAT.minusSign || '-') + str;
       }
 
       return str;
