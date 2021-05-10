@@ -2538,6 +2538,7 @@
      */
     P.toFormat = function (dp, rm, format) {
       var str,
+        isNeg,
         x = this;
 
       if (format == null) {
@@ -2556,18 +2557,18 @@
       }
 
       str = x.toFixed(dp, rm);
-
+      isNeg = x.s < 0;
+      str = isNeg ? str.slice(1) : str;
+      
       if (x.c) {
         var i,
           arr = str.split('.'),
           g1 = +format.groupSize,
           g2 = +format.secondaryGroupSize,
-          minusSign = format.minusSign || '-',
           groupSeparator = format.groupSeparator || '',
           intPart = arr[0],
           fractionPart = arr[1],
-          isNeg = x.s < 0,
-          intDigits = isNeg ? intPart.slice(1) : intPart,
+          intDigits = intPart,
           len = intDigits.length;
 
         if (g2) i = g1, g1 = g2, g2 = i, len -= i;
@@ -2577,7 +2578,6 @@
           intPart = intDigits.substr(0, i);
           for (; i < len; i += g1) intPart += groupSeparator + intDigits.substr(i, g1);
           if (g2 > 0) intPart += groupSeparator + intDigits.slice(i);
-          if (isNeg) intPart = minusSign + intPart;
         }
 
         str = fractionPart
@@ -2587,6 +2587,7 @@
           : fractionPart)
          : intPart;
       }
+      if (isNeg) str = (format.minusSign || '-') + str;
 
       return (format.prefix || '') + str + (format.suffix || '');
     };
