@@ -2713,7 +2713,7 @@
       if (e === null) {
         if (s) {
           str = 'Infinity';
-          if (s < 0) str = (FORMAT.minusSign || '-') + str;
+          if (s < 0) str = '-' + str;
         } else {
           str = 'NaN';
         }
@@ -2730,7 +2730,7 @@
           str = convertBase(toFixedPoint(coeffToString(n.c), e, '0'), 10, b, s, true);
         }
 
-        if (s < 0 && n.c[0]) str = (FORMAT.minusSign || '-') + str;
+        if (s < 0 && n.c[0]) str = '-' + str;
       }
 
       return str;
