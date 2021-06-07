@@ -12,4 +12,5 @@ Test('sum', function () {
     t(expectedSum, BigNumber.sum(new BigNumber(100), new BigNumber(200), new BigNumber(300)));
     t(expectedSum, BigNumber.sum(100, '200', new BigNumber(300)));
     t(expectedSum, BigNumber.sum(99.9, 200.05, 300.05));
+    t(new BigNumber(0), BigNumber.sum());
 });
