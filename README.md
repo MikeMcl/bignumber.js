@@ -4,7 +4,6 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 [![npm version](https://img.shields.io/npm/v/bignumber.js.svg)](https://www.npmjs.com/package/bignumber.js)
 [![npm downloads](https://img.shields.io/npm/dw/bignumber.js)](https://www.npmjs.com/package/bignumber.js)
-[![build status](https://travis-ci.org/MikeMcl/bignumber.js.svg)](https://travis-ci.org/MikeMcl/bignumber.js)
 
 <br />
 
