@@ -50,7 +50,7 @@ import BigNumber from './path/to/bignumber.mjs';
 ### [Node.js](http://nodejs.org):
 
 ```bash
-$ npm install bignumber.js
+npm install bignumber.js
 ```
 
 ```javascript
