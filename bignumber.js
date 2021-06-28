@@ -799,9 +799,9 @@
      * arguments {number|string|BigNumber}
      */
     BigNumber.sum = function () {
-      var i = 1,
+      var i = 0,
         args = arguments,
-        sum = new BigNumber(args[0]);
+        sum = new BigNumber(0);
       for (; i < args.length;) sum = sum.plus(args[i++]);
       return sum;
     };
