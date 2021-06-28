@@ -13,7 +13,7 @@ Test('toString', function () {
         ROUNDING_MODE: 4,
         RANGE: 1E9,
         EXPONENTIAL_AT: 1E9,
-        ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'
+        ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz',
     });
 
     t('NaN', NaN);
