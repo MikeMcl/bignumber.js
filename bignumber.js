@@ -2742,6 +2742,116 @@
     };
 
 
+    /*
+     * Shifts the integer part of this BigNumber in binary representation {n} bits to the left.
+     */
+    P.bitShiftLeft = function (n) {
+      n = new BigNumber(n).integerValue().toNumber();
+      var dec = this.modulo(1);
+      var int = this.integerValue();
+      var bits = int.toString(2);
+      bits += repeat('0', n);
+      return new BigNumber(bits, 2).plus(dec);
+    };
+
+
+    /*
+     * Shifts the integer part of this BigNumber in binary representation {n} bits to the right.
+     */
+    P.bitShiftRight = function (n) {
+      n = new BigNumber(n).integerValue().toNumber();
+      var dec = this.modulo(1);
+      var int = this.integerValue();
+      var bits = int.toString(2);
+      bits = bits.slice(0, Math.max(bits.length - n, 0));
+      if (bits === '-') bits = '0'
+      return new BigNumber(bits, 2).plus(dec);
+    };
+
+
+    /*
+     * Returns a one in each bit position for which the corresponding bits of the integer part
+     * of this BigNumber and {a} are ones.
+     */
+    P.and = function (a) {
+      var aBN = new BigNumber(a);
+      var aBits = aBN.abs().integerValue().toString(2);
+      var dec = this.modulo(1);
+      var posInt = this.integerValue().abs();
+      var bits = posInt.toString(2);
+      var aBitsLen = aBits.length;
+      var bitsLen = bits.length;
+      var finalBits = '0';
+      if (aBitsLen < bitsLen) aBits = repeat('0', bitsLen - aBitsLen) + aBits;
+      else if (aBitsLen > bitsLen) bits = repeat('0', aBitsLen - bitsLen) + bits;
+      for (var i = 0; i < bitsLen; i++) {
+          if (aBits[i] & bits[i]) finalBits += '1';
+          else finalBits += '0';
+      };
+      if (this.isNegative() & aBN.isNegative()) finalBits = '-' + finalBits;
+      return new BigNumber(finalBits, 2).plus(dec);
+    };
+
+
+    /*
+     * Returns a one in each bit position for which the corresponding bits of either, or both,
+     * the integer part of this BigNumber or {a} are ones.
+     */
+    P.or = function (a) {
+      var aBN = new BigNumber(a);
+      var aBits = aBN.abs().integerValue().toString(2);
+      var dec = this.modulo(1);
+      var posInt = this.integerValue().abs();
+      var bits = posInt.toString(2);
+      var aBitsLen = aBits.length;
+      var bitsLen = bits.length;
+      var finalBits = '0';
+      if (aBitsLen < bitsLen) aBits = repeat('0', bitsLen - aBitsLen) + aBits;
+      else if (aBitsLen > bitsLen) bits = repeat('0', aBitsLen - bitsLen) + bits;
+      for (var i = 0; i < bitsLen; i++) {
+        if (aBits[i] | bits[i]) finalBits += '1';
+        else finalBits += '0';
+      };
+      if (this.isNegative() | aBN.isNegative()) finalBits = '-' + finalBits;
+      return new BigNumber(finalBits, 2).plus(dec);
+    };
+
+
+    /*
+     * Returns a one in each bit position for which the corresponding bits of either, but not both,
+     * the integer part of this BigNumber or {a} are ones.
+     */
+    P.xor = function (a) {
+      var aBN = new BigNumber(a);
+      var aBits = aBN.abs().integerValue().toString(2);
+      var dec = this.modulo(1);
+      var posInt = this.integerValue().abs();
+      var bits = posInt.toString(2);
+      var aBitsLen = aBits.length;
+      var bitsLen = bits.length;
+      var finalBits = '0';
+      if (aBitsLen < bitsLen) aBits = repeat('0', bitsLen - aBitsLen) + aBits;
+      else if (aBitsLen > bitsLen) bits = repeat('0', aBitsLen - bitsLen) + bits;
+      for (var i = 0; i < bitsLen; i++) {
+        if (aBits[i] ^ bits[i]) finalBits += '1';
+        else finalBits += '0';
+      };
+      if (this.isNegative() ^ aBN.isNegative()) finalBits = '-' + finalBits;
+      return new BigNumber(finalBits, 2).plus(dec);
+    };
+
+
+    /*
+     * Inverts the bits of the integer part of this BigNumber.
+     */
+    P.not = function () {
+      var dec = this.modulo(1);
+      var int = this.integerValue();
+      var not = int.plus(1).negated();
+      return new BigNumber(not, 2).plus(dec);
+    };
+
+
     P._isBigNumber = true;
 
     if (configObject != null) BigNumber.set(configObject);
@@ -2874,6 +2984,16 @@
     }
 
     return str;
+  }
+
+
+
+  function repeat(str, n) {
+    var res = '';
+    for (var i = 0; i < n; i++) {
+      res += str;
+    };
+    return res
   }
 
 
