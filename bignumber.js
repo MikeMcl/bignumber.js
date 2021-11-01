@@ -2776,19 +2776,28 @@
     P.and = function (a) {
       var aBN = new BigNumber(a);
       var aBits = aBN.abs().integerValue().toString(2);
-      var dec = this.modulo(1);
-      var posInt = this.integerValue().abs();
-      var bits = posInt.toString(2);
+      var bits = this.integerValue().abs().toString(2);
+
       var aBitsLen = aBits.length;
       var bitsLen = bits.length;
-      var finalBits = '0';
-      if (aBitsLen < bitsLen) aBits = repeat('0', bitsLen - aBitsLen) + aBits;
-      else if (aBitsLen > bitsLen) bits = repeat('0', aBitsLen - bitsLen) + bits;
-      for (var i = 0; i < bitsLen; i++) {
-          if (aBits[i] & bits[i]) finalBits += '1';
-          else finalBits += '0';
+      var finalBits = '';
+
+      if (aBitsLen < bitsLen) {
+        aBits = repeat('0', bitsLen - aBitsLen) + aBits;
+      } else if (aBitsLen > bitsLen) {
+        bits = repeat('0', aBitsLen - bitsLen) + bits;
+      }
+
+      for (var i = 0; i < aBits.length; i++) {
+        finalBits += aBits[i] & bits[i];
       };
-      if (this.isNegative() & aBN.isNegative()) finalBits = '-' + finalBits;
+
+      if (this.isNegative() & aBN.isNegative()) {
+        finalBits = '-' + finalBits;
+      }
+
+      var dec = this.modulo(1);
+
       return new BigNumber(finalBits, 2).plus(dec);
     };
 
