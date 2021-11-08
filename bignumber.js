@@ -2866,9 +2866,11 @@
      */
     P.not = function () {
       var dec = this.modulo(1);
-      var int = this.integerValue();
-      var not = int.plus(1).negated();
-      return new BigNumber(not, 2).plus(dec);
+      var intPart = this.integerValue().plus(1);
+      if (intPart.isEqualTo(0)) {
+        return intPart.plus(dec);
+      }
+      return intPart.negated().plus(dec);
     };
 
 
