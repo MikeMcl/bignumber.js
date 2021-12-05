@@ -1827,3 +1827,5 @@ export declare class BigNumber implements BigNumber.Instance {
    */
   static set(object: BigNumber.Config): BigNumber.Config;
 }
+
+export function BigNumber(n: BigNumber.Value, base?: number): BigNumber;
