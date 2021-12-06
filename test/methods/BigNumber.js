@@ -622,10 +622,10 @@ Test('bigNumber', function () {
     BigNumber.config({ALPHABET: 'xy'});
 
     t('1', 'y', 2);    // 1
-    t('2', 'yx', 2);   // 10
-    t('3', 'yy', 2);   // 11
-    t('4', 'yxx', 2);  // 100
-    t('5', 'yxy', 2);  // 101
+    t('2', 'Yx', 2);   // 10
+    t('3', 'yY', 2);   // 11
+    t('4', 'YxX', 2);  // 100
+    t('5', 'yXy', 2);  // 101
 
     BigNumber.config({ALPHABET: '0123456789*#'});
 
