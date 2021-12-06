@@ -2873,9 +2873,6 @@
       c = alphabet.charAt(i);
       for (j = 0; j < i; j++) {
         d = alphabet.charAt(j);
-        if (c === d) {
-          throw new Error(bignumberError + 'Duplicate character in alphabet: ' + c);
-        }
         if (c.toLowerCase() === d.toLowerCase()) {
           caseSensitive = true;
         }
