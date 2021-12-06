@@ -162,7 +162,7 @@
       // The alphabet used for base conversion. It must be at least 2 characters long, with no '+',
       // '-', '.', whitespace, or repeated character.
       // '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_'
-      ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
+      ALPHABET = createAlphabet('0123456789abcdefghijklmnopqrstuvwxyz');
 
 
     //------------------------------------------------------------------------------------------
@@ -179,8 +179,7 @@
      * [b] {number} The base of v. Integer, 2 to ALPHABET.length inclusive.
      */
     function BigNumber(v, b) {
-      var alphabet, c, caseChanged, e, i, isNum, len, str,
-        x = this;
+      var c, e, i, isNum, len, str, x = this;
 
       // Enable constructor call without `new`.
       if (!(x instanceof BigNumber)) return new BigNumber(v, b);
@@ -252,7 +251,7 @@
 
         // Allow exponential notation to be used with base 10 argument, while
         // also rounding to DECIMAL_PLACES as with other bases.
-        if (b == 10) {
+        if (b == 10 && ALPHABET.decimalCompatible) {
           x = new BigNumber(v);
           return round(x, DECIMAL_PLACES + x.e + 1, ROUNDING_MODE);
         }
@@ -275,28 +274,17 @@
           x.s = str.charCodeAt(0) === 45 ? (str = str.slice(1), -1) : 1;
         }
 
-        alphabet = ALPHABET.slice(0, b);
         e = i = 0;
 
         // Check that str is a valid base b number.
         // Don't use RegExp, so alphabet can contain special characters.
         for (len = str.length; i < len; i++) {
-          if (alphabet.indexOf(c = str.charAt(i)) < 0) {
+          if (ALPHABET.charIndex(c = str.charAt(i), b) < 0) {
             if (c == '.') {
 
               // If '.' is not the first character and it has not be found before.
               if (i > e) {
                 e = len;
-                continue;
-              }
-            } else if (!caseChanged) {
-
-              // Allow e.g. hexadecimal 'FF' as well as 'ff'.
-              if (str == str.toUpperCase() && (str = str.toLowerCase()) ||
-                  str == str.toLowerCase() && (str = str.toUpperCase())) {
-                caseChanged = true;
-                i = -1;
-                e = 0;
                 continue;
               }
             }
@@ -544,7 +532,7 @@
             // Disallow if less than two characters,
             // or if it contains '+', '-', '.', whitespace, or a repeated character.
             if (typeof v == 'string' && !/^.?$|[+\-.\s]|(.).*\1/.test(v)) {
-              ALPHABET = v;
+              ALPHABET = createAlphabet(v);
             } else {
               throw Error
                (bignumberError + p + ' invalid: ' + v);
@@ -568,7 +556,7 @@
         MODULO_MODE: MODULO_MODE,
         POW_PRECISION: POW_PRECISION,
         FORMAT: FORMAT,
-        ALPHABET: ALPHABET
+        ALPHABET: ALPHABET.original
       };
     };
 
@@ -812,7 +800,7 @@
 
     // Called by BigNumber and BigNumber.prototype.toString.
     convertBase = (function () {
-      var decimal = '0123456789';
+      var decimal = createAlphabet('0123456789');
 
       /*
        * Convert string of baseIn to an array of numbers of baseOut.
@@ -829,7 +817,7 @@
         for (; i < len;) {
           for (arrL = arr.length; arrL--; arr[arrL] *= baseIn);
 
-          arr[0] += alphabet.indexOf(str.charAt(i++));
+          arr[0] += alphabet.charIndex(str.charAt(i++));
 
           for (j = 0; j < arr.length; j++) {
 
@@ -2874,6 +2862,50 @@
     }
 
     return str;
+  }
+
+
+  function createAlphabet(alphabet) {
+    var i, j, c, d, caseSensitive, lowerAlphabet;
+
+    // check if alphabet is case-sensitive
+    for (i = 0; i < alphabet.length; i++) {
+      c = alphabet.charAt(i);
+      for (j = 0; j < i; j++) {
+        d = alphabet.charAt(j);
+        if (c === d) {
+          throw new Error(bignumberError + 'Duplicate character in alphabet: ' + c);
+        }
+        if (c.toLowerCase() === d.toLowerCase()) {
+          caseSensitive = true;
+        }
+      }
+    }
+
+    if (!caseSensitive) {
+      lowerAlphabet = alphabet.toLowerCase();
+    }
+
+    function charAt(i) {
+      return alphabet.charAt(i);
+    }
+
+    // case-insensitive version of indexOf
+    function charIndex(c, b) {
+      var i = caseSensitive
+        ? alphabet.indexOf(c)
+        : lowerAlphabet.indexOf(c.toLowerCase());
+
+      return !b || i < b ? i : -1;
+    }
+
+    return {
+      original: alphabet,
+      decimalCompatible: alphabet.slice(0, 10) === '0123456789',
+      length: alphabet.length,
+      charAt: charAt,
+      charIndex: charIndex,
+    };
   }
 
 
