@@ -32,7 +32,7 @@ See also [decimal.js](https://github.com/MikeMcl/decimal.js/), which among other
 
 The library is the single JavaScript file *bignumber.js* or ES module *bignumber.mjs*.
 
-### Browser:
+### Browser
 
 ```html
 <script src='path/to/bignumber.js'></script>
@@ -43,14 +43,18 @@ The library is the single JavaScript file *bignumber.js* or ES module *bignumber
 ```html
 <script type="module">
 import BigNumber from './path/to/bignumber.mjs';
-...
-</script>
 ```
 
-### [Node.js](http://nodejs.org):
+> Get a minified version from a CDN:
+
+```html
+<script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.0.2/bignumber.min.js'></script>
+```
+
+### [Node.js](http://nodejs.org)
 
 ```bash
-$ npm install bignumber.js
+npm install bignumber.js
 ```
 
 ```javascript
@@ -61,8 +65,17 @@ const BigNumber = require('bignumber.js');
 
 ```javascript
 import BigNumber from "bignumber.js";
-// or
+// or maybe
 import { BigNumber } from "bignumber.js";
+// else
+import { BigNumber } from "./node_modules/bignumber.js/bignumber.mjs";
+```
+
+### [Deno](https://deno.land/)
+
+```javascript
+import BigNumber from 'https://raw.githubusercontent.com/mikemcl/bignumber.js/v9.0.2/bignumber.mjs';
+import BigNumber from 'https://unpkg.com/bignumber.js@latest/bignumber.mjs';
 ```
 
 ## Use
@@ -239,31 +252,35 @@ The *test/modules* directory contains the test scripts for each method.
 
 The tests can be run with Node.js or a browser. For Node.js use
 
-    $ npm test
+```bash
+npm test
+```
 
 or
 
-    $ node test/test
+```bash
+node test/test
+```
 
 To test a single method, use, for example
 
-    $ node test/methods/toFraction
+```bash
+node test/methods/toFraction
+```
 
 For the browser, open *test/test.html*.
 
-## Build
+## Minify
 
-For Node, if [uglify-js](https://github.com/mishoo/UglifyJS2) is installed
+To minify using, for example, [terser](https://github.com/terser/terser)
 
-    npm install uglify-js -g
+```bash
+npm install -g terser
+```
 
-then
-
-    npm run build
-
-will create *bignumber.min.js*.
-
-A source map will also be created in the root directory.
+```bash
+terser big.js -c -m -o big.min.js
+```
 
 ## Licence
 
