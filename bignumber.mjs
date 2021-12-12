@@ -48,7 +48,6 @@
 
 var
   isNumeric = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i,
-
   mathceil = Math.ceil,
   mathfloor = Math.floor,
 
@@ -143,7 +142,7 @@ function clone(configObject) {
 
     // The maximum number of significant digits of the result of the exponentiatedBy operation.
     // If POW_PRECISION is 0, there will be unlimited significant digits.
-    POW_PRECISION = 0,                    // 0 to MAX
+    POW_PRECISION = 0,                       // 0 to MAX
 
     // The format specification used by the BigNumber.prototype.toFormat method.
     FORMAT = {
@@ -153,14 +152,15 @@ function clone(configObject) {
       groupSeparator: ',',
       decimalSeparator: '.',
       fractionGroupSize: 0,
-      fractionGroupSeparator: '\xA0',      // non-breaking space
+      fractionGroupSeparator: '\xA0',        // non-breaking space
       suffix: ''
     },
 
     // The alphabet used for base conversion. It must be at least 2 characters long, with no '+',
     // '-', '.', whitespace, or repeated character.
     // '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_'
-    ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
+    ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz',
+    alphabetHasNormalDecimalDigits = true;
 
 
   //------------------------------------------------------------------------------------------
@@ -250,7 +250,7 @@ function clone(configObject) {
 
       // Allow exponential notation to be used with base 10 argument, while
       // also rounding to DECIMAL_PLACES as with other bases.
-      if (b == 10) {
+      if (b == 10 && alphabetHasNormalDecimalDigits) {
         x = new BigNumber(v);
         return round(x, DECIMAL_PLACES + x.e + 1, ROUNDING_MODE);
       }
@@ -404,7 +404,7 @@ function clone(configObject) {
    *   MODULO_MODE      {number}           0 to 9
    *   POW_PRECISION       {number}           0 to MAX
    *   ALPHABET         {string}           A string of two or more unique characters which does
-   *                                     not contain '.'.
+   *                                       not contain '.'.
    *   FORMAT           {object}           An object with some of the following properties:
    *     prefix                 {string}
    *     groupSize              {number}
@@ -539,9 +539,10 @@ function clone(configObject) {
         if (obj.hasOwnProperty(p = 'ALPHABET')) {
           v = obj[p];
 
-          // Disallow if only one character,
+          // Disallow if less than two characters,
           // or if it contains '+', '-', '.', whitespace, or a repeated character.
-          if (typeof v == 'string' && !/^.$|[+-.\s]|(.).*\1/.test(v)) {
+          if (typeof v == 'string' && !/^.?$|[+\-.\s]|(.).*\1/.test(v)) {
+            alphabetHasNormalDecimalDigits = v.slice(0, 10) == '0123456789';
             ALPHABET = v;
           } else {
             throw Error
@@ -2716,7 +2717,7 @@ function clone(configObject) {
         str = e <= TO_EXP_NEG || e >= TO_EXP_POS
          ? toExponential(coeffToString(n.c), e)
          : toFixedPoint(coeffToString(n.c), e, '0');
-      } else if (b === 10) {
+      } else if (b === 10 && alphabetHasNormalDecimalDigits) {
         n = round(new BigNumber(n), DECIMAL_PLACES + e + 1, ROUNDING_MODE);
         str = toFixedPoint(coeffToString(n.c), n.e, '0');
       } else {

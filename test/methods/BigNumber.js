@@ -178,7 +178,7 @@ Test('bigNumber', function () {
     tx(function () {new BigNumber('0 o1')}, "0 o1");
     tx(function () {new BigNumber('0o 1')}, "0o 1");
     tx(function () {new BigNumber('0-o1')}, "0o-1");
-    tx(function () {new BigNumber('0o1', 16)}, "001, 16");
+    tx(function () {new BigNumber('0o1', 16)}, "0o1, 16");
     tx(function () {new BigNumber('--45')}, "--45");
     tx(function () {new BigNumber('+-2')}, "+-2");
     tx(function () {new BigNumber('0 0')}, "0 0");
@@ -626,6 +626,9 @@ Test('bigNumber', function () {
     t('3', 'yy', 2);   // 11
     t('4', 'yxx', 2);  // 100
     t('5', 'yxy', 2);  // 101
+    
+    t('2', 'YX', 2);   // 10
+    tx(function () {new BigNumber('xX', 2).toString()}, "('xX', 2)");
 
     BigNumber.config({ALPHABET: '0123456789*#'});
 
