@@ -1,3 +1,9 @@
+#### 9.0.2
+* 12/12/21
+* #250 [BUGFIX] Allow use of user-defined alphabet for base 10.
+* #295 Remove *bignumber.min.js* and amend *README.md*.
+* Update *.travis.yml* and *LICENCE.md*.
+
 #### 9.0.1
 * 28/09/20
 * [BUGFIX] #276 Correct `sqrt` initial estimate.
