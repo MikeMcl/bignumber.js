@@ -2774,29 +2774,7 @@
      * of this BigNumber and {a} are ones.
      */
     P.and = function (a) {
-      var aBN = new BigNumber(a);
-      var aBits = aBN.abs().integerValue().toString(2);
-      var bits = this.integerValue().abs().toString(2);
-
-      var finalBits = '';
-
-      if (aBits.length < bits.length) {
-        aBits = repeat('0', bits.length - aBits.length) + aBits;
-      } else if (aBits.length > bits.length) {
-        bits = repeat('0', aBits.length - bits.length) + bits;
-      }
-
-      for (var i = 0; i < aBits.length; i++) {
-        finalBits += aBits[i] & bits[i];
-      };
-
-      if (this.isNegative() & aBN.isNegative()) {
-        finalBits = '-' + finalBits;
-      }
-
-      var dec = this.modulo(1);
-
-      return new BigNumber(finalBits, 2).plus(dec);
+      return bitwiseOperation(new BigNumber(a), this, 'and');
     };
 
 
@@ -2805,29 +2783,7 @@
      * the integer part of this BigNumber or {a} are ones.
      */
     P.or = function (a) {
-      var aBN = new BigNumber(a);
-      var aBits = aBN.abs().integerValue().toString(2);
-      var bits = this.integerValue().abs().toString(2);
-
-      var finalBits = '0';
-
-      if (aBits.length < bits.length) {
-        aBits = repeat('0', bits.length - aBits.length) + aBits;
-      } else if (aBits.length > bits.length) {
-        bits = repeat('0', aBits.length - bits.length) + bits;
-      }
-
-      for (var i = 0; i < aBits.length; i++) {
-        finalBits += aBits[i] | bits[i];
-      };
-
-      if (this.isNegative() | aBN.isNegative()) {
-        finalBits = '-' + finalBits;
-      }
-
-      var dec = this.modulo(1);
-
-      return new BigNumber(finalBits, 2).plus(dec);
+      return bitwiseOperation(new BigNumber(a), this, 'or');
     };
 
 
@@ -2836,28 +2792,7 @@
      * the integer part of this BigNumber or {a} are ones.
      */
     P.xor = function (a) {
-      var aBN = new BigNumber(a);
-      var aBits = aBN.abs().integerValue().toString(2);
-      var bits = this.integerValue().abs().toString(2);
-
-      var finalBits = '0';
-
-      if (aBits.length < bits.length) {
-        aBits = repeat('0', bits.length - aBits.length) + aBits;
-      } else if (aBits.length > bits.length) {
-        bits = repeat('0', aBits.length - bits.length) + bits;
-      }
-
-      for (var i = 0; i < aBits.length; i++) {
-        finalBits += aBits[i] ^ bits[i];
-      };
-
-      if (this.isNegative() ^ aBN.isNegative()) {
-        finalBits = '-' + finalBits;
-      }
-
-      var dec = this.modulo(1);
-      return new BigNumber(finalBits, 2).plus(dec);
+      return bitwiseOperation(new BigNumber(a), this, 'xor');
     };
 
 
@@ -2887,6 +2822,35 @@
   // These functions don't need access to variables,
   // e.g. DECIMAL_PLACES, in the scope of the `clone` function above.
 
+  function bitwiseOperation(a, b, operator) {
+    var aBits = a.abs().integerValue().toString(2);
+    var bits = b.integerValue().abs().toString(2);
+
+    var finalBits = '0';
+
+    if (aBits.length < bits.length) {
+      aBits = repeat('0', bits.length - aBits.length) + aBits;
+    } else if (aBits.length > bits.length) {
+      bits = repeat('0', aBits.length - bits.length) + bits;
+    }
+
+    var operations = {
+      'and': (a, b) => a & b,
+      'or': (a, b) => a | b,
+      'xor': (a, b) => a ^ b,
+    }
+
+    for (var i = 0; i < aBits.length; i++) {
+      finalBits += operations[operator](aBits[i], bits[i]);
+    };
+
+    if (b.isNegative() ^ a.isNegative()) {
+      finalBits = '-' + finalBits;
+    }
+
+    var dec = b.modulo(1);
+    return new BigNumber(finalBits, 2).plus(dec);
+  } 
 
   function bitFloor(n) {
     var i = n | 0;
