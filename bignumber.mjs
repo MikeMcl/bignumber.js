@@ -185,7 +185,7 @@ function clone(configObject) {
 
     if (b == null) {
 
-      if (v && v._isBigNumber === true) {
+      if (v && typeof v.c !== "undefined" && typeof v.s !== "undefined" && typeof v.e !== "undefined") {
         x.s = v.s;
 
         if (!v.c || v.e > MAX_EXP) {
