@@ -24,6 +24,15 @@
   "module": "bignumber.mjs",
   "browser": "bignumber.js",
   "types": "bignumber.d.ts",
+  "exports": {
+    ".": {
+      "require": "./bignumber.js",
+      "import": "./bignumber.mjs",
+      "browser": "./bignumber.js",
+      "types": "./bignumber.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
   "author": {
     "name": "Michael Mclaughlin",
     "email": "M8ch88l@gmail.com"
