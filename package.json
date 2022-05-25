@@ -26,10 +26,10 @@
   "types": "bignumber.d.ts",
   "exports": {
     ".": {
+      "types": "./bignumber.d.ts",
       "require": "./bignumber.js",
       "import": "./bignumber.mjs",
-      "browser": "./bignumber.js",
-      "types": "./bignumber.d.ts"
+      "browser": "./bignumber.js"
     },
     "./package.json": "./package.json"
   },
