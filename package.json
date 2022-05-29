@@ -31,6 +31,8 @@
       "import": "./bignumber.mjs",
       "browser": "./bignumber.js"
     },
+    "./bignumber.mjs": "./bignumber.mjs",
+    "./bignumber.js": "./bignumber.js",
     "./package.json": "./package.json"
   },
   "author": {
