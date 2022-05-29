@@ -195,14 +195,20 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       is a numeric value in the specified <code>base</code>, or base <code>10</code> if
       <code>base</code> is omitted or is <code>null</code> or <code>undefined</code>.
     </p>
+    <p>
+      Note that the BigNnumber constructor accepts an <code>n</code> of type <em>number</em> purely
+      as a convenience so that string quotes don't have to be typed when entering literal values,
+      and that it is the <code>toString</code> value of <code>n</code> that is used rather than its
+      underlying binary floating point value converted to decimal. 
+    </p>
     <pre>
 x = new BigNumber(123.4567)                // '123.4567'
 // 'new' is optional
 y = BigNumber(x)                           // '123.4567'</pre>
     <p>
-      If <code>n</code> is a base <code>10</code> value it can be in normal (fixed-point) or
-      exponential notation. Values in other bases must be in normal notation. Values in any base can
-      have fraction digits, i.e. digits after the decimal point.
+      If <code>n</code> is a base <code>10</code> value it can be in normal or exponential notation.
+      Values in other bases must be in normal notation. Values in any base can have fraction digits,
+      i.e. digits after the decimal point.
     </p>
     <pre>
 new BigNumber(43210)                       // '43210'
@@ -257,7 +263,7 @@ new BigNumber(9, 2)                        // 'NaN'</pre>
     <p>
       To aid in debugging, if <code>BigNumber.DEBUG</code> is <code>true</code> then an error will
       be thrown on an invalid <code>n</code>. An error will also be thrown if <code>n</code> is of
-      type <em>number</em> with more than <code>15</code> significant digits, as calling
+      type <em>number</em> and has more than <code>15</code> significant digits, as calling
       <code><a href='#toS'>toString</a></code> or <code><a href='#valueOf'>valueOf</a></code> on
       these numbers may not result in the intended value.
     </p>
@@ -325,9 +331,9 @@ BN.config({ DECIMAL_PLACES: 9 })</pre>
         Default value: <code>20</code>
       </dd>
       <dd>
-        The <u>maximum</u> number of decimal places of the results of operations involving
-        division, i.e. division, square root and base conversion operations, and power
-        operations with negative exponents.<br />
+        The <em>maximum</em> number of decimal places of the results of operations involving
+        division, i.e. division, square root and base conversion operations, and power operations
+        with negative exponents.<br />
       </dd>
       <dd>
       <pre>BigNumber.config({ DECIMAL_PLACES: 5 })
@@ -1331,7 +1337,7 @@ y.isPositive()                  // true</pre>
     </p>
     <pre>
 x = new BigNumber(-0)
-x.isZero() && x.isNegative()         // true
+x.isZero() &amp;&amp; x.isNegative()         // true
 y = new BigNumber(Infinity)
 y.isZero()                      // false</pre>
     <p>Note: <code>n == 0</code> can be used if <code>n &gt;= Number.MIN_VALUE</code>.</p>
@@ -1454,7 +1460,7 @@ x.plus('0.1', 8)                // '0.225'</pre>
     <p>
       If <code>d</code> is omitted or is <code>null</code> or <code>undefined</code>, the return
       value is the number of significant digits of the value of this BigNumber, or <code>null</code>
-      if the value of this BigNumber is &plusmn;<code>Infinity</code> or <code>NaN</code>.</p>
+      if the value of this BigNumber is &plusmn;<code>Infinity</code> or <code>NaN</code>.
     </p>
     <p>
       If <code>d</code> is <code>true</code> then any trailing zeros of the integer
@@ -2158,7 +2164,7 @@ y.s                             // -1</pre>
 try {
   // ...
 } catch (e) {
-  if (e instanceof Error && e.message.indexOf('[BigNumber Error]') === 0) {
+  if (e instanceof Error &amp;&amp; e.message.indexOf('[BigNumber Error]') === 0) {
       // ...
   }
 }</pre>
