@@ -482,7 +482,10 @@ new BigNumber(0.0001)        // '0'          e is -4</pre>
       <dd>
       <pre>
 // Node.js
-global.crypto = require('crypto')
+const crypto = require('crypto');   // CommonJS
+import * as crypto from 'crypto';   // ES module
+
+global.crypto = crypto;
 
 BigNumber.config({ CRYPTO: true })
 BigNumber.config().CRYPTO       // true
@@ -776,7 +779,10 @@ BigNumber.min.apply(null, arr)                // '-15.9999'</pre>
       To be able to set <a href='#crypto'><code>CRYPTO</code></a> to <code>true</code> when using
       Node.js, the <code>crypto</code> object must be available globally:
     </p>
-    <pre>global.crypto = require('crypto')</pre>
+    <pre>// Node.js
+const crypto = require('crypto');   // CommonJS
+import * as crypto from 'crypto';   // ES module
+global.crypto = crypto;</pre>
     <p>
       If <a href='#crypto'><code>CRYPTO</code></a> is <code>true</code>, i.e. one of the
       <code>crypto</code> methods is to be used, the value of a returned BigNumber should be
