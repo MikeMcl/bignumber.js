@@ -517,7 +517,7 @@ export declare class BigNumber implements BigNumber.Instance {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  decimalPlaces(): number;
+  decimalPlaces(): number | null;
   decimalPlaces(decimalPlaces: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
@@ -550,7 +550,7 @@ export declare class BigNumber implements BigNumber.Instance {
    * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
-  dp(): number;
+  dp(): number | null;
   dp(decimalPlaces: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
