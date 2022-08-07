@@ -65,8 +65,6 @@ const BigNumber = require('bignumber.js');
 
 ```javascript
 import BigNumber from "bignumber.js";
-// or maybe
-import { BigNumber } from "bignumber.js";
 // else
 import { BigNumber } from "./node_modules/bignumber.js/bignumber.mjs";
 ```
