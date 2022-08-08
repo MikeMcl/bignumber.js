@@ -1,3 +1,12 @@
+#### 9.1.0
+* 08/08/22
+* #329 Remove `import` example.
+* #277 Resolve lint warnings and add number `toString` note.
+* Correct `decimalPlaces()` return type in *bignumber.d.ts*. 
+* Add ES module global `crypto` example.
+* #322 Add `exports` field to *package.json*.
+* #251 (#308) Amend *bignumber.d.ts* to allow instantiating a BigNumber without `new`.
+
 #### 9.0.2
 * 12/12/21
 * #250 [BUGFIX] Allow use of user-defined alphabet for base 10.
