@@ -283,4 +283,4 @@ terser big.js -c -m -o big.min.js
 
 The MIT Licence.
 
-See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
+See [LICENSE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENSE.md).
