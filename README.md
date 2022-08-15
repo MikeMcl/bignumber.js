@@ -279,8 +279,8 @@ npm install -g terser
 terser big.js -c -m -o big.min.js
 ```
 
-## Licence
+## License
 
-The MIT Licence.
+The MIT License.
 
 See [LICENSE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENSE.md).
