@@ -1648,7 +1648,7 @@ export declare class BigNumber implements BigNumber.Instance {
    *
    * @param object The configuration object.
    */
-  static config(object: BigNumber.Config): BigNumber.Config;
+  static config(object?: BigNumber.Config): BigNumber.Config;
 
   /**
    * Returns `true` if `value` is a BigNumber instance, otherwise returns `false`.
@@ -1825,7 +1825,7 @@ export declare class BigNumber implements BigNumber.Instance {
    *
    * @param object The configuration object.
    */
-  static set(object: BigNumber.Config): BigNumber.Config;
+  static set(object?: BigNumber.Config): BigNumber.Config;
 }
 
 export function BigNumber(n: BigNumber.Value, base?: number): BigNumber;
