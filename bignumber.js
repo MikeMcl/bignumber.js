@@ -1706,7 +1706,7 @@
 
         // The sign of the result of pow when x is negative depends on the evenness of n.
         // If +n overflows to ±Infinity, the evenness of n would be not be known.
-        y = new BigNumber(Math.pow(+valueOf(x), nIsBig ? 2 - isOdd(n) : +valueOf(n)));
+        y = new BigNumber(Math.pow(+valueOf(x), nIsBig ? n.s * (2 - isOdd(n)) : +valueOf(n)));
         return m ? y.mod(m) : y;
       }
 
@@ -2012,7 +2012,7 @@
         xc = yc;
         yc = t;
         y.s = -y.s;
-      }  
+      }
 
       b = (j = yc.length) - (i = xc.length);
 
@@ -2173,7 +2173,7 @@
         i = xcL;
         xcL = ycL;
         ycL = i;
-      }  
+      }
 
       // Initialise the result array with zeros.
       for (i = xcL + ycL, zc = []; i--; zc.push(0));
@@ -2299,7 +2299,7 @@
         yc = xc;
         xc = t;
         b = a;
-      }  
+      }
 
       // Only start adding at yc.length - 1 as the further digits of xc can be ignored.
       for (a = 0; b;) {
@@ -2590,7 +2590,7 @@
           g1 = g2;
           g2 = i;
           len -= i;
-        }  
+        }
 
         if (g1 > 0 && len > 0) {
           i = len % g1 || g1;

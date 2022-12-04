@@ -1,8 +1,12 @@
+#### 9.1.1
+* 04/12/22
+* #338 [BUGFIX] `exponentiatedBy`: ensure `0**-n === Infinity` for very large `n`.
+
 #### 9.1.0
 * 08/08/22
 * #329 Remove `import` example.
 * #277 Resolve lint warnings and add number `toString` note.
-* Correct `decimalPlaces()` return type in *bignumber.d.ts*. 
+* Correct `decimalPlaces()` return type in *bignumber.d.ts*.
 * Add ES module global `crypto` example.
 * #322 Add `exports` field to *package.json*.
 * #251 (#308) Amend *bignumber.d.ts* to allow instantiating a BigNumber without `new`.

@@ -40,6 +40,8 @@ Test('exponentiatedBy', function () {
     t('NaN', 0, NaN);
     t('0', 0, Infinity);
     t('Infinity', 0, -Infinity);
+    t('Infinity', 0, '-123456789012345');
+    t('Infinity', 0, '-12345678901234567890123456789012345678901234567890');
 
     //-0
     t('1', -0, +0);
@@ -51,6 +53,8 @@ Test('exponentiatedBy', function () {
     t('NaN', -0, NaN);
     t('0', -0, Infinity);
     t('Infinity', -0, -Infinity);
+    t('-Infinity', -0, '-123456789012345');
+    t('Infinity', -0, '-12345678901234567890123456789012345678901234567890');
 
     // 1
     t('1', 1, +0);
