@@ -16,6 +16,30 @@ Test('minimum and maximum', function () {
     Test.areEqual(BigNumber.maximum, BigNumber.max);
     Test.areEqual(BigNumber.minimum, BigNumber.min);
 
+    function isMinusZero(x) {
+        return x.isZero() && x.isNegative();
+    }
+
+    t(isMinusZero(BigNumber.min(-0, 0)));
+    t(isMinusZero(BigNumber.min(0, -0)));
+    t(isMinusZero(BigNumber.min('-0', '0')));
+    t(isMinusZero(BigNumber.min('0', '-0')));
+    t(isMinusZero(BigNumber.min(-0, 1, 0, 2)));
+    t(isMinusZero(BigNumber.min(0, 1, 2, -0)));
+    t(isMinusZero(BigNumber.min(2, 1, -0, 0)));
+
+    function isPositiveZero(x) {
+        return x.isZero() && x.isPositive();
+    }
+
+    t(isPositiveZero(BigNumber.max(-0, 0)));
+    t(isPositiveZero(BigNumber.max(0, -0)));
+    t(isPositiveZero(BigNumber.max('-0', '0')));
+    t(isPositiveZero(BigNumber.max('0', '-0')));
+    t(isPositiveZero(BigNumber.max(0, -1, -0, -2)));
+    t(isPositiveZero(BigNumber.max(0, -1, 0, -2, -0)));
+    t(isPositiveZero(BigNumber.max(-0, -1, -2, -0, 0)));
+
     t(!BigNumber.min(0, 0, 0).isNaN());
     t(BigNumber.min(NaN, -2, 0, -1).isNaN());
     t(BigNumber.max(NaN, -2, 0, -1).isNaN());

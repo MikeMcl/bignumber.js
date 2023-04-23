@@ -637,7 +637,7 @@
      * arguments {number|string|BigNumber}
      */
     BigNumber.maximum = BigNumber.max = function () {
-      return maxOrMin(arguments, P.lt);
+      return maxOrMin(arguments, -1);
     };
 
 
@@ -647,7 +647,7 @@
      * arguments {number|string|BigNumber}
      */
     BigNumber.minimum = BigNumber.min = function () {
-      return maxOrMin(arguments, P.gt);
+      return maxOrMin(arguments, 1);
     };
 
 
@@ -1291,24 +1291,20 @@
 
 
     // Handle BigNumber.max and BigNumber.min.
-    function maxOrMin(args, method) {
-      var n,
+    // If any number is NaN, return NaN.
+    function maxOrMin(args, n) {
+      var k, y,
         i = 1,
-        m = new BigNumber(args[0]);
+        x = new BigNumber(args[0]);
 
       for (; i < args.length; i++) {
-        n = new BigNumber(args[i]);
-
-        // If any number is NaN, return NaN.
-        if (!n.s) {
-          m = n;
-          break;
-        } else if (method.call(m, n)) {
-          m = n;
+        y = new BigNumber(args[i]);
+        if (!y.s || (k = compare(x, y)) === n || k === 0 && x.s === n) {
+          x = y;
         }
       }
 
-      return m;
+      return x;
     }
 
 
