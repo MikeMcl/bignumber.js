@@ -10,7 +10,7 @@
 //   class     BigNumber (default export)
 //   type      BigNumber.Constructor
 //   type      BigNumber.ModuloMode
-//   type      BigNumber.RoundingMOde
+//   type      BigNumber.RoundingMode
 //   type      BigNumber.Value
 //   interface BigNumber.Config
 //   interface BigNumber.Format
