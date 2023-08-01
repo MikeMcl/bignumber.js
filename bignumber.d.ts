@@ -1428,7 +1428,7 @@ export declare class BigNumber implements BigNumber.Instance {
    *
    * ```ts
    * x = new BigNumber(456)
-   * x.toBigInt()                    // 456
+   * x.toBigInt()                    // 456n
    *
    * y = new BigNumber('45987349857634085409857349856430985')
    * y.toBigInt()                    // 45987349857634085409857349856430985n
