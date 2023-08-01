@@ -42,6 +42,7 @@
  *      toFraction                      |
  *      toJSON                          |
  *      toNumber                        |
+ *      toBigInt                        |
  *      toPrecision                     |
  *      toString                        |
  *      valueOf                         |
@@ -2694,6 +2695,12 @@
       return +valueOf(this);
     };
 
+    /*
+     * Return the value of this BigNumber converted to a BigInt primitive.
+     */
+    P.toBigInt = function () {
+      return BigInt(+valueOf(this));
+    };
 
     /*
      * Return a string representing the value of this BigNumber rounded to sd significant digits

@@ -39,6 +39,7 @@
  *      toFraction                      |
  *      toJSON                          |
  *      toNumber                        |
+ *      toBigInt                        |
  *      toPrecision                     |
  *      toString                        |
  *      valueOf                         |
@@ -2667,6 +2668,13 @@ function clone(configObject) {
    */
   P.toNumber = function () {
     return +valueOf(this);
+  };
+
+  /*
+   * Return the value of this BigNumber converted to a BigInt primitive.
+   */
+  P.toBigInt = function () {
+    return BigInt(+valueOf(this));
   };
 
 
