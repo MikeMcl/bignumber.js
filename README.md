@@ -48,7 +48,7 @@ import BigNumber from './path/to/bignumber.mjs';
 > Get a minified version from a CDN:
 
 ```html
-<script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.1.0/bignumber.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.1.2/bignumber.min.js'></script>
 ```
 
 ### [Node.js](http://nodejs.org)
@@ -71,7 +71,7 @@ import { BigNumber } from "./node_modules/bignumber.js/bignumber.mjs";
 ### [Deno](https://deno.land/)
 
 ```javascript
-import BigNumber from 'https://raw.githubusercontent.com/mikemcl/bignumber.js/v9.1.0/bignumber.mjs';
+import BigNumber from 'https://raw.githubusercontent.com/mikemcl/bignumber.js/v9.1.2/bignumber.mjs';
 import BigNumber from 'https://unpkg.com/bignumber.js@latest/bignumber.mjs';
 ```
 

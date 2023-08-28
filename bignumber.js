@@ -2,7 +2,7 @@
   'use strict';
 
 /*
- *      bignumber.js v9.1.1
+ *      bignumber.js v9.1.2
  *      A JavaScript library for arbitrary-precision arithmetic.
  *      https://github.com/MikeMcl/bignumber.js
  *      Copyright (c) 2022 Michael Mclaughlin <M8ch88l@gmail.com>
