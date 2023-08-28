@@ -1,7 +1,7 @@
 #### 9.1.2
 * 28/08/23
 * #354 Amend `round` to avoid bug in v8 Maglev compiler.
-* [BUGFIX] #344 `minumum(0, -0)` should be `-0`.
+* [BUGFIX] #344 `minimum(0, -0)` should be `-0`.
 
 #### 9.1.1
 * 04/12/22
