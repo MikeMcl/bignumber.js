@@ -1423,7 +1423,7 @@
             n = xc[ni = 0];
 
             // Get the rounding digit at index j of n.
-            rd = n / pows10[d - j - 1] % 10 | 0;
+            rd = mathfloor(n / pows10[d - j - 1] % 10);
           } else {
             ni = mathceil((i + 1) / LOG_BASE);
 
@@ -1454,7 +1454,7 @@
               j = i - LOG_BASE + d;
 
               // Get the rounding digit at index j of n.
-              rd = j < 0 ? 0 : n / pows10[d - j - 1] % 10 | 0;
+              rd = j < 0 ? 0 : mathfloor(n / pows10[d - j - 1] % 10);
             }
           }
 

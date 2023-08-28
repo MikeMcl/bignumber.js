@@ -1420,7 +1420,7 @@ function clone(configObject) {
           n = xc[ni = 0];
 
           // Get the rounding digit at index j of n.
-          rd = n / pows10[d - j - 1] % 10 | 0;
+          rd = mathfloor(n / pows10[d - j - 1] % 10);
         } else {
           ni = mathceil((i + 1) / LOG_BASE);
 
@@ -1451,7 +1451,7 @@ function clone(configObject) {
             j = i - LOG_BASE + d;
 
             // Get the rounding digit at index j of n.
-            rd = j < 0 ? 0 : n / pows10[d - j - 1] % 10 | 0;
+            rd = j < 0 ? 0 : mathfloor(n / pows10[d - j - 1] % 10);
           }
         }
 
@@ -2000,7 +2000,12 @@ function clone(configObject) {
     }
 
     // x < y? Point xc to the array of the bigger number.
-    if (xLTy) t = xc, xc = yc, yc = t, y.s = -y.s;
+    if (xLTy) {
+      t = xc;
+      xc = yc;
+      yc = t;
+      y.s = -y.s;
+    }
 
     b = (j = yc.length) - (i = xc.length);
 
@@ -2154,7 +2159,14 @@ function clone(configObject) {
     ycL = yc.length;
 
     // Ensure xc points to longer array and xcL to its length.
-    if (xcL < ycL) zc = xc, xc = yc, yc = zc, i = xcL, xcL = ycL, ycL = i;
+    if (xcL < ycL) {
+      zc = xc;
+      xc = yc;
+      yc = zc;
+      i = xcL;
+      xcL = ycL;
+      ycL = i;
+    }
 
     // Initialise the result array with zeros.
     for (i = xcL + ycL, zc = []; i--; zc.push(0));
@@ -2275,7 +2287,12 @@ function clone(configObject) {
     b = yc.length;
 
     // Point xc to the longer array, and b to the shorter length.
-    if (a - b < 0) t = yc, yc = xc, xc = t, b = a;
+    if (a - b < 0) {
+      t = yc;
+      yc = xc;
+      xc = t;
+      b = a;
+    }
 
     // Only start adding at yc.length - 1 as the further digits of xc can be ignored.
     for (a = 0; b;) {
@@ -2561,7 +2578,12 @@ function clone(configObject) {
         intDigits = isNeg ? intPart.slice(1) : intPart,
         len = intDigits.length;
 
-      if (g2) i = g1, g1 = g2, g2 = i, len -= i;
+      if (g2) {
+        i = g1;
+        g1 = g2;
+        g2 = i;
+        len -= i;
+      }
 
       if (g1 > 0 && len > 0) {
         i = len % g1 || g1;
