@@ -790,7 +790,7 @@ export declare class BigNumber implements BigNumber.Instance {
    * returns `false`.
    *
    * ```ts
-   * 0.1 > (0.3 - 0                     // true
+   * 0.1 > (0.3 - 0.2)                  // true
    * x = new BigNumber(0.1)
    * x.gt(BigNumber(0.3).minus(0.2))    // false
    * BigNumber(0).gt(x)                 // false
