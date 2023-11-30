@@ -2762,6 +2762,73 @@
     };
 
 
+    /*
+     * Shifts the integer part of this BigNumber in binary representation {n} bits to the left.
+     */
+    P.bitShiftLeft = function (n) {
+      n = new BigNumber(n).integerValue().toNumber();
+      var dec = this.modulo(1);
+      var int = this.integerValue();
+      var bits = int.toString(2);
+      bits += repeat('0', n);
+      return new BigNumber(bits, 2).plus(dec);
+    };
+
+
+    /*
+     * Shifts the integer part of this BigNumber in binary representation {n} bits to the right.
+     */
+    P.bitShiftRight = function (n) {
+      n = new BigNumber(n).integerValue().toNumber();
+      var dec = this.modulo(1);
+      var int = this.integerValue();
+      var bits = int.toString(2);
+      bits = bits.slice(0, Math.max(bits.length - n, 0));
+      if (bits === '-') bits = '0'
+      return new BigNumber(bits, 2).plus(dec);
+    };
+
+
+    /*
+     * Returns a one in each bit position for which the corresponding bits of the integer part
+     * of this BigNumber and {a} are ones.
+     */
+    P.and = function (a) {
+      return bitwiseOperation(new BigNumber(a), this, 'and');
+    };
+
+
+    /*
+     * Returns a one in each bit position for which the corresponding bits of either, or both,
+     * the integer part of this BigNumber or {a} are ones.
+     */
+    P.or = function (a) {
+      return bitwiseOperation(new BigNumber(a), this, 'or');
+    };
+
+
+    /*
+     * Returns a one in each bit position for which the corresponding bits of either, but not both,
+     * the integer part of this BigNumber or {a} are ones.
+     */
+    P.xor = function (a) {
+      return bitwiseOperation(new BigNumber(a), this, 'xor');
+    };
+
+
+    /*
+     * Inverts the bits of the integer part of this BigNumber.
+     */
+    P.not = function () {
+      var dec = this.modulo(1);
+      var intPart = this.integerValue().plus(1);
+      if (intPart.isEqualTo(0)) {
+        return intPart.plus(dec);
+      }
+      return intPart.negated().plus(dec);
+    };
+
+
     P._isBigNumber = true;
 
     if (configObject != null) BigNumber.set(configObject);
@@ -2775,6 +2842,35 @@
   // These functions don't need access to variables,
   // e.g. DECIMAL_PLACES, in the scope of the `clone` function above.
 
+  function bitwiseOperation(a, b, operator) {
+    var aBits = a.abs().integerValue().toString(2);
+    var bits = b.integerValue().abs().toString(2);
+
+    var finalBits = '0';
+
+    if (aBits.length < bits.length) {
+      aBits = repeat('0', bits.length - aBits.length) + aBits;
+    } else if (aBits.length > bits.length) {
+      bits = repeat('0', aBits.length - bits.length) + bits;
+    }
+
+    var operations = {
+      'and': (a, b) => a & b,
+      'or': (a, b) => a | b,
+      'xor': (a, b) => a ^ b,
+    }
+
+    for (var i = 0; i < aBits.length; i++) {
+      finalBits += operations[operator](aBits[i], bits[i]);
+    };
+
+    if (b.isNegative() ^ a.isNegative()) {
+      finalBits = '-' + finalBits;
+    }
+
+    var dec = b.modulo(1);
+    return new BigNumber(finalBits, 2).plus(dec);
+  } 
 
   function bitFloor(n) {
     var i = n | 0;
@@ -2894,6 +2990,16 @@
     }
 
     return str;
+  }
+
+
+
+  function repeat(str, n) {
+    var res = '';
+    for (var i = 0; i < n; i++) {
+      res += str;
+    };
+    return res
   }
 
 
