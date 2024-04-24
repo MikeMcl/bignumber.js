@@ -26,10 +26,18 @@
   "types": "bignumber.d.ts",
   "exports": {
     ".": {
-      "types": "./bignumber.d.ts",
-      "require": "./bignumber.js",
-      "import": "./bignumber.mjs",
-      "browser": "./bignumber.js"
+      "import": {
+        "types": "./bignumber.d.mts",
+        "default": "./bignumber.mjs"
+      },
+      "require": {
+        "types": "./bignumber.d.ts",
+        "default": "./bignumber.js"
+      },
+      "browser": {
+        "types": "./bignumber.d.ts",
+        "default": "./bignumber.js"
+      }
     },
     "./bignumber.mjs": "./bignumber.mjs",
     "./bignumber.js": "./bignumber.js",

@@ -31,7 +31,7 @@
 //
 // The use of compiler option `--strictNullChecks` is recommended.
 
-export = BigNumber;
+export default BigNumber;
 
 export namespace BigNumber {
 
