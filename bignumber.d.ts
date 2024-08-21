@@ -485,7 +485,7 @@ export declare class BigNumber implements BigNumber.Instance {
    * @param n A numeric value.
    * @param [base] The base of n.
    */
-  comparedTo(n: BigNumber.Value, base?: number): number;
+  comparedTo(n: BigNumber.Value, base?: number): 1 | -1 | 0 | null;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
