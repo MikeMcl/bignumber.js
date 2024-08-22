@@ -42,6 +42,7 @@
  *      toFraction                      |
  *      toJSON                          |
  *      toNumber                        |
+ *      toBigInt                        |
  *      toPrecision                     |
  *      toString                        |
  *      valueOf                         |
@@ -2690,6 +2691,15 @@
       return +valueOf(this);
     };
 
+    /*
+     * Return the value of this BigNumber converted to a BigInt primitive.
+     */
+    P.toBigInt = function () {
+      if (!this.isInteger()) throw Error(bignumberError + 'Not an integer: ' + valueOf(this));
+      var str = coeffToString(this.c);
+      for (var i = this.e + 1 - str.length; i > 0; i--) str += '0';
+      return BigInt(this.s < 0 ? '-' + str : str);
+    };
 
     /*
      * Return a string representing the value of this BigNumber rounded to sd significant digits
