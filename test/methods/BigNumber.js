@@ -19,6 +19,8 @@ Test('bigNumber', function () {
     });
 
     // Parsing tests
+    Test.areEqual(new BigNumber(null).isNaN(), true)
+    Test.areEqual(new BigNumber(undefined).isNaN(), true)
 
     t('Infinity', new BigNumber('1e10000000000'));
     t('-Infinity', new BigNumber('-1e10000000000'));
