@@ -33,7 +33,6 @@ console.log('\n Testing bignumber.js\n');
   'toFormat',
   'toFraction',
   'toNumber',
-  'toBigInt',
   'toPrecision',
   'toString'
 ]
