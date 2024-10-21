@@ -79,7 +79,10 @@ Test('bigNumber', function () {
     tx(function () {new BigNumber('+.Infinity')}, "+.Infinity");
 
     t('0', new BigNumber(0));
+    t('0', new BigNumber(0n));
+    t('0', new BigNumber(BigInt(0)));
     t('0', new BigNumber(-0));
+    t('0', new BigNumber(-0n));
     t('0', new BigNumber('.0'));
     t('0', new BigNumber('0.'));
     t('0', new BigNumber('-0.'));
