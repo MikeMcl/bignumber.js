@@ -1424,6 +1424,19 @@ export declare class BigNumber implements BigNumber.Instance {
   toNumber(): number;
 
   /**
+   * Returns the value of this BigNumber as a JavaScript primitive BigInt.
+   *
+   * ```ts
+   * x = new BigNumber(456)
+   * x.toBigInt()                    // 456n
+   *
+   * y = new BigNumber('45987349857634085409857349856430985')
+   * y.toBigInt()                    // 45987349857634085409857349856430985n
+   * ```
+   */
+  toBigInt(): BigInt;
+
+  /**
    * Returns a string representing the value of this BigNumber rounded to `significantDigits`
    * significant digits using rounding mode `roundingMode`.
    *
