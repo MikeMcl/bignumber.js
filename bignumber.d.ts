@@ -320,7 +320,7 @@ declare namespace BigNumber {
   type Constructor = typeof BigNumber;
   type ModuloMode = 0 | 1 | 3 | 6 | 9;
   type RoundingMode = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-  type Value = string | number | Instance;
+  type Value = string | number | bigint | Instance;
 }
 
 declare class BigNumber implements BigNumber.Instance {
@@ -339,7 +339,7 @@ declare class BigNumber implements BigNumber.Instance {
 
   /**
    * Returns a new instance of a BigNumber object with value `n`, where `n` is a numeric value in
-   * the specified `base`, or base 10 if `base` is omitted or is `null` or `undefined`.
+   * the specified `base`, or base 10 if `base` is omitted.
    *
    * ```ts
    * x = new BigNumber(123.4567)              // '123.4567'
@@ -487,11 +487,10 @@ declare class BigNumber implements BigNumber.Instance {
    * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
    * `roundingMode` to a maximum of `decimalPlaces` decimal places.
    *
-   * If `decimalPlaces` is omitted, or is `null` or `undefined`, the return value is the number of
-   * decimal places of the value of this BigNumber, or `null` if the value of this BigNumber is
-   * ±`Infinity` or `NaN`.
+   * If `decimalPlaces` is omitted, the return value is the number of decimal places of the value of
+   * this BigNumber, or `null` if the value of this BigNumber is ±`Infinity` or `NaN`.
    *
-   * If `roundingMode` is omitted, or is `null` or `undefined`, `ROUNDING_MODE` is used.
+   * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
    * Throws if `decimalPlaces` or `roundingMode` is invalid.
    *
@@ -520,11 +519,10 @@ declare class BigNumber implements BigNumber.Instance {
    * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
    * `roundingMode` to a maximum of `decimalPlaces` decimal places.
    *
-   * If `decimalPlaces` is omitted, or is `null` or `undefined`, the return value is the number of
-   * decimal places of the value of this BigNumber, or `null` if the value of this BigNumber is
-   * ±`Infinity` or `NaN`.
+   * If `decimalPlaces` is omitted, the return value is the number of decimal places of the value of
+   * this BigNumber, or `null` if the value of this BigNumber is ±`Infinity` or `NaN`.
    *
-   * If `roundingMode` is omitted, or is `null` or `undefined`, `ROUNDING_MODE` is used.
+   * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
    * Throws if `decimalPlaces` or `roundingMode` is invalid.
    *
@@ -689,7 +687,7 @@ declare class BigNumber implements BigNumber.Instance {
    * Returns a BigNumber whose value is the value of this BigNumber rounded to an integer using
    * rounding mode `rm`.
    *
-   * If `rm` is omitted, or is `null` or `undefined`, `ROUNDING_MODE` is used.
+   * If `rm` is omitted, `ROUNDING_MODE` is used.
    *
    * Throws if `rm` is invalid.
    *
@@ -1118,7 +1116,7 @@ declare class BigNumber implements BigNumber.Instance {
    * Returns a BigNumber whose value is the value of this BigNumber rounded to a precision of
    * `significantDigits` significant digits using rounding mode `roundingMode`.
    *
-   * If `roundingMode` is omitted or is `null` or `undefined`, `ROUNDING_MODE` will be used.
+   * If `roundingMode` is omitted, `ROUNDING_MODE` will be used.
    *
    * Throws if `significantDigits` or `roundingMode` is invalid.
    *
@@ -1162,7 +1160,7 @@ declare class BigNumber implements BigNumber.Instance {
    * Returns a BigNumber whose value is the value of this BigNumber rounded to a precision of
    * `significantDigits` significant digits using rounding mode `roundingMode`.
    *
-   * If `roundingMode` is omitted or is `null` or `undefined`, `ROUNDING_MODE` will be used.
+   * If `roundingMode` is omitted, `ROUNDING_MODE` will be used.
    *
    * Throws if `significantDigits` or `roundingMode` is invalid.
    *
@@ -1240,11 +1238,10 @@ declare class BigNumber implements BigNumber.Instance {
    * If the value of this BigNumber in exponential notation has fewer than `decimalPlaces` fraction
    * digits, the return value will be appended with zeros accordingly.
    *
-   * If `decimalPlaces` is omitted, or is `null` or `undefined`, the number of digits after the
-   * decimal point defaults to the minimum number of digits necessary to represent the value
-   * exactly.
+   * If `decimalPlaces` is omitted, the number of digits after the decimal point defaults to the
+   * minimum number of digits necessary to represent the value exactly.
    *
-   * If `roundingMode` is omitted or is `null` or `undefined`, `ROUNDING_MODE` is used.
+   * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
    * Throws if `decimalPlaces` or `roundingMode` is invalid.
    *
@@ -1278,12 +1275,12 @@ declare class BigNumber implements BigNumber.Instance {
    * Unlike `Number.prototype.toFixed`, which returns exponential notation if a number is greater or
    * equal to 10**21, this method will always return normal notation.
    *
-   * If `decimalPlaces` is omitted or is `null` or `undefined`, the return value will be unrounded
-   * and in normal notation. This is also unlike `Number.prototype.toFixed`, which returns the value
-   * to zero decimal places. It is useful when normal notation is required and the current
-   * `EXPONENTIAL_AT` setting causes `toString` to return exponential notation.
+   * If `decimalPlaces` is omitted, the return value will be unrounded and in normal notation.
+   * This is also unlike `Number.prototype.toFixed`, which returns the value to zero decimal places.
+   * It is useful when normal notation is required and the current `EXPONENTIAL_AT` setting causes
+   * `toString` to return exponential notation.
    *
-   * If `roundingMode` is omitted or is `null` or `undefined`, `ROUNDING_MODE` is used.
+   * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
    * Throws if `decimalPlaces` or `roundingMode` is invalid.
    *
@@ -1313,12 +1310,12 @@ declare class BigNumber implements BigNumber.Instance {
    *
    * The formatting object may contain some or all of the properties shown in the examples below.
    *
-   * If `decimalPlaces` is omitted or is `null` or `undefined`, then the return value is not
-   * rounded to a fixed number of decimal places.
+   * If `decimalPlaces` is omitted, then the return value is not rounded to a fixed number of
+   * decimal places.
    *
-   * If `roundingMode` is omitted or is `null` or `undefined`, `ROUNDING_MODE` is used.
+   * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
-   * If `format` is omitted or is `null` or `undefined`, `FORMAT` is used.
+   * If `format` is omitted, `FORMAT` is used.
    *
    * Throws if `decimalPlaces`, `roundingMode`, or `format` is invalid.
    *
@@ -1374,8 +1371,8 @@ declare class BigNumber implements BigNumber.Instance {
    * Returns an array of two BigNumbers representing the value of this BigNumber as a simple
    * fraction with an integer numerator and an integer denominator.
    * The denominator will be a positive non-zero value less than or equal to `max_denominator`.
-   * If a maximum denominator, `max_denominator`, is not specified, or is `null` or `undefined`, the
-   * denominator will be the lowest value necessary to represent the number exactly.
+   * If a maximum denominator, `max_denominator`, is not specified, the denominator will be the
+   * lowest value necessary to represent the number exactly.
    *
    * Throws if `max_denominator` is invalid.
    *
@@ -1426,10 +1423,9 @@ declare class BigNumber implements BigNumber.Instance {
    * If `significantDigits` is less than the number of digits necessary to represent the integer
    * part of the value in normal (fixed-point) notation, then exponential notation is used.
    *
-   * If `significantDigits` is omitted, or is `null` or `undefined`, then the return value is the
-   * same as `n.toString()`.
+   * If `significantDigits` is omitted, then the return value is the same as `n.toString()`.
    *
-   * If `roundingMode` is omitted or is `null` or `undefined`, `ROUNDING_MODE` is used.
+   * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
    * Throws if `significantDigits` or `roundingMode` is invalid.
    *
@@ -1454,7 +1450,7 @@ declare class BigNumber implements BigNumber.Instance {
 
   /**
    * Returns a string representing the value of this BigNumber in base `base`, or base 10 if `base`
-   * is omitted or is `null` or `undefined`.
+   * is omitted.
    *
    * For bases above 10, and using the default base conversion alphabet (see `ALPHABET`), values
    * from 10 to 35 are represented by a-z (the same as `Number.prototype.toString`).
@@ -1466,8 +1462,6 @@ declare class BigNumber implements BigNumber.Instance {
    * greater than the positive component of the current `EXPONENTIAL_AT` setting, or a negative
    * exponent equal to or less than the negative component of the setting, then exponential notation
    * is returned.
-   *
-   * If `base` is `null` or `undefined` it is ignored.
    *
    * Throws if `base` is invalid.
    *
@@ -1588,7 +1582,7 @@ declare class BigNumber implements BigNumber.Instance {
 
   /**
    * Returns a new independent BigNumber constructor with configuration as described by `object`, or
-   * with the default configuration if object is `null` or `undefined`.
+   * with the default configuration if object is omitted.
    *
    * Throws if `object` is not an object.
    *
