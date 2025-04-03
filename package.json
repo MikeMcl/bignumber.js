@@ -23,13 +23,21 @@
   "main": "bignumber",
   "module": "bignumber.mjs",
   "browser": "bignumber.js",
-  "types": "bignumber.d.ts",
+  "types": "bignumber.d.cts",
   "exports": {
     ".": {
-      "types": "./bignumber.d.ts",
-      "require": "./bignumber.js",
-      "import": "./bignumber.mjs",
-      "browser": "./bignumber.js"
+      "import": {
+        "types": "./bignumber.d.mts",
+        "default": "./bignumber.mjs"
+      },
+      "require": {
+        "types": "./bignumber.d.cts",
+        "default": "./bignumber.js"
+      },
+      "browser": {
+        "types": "./bignumber.d.cts",
+        "default": "./bignumber.js"
+      }
     },
     "./bignumber.mjs": "./bignumber.mjs",
     "./bignumber.js": "./bignumber.js",

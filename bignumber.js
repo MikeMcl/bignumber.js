@@ -906,7 +906,7 @@
 
         // xc now represents str converted to baseOut.
 
-        // THe index of the rounding digit.
+        // The index of the rounding digit.
         d = e + dp + 1;
 
         // The rounding digit: the digit to the right of the digit that may be rounded up.

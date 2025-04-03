@@ -5,9 +5,7 @@
 
 // Documentation: http://mikemcl.github.io/bignumber.js/
 //
-// Exports:
-//
-//   class     BigNumber (default export)
+//   class     BigNumber
 //   type      BigNumber.Constructor
 //   type      BigNumber.ModuloMode
 //   type      BigNumber.RoundingMode
@@ -31,9 +29,7 @@
 //
 // The use of compiler option `--strictNullChecks` is recommended.
 
-export default BigNumber;
-
-export namespace BigNumber {
+declare namespace BigNumber {
 
   /** See `BigNumber.config` (alias `BigNumber.set`) and `BigNumber.clone`. */
   interface Config {
@@ -327,7 +323,7 @@ export namespace BigNumber {
   type Value = string | number | Instance;
 }
 
-export declare class BigNumber implements BigNumber.Instance {
+declare class BigNumber implements BigNumber.Instance {
 
   /** Used internally to identify a BigNumber instance. */
   private readonly _isBigNumber: true;
@@ -1828,4 +1824,4 @@ export declare class BigNumber implements BigNumber.Instance {
   static set(object?: BigNumber.Config): BigNumber.Config;
 }
 
-export function BigNumber(n: BigNumber.Value, base?: number): BigNumber;
+declare function BigNumber(n: BigNumber.Value, base?: number): BigNumber;
