@@ -1,3 +1,13 @@
+#### 9.2.1
+* 08/04/25
+* ##371 #382 Add `BigNumber` as named export.
+
+#### 9.2.0
+* 03/04/25
+* #355 Support `BigInt` argument.
+* #371 Provide separate type definitions for CommonJS and ES modules.
+* #374 Correct `comparedTo` return type.
+
 #### 9.1.2
 * 28/08/23
 * #354 Amend `round` to avoid bug in v8 Maglev compiler.
