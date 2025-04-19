@@ -4,6 +4,7 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 [![npm version](https://img.shields.io/npm/v/bignumber.js.svg)](https://www.npmjs.com/package/bignumber.js)
 [![npm downloads](https://img.shields.io/npm/dw/bignumber.js)](https://www.npmjs.com/package/bignumber.js)
+[![CI](https://github.com/MikeMcl/bignumber.js/actions/workflows/ci.yml/badge.svg)](https://github.com/MikeMcl/bignumber.js/actions/workflows/ci.yml)
 
 <br />
 
@@ -285,4 +286,4 @@ terser big.js -c -m -o big.min.js
 
 The MIT Licence.
 
-See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/master/LICENCE).
+See [LICENCE](https://github.com/MikeMcl/bignumber.js/blob/main/LICENCE).
