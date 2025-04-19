@@ -13,7 +13,7 @@
 #### 9.2.1
 
 * 08/04/25
-* ##371 #382 Add `BigNumber` as named export.
+* #371 #382 Add `BigNumber` as named export.
 
 #### 9.2.0
 
