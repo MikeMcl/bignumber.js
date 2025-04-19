@@ -1,3 +1,15 @@
+#### 9.3.0
+
+* 19/04/25
+* Refactor type declarations:
+* Rename *bignumber.d.ts* to *types.d.ts*.
+* Rename *bignumber.d.cts* to *bignumber.d.ts*.
+* Add `export as namespace` to *bignumber.d.ts*.
+* Remove subpath exports from *package.json*.
+* Refactor named export from *bignumber.d.mts*.
+* #383 Remove `?` from static `BigNumber` and `default` properties.
+* Add blank lines after titles in *CHANGELOG.md*.
+
 #### 9.2.1
 
 * 08/04/25
