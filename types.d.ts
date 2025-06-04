@@ -1391,7 +1391,7 @@ declare class BigNumber implements BigNumber.Instance {
    *
    * @param [max_denominator] The maximum denominator, integer > 0, or Infinity.
    */
-  toFraction(max_denominator?: BigNumber.Value): [BigNumber, BigNumber];
+  toFraction(max_denominator?: BigNumber.Value): BigNumber | [BigNumber, BigNumber];
 
   /** As `valueOf`. */
   toJSON(): string;
