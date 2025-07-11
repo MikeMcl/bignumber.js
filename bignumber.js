@@ -1270,7 +1270,7 @@
 
         // Fixed-point notation.
         } else {
-          i -= ne;
+          i -= ne + (id === 2 && e > ne);
           str = toFixedPoint(str, e, '0');
 
           // Append zeros?
