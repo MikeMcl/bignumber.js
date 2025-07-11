@@ -26,8 +26,10 @@
  *      isLessThanOrEqualTo      lte    |  minimum              min
  *      isNaN                           |  random
  *      isNegative                      |  sum
- *      isPositive                      |
+ *      isPositive                      |	 euler								e
  *      isZero                          |
+ * 			logBase									 log		|
+ * 			naturalLog               ln     |
  *      minus                           |
  *      modulo                   mod    |
  *      multipliedBy             times  |
@@ -74,7 +76,7 @@
    * Create and return a BigNumber constructor.
    */
   function clone(configObject) {
-    var div, convertBase, parseNumeric,
+    var div, log, convertBase, parseNumeric,
       P = BigNumber.prototype = { constructor: BigNumber, toString: null, valueOf: null },
       ONE = new BigNumber(1),
 
@@ -808,6 +810,27 @@
       return sum;
     };
 
+		/*
+		*	Returns e to dp decimal places
+		* Runtime could be improved with binary splitting at expense of storage
+		* Runtime of 5,000 digits was ~3s
+		*/
+
+		BigNumber.e = BigNumber.euler = function (dp, rm) {
+			let oldDp = DECIMAL_PLACES
+			dp = dp | oldDp
+			BigNumber.set({DECIMAL_PLACES: dp + 1})
+			let e = BigNumber('1')
+			let divisor = BigNumber('1')
+			let one = BigNumber('1')
+			for (let i = 2; i < dp * 10; i++) {
+				e = e.plus(one.div(divisor))
+				divisor = divisor.multipliedBy(BigNumber(i))
+			}
+			e = BigNumber(round(e, dp, rm, true).toString())
+			BigNumber.set({DECIMAL_PLACES: oldDp})
+			return BigNumber(round(e, dp, rm, true).toString())
+		}
 
     // PRIVATE FUNCTIONS
 
@@ -1222,6 +1245,44 @@
       };
     })();
 
+
+		// Perform logorithm using the method by Daniel Shanks https://www.ams.org/journals/mcom/1954-08-046/S0025-5718-1954-0061464-9/S0025-5718-1954-0061464-9.pdf
+		log = (function () {
+			// x: base, y: number
+      return function (x, y, dp, rm) {
+				if (x.comparedTo(0) + y.comparedTo(0) !== 2 || !x.isFinite() || !y.isFinite() || y.valueOf() === '1') {
+					return BigNumber(NaN)
+				}
+				var A = y
+				var B = x
+				var C = BigNumber(1)
+				var D = BigNumber(0)
+				var E = BigNumber(0)
+				var F = BigNumber(1)
+				var s = 1
+				var one = BigNumber('1')
+				if (A.comparedTo(one) === -1) {
+					A = one.div(A)
+					s *= -1
+				}
+				if (B.comparedTo(one) === -1) {
+					B = one.div(B)
+					s *= -1
+				}
+				for (let i = 0; i < dp * 1.1 + 5; i) {
+					if (A.comparedTo(B) > -1 && B.valueOf() !== '1') {
+						[A, C, D] = [A.div(B), C.plus(E), D.plus(F)]
+					} else if (B.valueOf() === '1') {
+						break
+					} else {
+						[A, B, C, D, E, F] = [B, A, E, F, C, D]
+						i++
+					}
+
+				}
+				return round(E.div(F).multipliedBy(s), dp, rm)
+      };
+    })();
 
     /*
      * Return a string representing the value of BigNumber n in fixed-point or exponential
@@ -1664,6 +1725,18 @@
       return div(this, new BigNumber(y, b), 0, 1);
     };
 
+
+		/*
+		* Return a new BigNumber whose value is the value of log with base this BigNumber of the value
+		* BigNumber(y, b), rounded according to DECIMAL_PLACES and ROUNDING_MODE
+		*/
+		P.logBase = P.log = function (y, b) {
+			return log(this, new BigNumber(y, b), DECIMAL_PLACES, ROUNDING_MODE)
+		}
+
+		P.naturalLog = P.ln = function () {
+			return log(this, BigNumber.euler(DECIMAL_PLACES), DECIMAL_PLACES, ROUNDING_MODE)
+		}
 
     /*
      * Return a BigNumber whose value is the value of this BigNumber exponentiated by n.
