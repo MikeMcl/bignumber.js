@@ -1,7 +1,7 @@
 {
   "name": "bignumber.js",
   "description": "A library for arbitrary-precision decimal and non-decimal arithmetic",
-  "version": "9.3.0",
+  "version": "9.3.1",
   "keywords": [
     "arbitrary",
     "precision",
