@@ -1,4 +1,4 @@
-/// <reference path="./types.d.ts" />
+import { BigNumber } from "./types";
 
 export = BigNumber;
 
