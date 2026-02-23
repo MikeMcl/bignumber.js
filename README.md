@@ -173,6 +173,8 @@ b = new BigNumber('zz.9', 36)       // "1295.25"
 c = a.plus(b)                       // "1306.25"
 ```
 
+*Explicitly passing base 10 is not recommended as it will cause the slower base conversion path to be used, which is only necessary if an unconventional `ALPHABET` has been specified.* 
+
 A BigNumber is immutable in the sense that it is not changed by its methods.
 
 ```javascript
@@ -211,6 +213,8 @@ x.toNumber()                        //  255.5
  ```javascript
  x.toString(16)                     // "ff.8"
  ```
+
+ *Again, explicitly passing base 10 is not recommended as it will cause the slower base conversion path to be used, which is only necessary if an unconventional `ALPHABET` has been specified.* 
 
 There is a [`toFormat`](http://mikemcl.github.io/bignumber.js/#toFor) method which may be useful for internationalisation.
 

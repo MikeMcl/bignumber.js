@@ -1,6 +1,6 @@
 #### 10.0.0
 
-* ??/02/26
+* 23/02/26
 * Implement targeted builds for ES modules, CommonJS, and browser (global assignment). 
 * Add CI workflow.
 * Add type declaration import tests.
