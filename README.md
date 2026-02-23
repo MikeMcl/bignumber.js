@@ -4,9 +4,18 @@ A JavaScript library for arbitrary-precision decimal and non-decimal arithmetic.
 
 [![npm version](https://img.shields.io/npm/v/bignumber.js.svg)](https://www.npmjs.com/package/bignumber.js)
 [![npm downloads](https://img.shields.io/npm/dw/bignumber.js)](https://www.npmjs.com/package/bignumber.js)
-[![CI](https://github.com/MikeMcl/bignumber.js/actions/workflows/ci.yml/badge.svg)](https://github.com/MikeMcl/bignumber.js/actions/workflows/ci.yml)
+[![CI](https://github.com/MikeMcl/bignumber.js/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MikeMcl/bignumber.js/actions/workflows/ci.yml)
 
 <br />
+
+- [Features](#features)
+- [Build](#build)
+- [Load](#load)
+- [Use](#use)
+- [Test](#test)
+- [Minify](#minify)
+- [Licence](#licence)
+
 
 ## Features
 
@@ -29,27 +38,45 @@ It also has fewer configuration options than this library, and does not allow `N
 
 See also [decimal.js](https://github.com/MikeMcl/decimal.js/), which among other things adds support for non-integer powers, and performs all operations to a specified number of significant digits.
 
-## Load
+## Build
 
-The library is the single JavaScript file *bignumber.js* or ES module *bignumber.mjs*.
+*bignumber.js* is the single source file, and *bignumber.d.ts* contains the type declarations for it. The build script, *build.js*, creates targeted builds in a *dist* directory for ES module, CommonJS, and browser usage.
+
+To run the build script (requires Node.js ≥ 14.14.0):
+
+```bash
+npm install
+npm run build
+# or: node build.js
+```
+
+A *dist* directory will be created containing the following:
+
+| Module format | Distributable | Type declaration |
+| --- | --- | --- |
+| ES module (ESM) | bignumber.mjs | bignumber.d.mts |
+| CommonJS (CJS) | bignumber.cjs | bignumber.d.cts |
+| Browser (global) | bignumber.js | bignumber.d.ts |
+
+## Load
 
 ### Browser
 
 ```html
-<script src='path/to/bignumber.js'></script>
+<script src='dist/bignumber.js'></script>
 ```
 
 > ES module
 
 ```html
 <script type="module">
-import BigNumber from './path/to/bignumber.mjs';
+import BigNumber from './dist/bignumber.mjs';
 ```
 
 > Get a minified version from a CDN:
 
 ```html
-<script src='https://cdn.jsdelivr.net/npm/bignumber.js@9.3.1/bignumber.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/bignumber.js@10.0.0/dist/bignumber.min.js'></script>
 ```
 
 ### [Node.js](http://nodejs.org)
@@ -65,22 +92,37 @@ const BigNumber = require('bignumber.js');
 > ES module
 
 ```javascript
-import BigNumber from "bignumber.js";
+import BigNumber from 'bignumber.js';
+
+// or
+import { BigNumber } from 'bignumber.js';
+```
+
+> Testing from a local repo
+
+```javascript
+const BigNumber = require('./dist/bignumber.cjs');
+```
+
+or
+
+```javascript
+import BigNumber from './dist/bignumber.mjs';
 ```
 
 ### [Deno](https://deno.land/)
 
 ```javascript
-// @deno-types="https://raw.githubusercontent.com/mikemcl/bignumber.js/v9.3.1/bignumber.d.mts"
-import BigNumber from 'https://raw.githubusercontent.com/mikemcl/bignumber.js/v9.3.1/bignumber.mjs';
+// @deno-types="https://raw.githubusercontent.com/mikemcl/bignumber.js/v10.0.0/dist/bignumber.d.mts"
+import BigNumber from 'https://raw.githubusercontent.com/mikemcl/bignumber.js/v10.0.0/dist/bignumber.mjs';
 
-// @deno-types="https://unpkg.com/bignumber.js@latest/bignumber.d.mts"
-import { BigNumber } from 'https://unpkg.com/bignumber.js@latest/bignumber.mjs';
+// @deno-types="https://unpkg.com/bignumber.js@latest/dist/bignumber.d.mts"
+import { BigNumber } from 'https://unpkg.com/bignumber.js@latest/dist/bignumber.mjs';
 ```
 
 ## Use
 
-The library exports a single constructor function, [`BigNumber`](http://mikemcl.github.io/bignumber.js/#bignumber), which accepts a value of type Number, String or BigNumber,
+The library exports a single constructor function, [`BigNumber`](http://mikemcl.github.io/bignumber.js/#bignumber), which accepts a value of type Number, String, BigInt or BigNumber,
 
 ```javascript
 let x = new BigNumber(123.4567);
@@ -88,6 +130,8 @@ let y = BigNumber('123456.7e-3');
 let z = new BigNumber(x);
 x.isEqualTo(y) && y.isEqualTo(z) && x.isEqualTo(z);      // true
 ```
+
+An error will be thrown if an invalid value is passed to the constructor.
 
 To get the string value of a BigNumber use [`toString()`](http://mikemcl.github.io/bignumber.js/#toS) or [`toFixed()`](http://mikemcl.github.io/bignumber.js/#toFix). Using `toFixed()` prevents exponential notation being returned, no matter how large or small the value.
 
@@ -121,15 +165,13 @@ When creating a BigNumber from a Number, note that a BigNumber is created from a
 new BigNumber(Number.MAX_VALUE.toString(2), 2)
 ```
 
-BigNumbers can be created from values in bases from 2 to 36. See [`ALPHABET`](http://mikemcl.github.io/bignumber.js/#alphabet) to extend this range.
+BigNumbers can be created from string values in bases from 2 to 36. See [`ALPHABET`](http://mikemcl.github.io/bignumber.js/#alphabet) to extend this range.
 
 ```javascript
-a = new BigNumber(1011, 2)          // "11"
+a = new BigNumber('1011', 2)        // "11"
 b = new BigNumber('zz.9', 36)       // "1295.25"
 c = a.plus(b)                       // "1306.25"
 ```
-
-*Performance is better if base 10 is NOT specified for decimal values. Only specify base 10 when you want to limit the number of decimal places of the input value to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.*
 
 A BigNumber is immutable in the sense that it is not changed by its methods.
 
@@ -165,8 +207,6 @@ x.toNumber()                        //  255.5
 ```
 
  A base can be specified for [`toString`](http://mikemcl.github.io/bignumber.js/#toS).
-
-*Performance is better if base 10 is NOT specified, i.e. use `toString()` not `toString(10)`. Only specify base 10 when you want to limit the number of decimal places of the string to the current [`DECIMAL_PLACES`](http://mikemcl.github.io/bignumber.js/#decimal-places) setting.*
 
  ```javascript
  x.toString(16)                     // "ff.8"
@@ -245,21 +285,17 @@ BigNumber.prototype[require('util').inspect.custom] = BigNumber.prototype.valueO
 ```
 
 For further information see the [API](http://mikemcl.github.io/bignumber.js/) reference in the *doc* directory.
-
+ 
 ## Test
 
-The *test/modules* directory contains the test scripts for each method.
+The *test/methods* directory contains the test scripts for each method.
 
-The tests can be run with Node.js or a browser. For Node.js use
+The tests can be run with Node.js or a browser. The tests require the CommonJS distributable, so **build before testing**:
 
 ```bash
+npm run build
 npm test
-```
-
-or
-
-```bash
-node test/test
+# or: node test/test
 ```
 
 To test a single method, use, for example
@@ -270,16 +306,28 @@ node test/methods/toFraction
 
 For the browser, open *test/test.html*.
 
+There are also some old programs in *perf* that still work and can be useful for testing and cross-checking results over large sets of random inputs.
+
+### TypeScript
+
+The *test/typescript* directory contains TypeScript compilation tests that verify the type declarations and imports work correctly for each module format. Run them with:
+
+```bash
+npm run typecheck
+```
+
 ## Minify
 
-To minify using, for example, [terser](https://github.com/terser/terser)
+To minify using, for example, [terser](https://github.com/terser/terser):
 
 ```bash
 npm install -g terser
 ```
 
+Minify the browser/global bundle:
+
 ```bash
-terser big.js -c -m -o big.min.js
+terser dist/bignumber.js -c -m -o dist/bignumber.min.js
 ```
 
 ## Licence

@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  }
+}

@@ -1,3 +1,19 @@
+#### 10.0.0
+
+* ??/02/26
+* Implement targeted builds for ES modules, CommonJS, and browser (global assignment). 
+* Add CI workflow.
+* Add type declaration import tests.
+* Remove `BigNumber.DEBUG`, so the behaviour is now always as if it was `true`:
+  - throw on invalid input instead of returning `NaN`.
+  - always validate the `c`, `e`, and `s` properties of objects passed to `isBigNumber`
+* Don't call `toString` on any arbitrary object passed to the constructor.
+* Require a BigNumber value to be a string if a base is also passed.
+* Add `toObject` prototype method which returns a plain object with `c`, `e`, and `s` properties.
+* Remove *.npmignore*, as `files` in *package.json* is used. Add *.gitignore*.
+* Normalise line endings and add *.gitattributes*.
+* Add typescript to `devDependencies`.
+
 #### 9.3.1
 
 * 11/07/25

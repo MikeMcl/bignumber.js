@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "none",
+  },
+  "files": [
+    "../../dist/bignumber.d.ts",
+    "test_global.ts"
+  ]
+}

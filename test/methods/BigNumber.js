@@ -275,11 +275,11 @@ Test('bigNumber', function () {
         }
     }
 
-    t('0', 0, 2);
-    t('0', 0, 10);
-    t('0', -0, 36);
-    t('-5', -101, 2);
-    t('-101', -101, 10);
+    t('0', '0', 2);
+    t('0', '0', 10);
+    t('0', '-0', 36);
+    t('-5', '-101', 2);
+    t('-101', '-101', 10);
 
     // Test numbers with fraction digits
 
@@ -595,9 +595,9 @@ Test('bigNumber', function () {
 
     t('NaN', 'NaN', undefined);
     t('NaN', 'NaN', null);
-    t('NaN', NaN, 2);
+    t('NaN', 'NaN', 2);
     t('NaN', '-NaN', 2);
-    t('NaN', -NaN, 10);
+    t('NaN', '-NaN', 10);
     t('NaN', 'NaN', 10);
     t('12.345', 12.345, null);
     t('12.345', 12.345, undefined);
@@ -638,7 +638,54 @@ Test('bigNumber', function () {
 
     t('144', '144', 10);
 
-    // TODO: more ALPHABET tests.
+    BigNumber.config({ALPHABET: '0123456789ABCDEF'});
 
+    t('255', 'FF', 16);
+    t('16', '10', 16);
+    t('26', '1A', 16);
+    t('0', '0', 16);
+    t('123', '7B', 16);
+
+    BigNumber.config({ALPHABET: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'});
+
+    t('35', 'Z', 36);
+    t('36', '10', 36);
+    t('71', '1Z', 36);
+    t('1295', 'ZZ', 36);
+    t('46655', 'ZZZ', 36);
+
+    BigNumber.config({ALPHABET: '0123456789abcdefXYZ'});
+
+    t('16', 'X', 19);
+    t('18', 'Z', 19);
+    t('19', '10', 19);
+    t('31', '1c', 19);
+    t('360', 'ZZ', 19);
+
+    BigNumber.config({ALPHABET: '0123456789!$%&()*?@^'});
+
+    t('19', '^', 20);
+    t('20', '10', 20);
+    t('59', '2^', 20);
+    t('399', '^^', 20);
+    t('400', '100', 20);
+
+    BigNumber.config({ALPHABET: '0123456789~`^_|'});
+
+    t('14', '|', 15);
+    t('15', '10', 15);
+    t('29', '1|', 15);
+    t('224', '||', 15);
+    t('225', '100', 15);
+
+    BigNumber.config({ALPHABET: 'fedcba9876543210'});
+
+    t('0', 'f', 16);
+    t('1', 'e', 16);
+    t('15', '0', 16);
+    t('16', 'ef', 16);
+    t('31', 'e0', 16);
+
+    // Reset to default alphabet.
     BigNumber.config({ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'});
 });

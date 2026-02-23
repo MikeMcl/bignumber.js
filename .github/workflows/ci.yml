@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      # Build script requires Node.js >= 14.14.0.
       matrix:
-        node-version: ['8', '18', '20', '22']
+        node-version: ['14', '20', 'lts/*', 'node']
       fail-fast: false
 
     steps:
@@ -24,5 +25,31 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Run Tests
-        run: node test/test
+      - name: Build
+        run: npm run build
+
+      - name: Run JS tests
+        run: npm test
+
+  typecheck:
+    name: Type-check
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'node'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Type-check
+        run: npm run typecheck
+

@@ -1,4 +1,4 @@
-// Add `Test` to global scope.
+// Add `Test` to global scope in browser and Node.js using unqualified identifier assignment.
 Test = (function () {
   var passed, testNumber, write;
 
@@ -20,8 +20,8 @@ Test = (function () {
     };
   } else {
 
-    // Add `BigNumber` to global scope.
-    BigNumber = require('../bignumber');
+    // Add BigNumber to global scope.
+    BigNumber = require('../dist/bignumber.cjs');
     write = process.stdout.write.bind(process.stdout);
   }
 
@@ -79,5 +79,3 @@ Test = (function () {
 
   return Test;
 })();
-
-BigNumber.DEBUG = true;

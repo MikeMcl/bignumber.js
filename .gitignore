@@ -1,0 +1,13 @@
+dist/
+node_modules/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+npm-shrinkwrap.json
+.env
+.vscode/
+.idea/
+.DS_Store
+*.log

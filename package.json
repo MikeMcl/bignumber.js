@@ -2,6 +2,15 @@
   "name": "bignumber.js",
   "description": "A library for arbitrary-precision decimal and non-decimal arithmetic",
   "version": "9.3.1",
+  "author": {
+    "name": "Michael Mclaughlin",
+    "email": "M8ch88l@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MikeMcl/bignumber.js.git"
+  },
   "keywords": [
     "arbitrary",
     "precision",
@@ -16,45 +25,37 @@
     "bigint",
     "bignum"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MikeMcl/bignumber.js.git"
-  },
-  "main": "bignumber",
-  "module": "bignumber.mjs",
-  "browser": "bignumber.js",
-  "types": "bignumber.d.ts",
+  "main": "dist/bignumber.cjs",
+  "module": "dist/bignumber.mjs",
+  "browser": "dist/bignumber.js",
   "exports": {
     ".": {
       "import": {
-        "types": "./bignumber.d.mts",
-        "default": "./bignumber.mjs"
+        "types": "./dist/bignumber.d.mts",
+        "default": "./dist/bignumber.mjs"
       },
       "require": {
-        "types": "./bignumber.d.ts",
-        "default": "./bignumber.js"
+        "types": "./dist/bignumber.d.cts",
+        "default": "./dist/bignumber.cjs"
       },
       "browser": {
-        "types": "./bignumber.d.ts",
-        "default": "./bignumber.js"
-      },
-      "default": {
-        "types": "./bignumber.d.ts",
-        "default": "./bignumber.js"
+        "types": "./dist/bignumber.d.ts",
+        "default": "./dist/bignumber.js"
       }
     },
     "./package.json": "./package.json"
-  },
-  "author": {
-    "name": "Michael Mclaughlin",
-    "email": "M8ch88l@gmail.com"
-  },
-  "engines": {
-    "node": "*"
-  },
-  "license": "MIT",
+  }, 
   "scripts": {
-    "test": "node test/test"
+    "build": "node build.js",
+    "clean": "node -e \"require('fs').rmSync('dist',{ recursive: true, force: true })\"",
+    "test": "node test/test.js",
+    "typecheck:cjs": "tsc -p test/typescript/tsconfig.cjs.json",
+    "typecheck:esm": "tsc -p test/typescript/tsconfig.esm.json",
+    "typecheck:global": "tsc -p test/typescript/tsconfig.global.json",
+    "typecheck": "npm run typecheck:cjs && npm run typecheck:esm && npm run typecheck:global"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  },
+  "files": ["dist"]
 }

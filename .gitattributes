@@ -1,0 +1,2 @@
+# Enforce LF normalization for all text files
+* text=auto

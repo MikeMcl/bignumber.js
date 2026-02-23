@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "bignumber.js": ["../../dist/bignumber.d.cts"]
+    }
+  },
+  "files": [
+    "test_default_import.ts",
+    "test_require.ts"
+  ]
+}

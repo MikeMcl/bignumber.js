@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "paths": {
+      "bignumber.js": ["../../dist/bignumber.d.mts"]
+    }
+  },
+  "files": [
+    "test_default_import.ts",
+    "test_named_import.ts"
+  ]
+}

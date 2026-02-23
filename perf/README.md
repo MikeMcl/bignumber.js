@@ -1,3 +1,5 @@
+Legacy programs: These tools are old but still work and can be useful for testing and cross-checking BigNumber results over large sets of random inputs.
+
 This directory contains two command-line applications *bigtime.js*  and *bigtime-OOM.js*, and for the browser *bignumber-vs-bigdecimal.html*, which enable some of the methods of bignumber.js to be tested against the JavaScript translations of the two versions of BigDecimal in the *lib* directory.
 
 * GWT: java.math.BigDecimal

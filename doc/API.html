@@ -58,7 +58,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
 
   <div class="nav">
 
-    <b>v9.0.2</b>
+    <b>v10.0.0</b>
 
 	<a class='nav-title' href="#">API</a>
 
@@ -102,7 +102,6 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       <li><a href="#round-half-even" >ROUND_HALF_EVEN</a></li>
       <li><a href="#round-half-ceil" >ROUND_HALF_CEIL</a></li>
       <li><a href="#round-half-floor">ROUND_HALF_FLOOR</a></li>
-      <li><a href="#debug"           >DEBUG</a></li>
     </ul>
 
     <b> INSTANCE </b>
@@ -141,6 +140,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       <li><a href="#toFr"   >toFraction            </a>                  </li>
       <li><a href="#toJSON" >toJSON                </a>                  </li>
       <li><a href="#toN"    >toNumber              </a>                  </li>
+      <li><a href="#toObj"  >toObject              </a>                  </li>
       <li><a href="#toP"    >toPrecision           </a>                  </li>
       <li><a href="#toS"    >toString              </a>                  </li>
       <li><a href="#valueOf">valueOf               </a>                  </li>
@@ -196,19 +196,20 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       <code>base</code> is omitted or is <code>null</code> or <code>undefined</code>.
     </p>
     <p>
-      Note that the BigNnumber constructor accepts an <code>n</code> of type <em>number</em> purely
+      Note that the BigNumber constructor accepts an <code>n</code> of type <em>number</em> purely
       as a convenience so that string quotes don't have to be typed when entering literal values,
       and that it is the <code>toString</code> value of <code>n</code> that is used rather than its
       underlying binary floating point value converted to decimal. 
     </p>
     <pre>
-x = new BigNumber(123.4567)                // '123.4567'
+x = new BigNumber(0.1)                     // '0.1'
 // 'new' is optional
-y = BigNumber(x)                           // '123.4567'</pre>
+y = BigNumber(x)                           // '0.1'</pre>
     <p>
-      If <code>n</code> is a base <code>10</code> value it can be in normal or exponential notation.
-      Values in other bases must be in normal notation. Values in any base can have fraction digits,
-      i.e. digits after the decimal point.
+      If <code>n</code> is a decimal value and a <code>base</code> is not specified, it can be in
+      normal or exponential notation. If a <code>base</code> is specified, <code>n</code> must be
+      a string in normal notation. Values in any base can have fraction digits, i.e. digits after
+      the decimal point.
     </p>
     <pre>
 new BigNumber(43210)                       // '43210'
@@ -231,20 +232,17 @@ new BigNumber('+2')                        // '2'</pre>
       the prefix will be interpreted as decimals, e.g. <code>'011'</code> is interpreted as 11, not 9.
     </p>
     <pre>
-new BigNumber(-10110100.1, 2)              // '-180.5'
+new BigNumber('-10110100.1', 2)            // '-180.5'
 new BigNumber('-0b10110100.1')             // '-180.5'
 new BigNumber('ff.8', 16)                  // '255.5'
 new BigNumber('0xff.8')                    // '255.5'</pre>
     <p>
-      If a base is specified, <code>n</code> is rounded according to the current
-      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings. <em>This includes base
-      <code>10</code> so don't include a <code>base</code> parameter for decimal values unless
-      this behaviour is wanted.</em>
+      If a base is specified, <code>n</code> is converted to a decimal BigNumber value rounded
+      according to the current <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
     </p>
     <pre>BigNumber.config({ DECIMAL_PLACES: 5 })
-new BigNumber(1.23456789)                  // '1.23456789'
-new BigNumber(1.23456789, 10)              // '1.23457'</pre>
+new BigNumber('xy.z', 36)                  // '1222.97222'</pre>
     <p>An error is thrown if <code>base</code> is invalid. See <a href='#Errors'>Errors</a>.</p>
     <p>
       There is no limit to the number of digits of a value of type <em>string</em> (other than
@@ -254,32 +252,21 @@ new BigNumber(1.23456789, 10)              // '1.23457'</pre>
     <pre>
 new BigNumber('5032485723458348569331745.33434346346912144534543')
 new BigNumber('4.321e10000000')</pre>
-    <p>BigNumber <code>NaN</code> is returned if <code>n</code> is invalid
-    (unless <code>BigNumber.DEBUG</code> is <code>true</code>, see below).</p>
+    <p>An error is thrown if <code>n</code> is invalid. See <a href='#Errors'>Errors</a>.</p>
     <pre>
-new BigNumber('.1*')                       // 'NaN'
-new BigNumber('blurgh')                    // 'NaN'
-new BigNumber(9, 2)                        // 'NaN'</pre>
+new BigNumber('.1*')                       // '[BigNumber Error] Not a number: .1*'
+new BigNumber('blurgh')                    // '[BigNumber Error] Not a number: blurgh'
+new BigNumber('9', 2)                      // '[BigNumber Error] Not a base 2 number: 9'</pre>
     <p>
-      To aid in debugging, if <code>BigNumber.DEBUG</code> is <code>true</code> then an error will
-      be thrown on an invalid <code>n</code>. An error will also be thrown if <code>n</code> is of
-      type <em>number</em> and has more than <code>15</code> significant digits, as calling
-      <code><a href='#toS'>toString</a></code> or <code><a href='#valueOf'>valueOf</a></code> on
-      these numbers may not result in the intended value.
-    </p>
-      <pre>
-console.log(823456789123456.3)            //  823456789123456.2
-new BigNumber(823456789123456.3)          // '823456789123456.2'
-BigNumber.DEBUG = true
-// '[BigNumber Error] Number primitive has more than 15 significant digits'
-new BigNumber(823456789123456.3)
-// '[BigNumber Error] Not a base 2 number'
-new BigNumber(9, 2)</pre>
-    <p>
-      A BigNumber can also be created from an object literal.
-      Use <code><a href='#isBigNumber'>isBigNumber</a></code> to check that it is well-formed.
+      In advanced usage, a BigNumber can also be created from a plain object with <code>c</code>,
+      <code>e</code> and <code>s</code> properties, representing its coefficient, exponent and
+      sign respectively, if an <code>_isBigNumber</code> property with the value <code>true</code>
+      is also present.
     </p>
     <pre>new BigNumber({ s: 1, e: 2, c: [ 777, 12300000000000 ], _isBigNumber: true })    // '777.123'</pre>
+    <p>
+      See <code><a href='#toObj'>toObject</a></code> for converting a BigNumber to a plain object.
+    </p>
 
 
 
@@ -408,7 +395,7 @@ BigNumber.config({ EXPONENTIAL_AT: 0 })</pre>
         will always return a value in exponential form.
       </dd>
       <dd>
-        Calling <code>toString</code> with a base argument, e.g. <code>toString(10)</code>, will
+        Calling <code>toString</code> with a base argument, e.g. <code>toString(16)</code>, will
         also always return normal notation.
       </dd>
 
@@ -636,8 +623,8 @@ BigNumber.config({
         <a href='#toS'><code>toString</code></a>.
       </dd>
       <dd>
-        There is no maximum length for the alphabet, but it must be at least 2 characters long, and
-        it must not contain whitespace or a repeated character, or the sign indicators
+        There is no maximum length for the alphabet, but it must be at least two characters long,
+        and must not contain whitespace or a repeated character, or the sign indicators
         <code>'+'</code> and <code>'-'</code>, or the decimal separator <code>'.'</code>.
       </dd>
       <dd>
@@ -685,8 +672,10 @@ obj.RANGE                 // [-500, 500]</pre>
     </h5>
     <p><code>value</code>: <i>any</i><br /></p>
     <p>
-      Returns <code>true</code> if <code>value</code> is a BigNumber instance, otherwise returns
-      <code>false</code>.
+      Returns <code>true</code> if <code>value</code> is a BigNumber instance or
+      an object with valid coefficient (<code>c</code>), exponent (<code>e</code>) and sign
+      (<code>s</code>) properties that the BigNumber constructor will accept,
+      otherwise returns <code>false</code>. See <a href='#toObj'>toObject</a>.
     </p>
     <pre>x = 42
 y = new BigNumber(x)
@@ -699,30 +688,6 @@ BN = BigNumber.clone();
 z = new BN(x)
 z instanceof BigNumber               // false
 BigNumber.isBigNumber(z)             // true</pre>
-    <p>
-      If <code>value</code> is a BigNumber instance and <code>BigNumber.DEBUG</code> is <code>true</code>,
-      then this method will also check if <code>value</code> is well-formed, and throw if it is not.
-      See <a href='#Errors'>Errors</a>.
-    </p>
-    <p>
-      The check can be useful if creating a BigNumber from an object literal.
-      See <a href='#bignumber'>BigNumber</a>.
-    </p>
-    <pre>
-x = new BigNumber(10)
-
-// Change x.c to an illegitimate value.
-x.c = NaN
-
-BigNumber.DEBUG = false
-
-// No error.
-BigNumber.isBigNumber(x)    // true
-
-BigNumber.DEBUG = true
-
-// Error.
-BigNumber.isBigNumber(x)    // '[BigNumber Error] Invalid BigNumber'</pre>
 
 
 
@@ -898,22 +863,6 @@ BigNumber.sum.apply(null, arr)            // '43.9999'</pre>
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_CEIL })
 BigNumber.config({ ROUNDING_MODE: 2 })     // equivalent</pre>
 
-    <h5 id="debug">DEBUG</h5>
-    <p><i>undefined|false|true</i></p>
-    <p>
-      If <code>BigNumber.DEBUG</code> is set <code>true</code> then an error will be thrown
-      if this <a href='#bignumber'>BigNumber</a> constructor receives an invalid value, such as
-      a value of type <em>number</em> with more than <code>15</code> significant digits.
-      See <a href='#bignumber'>BigNumber</a>.
-    </p>
-    <p>
-      An error will also be thrown if the <code><a href='#isBigNumber'>isBigNumber</a></code>
-      method receives a BigNumber that is not well-formed.
-      See <code><a href='#isBigNumber'>isBigNumber</a></code>.
-    </p>
-    <pre>BigNumber.DEBUG = true</pre>
-
-
     <h3>INSTANCE</h3>
 
 
@@ -1035,7 +984,7 @@ x = new BigNumber(355)
 y = new BigNumber(113)
 x.dividedBy(y)                  // '3.14159292035398230088'
 x.div(5)                        // '71'
-x.div(47, 16)                   // '5'</pre>
+x.div('47', 16)                 // '5'</pre>
 
 
 
@@ -1208,7 +1157,7 @@ y.isFinite()                    // false</pre>
 x = new BigNumber(0.1)
 x.isGreaterThan(BigNumber(0.3).minus(0.2))    // false
 BigNumber(0).gt(x)                            // false
-BigNumber(11, 3).gt(11.1, 2)                  // true</pre>
+BigNumber('11', 3).gt('11.1', 2)              // true</pre>
 
 
 
@@ -1230,7 +1179,7 @@ BigNumber(11, 3).gt(11.1, 2)                  // true</pre>
 x = new BigNumber(0.3).minus(0.2)
 x.isGreaterThanOrEqualTo(0.1)          // true
 BigNumber(1).gte(x)                    // true
-BigNumber(10, 18).gte('i', 36)         // true</pre>
+BigNumber('10', 18).gte('i', 36)       // true</pre>
 
 
 
@@ -1263,7 +1212,7 @@ y.isInteger()                   // false</pre>
 x = new BigNumber(0.3).minus(0.2)
 x.isLessThan(0.1)                       // false
 BigNumber(0).lt(x)                      // true
-BigNumber(11.1, 2).lt(11, 3)            // true</pre>
+BigNumber('11.1', 2).lt('11', 3)        // true</pre>
 
 
 
@@ -1285,7 +1234,7 @@ BigNumber(11.1, 2).lt(11, 3)            // true</pre>
 x = new BigNumber(0.1)
 x.isLessThanOrEqualTo(BigNumber(0.3).minus(0.2))  // true
 BigNumber(-1).lte(x)                              // true
-BigNumber(10, 18).lte('i', 36)                    // true</pre>
+BigNumber('10', 18).lte('i', 36)                  // true</pre>
 
 
 
@@ -1358,7 +1307,7 @@ y.isZero()                      // false</pre>
 0.3 - 0.1                       // 0.19999999999999998
 x = new BigNumber(0.3)
 x.minus(0.1)                    // '0.2'
-x.minus(0.6, 20)                // '0'</pre>
+x.minus('0.6', 20)              // '0'</pre>
 
 
 
@@ -1763,6 +1712,27 @@ z = new BigNumber(-0)
 
 
 
+    <h5 id="toObj">toObject<code class='inset'>.toObject() <i>&rArr; object</i></code></h5>
+    <p>
+      Returns a plain object with <code>c</code>, <code>e</code> and <code>s</code> properties
+      representing the coefficient, exponent and sign of this BigNumber.
+    </p>
+    <p>
+      The returned object can be passed to the
+      <a href='#bignumber'><code>BigNumber</code></a> constructor (with a
+      <code>_isBigNumber</code> property) to recreate the BigNumber without
+      the overhead of parsing the string value.
+    </p>
+    <pre>
+x = new BigNumber('777.123')
+obj = x.toObject()              // { c: [ 777, 12300000000000 ], e: 2, s: 1 }
+
+obj._isBigNumber = true
+y = new BigNumber(obj)
+x.isEqualTo(y)                  // true</pre>
+
+
+
     <h5 id="toP">
       toPrecision<code class='inset'>.toPrecision([sd [, rm]]) <i>&rArr; string</i></code>
     </h5>
@@ -1812,15 +1782,9 @@ y.toPrecision(5)                // '45.600'</pre>
       <code>undefined</code>.
     </p>
     <p>
-      For bases above <code>10</code>, and using the default base conversion alphabet
-      (see <a href='#alphabet'><code>ALPHABET</code></a>), values from <code>10</code> to
-      <code>35</code> are represented by <code>a-z</code>
-      (as with <code>Number.prototype.toString</code>).
-    </p>
-    <p>
       If a base is specified the value is rounded according to the current
-      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a>
-      and <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
+      <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.
     </p>
     <p>
       If a base is not specified, and this BigNumber has a positive
@@ -1978,7 +1942,7 @@ y.s                             // -1</pre>
         <th>Throws</th>
       </tr>
       <tr>
-        <td rowspan=6>
+        <td rowspan=8>
           <code>BigNumber</code><br />
           <code>comparedTo</code><br />
           <code>dividedBy</code><br />
@@ -2002,13 +1966,19 @@ y.s                             // -1</pre>
         <td>Base out of range</td>
       </tr>
        <tr>
-        <td>Number primitive has more than 15 significant digits<sup>*</sup></td>
+        <td>Number primitive has more than 15 significant digits</td>
       </tr>
       <tr>
-        <td>Not a base... number<sup>*</sup></td>
+        <td>Not a base... number</td>
       </tr>
       <tr>
-        <td>Not a number<sup>*</sup></td>
+        <td>Not a number</td>
+      </tr>
+      <tr>
+        <td>String expected</td>
+      </tr>
+      <tr>
+        <td>Invalid argument</td>
       </tr>
       <tr>
         <td><code>clone</code></td>
@@ -2117,16 +2087,13 @@ y.s                             // -1</pre>
         <td><code>exponentiatedBy</code></td>
         <td>Argument not an integer</td>
       </tr>
-      <tr>
-        <td><code>isBigNumber</code></td>
-        <td>Invalid BigNumber<sup>*</sup></td>
-      </tr>
+
       <tr>
         <td>
           <code>minimum</code><br />
           <code>maximum</code>
         </td>
-        <td>Not a number<sup>*</sup></td>
+        <td>Not a number</td>
       </tr>
       <tr>
         <td>
@@ -2158,13 +2125,13 @@ y.s                             // -1</pre>
         <td>Base out of range</td>
       </tr>
     </table>
-    <p><sup>*</sup>Only thrown if <code>BigNumber.DEBUG</code> is <code>true</code>.</p>
+
     <p>To determine if an exception is a BigNumber Error:</p>
     <pre>
 try {
   // ...
 } catch (e) {
-  if (e instanceof Error &amp;&amp; e.message.indexOf('[BigNumber Error]') === 0) {
+  if (e instanceof Error &amp;&amp; e.message.startsWith('[BigNumber Error]')) {
       // ...
   }
 }</pre>
