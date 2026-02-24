@@ -73,12 +73,6 @@ A *dist* directory will be created containing the following:
 import BigNumber from './dist/bignumber.mjs';
 ```
 
-> Get a minified version from a CDN:
-
-```html
-<script src='https://cdn.jsdelivr.net/npm/bignumber.js@10.0.0/dist/bignumber.min.js'></script>
-```
-
 ### [Node.js](http://nodejs.org)
 
 ```bash
@@ -108,16 +102,6 @@ or
 
 ```javascript
 import BigNumber from './dist/bignumber.mjs';
-```
-
-### [Deno](https://deno.land/)
-
-```javascript
-// @deno-types="https://raw.githubusercontent.com/mikemcl/bignumber.js/v10.0.0/dist/bignumber.d.mts"
-import BigNumber from 'https://raw.githubusercontent.com/mikemcl/bignumber.js/v10.0.0/dist/bignumber.mjs';
-
-// @deno-types="https://unpkg.com/bignumber.js@latest/dist/bignumber.d.mts"
-import { BigNumber } from 'https://unpkg.com/bignumber.js@latest/dist/bignumber.mjs';
 ```
 
 ## Use

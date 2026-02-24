@@ -1,3 +1,4 @@
+(function() {
 /*
  *      bignumber.js v10.0.1
  *      A JavaScript library for arbitrary-precision arithmetic.
@@ -2886,3 +2887,7 @@ function toFixedPoint(str, e, z) {
 
   return str;
 }
+
+(typeof globalThis !== 'undefined' ? globalThis :
+  typeof window !== 'undefined' ? window : self).BigNumber = BigNumber;
+})();

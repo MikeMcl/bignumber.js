@@ -2886,3 +2886,7 @@ function toFixedPoint(str, e, z) {
 
   return str;
 }
+
+BigNumber['default'] = BigNumber.BigNumber = BigNumber;
+
+module.exports = BigNumber;
