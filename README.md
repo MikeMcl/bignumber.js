@@ -66,11 +66,28 @@ A *dist* directory will be created containing the following:
 <script src='dist/bignumber.js'></script>
 ```
 
+or, minified from a CDN (Content Delivery Network):
+
+```html
+<script src='https://cdn.jsdelivr.net/npm/bignumber.js@latest/dist/bignumber.min.js'></script>
+```
+
 > ES module
 
 ```html
 <script type="module">
 import BigNumber from './dist/bignumber.mjs';
+// ...
+</script>
+```
+
+or, minified from a CDN:
+
+```html
+<script type="module">
+import BigNumber from 'https://cdn.jsdelivr.net/npm/bignumber.js@latest/+esm'
+// ...
+</script>
 ```
 
 ### [Node.js](http://nodejs.org)
@@ -79,8 +96,13 @@ import BigNumber from './dist/bignumber.mjs';
 npm install bignumber.js
 ```
 
+> CommonJS
+
 ```javascript
 const BigNumber = require('bignumber.js');
+
+// or, testing from a local repo:
+const BigNumber = require('./dist/bignumber.cjs');
 ```
 
 > ES module
@@ -90,18 +112,20 @@ import BigNumber from 'bignumber.js';
 
 // or
 import { BigNumber } from 'bignumber.js';
+
+// or, testing from a local repo:
+import { BigNumber } from './dist/bignumber.mjs';
 ```
 
-> Testing from a local repo
+### [Deno](https://deno.land/)
 
 ```javascript
-const BigNumber = require('./dist/bignumber.cjs');
-```
+// @deno-types="https://raw.githubusercontent.com/MikeMcl/bignumber.js/main/dist/bignumber.d.mts"
+import BigNumber from 'https://raw.githubusercontent.com/MikeMcl/bignumber.js/main/dist/bignumber.mjs';
 
-or
-
-```javascript
-import BigNumber from './dist/bignumber.mjs';
+// or
+// @deno-types="https://unpkg.com/bignumber.js@latest/dist/bignumber.d.mts"
+import { BigNumber } from 'https://unpkg.com/bignumber.js@latest/dist/bignumber.mjs';
 ```
 
 ## Use
