@@ -426,7 +426,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param base The base of `n`, integer, 2 to 36 (or `ALPHABET.length`, see `ALPHABET`).
    */
   constructor(n: BigNumber.Value);
-  constructor(n: string, base: number);
+  constructor(n: string | number, base?: number);
 
   /**
    * Returns a BigNumber whose value is the absolute value, i.e. the magnitude, of the value of this
@@ -475,7 +475,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   comparedTo(n: BigNumber.Value): 1 | -1 | 0 | null;
-  comparedTo(n: string, base: number): 1 | -1 | 0 | null;
+  comparedTo(n: string | number, base?: number): 1 | -1 | 0 | null;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
@@ -557,7 +557,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   dividedBy(n: BigNumber.Value): BigNumber;
-  dividedBy(n: string, base: number): BigNumber;
+  dividedBy(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber divided by `n`, rounded
@@ -575,7 +575,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   div(n: BigNumber.Value): BigNumber;
-  div(n: string, base: number): BigNumber;
+  div(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the integer part of dividing the value of this BigNumber by
@@ -593,7 +593,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   dividedToIntegerBy(n: BigNumber.Value): BigNumber;
-  dividedToIntegerBy(n: string, base: number): BigNumber;
+  dividedToIntegerBy(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the integer part of dividing the value of this BigNumber by
@@ -611,7 +611,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   idiv(n: BigNumber.Value): BigNumber;
-  idiv(n: string, base: number): BigNumber;
+  idiv(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber exponentiated by `n`, i.e.
@@ -723,7 +723,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   isEqualTo(n: BigNumber.Value): boolean;
-  isEqualTo(n: string, base: number): boolean;
+  isEqualTo(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is equal to the value of `n`, otherwise returns
@@ -746,7 +746,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   eq(n: BigNumber.Value): boolean;
-  eq(n: string, base: number): boolean;
+  eq(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is a finite number, otherwise returns `false`.
@@ -778,7 +778,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   isGreaterThan(n: BigNumber.Value): boolean;
-  isGreaterThan(n: string, base: number): boolean;
+  isGreaterThan(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is greater than the value of `n`, otherwise
@@ -796,7 +796,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   gt(n: BigNumber.Value): boolean;
-  gt(n: string, base: number): boolean;
+  gt(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is greater than or equal to the value of `n`,
@@ -814,7 +814,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   isGreaterThanOrEqualTo(n: BigNumber.Value): boolean;
-  isGreaterThanOrEqualTo(n: string, base: number): boolean;
+  isGreaterThanOrEqualTo(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is greater than or equal to the value of `n`,
@@ -832,7 +832,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   gte(n: BigNumber.Value): boolean;
-  gte(n: string, base: number): boolean;
+  gte(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is an integer, otherwise returns `false`.
@@ -862,7 +862,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   isLessThan(n: BigNumber.Value): boolean;
-  isLessThan(n: string, base: number): boolean;
+  isLessThan(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is less than the value of `n`, otherwise returns
@@ -880,7 +880,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   lt(n: BigNumber.Value): boolean;
-  lt(n: string, base: number): boolean;
+  lt(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is less than or equal to the value of `n`,
@@ -898,7 +898,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   isLessThanOrEqualTo(n: BigNumber.Value): boolean;
-  isLessThanOrEqualTo(n: string, base: number): boolean;
+  isLessThanOrEqualTo(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is less than or equal to the value of `n`,
@@ -916,7 +916,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   lte(n: BigNumber.Value): boolean;
-  lte(n: string, base: number): boolean;
+  lte(n: string | number, base?: number): boolean;
 
   /**
    * Returns `true` if the value of this BigNumber is `NaN`, otherwise returns `false`.
@@ -980,7 +980,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   minus(n: BigNumber.Value): BigNumber;
-  minus(n: string, base: number): BigNumber;
+  minus(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber modulo `n`, i.e. the integer
@@ -1007,7 +1007,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   modulo(n: BigNumber.Value): BigNumber;
-  modulo(n: string, base: number): BigNumber;
+  modulo(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber modulo `n`, i.e. the integer
@@ -1034,7 +1034,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   mod(n: BigNumber.Value): BigNumber;
-  mod(n: string, base: number): BigNumber;
+  mod(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber multiplied by `n`.
@@ -1053,7 +1053,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   multipliedBy(n: BigNumber.Value): BigNumber;
-  multipliedBy(n: string, base: number): BigNumber;
+  multipliedBy(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber multiplied by `n`.
@@ -1072,7 +1072,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   times(n: BigNumber.Value): BigNumber;
-  times(n: string, base: number): BigNumber;
+  times(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns a BigNumber whose value is the value of this BigNumber negated, i.e. multiplied by -1.
@@ -1103,7 +1103,7 @@ declare class BigNumber implements BigNumber.Instance {
    * @param [base] The base of n.
    */
   plus(n: BigNumber.Value): BigNumber;
-  plus(n: string, base: number): BigNumber;
+  plus(n: string | number, base?: number): BigNumber;
 
   /**
    * Returns the number of significant digits of the value of this BigNumber, or `null` if the value
@@ -1805,4 +1805,4 @@ declare class BigNumber implements BigNumber.Instance {
 }
 
 declare function BigNumber(n: BigNumber.Value): BigNumber;
-declare function BigNumber(n: string, base: number): BigNumber;
+declare function BigNumber(n: string | number, base?: number): BigNumber;
