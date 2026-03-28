@@ -2621,12 +2621,12 @@ function clone(configObject) {
 
   /*
    * Return an array of two BigNumbers representing the value of this BigNumber as a simple
-   * fraction with an integer numerator and an integer denominator.
-   * The denominator will be a positive non-zero value less than or equal to the specified
-   * maximum denominator. If a maximum denominator is not specified, the denominator will be
-   * the lowest value necessary to represent the number exactly.
+   * fraction with an integer numerator and an integer denominator. The denominator will be
+   * a positive value less than or equal to the specified maximum denominator. If a maximum
+   * denominator is not specified, the denominator will be the lowest value necessary to
+   * represent the number exactly.
    *
-   * [md] {number|string|BigNumber} Integer >= 1, or Infinity. The maximum denominator.
+   * [md] {number|string|BigNumber} Integer > 0, or Infinity. The maximum denominator.
    *
    * '[BigNumber Error] Argument {not an integer|out of range} : {md}'
    */
@@ -2646,7 +2646,9 @@ function clone(configObject) {
       }
     }
 
-    if (!xc) return new BigNumber(x);
+    if (!xc) {
+      return [new BigNumber(x.s || 0), new BigNumber(0)];
+    }  
 
     d = new BigNumber(ONE);
     n1 = d0 = new BigNumber(ONE);

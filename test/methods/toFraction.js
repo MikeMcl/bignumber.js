@@ -14,10 +14,10 @@ Test('toFraction', function () {
         EXPONENTIAL_AT: 1E9
     });
 
-    t('Infinity', 'Infinity', u);
-    t('-Infinity', -Infinity, u);
-    t('NaN', 'NaN', u);
-    t('NaN', NaN, u);
+    t('1,0', 'Infinity', u);
+    t('-1,0', -Infinity, u);
+    t('0,0', 'NaN', u);
+    t('0,0', NaN, u);
 
     // Tests generated using Python's fraction module.
 

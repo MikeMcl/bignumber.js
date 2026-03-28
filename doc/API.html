@@ -1693,12 +1693,17 @@ x.toFormat(3, BigNumber.ROUND_UP, fmt)    // '=> 12.34.56.789,124'</pre>
     <p>
       Returns an array of two BigNumbers representing the value of this BigNumber as a simple
       fraction with an integer numerator and an integer denominator. The denominator will be a
-      positive non-zero value less than or equal to <code>maximum_denominator</code>.
+      positive value less than or equal to <code>maximum_denominator</code>.
     </p>
     <p>
       If a <code>maximum_denominator</code> is not specified, or is <code>null</code> or
       <code>undefined</code>, the denominator will be the lowest value necessary to represent the
       number exactly.
+    </p>
+    <p>
+      If the value of this BigNumber is <code>Infinity</code>, <code>-Infinity</code>, or
+      <code>NaN</code>, the returned fraction is <code>[1, 0]</code>, <code>[-1, 0]</code>, or
+      <code>[0, 0]</code> respectively.
     </p>
     <p>
       Throws if <code>maximum_denominator</code> is invalid. See <a href='#Errors'>Errors</a>.
@@ -1713,7 +1718,12 @@ pi.toFraction(100000)           // '312689, 99532'
 pi.toFraction(10000)            // '355, 113'
 pi.toFraction(100)              // '311, 99'
 pi.toFraction(10)               // '22, 7'
-pi.toFraction(1)                // '3, 1'</pre>
+pi.toFraction(1)                // '3, 1'
+
+y = new BigNumber('-Infinity')
+y.toFraction()                  // '-1, 0'
+z = new BigNumber(NaN)
+z.toFraction()                  // '0, 0'</pre>
 
 
 

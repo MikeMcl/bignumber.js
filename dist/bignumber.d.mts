@@ -1406,11 +1406,14 @@ declare class BigNumber implements BigNumber.Instance {
   toFormat(format: BigNumber.Format): string;
 
   /**
-   * Returns an array of two BigNumbers representing the value of this BigNumber as a simple
-   * fraction with an integer numerator and an integer denominator.
-   * The denominator will be a positive non-zero value less than or equal to `max_denominator`.
-   * If a maximum denominator, `max_denominator`, is not specified, the denominator will be the
-   * lowest value necessary to represent the number exactly.
+   * Returns an array of two BigNumbers representing the value of this BigNumber as a
+   * simple fraction with an integer numerator and an integer denominator.
+   * The denominator will be a positive value less than or equal to `max_denominator`.
+   * If a maximum denominator, `max_denominator`, is not specified, the denominator
+   * will be the lowest value necessary to represent the number exactly.
+   *
+   * If the value of this BigNumber is `Infinity`, `-Infinity`, or `NaN`, the returned
+   * fraction is `[1, 0]`, `[-1, 0]`, or `[0, 0]` respectively.
    *
    * Throws if `max_denominator` is invalid.
    *
@@ -1425,11 +1428,16 @@ declare class BigNumber implements BigNumber.Instance {
    * pi.toFraction(100)              // '311, 99'
    * pi.toFraction(10)               // '22, 7'
    * pi.toFraction(1)                // '3, 1'
+   * 
+   * y = new BigNumber('-Infinity')
+   * y.toFraction()                  // '-1, 0'
+   * z = new BigNumber(NaN)
+   * z.toFraction()                  // '0, 0'
    * ```
    *
    * @param [max_denominator] The maximum denominator, integer > 0, or Infinity.
    */
-  toFraction(max_denominator?: BigNumber.Value): BigNumber | [BigNumber, BigNumber];
+  toFraction(max_denominator?: BigNumber.Value): [BigNumber, BigNumber];
 
   /** As `valueOf`. */
   toJSON(): string;
