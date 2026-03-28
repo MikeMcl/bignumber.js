@@ -1,5 +1,5 @@
 /*
- *      bignumber.js v10.0.1
+ *      bignumber.js v10.0.2
  *      A JavaScript library for arbitrary-precision arithmetic.
  *      https://github.com/MikeMcl/bignumber.js
  *      Copyright (c) 2026 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -123,6 +123,9 @@ function clone(configObject) {
     // Whether to use cryptographically-secure random number generation, if available.
     CRYPTO = false,                          // true or false
 
+    // Whether to throw or to return NaN on an invalid BigNumber string value.
+    STRICT = true,                           // true or false
+
     // The modulo mode used when calculating the modulus: a mod n.
     // The quotient (q = a / n) is calculated according to the corresponding rounding mode.
     // The remainder (r) is calculated as: r = a - n * q.
@@ -174,7 +177,7 @@ function clone(configObject) {
    * The BigNumber constructor and exported function.
    * Create and return a new instance of a BigNumber object.
    *
-   * v {number|string|BigNumber} A numeric value.
+   * v {BigNumber|string|number|bigint} A numeric value.
    * [b] {number} The base of v. Integer, 2 to ALPHABET.length inclusive.
    */
   function BigNumber(v, b) {
@@ -239,8 +242,14 @@ function clone(configObject) {
         } else if (t == 'bigint') {
           str = String(v);
         } else {
-          throw Error
-            (bignumberError + 'Invalid argument: ' + v);
+          if (STRICT) {
+            throw Error
+              (bignumberError + 'BigNumber, string, number, or BigInt expected: ' + v);
+          }
+          str = String(v);
+          if (!isNumeric.test(str)) {
+            return parseUnusualNumeric(x, str);
+          }
         }
        
         x.s = str.charCodeAt(0) == 45 ? (str = str.slice(1), -1) : 1;
@@ -264,11 +273,12 @@ function clone(configObject) {
 
     // Base specified.
     } else {  
-
-      // '[BigNumber Error] String expected: {v}'
       if (t != 'string') {
-        throw Error
-          (bignumberError + 'String expected: ' + v);
+        if (STRICT) {
+          throw Error
+            (bignumberError + 'String expected: ' + v);
+        }
+        v = String(v);    
       }
 
       // '[BigNumber Error] Base {not a primitive number|not an integer|out of range}: {b}'
@@ -396,6 +406,7 @@ function clone(configObject) {
    *   EXPONENTIAL_AT   {number|number[]}  -MAX to MAX  or  [-MAX to 0, 0 to MAX]
    *   RANGE            {number|number[]}  -MAX to MAX (not zero)  or  [-MAX to -1, 1 to MAX]
    *   CRYPTO           {boolean}          true or false
+   *   STRICT           {boolean}          true or false
    *   MODULO_MODE      {number}           0 to 9
    *   POW_PRECISION       {number}           0 to MAX
    *   ALPHABET         {string}           A string of unique characters which does not contain
@@ -504,6 +515,18 @@ function clone(configObject) {
           }
         }
 
+        // STRICT {boolean} true or false.
+        // '[BigNumber Error] STRICT not true or false: {v}'
+        if (obj.hasOwnProperty(p = 'STRICT')) {
+          v = obj[p];
+          if (v === !!v) {
+            STRICT = v;
+          } else {
+            throw Error
+             (bignumberError + p + ' not true or false: ' + v);
+          }
+        }
+
         // MODULO_MODE {number} Integer, 0 to 9 inclusive.
         // '[BigNumber Error] MODULO_MODE {not a primitive number|not an integer|out of range}: {v}'
         if (obj.hasOwnProperty(p = 'MODULO_MODE')) {
@@ -558,6 +581,7 @@ function clone(configObject) {
       EXPONENTIAL_AT: [TO_EXP_NEG, TO_EXP_POS],
       RANGE: [MIN_EXP, MAX_EXP],
       CRYPTO: CRYPTO,
+      STRICT: STRICT,
       MODULO_MODE: MODULO_MODE,
       POW_PRECISION: POW_PRECISION,
       FORMAT: FORMAT,
@@ -582,7 +606,7 @@ function clone(configObject) {
     if ({}.toString.call(c) != '[object Array]') {
     
       // ±Infinity and NaN
-      return c === null && e === null && (s === null || s === 1 || s === -1)
+      return c === null && e === null && (s === null || s === 1 || s === -1);
     }  
      
     // Check sign and check that exponent is an integer within the allowed range.
@@ -1367,8 +1391,13 @@ function clone(configObject) {
       
       // '[BigNumber Error] Not a number: {n}'
       // '[BigNumber Error] Not a base {b} number: {n}'
-      throw Error
-        (bignumberError + 'Not a' + (b ? ' base ' + b : '') + ' number: ' + str);
+      if (STRICT) {
+        throw Error
+          (bignumberError + 'Not a' + (b ? ' base ' + b : '') + ' number: ' + str);
+      }
+
+      // NaN.
+      x.s = x.c = x.e = null;
     }
   })();
 

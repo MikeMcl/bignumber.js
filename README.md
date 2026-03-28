@@ -139,8 +139,6 @@ let z = new BigNumber(x);
 x.isEqualTo(y) && y.isEqualTo(z) && x.isEqualTo(z);      // true
 ```
 
-An error will be thrown if an invalid value is passed to the constructor.
-
 To get the string value of a BigNumber use [`toString()`](http://mikemcl.github.io/bignumber.js/#toS) or [`toFixed()`](http://mikemcl.github.io/bignumber.js/#toFix). Using `toFixed()` prevents exponential notation being returned, no matter how large or small the value.
 
 ```javascript
@@ -263,6 +261,10 @@ and [`isNaN`](http://mikemcl.github.io/bignumber.js/#isNaN) and [`isFinite`](htt
 x = new BigNumber(NaN)                                           // "NaN"
 y = new BigNumber(Infinity)                                      // "Infinity"
 x.isNaN() && !y.isNaN() && !x.isFinite() && !y.isFinite()        // true
+
+BigNumber.set({ STRICT: false })
+z = new BigNumber('zzz')                 
+z.isNaN()                                                        // true
 ```
 
 The value of a BigNumber is stored in a decimal floating point format in terms of a coefficient, exponent and sign.

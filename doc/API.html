@@ -78,6 +78,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
           <li><a href="#exponential-at">EXPONENTIAL_AT</a></li>
           <li><a href="#range"         >RANGE</a></li>
           <li><a href="#crypto"        >CRYPTO</a></li>
+          <li><a href="#strict"        >STRICT</a></li>
           <li><a href="#modulo-mode"   >MODULO_MODE</a></li>
           <li><a href="#pow-precision" >POW_PRECISION</a></li>
           <li><a href="#format"        >FORMAT</a></li>
@@ -243,7 +244,7 @@ new BigNumber('0xff.8')                    // '255.5'</pre>
     </p>
     <pre>BigNumber.config({ DECIMAL_PLACES: 5 })
 new BigNumber('xy.z', 36)                  // '1222.97222'</pre>
-    <p>An error is thrown if <code>base</code> is invalid. See <a href='#Errors'>Errors</a>.</p>
+    <p>An exception is thrown if <code>base</code> is invalid. See <a href='#Errors'>Errors</a>.</p>
     <p>
       There is no limit to the number of digits of a value of type <em>string</em> (other than
       that of JavaScript's maximum array size). See <a href='#range'><code>RANGE</code></a> to set
@@ -252,11 +253,16 @@ new BigNumber('xy.z', 36)                  // '1222.97222'</pre>
     <pre>
 new BigNumber('5032485723458348569331745.33434346346912144534543')
 new BigNumber('4.321e10000000')</pre>
-    <p>An error is thrown if <code>n</code> is invalid. See <a href='#Errors'>Errors</a>.</p>
+    <p>
+      If <code>n</code> is a value of an unsupported type or not a valid numeric value then a
+      BigNumber Error is thrown, unless <a href='#strict'>STRICT</a> is <code>false</code>,
+      whereupon a BigNumber with value <code>NaN</code> is returned.
+      See <a href='#strict'>STRICT</a> and <a href='#Errors'>Errors</a>.
+    </p>
     <pre>
-new BigNumber('.1*')                       // '[BigNumber Error] Not a number: .1*'
-new BigNumber('blurgh')                    // '[BigNumber Error] Not a number: blurgh'
-new BigNumber('9', 2)                      // '[BigNumber Error] Not a base 2 number: 9'</pre>
+new BigNumber('.1*')            // '[BigNumber Error] Not a number: .1*'
+new BigNumber('blurgh')         // '[BigNumber Error] Not a number: blurgh'
+new BigNumber('9', 2)           // '[BigNumber Error] Not a base 2 number: 9'</pre>
     <p>
       In advanced usage, a BigNumber can also be created from a plain object with <code>c</code>,
       <code>e</code> and <code>s</code> properties, representing its coefficient, exponent and
@@ -487,6 +493,41 @@ BigNumber.random()              // 0.54340758610486147524</pre>
 
 
 
+      <dt id="strict"><code><b>STRICT</b></code></dt>
+      <dd>
+        <i>boolean</i>: <code>true</code> or <code>false</code>.<br />
+        Default value: <code>true</code>
+      </dd>
+      <dd>
+        The value that determines whether an exception is thrown or a BigNumber with value
+        <code>NaN</code> is returned when an invalid value is passed to the constructor
+        or a method as the value of a BigNumber.
+      </dd>
+      <dd>
+        If <code>STRICT</code> is <code>true</code> then a BigNumber Error is thrown if the
+        value is not of type <code>BigNumber</code>, <code>number</code>, <code>string</code>,
+        or <code>BigInt</code>, or if the value is a string that is not a valid numeric value.
+      </dd>
+      <dd>
+        If <code>STRICT</code> is <code>false</code> then a BigNumber with value
+        <code>NaN</code> is returned if the value is not a valid numeric value.
+        Types unsupported when <code>STRICT</code> is <code>true</code> are first
+        converted to a string.
+      </dd>
+      <dd>  
+        See <a href='#Errors'>Errors</a>.  
+      </dd>
+      <dd>
+      <pre>BigNumber.config({ STRICT: false })
+x = new BigNumber('blurgh')
+x.toString()                    // 'NaN'
+
+BigNumber.config({ STRICT: true })
+new BigNumber('blurgh')         // '[BigNumber Error] Not a number: blurgh'</pre>
+      </dd>
+
+
+
       <dt id="modulo-mode"><code><b>MODULO_MODE</b></code></dt>
       <dd>
         <i>number</i>: integer, <code>0</code> to <code>9</code> inclusive<br />
@@ -651,6 +692,7 @@ BigNumber.config({
   EXPONENTIAL_AT: [-10, 20],
   RANGE: [-500, 500],
   CRYPTO: true,
+  STRICT: false,
   MODULO_MODE: BigNumber.ROUND_FLOOR,
   POW_PRECISION: 80,
   FORMAT: {
@@ -1931,9 +1973,9 @@ y.s                             // -1</pre>
 
 
     <h4 id='Errors'>Errors</h4>
-    <p>The table below shows the errors that are thrown.</p>
+    <p>The table below shows the exceptions that are thrown.</p>
     <p>
-      The errors are generic <code>Error</code> objects whose message begins
+      The exceptions are generic <code>Error</code> objects whose message begins
       <code>'[BigNumber Error]'</code>.
     </p>
     <table class='error-table'>
@@ -1975,7 +2017,7 @@ y.s                             // -1</pre>
         <td>String expected</td>
       </tr>
       <tr>
-        <td>Invalid argument</td>
+        <td>BigNumber, string, number, or BigInt expected</td>
       </tr>
       <tr>
         <td><code>clone</code></td>

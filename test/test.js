@@ -27,6 +27,7 @@ console.log('\n Testing bignumber.js\n');
   'random',
   'shiftedBy',
   'squareRoot',
+  'strict',
   'sum',
   'toExponential',
   'toFixed',

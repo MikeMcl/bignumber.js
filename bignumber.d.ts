@@ -168,6 +168,28 @@ declare namespace BigNumber {
     CRYPTO?: boolean;
 
     /**
+     * A boolean: `true` or `false`. Default value: `true`.
+     *
+     * The value that determines whether an exception is thrown or a BigNumber with value `NaN`
+     * is returned when an invalid value is passed to the constructor or a method as the value
+     * of a BigNumber.
+     *
+     * If `STRICT` is `true` then a BigNumber Error is thrown if the value is not of type
+     * BigNumber, number, string, or BigInt, or if the value is a string that is not a 
+     * valid numeric value.
+     * 
+     * If `STRICT` is `false` then a BigNumber with value `NaN` is returned if the value is not
+     * a valid numeric value. Types unsupported when `STRICT` is `true` are first converted to
+     * a string.
+     *
+     * ```ts
+     * BigNumber.config({ STRICT: false })
+     * new BigNumber('blurgh')     // 'NaN'
+     * ```
+     */
+    STRICT?: boolean;
+
+    /**
      * An integer, 0, 1, 3, 6 or 9. Default value: `BigNumber.ROUND_DOWN` (1).
      *
      * The modulo mode used when calculating the modulus: `a mod n`.
@@ -404,7 +426,9 @@ declare class BigNumber implements BigNumber.Instance {
    * new BigNumber('4.321e10000000')
    * ```
    *
-   * An error is thrown if `n` is invalid.
+   * If `n` is a value of an unsupported type or not a valid numeric value then a BigNumber Error
+   * is thrown, unless `STRICT` is `false`, whereupon a BigNumber with value `NaN` is returned.
+   * See `STRICT` for more details.
    *
    * ```ts
    * new BigNumber('.1*')                    // '[BigNumber Error] Not a number: .1*'
