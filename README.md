@@ -142,9 +142,9 @@ x.isEqualTo(y) && y.isEqualTo(z) && x.isEqualTo(z);      // true
 To get the string value of a BigNumber use [`toString()`](http://mikemcl.github.io/bignumber.js/#toS) or [`toFixed()`](http://mikemcl.github.io/bignumber.js/#toFix). Using `toFixed()` prevents exponential notation being returned, no matter how large or small the value.
 
 ```javascript
-let x = new BigNumber('1111222233334444555566');
-x.toString();                       // "1.111222233334444555566e+21"
-x.toFixed();                        // "1111222233334444555566"
+let x = new BigNumber('1_234_567_890_000_000_000_000');
+x.toString();                       // "1.23456789e+21"
+x.toFixed();                        // "1234567890000000000000"
 ```
 
 If the limited precision of Number values is not well understood, it is recommended to create BigNumbers from String values rather than Number values to avoid a potential loss of precision.

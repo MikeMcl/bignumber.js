@@ -238,6 +238,14 @@ new BigNumber('-0b10110100.1')             // '-180.5'
 new BigNumber('ff.8', 16)                  // '255.5'
 new BigNumber('0xff.8')                    // '255.5'</pre>
     <p>
+      String values may contain underscores as numeric separators.
+      Each underscore must be between two digits.
+    </p>
+    <pre>
+new BigNumber('1_000_000.000_5')           // '1000000.0005'
+new BigNumber('0xff_ff')                   // '65535'
+new BigNumber('1010_1111', 2)              // '175'</pre>
+    <p>
       If a base is specified, <code>n</code> is converted to a decimal BigNumber value rounded
       according to the current <a href='#decimal-places'><code>DECIMAL_PLACES</code></a> and
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> settings.

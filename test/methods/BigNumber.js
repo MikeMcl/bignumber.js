@@ -183,20 +183,24 @@ Test('bigNumber', function () {
     tx(function () {new BigNumber('+-2')}, "+-2");
     tx(function () {new BigNumber('0 0')}, "0 0");
 
-    t('15', new BigNumber('0xf', 16));
+    // Base prefixes are not supported if an explicit base is passed.
+    // They will just be interpreted as intended to be numerals in that base.
+
+    tx(function () {new BigNumber('0xf', 16)}, "0xf, 16");
+    tx(function () {new BigNumber('0b1.', 2)}, "0b1., 2");
+    tx(function () {new BigNumber('   -0o1  ', 8)}, "   -0o1  , 8");
+
     t('-10', new BigNumber('-0xa'));
     t('255', new BigNumber('0xff'));
     t('-3294', new BigNumber('-0xcde'));
     t('15.5', new BigNumber('0xf.8'));
-
-    t('1', new BigNumber('0b1.', 2));
+   
     t('0', new BigNumber('0b0'));
     t('-1', new BigNumber('-0b1'));
     t('3', new BigNumber('0b11'));
     t('-11', new BigNumber('-0b1011'));
     t('1.5', new BigNumber('0b1.1'));
-
-    t('-1', new BigNumber('   -0o1  ', 8));
+    
     t('0', new BigNumber('-0o0'));
     t('1', new BigNumber('0o1'));
     t('63', new BigNumber('0o77'));
@@ -595,18 +599,132 @@ Test('bigNumber', function () {
 
     t('NaN', 'NaN', undefined);
     t('NaN', 'NaN', null);
-    t('NaN', 'NaN', 2);
-    t('NaN', '-NaN', 2);
-    t('NaN', '-NaN', 10);
-    t('NaN', 'NaN', 10);
+    tx(function () {new BigNumber('NaN', 2)}, "'NaN', 2");
+    tx(function () {new BigNumber('-NaN', 2)}, "'-NaN', 2");
+    tx(function () {new BigNumber('-NaN', 10)}, "'-NaN', 10");
+    tx(function () {new BigNumber('NaN', 10)}, "'NaN', 10");
     t('12.345', 12.345, null);
     t('12.345', 12.345, undefined);
-    t('Infinity', 'Infinity', 2);
-    t('Infinity', 'Infinity', 10);
-    t('-Infinity', '-Infinity', 2);
-    t('-Infinity', '-Infinity', 10);
+    tx(function () {new BigNumber('Infinity', 2)}, "'Infinity', 2");
+    tx(function () {new BigNumber('Infinity', 10)}, "'Infinity', 10");
+    tx(function () {new BigNumber('-Infinity', 2)}, "'-Infinity', 2");
+    tx(function () {new BigNumber('-Infinity', 10)}, "'-Infinity', 10");
     t('101725686101180', '101725686101180', undefined);
     t('101725686101180', '101725686101180', 10);
+
+    // Test underscores as numeric separators
+
+    // Valid decimal underscores (no base)
+
+    BigNumber.config({ EXPONENTIAL_AT: 20 });
+
+    t('1000', '1_000');
+    t('1000000', '1_000_000');
+    t('1000000.005', '1_000_000.00_50');
+    t('0.12', '.1_2');
+    t('1.2e+35', '1_2e3_4');
+    t('1e+23', '1e+2_3');
+    t('1e-23', '1e-2_3');
+    t('-1000', '-1_000');
+    t('1000', '+1_000');
+    t('1000', ' 1_000 ');
+    t('1000', ' +1_000 ');
+    t('-1000', ' -1_000 ');
+    t('10.2', '1_0.2_0');
+    t('99', '9_9');
+    t('123', '1_2_3');
+    t('12345', '1_2_3_4_5');
+
+    t('1.234e+57', '1_2.3_4e5_6');
+    t('1.234e+57', '+1_2.3_4e5_6');
+    t('-1.234e+57', '-1_2.3_4e5_6');
+    t('1.0009876543e+365435', '1_000.987_654_3e365_432');
+    t('-9.876543e-1000987', '-9.876_543e-1_000_987');
+
+    // Underscore after leading zero allowed here (JavaScript disallows).
+
+    t('1', '0_1');
+    t('0', '0_0');
+    t('1.2', '0_1.2');
+    t('100', '0_1e2');
+    t('1', '00_1');
+
+    // Invalid decimal underscores (no base)
+
+    tx(function () {new BigNumber('1__2')}, "'1__2'");
+    tx(function () {new BigNumber('1_.2')}, "'1_.2'");
+    tx(function () {new BigNumber('1._2')}, "'1._2'");
+    tx(function () {new BigNumber('1.2_e3')}, "'1.2_e3'");
+    tx(function () {new BigNumber('1.2e_3')}, "'1.2e_3'");
+    tx(function () {new BigNumber('1e_2')}, "'1e_2'");
+    tx(function () {new BigNumber('1e+_2')}, "'1e+_2'");
+    tx(function () {new BigNumber('1e-_2')}, "'1e-_2'");
+    tx(function () {new BigNumber('1e2_')}, "'1e2_'");
+    tx(function () {new BigNumber('_1')}, "'_1'");
+    tx(function () {new BigNumber('1_')}, "'1_'");
+    tx(function () {new BigNumber('_1_2')}, "'_1_2'");
+    tx(function () {new BigNumber('1_2_')}, "'1_2_'");
+    tx(function () {new BigNumber('_')}, "'_'");
+    tx(function () {new BigNumber('__')}, "'__'");
+
+    // Valid base underscores (explicit base)
+
+    t('42751', '10100110_11111111', 2);
+    t('175.07421875', '1010_1111.0001_0011', 2);
+    t('65535', 'ff_ff', 16);
+    t('171', 'a_b', 16);
+    t('255', 'F_F', 16);
+    t('-16', '-1_0', 16);
+    t('16', ' +1_0 ', 16);
+    t('8', '1_0', 8);
+    t('1000', '1_000', 10);
+    t('2748', 'a_b_c', 16);
+    t('15.99609375', 'f.f_f', 16);
+    t('1.5', '1.1_0', 2);
+
+    t('1', '0_1', 2);
+    t('3', '00_11', 2);
+    t('15', '0_f', 16);
+
+    // Invalid base underscores (explicit base)
+
+    tx(function () {new BigNumber('1010__1111', 2)}, "'1010__1111', 2");
+    tx(function () {new BigNumber('1010_.1111', 2)}, "'1010_.1111', 2");
+    tx(function () {new BigNumber('1010._1111', 2)}, "'1010._1111', 2");
+    tx(function () {new BigNumber('_ff', 16)}, "'_ff', 16");
+    tx(function () {new BigNumber('ff_', 16)}, "'ff_', 16");
+    tx(function () {new BigNumber('_1', 2)}, "'_1', 2");
+    tx(function () {new BigNumber('1_', 2)}, "'1_', 2");
+    tx(function () {new BigNumber('_', 16)}, "'_', 16");
+    tx(function () {new BigNumber('__', 16)}, "'__', 16");
+    tx(function () {new BigNumber('1_e2', 10)}, "'1_e2', 10");
+
+    // Valid prefixed underscores (base inferred from prefix)
+
+    t('175', '0b1010_1111');
+    t('668', '0o12_34');
+    t('18', '0x1_2');
+    t('65535', '0xff_ff');
+    t('171', '0xA_B');
+    t('-65535', '-0xff_ff');
+
+    // Leading zero with underscore in prefixed (non-decimal) bases
+
+    t('1', '0b0_1');
+    t('15', '0x0_f');
+    t('1', '0o0_1');
+
+    // Invalid prefixed underscores
+
+    tx(function () {new BigNumber('0b1010__1111')}, "'0b1010__1111'");
+    tx(function () {new BigNumber('0x_ff')}, "'0x_ff'");
+    tx(function () {new BigNumber('0xff_')}, "'0xff_'");
+    tx(function () {new BigNumber('0b_1')}, "'0b_1'");
+    tx(function () {new BigNumber('0o_7')}, "'0o_7'");
+    tx(function () {new BigNumber('0b1_.0')}, "'0b1_.0'");
+    tx(function () {new BigNumber('0b1._0')}, "'0b1._0'");
+
+    BigNumber.config({ EXPONENTIAL_AT: 1E9 });
 
     // Test ALPHABET
 
@@ -618,6 +736,11 @@ Test('bigNumber', function () {
 
     t('635356108986960269840155289238139379273453551922021969747464031737829471932451727645074552025138332075241803866047', '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$_', 64);
     t('64163.091552734375', 'fGz.5T', 64);
+
+    // When '_' is in the ALPHABET, it is a digit, not a separator.
+    t('63', '_', 64);
+    t('4031', '$_', 64);
+    t('8130', '1_2', 64);
 
     BigNumber.config({ALPHABET: 'xy'});
 

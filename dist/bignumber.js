@@ -73,7 +73,10 @@ var
  * Create and return a BigNumber constructor.
  */
 function clone(configObject) {
-  var div, convertBase, parseUnusualNumeric,
+  var div, convertBase, parseValidString, parseBaseString,
+    basePrefix = /^(-?)0([xbo])(?=[^.])/i,
+    isInfinityOrNaN = /^-?(Infinity|NaN)$/,
+    whitespaceOrPlus = /^\s*\+(?!-)|^\s+|\s+$/g,
     P = BigNumber.prototype = { constructor: BigNumber, toString: null, valueOf: null },
     ONE = new BigNumber(1),
 
@@ -182,7 +185,7 @@ function clone(configObject) {
    * [b] {number} The base of v. Integer, 2 to ALPHABET.length inclusive.
    */
   function BigNumber(v, b) {
-    var alphabet, c, caseChanged, e, i, len, str, t,
+    var e, i, str, t,
       x = this;
 
     // Enable constructor call without `new`.
@@ -233,44 +236,65 @@ function clone(configObject) {
           return;
         }
 
-        str = String(v);
-      } else {
-        if (t == 'string') { 
-          str = v;
-          if (!isNumeric.test(str)) {
-            return parseUnusualNumeric(x, str);
-          }
-        } else if (t == 'bigint') {
-          str = String(v);
-        } else {
-          if (STRICT) {
-            throw Error
-              (bignumberError + 'BigNumber, string, number, or BigInt expected: ' + v);
-          }
-          str = String(v);
-          if (!isNumeric.test(str)) {
-            return parseUnusualNumeric(x, str);
-          }
-        }
-       
-        x.s = str.charCodeAt(0) == 45 ? (str = str.slice(1), -1) : 1;
-      } 
-
-      // Decimal point?
-      if ((e = str.indexOf('.')) > -1) str = str.replace('.', '');
-
-      // Exponential form?
-      if ((i = str.search(/e/i)) > 0) {
-
-        // Determine exponent.
-        if (e < 0) e = i;
-        e += +str.slice(i + 1);
-        str = str.substring(0, i);
-      } else if (e < 0) {
-
-        // Integer.
-        e = str.length;
+        return parseValidString(x, String(v));
       }
+
+      if (t == 'bigint') {
+        x.s = v < 0 ? (v = -v, -1) : 1;
+        return parseValidString(x, String(v));
+      }
+
+      if (t == 'string') { 
+        str = v;
+      } else {
+        if (STRICT) {
+          throw Error
+            (bignumberError + 'BigNumber, string, number, or BigInt expected: ' + v);
+        }
+        str = String(v);
+      }
+
+      if (isNumeric.test(str)) {
+        x.s = str.charCodeAt(0) == 45 ? (str = str.slice(1), -1) : 1;
+        return parseValidString(x, str);
+      }
+
+      // Strip whitespace and leading +.
+      str = str.replace(whitespaceOrPlus, '');
+
+      // No exception on ±Infinity or NaN.
+      if (isInfinityOrNaN.test(str)) {
+        x.s = isNaN(str) ? null : str < 0 ? -1 : 1;
+        x.c = x.e = null;
+        return;
+      }
+
+      // Check for base prefix such as 0x for hexadecimal.
+      str = str.replace(basePrefix, function (m, p1, p2) {
+        b = (p2 = p2.toLowerCase()) == 'x' ? 16 : p2 == 'b' ? 2 : 8;
+        return p1;
+      });
+
+      if (b) {
+        return parseBaseString(x, str, b, v);
+      }  
+
+      // Strip underscores.
+      str = str.replace(/(\d)_(?=\d)/g, '$1');
+
+      if (isNumeric.test(str)) {
+        x.s = str.charCodeAt(0) == 45 ? (str = str.slice(1), -1) : 1;
+        return parseValidString(x, str);
+      }
+
+      // '[BigNumber Error] Not a number: {v}'
+      if (STRICT) {
+        throw Error
+          (bignumberError + 'Not a number: ' + v);
+      }
+
+      // NaN.
+      x.s = x.c = x.e = null;
 
     // Base specified.
     } else {  
@@ -285,96 +309,7 @@ function clone(configObject) {
       // '[BigNumber Error] Base {not a primitive number|not an integer|out of range}: {b}'
       intCheck(b, 2, ALPHABET.length, 'Base');  
         
-      str = v;
-      x.s = str.charCodeAt(0) === 45 ? (str = str.slice(1), -1) : 1;
-      alphabet = ALPHABET.slice(0, b);
-      e = i = 0;
-
-      // Check that str is a valid base b number.
-      // Don't use RegExp, so alphabet can contain special characters.
-      for (len = str.length; i < len; i++) {
-        if (alphabet.indexOf(c = str.charAt(i)) < 0) {
-          if (c == '.') {
-
-            // If '.' is not the first character and it has not be found before.
-            if (i > e) {
-              e = len;
-              continue;
-            }
-          } else if (!caseChanged) {
-
-            // Allow e.g. hexadecimal 'FF' as well as 'ff'.
-            if (str == str.toUpperCase() && (str = str.toLowerCase()) ||
-                str == str.toLowerCase() && (str = str.toUpperCase())) {
-              caseChanged = true;
-              i = -1;
-              e = 0;
-              continue;
-            }
-          }
-
-          return parseUnusualNumeric(x, v, b);
-        }
-      }  
-
-      str = convertBase(str, b, 10, x.s);
-
-      // Decimal point?
-      if ((e = str.indexOf('.')) > -1) str = str.replace('.', '');
-      else e = str.length;
-    }
-
-    // Determine leading zeros.
-    for (i = 0; str.charCodeAt(i) === 48; i++);
-
-    // Determine trailing zeros.
-    for (len = str.length; str.charCodeAt(--len) === 48;);
-
-    if (str = str.slice(i, ++len)) {
-      len -= i;
-      e = e - i - 1;
-
-      // Overflow?
-      if (e > MAX_EXP) {
-
-        // Infinity.
-        x.c = x.e = null;
-
-      // Underflow?
-      } else if (e < MIN_EXP) {
-
-        // Zero.
-        x.c = [x.e = 0];
-      } else {
-        x.e = e;
-        x.c = [];
-
-        // Transform base
-
-        // e is the base 10 exponent.
-        // i is where to slice str to get the first element of the coefficient array.
-        i = (e + 1) % LOG_BASE;
-        if (e < 0) i += LOG_BASE;  // i < 1
-
-        if (i < len) {
-          if (i) x.c.push(+str.slice(0, i));
-
-          for (len -= LOG_BASE; i < len;) {
-            x.c.push(+str.slice(i, i += LOG_BASE));
-          }
-
-          i = LOG_BASE - (str = str.slice(i)).length;
-        } else {
-          i -= len;
-        }
-
-        for (; i--; str += '0');
-        x.c.push(+str);
-      }
-    } else {
-
-      // Zero.
-      x.c = [x.e = 0];
+      parseBaseString(x, v.replace(whitespaceOrPlus, ''), b, v);
     }
   }
 
@@ -819,6 +754,160 @@ function clone(configObject) {
 
 
   // PRIVATE FUNCTIONS
+
+
+  /*
+   * Parse a known-valid decimal string str into BigNumber x.
+   * str must already have its sign removed.
+   */
+  parseValidString = function (x, str) {
+    var e, i, len;
+
+    // Decimal point?
+    if ((e = str.indexOf('.')) > -1) str = str.replace('.', '');
+
+    // Exponential form?
+    if ((i = str.search(/e/i)) > 0) {
+
+      // Determine exponent.
+      if (e < 0) e = i;
+      e += +str.slice(i + 1);
+      str = str.substring(0, i);
+    } else if (e < 0) {
+
+      // Integer.
+      e = str.length;
+    }
+
+    // Determine leading zeros.
+    for (i = 0; str.charCodeAt(i) === 48; i++);
+
+    // Determine trailing zeros.
+    for (len = str.length; str.charCodeAt(--len) === 48;);
+
+    if (str = str.slice(i, ++len)) {
+      len -= i;
+      e = e - i - 1;
+
+      // Overflow?
+      if (e > MAX_EXP) {
+
+        // Infinity.
+        x.c = x.e = null;
+
+      // Underflow?
+      } else if (e < MIN_EXP) {
+
+        // Zero.
+        x.c = [x.e = 0];
+      } else {
+        x.e = e;
+        x.c = [];
+
+        // Transform base
+
+        // e is the base 10 exponent.
+        // i is where to slice str to get the first element of the coefficient array.
+        i = (e + 1) % LOG_BASE;
+        if (e < 0) i += LOG_BASE;  // i < 1
+
+        if (i < len) {
+          if (i) x.c.push(+str.slice(0, i));
+
+          for (len -= LOG_BASE; i < len;) {
+            x.c.push(+str.slice(i, i += LOG_BASE));
+          }
+
+          i = LOG_BASE - (str = str.slice(i)).length;
+        } else {
+          i -= len;
+        }
+
+        for (; i--; str += '0');
+        x.c.push(+str);
+      }
+    } else {
+
+      // Zero.
+      x.c = [x.e = 0];
+    }
+  };
+
+
+  /*
+   * Parse a non-decimal base string str into BigNumber x.
+   * str must have whitespace/plus stripped and base prefix removed.
+   * b is the base, v is the original input for error messages.
+   *
+   * Handles sign extraction, underscore stripping, leading/trailing dot normalisation,
+   * case flipping, character validation, then converts to base 10 via convertBase
+   * and delegates to parseValidString.
+   */
+  parseBaseString = function (x, str, b, v) {
+    var c, len,
+      alphabet = ALPHABET.slice(0, b),
+      i = 0,
+      clean = '',
+      hasDot = false,
+      prevIsNumeral = false,
+      caseChanged = false;
+
+    x.s = str.charCodeAt(0) === 45 ? (str = str.slice(1), -1) : 1;
+
+    // Check that str is a valid base b number.
+    // Underscores as separators are only valid between two numerals.
+    for (len = str.length; i < len; i++) {
+      c = str.charAt(i);
+
+      if (alphabet.indexOf(c) >= 0) {
+        clean += c;
+        prevIsNumeral = true;
+        continue;
+      }
+
+      if (c == '_') {
+        if (prevIsNumeral && i + 1 < len) {
+          prevIsNumeral = false;
+          continue;
+        }
+      } else if (c == '.') {
+        if (i == 0 || !hasDot && prevIsNumeral) {
+          // Don't add trailing or lone dot.
+          if (i + 1 == len) break;
+          if (i == 0) clean = '0';
+          clean += c;
+          hasDot = true;
+          prevIsNumeral = false;
+          continue;
+        }
+      } else if (!caseChanged) {
+
+        // Allow e.g. hexadecimal 'FF' as well as 'ff'.
+        if (str == str.toUpperCase() && alphabet == alphabet.toLowerCase() &&
+           (str = str.toLowerCase()) ||
+            str == str.toLowerCase() && alphabet == alphabet.toUpperCase() &&
+           (str = str.toUpperCase())) {
+          i = -1;
+          clean = '';
+          caseChanged = true;
+          hasDot = prevIsNumeral = false;
+          continue;
+        }
+      }
+
+      // '[BigNumber Error] Not a base {b} number: {v}'
+      if (STRICT) {
+        throw Error
+          (bignumberError + 'Not a base ' + b + ' number: ' + v);
+      }
+
+      // NaN.
+      x.s = x.c = x.e = null;
+      return;
+    }
+
+    parseValidString(x, convertBase(clean, b, 10, x.s));
+  };
 
 
   // Called by BigNumber and BigNumber.prototype.toString.
@@ -1356,51 +1445,7 @@ function clone(configObject) {
   }
 
 
-  // Handle values that fail the validity test in BigNumber.
-  parseUnusualNumeric = (function () {
-    var basePrefix = /^(-?)0([xbo])(?=\w[\w.]*$)/i,
-      dotAfter = /^([^.]+)\.$/,
-      dotBefore = /^\.([^.]+)$/,
-      isInfinityOrNaN = /^-?(Infinity|NaN)$/,
-      whitespaceOrPlus = /^\s*\+(?=[\w.])|^\s+|\s+$/g;
 
-    return function (x, str, b) {
-      var base,
-        s = str.replace(whitespaceOrPlus, '');
-
-      // No exception on ±Infinity or NaN.
-      if (isInfinityOrNaN.test(s)) {
-        x.s = isNaN(s) ? null : s < 0 ? -1 : 1;
-        x.c = x.e = null;
-        return;
-      }
-
-      // basePrefix = /^(-?)0([xbo])(?=\w[\w.]*$)/i
-      s = s.replace(basePrefix, function (m, p1, p2) {
-        base = (p2 = p2.toLowerCase()) == 'x' ? 16 : p2 == 'b' ? 2 : 8;
-        return !b || b == base ? p1 : m;
-      });
-       
-      if (b) {
-        base = b;
-        
-        // E.g. '1.' to '1', '.1' to '0.1'
-        s = s.replace(dotAfter, '$1').replace(dotBefore, '0.$1');
-      }
-      
-      if (str != s) return new BigNumber(s, base);
-      
-      // '[BigNumber Error] Not a number: {n}'
-      // '[BigNumber Error] Not a base {b} number: {n}'
-      if (STRICT) {
-        throw Error
-          (bignumberError + 'Not a' + (b ? ' base ' + b : '') + ' number: ' + str);
-      }
-
-      // NaN.
-      x.s = x.c = x.e = null;
-    }
-  })();
 
 
   /*

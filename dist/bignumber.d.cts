@@ -407,12 +407,19 @@ declare class BigNumber implements BigNumber.Instance {
    * new BigNumber('0xff.8')                  // '255.5'
    * ```
    *
-  * If a base is specified, `n` is converted to a decimal BigNumber value rounded according to
-  * the current `DECIMAL_PLACES` and `ROUNDING_MODE` settings.
+   * String values may contain underscores as numeric separators.
+   * Each underscore must be between two digits.
+   * 
+   * new BigNumber('1_000_000.000_5')         // '1000000.0005'
+   * new BigNumber('0xff_ff')                 // '65535'
+   * new BigNumber('1010_1111', 2)            // '175'
+   * 
+   * If a base is specified, `n` is converted to a decimal BigNumber value rounded according to
+   * the current `DECIMAL_PLACES` and `ROUNDING_MODE` settings.
    *
    * ```ts
    * BigNumber.config({ DECIMAL_PLACES: 5 })
-   * new BigNumber('xy.z', 36)                  // '1222.97222'
+   * new BigNumber('xy.z', 36)                // '1222.97222'
    * ```
    *
    * An error is thrown if `base` is invalid.

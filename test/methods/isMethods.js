@@ -121,7 +121,7 @@ Test('`is` methods', function () {
     t(false, n.isEqualTo(Infinity));
     t(true, n.isEqualTo(-1/0));
     t(false, n.isGreaterThan(-Infinity));
-    t(true, n.isGreaterThanOrEqualTo('-Infinity', 8));
+    t(true, n.isGreaterThanOrEqualTo('-Infinity'));
     t(true, n.isLessThan(0));
     t(true, n.isLessThanOrEqualTo(Infinity));
     t(true, n.toString() === n.valueOf());
@@ -243,7 +243,7 @@ Test('`is` methods', function () {
     t(false, new BigNumber(NaN).isLessThan(NaN));
     t(false, new BigNumber(Infinity).isLessThan(-Infinity));
     t(false, new BigNumber(Infinity).isLessThan(Infinity));
-    t(true, new BigNumber('Infinity', 10).isLessThanOrEqualTo('Infinity', 2));
+    t(true, new BigNumber(Infinity).isLessThanOrEqualTo(Infinity));
     t(false, new BigNumber(NaN).isGreaterThanOrEqualTo(NaN));
     t(true, new BigNumber(Infinity).isGreaterThanOrEqualTo(Infinity));
     t(true, new BigNumber(Infinity).isGreaterThanOrEqualTo(-Infinity));
@@ -256,12 +256,12 @@ Test('`is` methods', function () {
     t(true, new BigNumber('a', 16).isGreaterThanOrEqualTo('9', 16));
     t(false, new BigNumber(0).isLessThanOrEqualTo('NaN'));
     t(false, new BigNumber(0).isGreaterThanOrEqualTo(NaN));
-    t(false, new BigNumber('NaN', 2).isLessThanOrEqualTo('NaN', 36));
-    t(false, new BigNumber('NaN', 36).isGreaterThanOrEqualTo('NaN', 2));
+    t(false, new BigNumber(NaN).isLessThanOrEqualTo(NaN));
+    t(false, new BigNumber(NaN).isGreaterThanOrEqualTo(NaN));
     t(false, new BigNumber(0).isLessThanOrEqualTo(-Infinity));
     t(true, new BigNumber(0).isGreaterThanOrEqualTo(-Infinity));
-    t(true, new BigNumber(0).isLessThanOrEqualTo('Infinity', 36));
-    t(false, new BigNumber(0).isGreaterThanOrEqualTo('Infinity', 36));
+    t(true, new BigNumber(0).isLessThanOrEqualTo(Infinity));
+    t(false, new BigNumber(0).isGreaterThanOrEqualTo(Infinity));
     t(false, new BigNumber(10).isLessThanOrEqualTo('20', 4));
     t(true, new BigNumber(10).isLessThanOrEqualTo('20', 5));
     t(false, new BigNumber(10).isGreaterThanOrEqualTo('20', 6));
