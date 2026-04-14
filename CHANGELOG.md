@@ -1,3 +1,13 @@
+#### 11.0.0
+
+* 14/04/26
+* Add `STRICT` configuration option:
+    if `true` (default), throw an exception on invalid input.
+    if `false`, return `NaN` on invalid input.
+* `toFraction`: return `[1, 0]` for `Infinity` and `[0, 0]` for `NaN`.
+* Support underscores as separators.
+* If a base is supplied, reject non-finite values and base prefixes.
+
 #### 10.0.2
 
 * 24/02/26
@@ -15,8 +25,8 @@
 * Add CI workflow.
 * Add type declaration import tests.
 * Remove `BigNumber.DEBUG`, so the behaviour is now always as if it was `true`:
-  - throw on invalid input instead of returning `NaN`.
-  - always validate the `c`, `e`, and `s` properties of objects passed to `isBigNumber`
+    throw on invalid input instead of returning `NaN`, and
+    always validate the `c`, `e`, and `s` properties of objects passed to `isBigNumber`
 * Don't call `toString` on any arbitrary object passed to the constructor.
 * Require a BigNumber value to be a string if a base is also passed.
 * Add `toObject` prototype method which returns a plain object with `c`, `e`, and `s` properties.
