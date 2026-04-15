@@ -739,15 +739,15 @@ function clone(configObject) {
 
 
   /*
-   * Return a BigNumber whose value is the sum of the arguments.
+   * Return a BigNumber whose value is the sum of the arguments,
+   * or zero if there are none.
    *
    * arguments {number|string|BigNumber}
    */
   BigNumber.sum = function () {
-    var i = 1,
-      args = arguments,
-      sum = new BigNumber(args[0]);
-    for (; i < args.length;) sum = sum.plus(args[i++]);
+    var i = 0,
+      sum = new BigNumber(0);
+    for (; i < arguments.length;) sum = sum.plus(arguments[i++]);
     return sum;
   };
 

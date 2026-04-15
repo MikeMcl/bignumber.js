@@ -1791,7 +1791,8 @@ declare class BigNumber implements BigNumber.Instance {
   static random(decimalPlaces?: number): BigNumber;
 
   /**
-   * Returns a BigNumber whose value is the sum of the arguments.
+   * Returns a BigNumber whose value is the sum of the arguments,
+   * or zero if there are none.
    *
    * The return value is always exact and unrounded.
    *

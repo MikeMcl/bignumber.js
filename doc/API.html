@@ -823,7 +823,10 @@ BigNumber.random(20)            // '0.78193327636914089009'</pre>
       <code>n</code>: <i>number|string|BigNumber</i><br />
       <i>See <code><a href="#bignumber">BigNumber</a></code> for further parameter details.</i>
     </p>
-    <p>Returns a BigNumber whose value is the sum of the arguments.</p>
+    <p>
+      Returns a BigNumber whose value is the sum of the arguments,
+      or zero if there are none.
+    </p>
     <p>The return value is always exact and unrounded.</p>
     <pre>x = new BigNumber('3257869345.0378653')
 BigNumber.sum(4e9, x, '123456789.9')      // '7381326134.9378653'

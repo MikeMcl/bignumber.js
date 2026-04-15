@@ -1,3 +1,8 @@
+#### 12.0.0
+
+* 15/04/26
+* `BigNumber.sum`: return zero if there are no arguments.
+
 #### 11.0.0
 
 * 14/04/26
