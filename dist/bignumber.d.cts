@@ -1276,6 +1276,38 @@ declare class BigNumber implements BigNumber.Instance {
   sqrt(): BigNumber;
 
   /**
+   * Returns the value of this BigNumber as a JavaScript BigInt.
+   *
+   * If the value is not an integer, it is rounded to an integer using rounding mode `roundingMode`,
+   * or `ROUNDING_MODE` if `roundingMode` is omitted or is `null` or `undefined`.
+   *
+   * If the value of this BigNumber is not finite (`Infinity`, `-Infinity` or `NaN`),
+   * `null` is returned.
+   *
+   * This method is only available if `BigInt` is supported in the environment.
+   *
+   * Throws if `roundingMode` is invalid.
+   *
+   * ```ts
+   * x = new BigNumber(123)
+   * x.toBigInt()                    // 123n
+   *
+   * y = new BigNumber('9999999999999999999999999999999')
+   * y.toBigInt()                    // 9999999999999999999999999999999n
+   *
+   * z = new BigNumber(1.5)
+   * z.toBigInt()                    // 2n       (default ROUND_HALF_UP)
+   * z.toBigInt(1)                   // 1n       (ROUND_DOWN)
+   *
+   * new BigNumber(Infinity).toBigInt()   // null
+   * new BigNumber(NaN).toBigInt()        // null
+   * ```
+   *
+   * @param [roundingMode] Rounding mode, integer, 0 to 8.
+   */
+  toBigInt(roundingMode?: BigNumber.RoundingMode): bigint | null;
+
+  /**
    * Returns a string representing the value of this BigNumber in exponential notation rounded using
    * rounding mode `roundingMode` to `decimalPlaces` decimal places, i.e with one digit before the
    * decimal point and `decimalPlaces` digits after it.

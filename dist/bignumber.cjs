@@ -8,22 +8,22 @@
  *      BigNumber.prototype methods     |  BigNumber methods
  *                                      |
  *      absoluteValue            abs    |  clone
- *      comparedTo                      |  config               set
+ *      comparedTo                      |  config                 set
  *      decimalPlaces            dp     |      DECIMAL_PLACES
  *      dividedBy                div    |      ROUNDING_MODE
  *      dividedToIntegerBy       idiv   |      EXPONENTIAL_AT
  *      exponentiatedBy          pow    |      RANGE
  *      integerValue                    |      CRYPTO
- *      isEqualTo                eq     |      MODULO_MODE
- *      isFinite                        |      POW_PRECISION
- *      isGreaterThan            gt     |      FORMAT
- *      isGreaterThanOrEqualTo   gte    |      ALPHABET
- *      isInteger                       |  isBigNumber
- *      isLessThan               lt     |  maximum              max
- *      isLessThanOrEqualTo      lte    |  minimum              min
- *      isNaN                           |  random
- *      isNegative                      |  sum
- *      isPositive                      |
+ *      isEqualTo                eq     |      STRICT
+ *      isFinite                        |      MODULO_MODE
+ *      isGreaterThan            gt     |      POW_PRECISION
+ *      isGreaterThanOrEqualTo   gte    |      FORMAT
+ *      isInteger                       |      ALPHABET
+ *      isLessThan               lt     |  isBigNumber
+ *      isLessThanOrEqualTo      lte    |  maximum                max
+ *      isNaN                           |  minimum                min
+ *      isNegative                      |  random
+ *      isPositive                      |  sum
  *      isZero                          |
  *      minus                           |
  *      modulo                   mod    |
@@ -33,6 +33,7 @@
  *      precision                sd     |
  *      shiftedBy                       |
  *      squareRoot               sqrt   |
+ *      toBigInt                        |
  *      toExponential                   |
  *      toFixed                         |
  *      toFormat                        |
@@ -196,7 +197,7 @@ function clone(configObject) {
 
       if (isBigNumber(v)) {
         x.s = v.s;
-        
+
         if (!v.c || v.e > MAX_EXP) {
           x.c = x.e = null;
         } else if (v.e < MIN_EXP) {
@@ -205,10 +206,10 @@ function clone(configObject) {
           x.e = v.e;
           x.c = v.c.slice();
         }
-         
+
         return;
       }
-      
+
       if (t == 'number') {
 
          // Handle ±Infinity and NaN.
@@ -243,7 +244,7 @@ function clone(configObject) {
         return parseValidString(x, String(v));
       }
 
-      if (t == 'string') { 
+      if (t == 'string') {
         str = v;
       } else {
         if (STRICT) {
@@ -276,7 +277,7 @@ function clone(configObject) {
 
       if (b) {
         return parseBaseString(x, str, b, v);
-      }  
+      }
 
       // Strip underscores.
       str = str.replace(/(\d)_(?=\d)/g, '$1');
@@ -296,18 +297,18 @@ function clone(configObject) {
       x.s = x.c = x.e = null;
 
     // Base specified.
-    } else {  
+    } else {
       if (t != 'string') {
         if (STRICT) {
           throw Error
             (bignumberError + 'String expected: ' + v);
         }
-        v = String(v);    
+        v = String(v);
       }
 
       // '[BigNumber Error] Base {not a primitive number|not an integer|out of range}: {b}'
-      intCheck(b, 2, ALPHABET.length, 'Base');  
-        
+      intCheck(b, 2, ALPHABET.length, 'Base');
+
       parseBaseString(x, v.replace(whitespaceOrPlus, ''), b, v);
     }
   }
@@ -537,38 +538,38 @@ function clone(configObject) {
       c = v.c,
       e = v.e,
       s = v.s;
-        
+
     if ({}.toString.call(c) != '[object Array]') {
-    
+
       // ±Infinity and NaN
       return c === null && e === null && (s === null || s === 1 || s === -1);
-    }  
-     
+    }
+
     // Check sign and check that exponent is an integer within the allowed range.
     if ((s !== 1 && s !== -1) || e < -MAX || e > MAX || e !== mathfloor(e)) {
       return false;
     }
-    
+
     // If the first element is zero, the BigNumber value must be zero.
     if (c[0] === 0) {
       return e === 0 && c.length === 1;
     }
-           
+
     // Calculate number of digits that c[0] should have, based on the exponent.
     i = (e + 1) % LOG_BASE;
     if (i < 1) i += LOG_BASE;
-            
+
     // Calculate number of digits of c[0].
     //if (Math.ceil(Math.log(c[0] + 1) / Math.LN10) !== i) {
     if (String(c[0]).length !== i) {
       return false;
     }
-          
+
     for (i = 0; i < c.length; i++) {
       n = c[i];
       if (n < 0 || n >= BASE || n !== mathfloor(n)) return false;
     }
-             
+
     // Last element cannot be zero, unless it is the only element.
     return n !== 0;
   };
@@ -2539,6 +2540,25 @@ function clone(configObject) {
   };
 
 
+  if (typeof BigInt == 'function') {
+
+    /*
+     * Return the value of this BigNumber as a BigInt. If the value is not an integer then
+     * round the value to an integer using rounding mode rm, or ROUNDING_MODE if rm is omitted.
+     * If the value is non-finite, return null.
+     *
+     * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
+     *
+     * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {rm}'
+     */
+    P.toBigInt = function (rm) {
+      var x = this;
+      if (!x.c) return null;
+      return BigInt(format(x, x.e + 1, rm));
+    };
+  }
+
+
   /*
    * Return a string representing the value of this BigNumber in exponential notation and
    * rounded using ROUNDING_MODE to dp fixed decimal places.
@@ -2692,7 +2712,7 @@ function clone(configObject) {
 
     if (!xc) {
       return [new BigNumber(x.s || 0), new BigNumber(0)];
-    }  
+    }
 
     d = new BigNumber(ONE);
     n1 = d0 = new BigNumber(ONE);

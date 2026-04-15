@@ -1,7 +1,8 @@
-#### 12.0.0
+#### 11.1.0
 
 * 15/04/26
-* `BigNumber.sum`: return zero if there are no arguments.
+* #401 `BigNumber.sum`: return zero if there are no arguments.
+* #352 Add `toBigInt` method.
 
 #### 11.0.0
 

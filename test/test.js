@@ -29,6 +29,7 @@ console.log('\n Testing bignumber.js\n');
   'squareRoot',
   'strict',
   'sum',
+  'toBigInt',
   'toExponential',
   'toFixed',
   'toFormat',
