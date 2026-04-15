@@ -1982,9 +1982,9 @@ Test('decimalPlaces', function () {
     tx(function () {new BigNumber('12.345').dp('-1.1e1')}, ".dp('-1.1e1')");
 
     tx(function () {new BigNumber('12.345').dp('-1')}, ".dp('-1')");
-    tx(function () {new BigNumber('12.345').dp(-23)}, ".dp(-23)");
     tx(function () {new BigNumber('12.345').dp(MAX + 1)}, ".dp(MAX + 1)");
     tx(function () {new BigNumber('12.345').dp(MAX + 0.1)}, ".dp(MAX + 1)");
+    tx(function () {new BigNumber('12.345').dp(-MAX - 1)}, ".dp(-MAX - 1)");
     tx(function () {new BigNumber('12.345').dp('-0.01')}, ".dp('-0.01')");
     tx(function () {new BigNumber('12.345').dp('-1e-1')}, ".dp('-1e-1')");
     tx(function () {new BigNumber('12.345').dp(Infinity)}, ".dp(Infinity)");
@@ -2018,4 +2018,114 @@ Test('decimalPlaces', function () {
     tx(function () {new BigNumber('12.345').dp(0, '-1e-1')}, ".dp(0, '-1e-1')");
     tx(function () {new BigNumber('12.345').dp(0, Infinity)}, ".dp(0, Infinity)");
     tx(function () {new BigNumber('12.345').dp(0, '-Infinity')}, ".dp(0, '-Infinity')");
+
+    BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_HALF_CEIL});
+
+    // Negative dp: round to the left of the decimal point
+
+    // Basic negative dp rounding
+    t('12350', '12345', -1);
+    t('12300', '12345', -2);
+    t('12000', '12345', -3);
+    t('10000', '12345', -4);
+    t('0', '12345', -5);
+    t('0', '12345', -6);
+    t('0', '12345', -10);
+
+    // Negative dp with negative values
+    t('-12340', '-12345', -1);
+    t('-12300', '-12345', -2);
+    t('-12000', '-12345', -3);
+    t('-10000', '-12345', -4);
+    t('-0', '-12345', -5);
+    t('-0', '-12345', -6);
+
+    // Negative dp with zero
+    t('0', '0', -1);
+    t('0', '0', -5);
+    t('-0', '-0', -1);
+    t('-0', '-0', -5);
+
+    // Negative dp with small values (smaller than rounding unit)
+    t('0', '0.5', -1);
+    t('0', '0.001', -1);
+    t('0', '4', -1);
+    t('10', '5', -1);
+    t('-0', '-4', -1);
+    t('-0', '-5', -1);
+
+    // Negative dp with non-finite values
+    t('Infinity', 'Infinity', -1);
+    t('-Infinity', '-Infinity', -1);
+    t('NaN', 'NaN', -1);
+    t('Infinity', 'Infinity', -5);
+    t('-Infinity', '-Infinity', -5);
+    t('NaN', 'NaN', -5);
+
+    // Rounding at halfway with different rounding modes
+    // 55555 has 5 in the ones place; dp(-1) rounds the 5
+    t('55560', '55555', -1, 0);    // ROUND_UP
+    t('55550', '55555', -1, 1);    // ROUND_DOWN
+    t('55560', '55555', -1, 2);    // ROUND_CEIL
+    t('55550', '55555', -1, 3);    // ROUND_FLOOR
+    t('55560', '55555', -1, 4);    // ROUND_HALF_UP
+    t('55550', '55555', -1, 5);    // ROUND_HALF_DOWN
+    t('55560', '55555', -1, 6);    // ROUND_HALF_EVEN
+    t('55560', '55555', -1, 7);    // ROUND_HALF_CEIL
+    t('55550', '55555', -1, 8);    // ROUND_HALF_FLOOR
+
+    // Rounding modes with negative values
+    t('-55560', '-55555', -1, 0);   // ROUND_UP
+    t('-55550', '-55555', -1, 1);   // ROUND_DOWN
+    t('-55550', '-55555', -1, 2);   // ROUND_CEIL
+    t('-55560', '-55555', -1, 3);   // ROUND_FLOOR
+    t('-55560', '-55555', -1, 4);   // ROUND_HALF_UP
+    t('-55550', '-55555', -1, 5);   // ROUND_HALF_DOWN
+    t('-55560', '-55555', -1, 6);   // ROUND_HALF_EVEN
+    t('-55550', '-55555', -1, 7);   // ROUND_HALF_CEIL
+    t('-55560', '-55555', -1, 8);   // ROUND_HALF_FLOOR
+
+    // Negative dp with all rounding modes for 12345
+    t('12350', '12345', -1, 0);    // ROUND_UP
+    t('12340', '12345', -1, 1);    // ROUND_DOWN
+    t('12350', '12345', -1, 2);    // ROUND_CEIL
+    t('12340', '12345', -1, 3);    // ROUND_FLOOR
+    t('12350', '12345', -1, 4);    // ROUND_HALF_UP
+    t('12340', '12345', -1, 5);    // ROUND_HALF_DOWN
+    t('12340', '12345', -1, 6);    // ROUND_HALF_EVEN
+    t('12350', '12345', -1, 7);    // ROUND_HALF_CEIL
+    t('12340', '12345', -1, 8);    // ROUND_HALF_FLOOR
+
+    // Larger negative dp values
+    t('123500000', '123456789', -5);
+    t('100000000', '123456789', -8);
+    t('0', '123456789', -9);
+    t('0', '123456789', -10);
+
+    // Negative dp with already-rounded integers
+    t('100', '100', -1);
+    t('100', '100', -2);
+    t('0', '100', -3);
+    t('1000', '1000', -1);
+    t('1000', '1000', -2);
+    t('1000', '1000', -3);
+    t('0', '1000', -4);
+
+    // Negative dp with decimals (rounds away all fractional and some integer digits)
+    t('12350', '12345.678', -1);
+    t('12300', '12345.678', -2);
+    t('12000', '12345.678', -3);
+
+    // Negative dp with very large numbers
+    t('100000000000000000000', '1e20', -5);
+    t('100000000000000000000', '1e20', -20);
+    t('0', '1e20', -21);
+
+    // Large negative dp (extreme)
+    t('0', '1', -100);
+    t('0', '999999999', -100);
+
+    // Negative dp with large precision numbers
+    t('249815496353142605063083339706423770452529255711064841248000', '249815496353142605063083339706423770452529255711064841247978.16482575714251625720191747855256', -3);
+    t('249815496353142605063083339706423770452529255711064841250000', '249815496353142605063083339706423770452529255711064841247978.16482575714251625720191747855256', -4);
 });

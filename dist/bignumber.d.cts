@@ -534,7 +534,7 @@ declare class BigNumber implements BigNumber.Instance {
    * y.decimalPlaces()                      // 102
    * ```
    *
-   * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
+   * @param [decimalPlaces] Decimal places, integer, -1e+9 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
   decimalPlaces(): number | null;
@@ -566,7 +566,7 @@ declare class BigNumber implements BigNumber.Instance {
    * y.dp()                                 // 102
    * ```
    *
-   * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
+   * @param [decimalPlaces] Decimal places, integer, -1e+9 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
   dp(): number | null;

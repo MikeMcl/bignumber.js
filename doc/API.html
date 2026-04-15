@@ -201,7 +201,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       Note that the BigNumber constructor accepts an <code>n</code> of type <em>number</em> purely
       as a convenience so that string quotes don't have to be typed when entering literal values,
       and that it is the <code>toString</code> value of <code>n</code> that is used rather than its
-      underlying binary floating point value converted to decimal. 
+      underlying binary floating point value converted to decimal.
     </p>
     <pre>
 x = new BigNumber(0.1)                     // '0.1'
@@ -523,8 +523,8 @@ BigNumber.random()              // 0.54340758610486147524</pre>
         Types unsupported when <code>STRICT</code> is <code>true</code> are first
         converted to a string.
       </dd>
-      <dd>  
-        See <a href='#Errors'>Errors</a>.  
+      <dd>
+        See <a href='#Errors'>Errors</a>.
       </dd>
       <dd>
       <pre>BigNumber.config({ STRICT: false })
@@ -1009,6 +1009,7 @@ x = new BigNumber(1234.56)
 x.decimalPlaces(1)                     // '1234.6'
 x.dp()                                 // 2
 x.decimalPlaces(2)                     // '1234.56'
+x.decimalPlaces(-2)                    // '1200'
 x.dp(10)                               // '1234.56'
 x.decimalPlaces(0, 1)                  // '1234'
 x.dp(0, 6)                             // '1235'

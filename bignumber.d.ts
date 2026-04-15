@@ -175,9 +175,9 @@ declare namespace BigNumber {
      * of a BigNumber.
      *
      * If `STRICT` is `true` then a BigNumber Error is thrown if the value is not of type
-     * BigNumber, number, string, or BigInt, or if the value is a string that is not a 
+     * BigNumber, number, string, or BigInt, or if the value is a string that is not a
      * valid numeric value.
-     * 
+     *
      * If `STRICT` is `false` then a BigNumber with value `NaN` is returned if the value is not
      * a valid numeric value. Types unsupported when `STRICT` is `true` are first converted to
      * a string.
@@ -409,11 +409,11 @@ declare class BigNumber implements BigNumber.Instance {
    *
    * String values may contain underscores as numeric separators.
    * Each underscore must be between two digits.
-   * 
+   *
    * new BigNumber('1_000_000.000_5')         // '1000000.0005'
    * new BigNumber('0xff_ff')                 // '65535'
    * new BigNumber('1010_1111', 2)            // '175'
-   * 
+   *
    * If a base is specified, `n` is converted to a decimal BigNumber value rounded according to
    * the current `DECIMAL_PLACES` and `ROUNDING_MODE` settings.
    *
@@ -450,7 +450,7 @@ declare class BigNumber implements BigNumber.Instance {
    * ```ts
    * new BigNumber({ s: 1, e: 2, c: [ 777, 12300000000000 ], _isBigNumber: true })    // '777.123'
    * ```
-   * 
+   *
    * See `toObject` for converting a BigNumber to a plain object.
    *
    * @param n A numeric value.
@@ -524,6 +524,7 @@ declare class BigNumber implements BigNumber.Instance {
    * x.decimalPlaces()                      // 2
    * x.decimalPlaces(1)                     // '1234.6'
    * x.decimalPlaces(2)                     // '1234.56'
+   * x.decimalPlaces(-2)                    // '1200'
    * x.decimalPlaces(10)                    // '1234.56'
    * x.decimalPlaces(0, 1)                  // '1234'
    * x.decimalPlaces(0, 6)                  // '1235'
@@ -534,7 +535,7 @@ declare class BigNumber implements BigNumber.Instance {
    * y.decimalPlaces()                      // 102
    * ```
    *
-   * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
+   * @param [decimalPlaces] Decimal places, integer, -1e+9 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
   decimalPlaces(): number | null;
@@ -556,6 +557,7 @@ declare class BigNumber implements BigNumber.Instance {
    * x.dp()                                 // 2
    * x.dp(1)                                // '1234.6'
    * x.dp(2)                                // '1234.56'
+   * x.dp(-2)                               // '1200'
    * x.dp(10)                               // '1234.56'
    * x.dp(0, 1)                             // '1234'
    * x.dp(0, 6)                             // '1235'
@@ -566,7 +568,7 @@ declare class BigNumber implements BigNumber.Instance {
    * y.dp()                                 // 102
    * ```
    *
-   * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
+   * @param [decimalPlaces] Decimal places, integer, -1e+9 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
   dp(): number | null;
@@ -1467,7 +1469,7 @@ declare class BigNumber implements BigNumber.Instance {
    * pi.toFraction(100)              // '311, 99'
    * pi.toFraction(10)               // '22, 7'
    * pi.toFraction(1)                // '3, 1'
-   * 
+   *
    * y = new BigNumber('-Infinity')
    * y.toFraction()                  // '-1, 0'
    * z = new BigNumber(NaN)
@@ -1557,7 +1559,7 @@ declare class BigNumber implements BigNumber.Instance {
    *
    * If a base is specified the value is rounded according to the current `DECIMAL_PLACES`
    * and `ROUNDING_MODE` settings.
-   * 
+   *
    * If a base is not specified, and this BigNumber has a positive exponent that is equal to or
    * greater than the positive component of the current `EXPONENTIAL_AT` setting, or a negative
    * exponent equal to or less than the negative component of the setting, then exponential notation

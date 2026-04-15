@@ -1660,7 +1660,7 @@ function clone(configObject) {
    * BigNumber rounded to a maximum of dp decimal places using rounding mode rm, or
    * ROUNDING_MODE if rm is omitted.
    *
-   * [dp] {number} Decimal places: integer, 0 to MAX inclusive.
+   * [dp] {number} Decimal places: integer, -MAX to MAX inclusive.
    * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
    *
    * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
@@ -1670,7 +1670,7 @@ function clone(configObject) {
       x = this;
 
     if (dp != null) {
-      intCheck(dp, 0, MAX);
+      intCheck(dp, -MAX, MAX);
       if (rm == null) rm = ROUNDING_MODE;
       else intCheck(rm, 0, 8);
 
