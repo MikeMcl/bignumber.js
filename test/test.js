@@ -14,6 +14,7 @@ console.log('\n Testing bignumber.js\n');
   'dividedToIntegerBy',
   'decimalPlaces',
   'exponentiatedBy',
+  'fromFormat',
   'integerValue',
   'isBigNumber',
   'minmax',

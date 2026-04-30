@@ -1,8 +1,14 @@
 #### 11.1.0
 
-* 15/04/26
+* 30/04/26
 * #401 `BigNumber.sum`: return zero if there are no arguments.
 * #352 Add `toBigInt` method.
+* #286 Add `fromFormat` method.
+* #262 `decimalPlaces`, `toFixed` and `toFormat`: support negative decimal places.
+* #260 `toFormat`: support minimum/maximum decimal places.
+* `toFormat`: fallback to `FORMAT` for each property not in `options`.
+* [BUGFIX] #342 Large `DECIMAL_PLACES` causing slow hex integer base conversion.
+* Typescript: add *test_api.ts* to improved typed API test coverage.
 
 #### 11.0.0
 

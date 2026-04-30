@@ -15,11 +15,6 @@ Test('toFixed', function () {
         EXPONENTIAL_AT: 1E9
     });
 
-    // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number/toFixed
-    // Javascript:                   2.26.toFixed(5)  returns  2.26000
-    // Javascript:                  -2.26.toFixed(5)  returns -2.26
-    // bignumber.js:  new BigNumber(-2.26).toFixed(5) returns -2.26000
-
     t('100.0', 99.9512986, 1);
     t('10.0',  9.95036, 1);
     t('1.0', 0.99, 1);
@@ -1311,6 +1306,90 @@ Test('toFixed', function () {
     t('123', '12.345e1', 0);
     t('123', '12.345e1', -0);
 
+    // Negative decimal places
+
+    BigNumber.config({ROUNDING_MODE: 4});
+
+    t('1230', 1234.5, -1);
+    t('1200', 1234.5, -2);
+    t('1000', 1234.5, -3);
+    t('0', 1234.5, -4);
+    t('0', 1234.5, -5);
+    t('100', 149, -2);
+    t('200', 150, -2);
+    t('300', 250, -2);
+    t('300', 250.1, -2);
+    t('0', 0, -1);
+    t('0', 0, -10);
+    t('10', 5, -1);
+    t('0', 4, -1);
+    t('1000', 500, -3);
+
+    t('-1230', -1234.5, -1);
+    t('-1200', -1234.5, -2);
+    t('-1000', -1234.5, -3);
+    t('-0', -1234.5, -4);
+    t('-0', -1234.5, -5);
+    t('-100', -149, -2);
+    t('-200', -150, -2);
+    t('-300', -250, -2);
+    t('-300', -250.1, -2);
+    t('-10', -5, -1);
+    t('-0', -4, -1);
+
+    t('1234567890', '1234567890.123', -0);
+    t('1234567890', '1234567890.123', 0);
+    t('1234567900', '1234567890.123', -2);
+    t('1234568000', '1234567890.123', -3);
+    t('1000000000', '1234567890.123', -9);
+    t('0', '1234567890.123', -10);
+
+    // Large values
+    t('12345678901234567891', '12345678901234567890.5', -0);
+    t('12345678901234567891', '12345678901234567890.5', 0);
+    t('12345678901234567900', '12345678901234567890.5', -2);
+    t('12345678901234570000', '12345678901234567890.5', -4);
+
+    // NaN and Infinity with negative dp
+    t('NaN', NaN, -1);
+    t('Infinity', 1/0, -1);
+    t('-Infinity', -1/0, -1);
+
+    // Extreme negative dp (far beyond integer digits)
+    t('0', 0, -999);
+    t('0', 5, -123456);
+    t('-0', -5, -230);
+    t('0', 123456, -999);
+    t('-0', -123456, -999);
+    t('0', '1e+100', -999);
+    t('0', '1e+100', -101);
+    t('0', '4.9e+99', -100);
+    t('0', 0.001, -999);
+    t('-0', -0.001, -99999);
+    t('NaN', NaN, -9);
+    t('Infinity', 1/0, -1000000);
+    t('-Infinity', -1/0, -999);
+
+    // With rounding mode 0 (ROUND_UP)
+    BigNumber.config({ROUNDING_MODE: 0});
+    t('1240', 1234.5, -1);
+    t('1300', 1234.5, -2);
+    t('2000', 1234.5, -3);
+    t('-1240', -1234.5, -1);
+    t('-1300', -1234.5, -2);
+    t('-2000', -1234.5, -3);
+
+    // With rounding mode 1 (ROUND_DOWN)
+    BigNumber.config({ROUNDING_MODE: 1});
+    t('1230', 1234.5, -1);
+    t('1200', 1234.5, -2);
+    t('1000', 1234.5, -3);
+    t('-1230', -1234.5, -1);
+    t('-1200', -1234.5, -2);
+    t('-1000', -1234.5, -3);
+
+    BigNumber.config({ROUNDING_MODE: 4});
+
     Test.isException(function () {new BigNumber(1.23).toFixed(NaN)}, "(1.23).toFixed(NaN)");
     Test.isException(function () {new BigNumber(1.23).toFixed('NaN')}, "(1.23).toFixed('NaN')");
     Test.isException(function () {new BigNumber(1.23).toFixed([])}, "(1.23).toFixed([])");
@@ -1328,14 +1407,17 @@ Test('toFixed', function () {
     Test.isException(function () {new BigNumber(1.23).toFixed(false)}, "(1.23).toFixed(false)");
     Test.isException(function () {new BigNumber(1.23).toFixed(function (){})}, "(1.23).toFixed(function (){})");
 
-    Test.isException(function () {new BigNumber('12.345e1').toFixed('-1')}, ".toFixed('-1')");
-    Test.isException(function () {new BigNumber('12.345e1').toFixed(-23)}, ".toFixed(-23)");
     Test.isException(function () {new BigNumber('12.345e1').toFixed(MAX + 1)}, ".toFixed(MAX + 1)");
     Test.isException(function () {new BigNumber('12.345e1').toFixed(MAX + 0.1)}, ".toFixed(MAX + 1)");
     Test.isException(function () {new BigNumber('12.345e1').toFixed('-0.01')}, ".toFixed('-0.01')");
     Test.isException(function () {new BigNumber('12.345e1').toFixed('-1e-1')}, ".toFixed('-1e-1')");
     Test.isException(function () {new BigNumber('12.345e1').toFixed(Infinity)}, ".toFixed(Infinity)");
     Test.isException(function () {new BigNumber('12.345e1').toFixed('-Infinity')}, ".toFixed('-Infinity')");
+    Test.isException(function () {new BigNumber('12.345e1').toFixed(-MAX - 1)}, ".toFixed(-MAX - 1)");
+    Test.isException(function () {new BigNumber(1.23).toFixed([3, 1])}, "(1.23).toFixed([3, 1])");
+    Test.isException(function () {new BigNumber(1.23).toFixed([-1, 1])}, "(1.23).toFixed([-1, 1])");
+    Test.isException(function () {new BigNumber(1.23).toFixed([0, -1])}, "(1.23).toFixed([0, -1])");
+    Test.isException(function () {new BigNumber(1.23).toFixed([null, MAX + 1])}, "(1.23).toFixed([null, MAX + 1])");
 
     // ROUND_HALF_CEIL
     // Rounds towards nearest neighbour. If equidistant, rounds towards Infinity

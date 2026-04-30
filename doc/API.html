@@ -85,6 +85,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
           <li><a href="#alphabet"      >ALPHABET</a></li>
         </ul>
       </li>
+      <li><a href="#fromFormat" >fromFormat</a></li>
       <li><a href="#isBigNumber">isBigNumber</a></li>
       <li><a href="#max"        >maximum</a><span>max</span></li>
       <li><a href="#min"        >minimum</a><span>min</span></li>
@@ -630,9 +631,9 @@ BigNumber.config({ MODULO_MODE: 9 })          // equivalent</pre>
       </dd>
       <dd>
          Unlike the other configuration properties, the values of the properties of the
-         <code>FORMAT</code> object will not be checked for validity. The existing
-         <code>FORMAT</code> object will simply be replaced by the object that is passed in.
-         The object can include any number of the properties shown below.
+        <code>FORMAT</code> object will not be checked for validity. Any recognised properties
+        of the object that is passed in are copied to the existing <code>FORMAT</code> object,
+        and omitted properties retain their current values.
       </dd>
       <dd>See <a href='#toFor'><code>toFormat</code></a> for examples of usage.</dd>
       <dd>
@@ -641,6 +642,10 @@ BigNumber.config({
   FORMAT: {
     // string to prepend
     prefix: '',
+    // the negative sign
+    negativeSign: '-',
+    // the positive sign
+    positiveSign: '',
     // decimal separator
     decimalSeparator: '.',
     // grouping separator of the integer part
@@ -650,7 +655,7 @@ BigNumber.config({
     // secondary grouping size of the integer part
     secondaryGroupSize: 0,
     // grouping separator of the fraction part
-    fractionGroupSeparator: ' ',
+    fractionGroupSeparator: '',
     // grouping size of the fraction part
     fractionGroupSize: 0,
     // string to append
@@ -715,6 +720,50 @@ BigNumber.config({
 obj = BigNumber.config();
 obj.DECIMAL_PLACES        // 40
 obj.RANGE                 // [-500, 500]</pre>
+
+
+
+    <h5 id="fromFormat">fromFormat<code class='inset'>.fromFormat(str [, options]) <i>&rArr; BigNumber</i></code></h5>
+    <p>
+      <code>str</code>: <i>string</i><br />
+      <code>options</code>: <i>object</i>: see <a href='#format'><code>FORMAT</code></a>
+    </p>
+    <p>
+      Returns a BigNumber whose value is parsed from the formatted string <code>str</code>.
+    </p>
+    <p>
+      The formatting described in <code>options</code> is stripped from <code>str</code> and the
+      result is passed to the BigNumber constructor.
+    </p>
+    <p>
+      If <code>options</code> is omitted, or is <code>null</code> or <code>undefined</code>, the
+      <a href='#format'><code>FORMAT</code></a> object is used for all properties.
+      Otherwise, any property not included in <code>options</code> falls back to the
+      corresponding value in <a href='#format'><code>FORMAT</code></a>.
+    </p>
+    <p>
+      Throws if <code>str</code> is not a string, or if <code>options</code> is not an object.
+      See <a href='#Errors'>Errors</a>.
+    </p>
+    <pre>
+BigNumber.fromFormat('$1,234,567.89', { prefix: '$' })
+                                // '1234567.89'
+
+BigNumber.fromFormat('$-1,234,567.89', { prefix: '$' })
+                                // '-1234567.89'
+
+BigNumber.fromFormat('&euro;-1.234.567,89', {
+  prefix: '&euro;',
+  decimalSeparator: ',',
+  groupSeparator: '.'
+})                              // '-1234567.89'
+
+// Round-trip with toFormat
+var opts = { prefix: '$' }
+x = new BigNumber('-1234567.891')
+x.toFormat(2, opts)             // '$-1,234,567.89'
+BigNumber.fromFormat('$-1,234,567.89', opts)
+                                // '-1234567.89'</pre>
 
 
 
@@ -1002,7 +1051,8 @@ y.comparedTo('110', 2)          // -1</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      Throws if <code>dp</code> or <code>rm</code> is invalid. See <a href='#Errors'>Errors</a>.
+      Throws if <code>dp</code> or <code>rm</code> is invalid, or if the minimum exceeds the
+      maximum in a <code>dp</code> array. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = new BigNumber(1234.56)
@@ -1617,16 +1667,19 @@ y.toExponential(3)              // '4.560e+1'</pre>
       toFixed<code class='inset'>.toFixed([dp [, rm]]) <i>&rArr; string</i></code>
     </h5>
     <p>
-      <code>dp</code>: <i>number</i>: integer, <code>0</code> to <code>1e+9</code> inclusive<br />
+      <code>dp</code>: <i>number</i>: number: integer, <code>-1e+9</code> to <code>1e+9</code>
+      inclusive<br />
       <code>rm</code>: <i>number</i>: integer, <code>0</code> to <code>8</code> inclusive
     </p>
     <p>
       Returns a string representing the value of this BigNumber in normal (fixed-point) notation
-      rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>.
+      rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>. If the value
+      has fewer than <code>dp</code> decimal places, the return value will be appended with zeros
+      accordingly.
     </p>
     <p>
-      If the value of this BigNumber in normal notation has fewer than <code>dp</code> fraction
-      digits, the return value will be appended with zeros accordingly.
+      If <code>dp</code> is negative, the rounding is applied to the corresponding number of
+      digits to the left of the decimal point.
     </p>
    <p>
       Unlike <code>Number.prototype.toFixed</code>, which returns exponential notation if a number
@@ -1644,7 +1697,8 @@ y.toExponential(3)              // '4.560e+1'</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      Throws if <code>dp</code> or <code>rm</code> is invalid. See <a href='#Errors'>Errors</a>.
+      Throws if <code>dp</code> or <code>rm</code> is invalid.
+      See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = 3.456
@@ -1656,81 +1710,112 @@ x.toFixed(2)                    // '3.46'
 y.toFixed(2)                    // '3.46'
 y.toFixed(2, 1)                 // '3.45'  (ROUND_DOWN)
 x.toFixed(5)                    // '3.45600'
-y.toFixed(5)                    // '3.45600'</pre>
+
+z = new BigNumber(1234.5)
+z.toFixed(-1)                   // '1230'
+z.toFixed(-2)                   // '1200'
+z.toFixed(-3)                   // '1000'</pre>
 
 
 
     <h5 id="toFor">
-      toFormat<code class='inset'>.toFormat([dp [, rm[, format]]]) <i>&rArr; string</i></code>
+      toFormat<code class='inset'>.toFormat([dp [, rm [, options]]]) <i>&rArr; string</i></code>
     </h5>
     <p>
-      <code>dp</code>: <i>number</i>: integer, <code>0</code> to <code>1e+9</code> inclusive<br />
+     <code>dp</code>: <i>number|Array</i>: number: integer, <code>-1e+9</code> to <code>1e+9</code>
+      inclusive; array: 1 or 2 elements, each an integer, <code>0</code> to <code>1e+9</code>
+      inclusive, or <code>null</code> or <code>undefined</code><br />
       <code>rm</code>: <i>number</i>: integer, <code>0</code> to <code>8</code> inclusive<br />
-      <code>format</code>: <i>object</i>: see <a href='#format'><code>FORMAT</code></a>
+      <code>options</code>: <i>object</i>: see <a href='#format'><code>FORMAT</code></a>
     </p>
     <p>
-      <p>
-      Returns a string representing the value of this BigNumber in normal (fixed-point) notation
-      rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>, and formatted
-      according to the properties of the <code>format</code> object.
+      Returns a string representing the value of this BigNumber in normal (fixed-point)
+      notation rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>,
+      and formatted according to the properties of the <code>options</code> object. If the value
+      has fewer than <code>dp</code> decimal, places, the return value will be appended with zeros
+      accordingly.
     </p>
     <p>
-      See <a href='#format'><code>FORMAT</code></a> and the examples below for the properties of the
-      <code>format</code> object, their types, and their usage. A formatting object may contain
-      some or all of the recognised properties.
+      See <a href='#format'><code>FORMAT</code></a> and the examples below for the properties
+      of the <code>options</code> object, their types, and their usage. The object may contain
+      some or all of the recognised properties. Any property not included in the
+      <code>options</code> object will fall back to the value in the
+      <a href='#format'><code>FORMAT</code></a> object.
     </p>
     <p>
-      If <code>dp</code> is omitted or is <code>null</code> or <code>undefined</code>, then the
-      return value is not rounded to a fixed number of decimal places.<br />
-      If <code>rm</code> is omitted or is <code>null</code> or <code>undefined</code>,
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.<br />
-      If <code>format</code> is omitted or is <code>null</code> or <code>undefined</code>, the
-      <a href='#format'><code>FORMAT</code></a> object is used.
+      If <code>dp</code> is omitted and the first argument is an object, it is interpreted as
+      <code>options</code>. If <code>rm</code> is omitted and the second argument is an object,
+      it is interpreted as <code>options</code>.
     </p>
     <p>
-      Throws if <code>dp</code>, <code>rm</code> or <code>format</code> is invalid. See
-      <a href='#Errors'>Errors</a>.
+      If <code>options</code> is omitted or is <code>null</code> or <code>undefined</code>,
+      the <a href='#format'><code>FORMAT</code></a> object is used.
+    </p>
+    <p>
+      If <code>dp</code> is a number and is negative, the rounding is applied to the
+      corresponding number of digits to the left of the decimal point.
+    </p>
+     <p>
+      If <code>dp</code> is an array, it is <code>[min, max]</code>, where <code>min</code> and
+      <code>max</code> are integers, <code>0</code> to <code>MAX</code> inclusive, or
+      <code>null</code> or <code>undefined</code>. <code>max</code> limits the number of decimal
+      places and <code>min</code> preserves them or adds trailing zeros.
+    </p>
+    <p>
+      If <code>rm</code> is omitted or is <code>null</code>,
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
+    </p>
+    <p>
+      Throws if <code>options</code> is not an object, or if <code>dp</code>
+      or <code>rm</code> is invalid, including if a <code>dp</code> array has more than two
+      elements or if its minimum exceeds its maximum.
+      See <a href='#Errors'>Errors</a>.
+    </p>
+    <p>
+      Also see <a href='#fromFormat'>fromFormat</a>.
     </p>
     <pre>
-fmt = {
-  prefix: '',
-  decimalSeparator: '.',
-  groupSeparator: ',',
-  groupSize: 3,
-  secondaryGroupSize: 0,
-  fractionGroupSeparator: ' ',
-  fractionGroupSize: 0,
-  suffix: ''
-}
-
 x = new BigNumber('123456789.123456789')
 
 // Set the global formatting options
-BigNumber.config({ FORMAT: fmt })
+BigNumber.config({
+  FORMAT: {
+    decimalSeparator: '.',
+    groupSeparator: ',',
+    groupSize: 3,
+    fractionGroupSeparator: ' ',
+    fractionGroupSize: 5
+  }
+})
 
-x.toFormat()                              // '123,456,789.123456789'
-x.toFormat(3)                             // '123,456,789.123'
+x.toFormat()                              // '123,456,789.12345 6789'
+x.toFormat(2)                             // '123,456,789.12'
 
-// If a reference to the object assigned to FORMAT has been retained,
-// the format properties can be changed directly
-fmt.groupSeparator = ' '
-fmt.fractionGroupSize = 5
-x.toFormat()                              // '123 456 789.12345 6789'
+x.toFormat([2, 5])                        // '123,456,789.12346'
 
-// Alternatively, pass the formatting options as an argument
-fmt = {
+y = new BigNumber('100')
+y.toFormat([2, 5])                        // '100.00'
+
+z = new BigNumber('12.3')
+z.toFormat([2, null])                     // '12.30'
+
+// Override formatting properties in the options argument
+x.toFormat([0, 5], {
   prefix: '=> ',
   decimalSeparator: ',',
   groupSeparator: '.',
   groupSize: 3,
   secondaryGroupSize: 2
-}
+})                                        // '=> 12.34.56.789,12346'
 
-x.toFormat()                              // '123 456 789.12345 6789'
-x.toFormat(fmt)                           // '=> 12.34.56.789,123456789'
-x.toFormat(2, fmt)                        // '=> 12.34.56.789,12'
-x.toFormat(3, BigNumber.ROUND_UP, fmt)    // '=> 12.34.56.789,124'</pre>
+x = x.negated()
 
+// Currency symbol before sign
+x.toFormat(2, { prefix: '$' })            // '$-123,456,789.12'
+
+// Sign before currency symbol
+x.toFormat([0, 5], { negativeSign: '-$', positiveSign: '$' })
+                                          // '-$123,456,789.12346'</pre>
 
 
     <h5 id="toFr">
@@ -2162,11 +2247,9 @@ y.s                             // -1</pre>
         <td rowspan=3>
           <code>decimalPlaces</code><br />
           <code>precision</code><br />
-          <code>random</code><br />
           <code>shiftedBy</code><br />
           <code>toExponential</code><br />
           <code>toFixed</code><br />
-          <code>toFormat</code><br />
           <code>toPrecision</code>
         </td>
         <td>Argument not a primitive number</td>
@@ -2178,11 +2261,33 @@ y.s                             // -1</pre>
         <td>Argument out of range</td>
       </tr>
       <tr>
-        <td>
-          <code>decimalPlaces</code><br />
-          <code>precision</code>
-        </td>
-        <td>Argument not true or false</td>
+        <td rowspan=4><code>random</code></td>
+        <td>Argument not a primitive number</td>
+      </tr>
+      <tr>
+        <td>Argument not an integer</td>
+      </tr>
+      <tr>
+        <td>Argument out of range</td>
+      </tr>
+      <tr>
+        <td>crypto unavailable</td>
+      </tr>
+      <tr>
+        <td rowspan=5><code>toFormat</code></td>
+        <td>Argument not a primitive number</td>
+      </tr>
+      <tr>
+        <td>Argument not an integer</td>
+      </tr>
+      <tr>
+        <td>Argument out of range</td>
+      </tr>
+      <tr>
+        <td>Minimum must not exceed maximum</td>
+      </tr>
+      <tr>
+        <td>Argument not an object</td>
       </tr>
       <tr>
         <td><code>exponentiatedBy</code></td>
@@ -2195,18 +2300,6 @@ y.s                             // -1</pre>
           <code>maximum</code>
         </td>
         <td>Not a number</td>
-      </tr>
-      <tr>
-        <td>
-          <code>random</code>
-        </td>
-        <td>crypto unavailable</td>
-      </tr>
-      <tr>
-        <td>
-          <code>toFormat</code>
-        </td>
-        <td>Argument not an object</td>
       </tr>
       <tr>
         <td rowspan=2><code>toFraction</code></td>

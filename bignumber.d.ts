@@ -257,6 +257,10 @@ declare namespace BigNumber {
      *   FORMAT: {
      *     // string to prepend
      *     prefix: '',
+     *     // the negative sign
+     *     negativeSign: '-',
+     *     // the positive sign
+     *     positiveSign: '',
      *     // the decimal separator
      *     decimalSeparator: '.',
      *     // the grouping separator of the integer part
@@ -266,11 +270,11 @@ declare namespace BigNumber {
      *     // the secondary grouping size of the integer part
      *     secondaryGroupSize: 0,
      *     // the grouping separator of the fraction part
-     *     fractionGroupSeparator: ' ',
+     *     fractionGroupSeparator: '',
      *     // the grouping size of the fraction part
      *     fractionGroupSize: 0,
-     *     // string to append
-     *     suffix: ''
+    *     // string to append
+    *     suffix: ''
      *   }
      * })
      * ```
@@ -303,6 +307,12 @@ declare namespace BigNumber {
 
     /** The string to prepend. */
     prefix?: string;
+
+    /** The negative sign. */
+    negativeSign?: string;
+
+    /** The positive sign. */
+    positiveSign?: string;
 
     /** The decimal separator. */
     decimalSeparator?: string;
@@ -491,7 +501,7 @@ declare class BigNumber implements BigNumber.Instance {
    *     1    | If the value of this BigNumber is greater than the value of `n`
    *    -1    | If the value of this BigNumber is less than the value of `n`
    *     0    | If this BigNumber and `n` have the same value
-   *  `null`  | If the value of either this BigNumber or `n` is `NaN`
+   *   null   | If the value of either this BigNumber or `n` is `NaN`
    *
    * ```ts
    *
@@ -509,11 +519,11 @@ declare class BigNumber implements BigNumber.Instance {
   comparedTo(n: string, base: number): 1 | -1 | 0 | null;
 
   /**
-   * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
-   * `roundingMode` to a maximum of `decimalPlaces` decimal places.
+   * Returns a BigNumber whose value is the value of this BigNumber rounded to `decimalPlaces`
+   * using `roundingMode`.
    *
-   * If `decimalPlaces` is omitted, the return value is the number of decimal places of the value of
-   * this BigNumber, or `null` if the value of this BigNumber is ±`Infinity` or `NaN`.
+   * If `decimalPlaces` is omitted, the return value is the number of decimal places of the value
+   * of this BigNumber, or `null` if the value of this BigNumber is ±`Infinity` or `NaN`.
    *
    * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
@@ -542,11 +552,11 @@ declare class BigNumber implements BigNumber.Instance {
   decimalPlaces(decimalPlaces: number, roundingMode?: BigNumber.RoundingMode): BigNumber;
 
   /**
-   * Returns a BigNumber whose value is the value of this BigNumber rounded by rounding mode
-   * `roundingMode` to a maximum of `decimalPlaces` decimal places.
+   * Returns a BigNumber whose value is the value of this BigNumber rounded to `decimalPlaces`
+   * using `roundingMode`.
    *
-   * If `decimalPlaces` is omitted, the return value is the number of decimal places of the value of
-   * this BigNumber, or `null` if the value of this BigNumber is ±`Infinity` or `NaN`.
+   * If `decimalPlaces` is omitted, the return value is the number of decimal places of the value
+   * of this BigNumber, or `null` if the value of this BigNumber is ±`Infinity` or `NaN`.
    *
    * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
@@ -1160,8 +1170,8 @@ declare class BigNumber implements BigNumber.Instance {
   precision(includeZeros?: boolean): number;
 
   /**
-   * Returns a BigNumber whose value is the value of this BigNumber rounded to a precision of
-   * `significantDigits` significant digits using rounding mode `roundingMode`.
+   * Returns a BigNumber whose value is the value of this BigNumber rounded to
+   * `significantDigits` using `roundingMode`.
    *
    * If `roundingMode` is omitted, `ROUNDING_MODE` will be used.
    *
@@ -1280,7 +1290,7 @@ declare class BigNumber implements BigNumber.Instance {
   /**
    * Returns the value of this BigNumber as a JavaScript BigInt.
    *
-   * If the value is not an integer, it is rounded to an integer using rounding mode `roundingMode`,
+   * If the value is not an integer, it is rounded to an integer using `roundingMode`,
    * or `ROUNDING_MODE` if `roundingMode` is omitted or is `null` or `undefined`.
    *
    * If the value of this BigNumber is not finite (`Infinity`, `-Infinity` or `NaN`),
@@ -1310,15 +1320,15 @@ declare class BigNumber implements BigNumber.Instance {
   toBigInt(roundingMode?: BigNumber.RoundingMode): bigint | null;
 
   /**
-   * Returns a string representing the value of this BigNumber in exponential notation rounded using
-   * rounding mode `roundingMode` to `decimalPlaces` decimal places, i.e with one digit before the
-   * decimal point and `decimalPlaces` digits after it.
+   * Returns a string representing the value of this BigNumber in exponential notation rounded
+   * to `decimalPlaces` using `roundingMode`, i.e. with one digit before the decimal point and
+   * `decimalPlaces` digits after it.
    *
    * If the value of this BigNumber in exponential notation has fewer than `decimalPlaces` fraction
    * digits, the return value will be appended with zeros accordingly.
    *
-   * If `decimalPlaces` is omitted, the number of digits after the decimal point defaults to the
-   * minimum number of digits necessary to represent the value exactly.
+   * If `decimalPlaces` is omitted, the return value will be the full value of this BigNumber
+   * in exponential notation.
    *
    * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
@@ -1345,19 +1355,19 @@ declare class BigNumber implements BigNumber.Instance {
   toExponential(): string;
 
   /**
-   * Returns a string representing the value of this BigNumber in normal (fixed-point) notation
-   * rounded to `decimalPlaces` decimal places using rounding mode `roundingMode`.
+   * Return a string representing the value of this BigNumber in fixed-point notation rounded
+   * to `decimalPlaces` using `roundingMode`.
    *
-   * If the value of this BigNumber in normal notation has fewer than `decimalPlaces` fraction
-   * digits, the return value will be appended with zeros accordingly.
+   * If `decimalPlaces` is negative, round to the corresponding number of digits to the left
+   * of the decimal point.
    *
-   * Unlike `Number.prototype.toFixed`, which returns exponential notation if a number is greater or
-   * equal to 10**21, this method will always return normal notation.
+   * Unlike `Number.prototype.toFixed`, which returns exponential notation if a number is greater
+   * or equal to 10**21, this method will always return normal notation.
    *
-   * If `decimalPlaces` is omitted, the return value will be unrounded and in normal notation.
-   * This is also unlike `Number.prototype.toFixed`, which returns the value to zero decimal places.
-   * It is useful when normal notation is required and the current `EXPONENTIAL_AT` setting causes
-   * `toString` to return exponential notation.
+   * If `decimalPlaces` is omitted, the return value will be the full value of this BigNumber in
+   * normal notation. This is also unlike `Number.prototype.toFixed`, which returns the value to
+   * zero decimal places. It is useful when normal notation is required and the current
+   * `EXPONENTIAL_AT` setting causes `toString` to return exponential notation.
    *
    * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
    *
@@ -1373,78 +1383,77 @@ declare class BigNumber implements BigNumber.Instance {
    * y.toFixed(2)                    // '3.46'
    * y.toFixed(2, 1)                 // '3.45'  (ROUND_DOWN)
    * x.toFixed(5)                    // '3.45600'
-   * y.toFixed(5)                    // '3.45600'
+   *
+   * z = new BigNumber(1234.5)
+   * z.toFixed(-1)                   // '1230'
+   * z.toFixed(-2)                   // '1200'
    * ```
    *
-   * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
+   * @param [decimalPlaces] Decimal places, integer, -1e+9 to 1e+9.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
    */
   toFixed(decimalPlaces: number, roundingMode?: BigNumber.RoundingMode): string;
   toFixed(): string;
 
   /**
-   * Returns a string representing the value of this BigNumber in normal (fixed-point) notation
-   * rounded to `decimalPlaces` decimal places using rounding mode `roundingMode`, and formatted
-   * according to the properties of the `format` or `FORMAT` object.
+   * Returns a string representing the value of this BigNumber in normal (fixed-point)
+   * notation rounded to `decimalPlaces` using `roundingMode`, and formatted according to the
+   * properties of the `options` or `FORMAT` object.
    *
-   * The formatting object may contain some or all of the properties shown in the examples below.
+   * The options object may contain some or all of the properties of `BigNumber.Format`.
+   * Any property not included will fall back to the corresponding value in `FORMAT`.
    *
-   * If `decimalPlaces` is omitted, then the return value is not rounded to a fixed number of
-   * decimal places.
+   * If `decimalPlaces` is omitted and the first argument is an object, it is interpreted as
+   * `options`. If `roundingMode` is omitted and the second argument is an object, it is
+   * interpreted as `options`.
    *
-   * If `roundingMode` is omitted, `ROUNDING_MODE` is used.
+   * If `decimalPlaces` is negative, round to the corresponding number of digits to the left of
+   * the decimal point.
    *
-   * If `format` is omitted, `FORMAT` is used.
+   * If `decimalPlaces` is an array, it is `[minimum, maximum]`, where `minimum` and `maximum`
+   * are integers, `0` to `MAX` inclusive, or `null` or `undefined`. `maximum` limits the number
+   * of decimal places and `minimum` preserves them or adds trailing zeros.
    *
-   * Throws if `decimalPlaces`, `roundingMode`, or `format` is invalid.
+   * If `roundingMode` is omitted or null, `ROUNDING_MODE` is used.
+   *
+   * Throws if `options` is not an object, or if `decimalPlaces` or `roundingMode` is invalid,
+   * or if the minimum exceeds the maximum in a `decimalPlaces` array.
    *
    * ```ts
-   * fmt = {
-   *   decimalSeparator: '.',
-   *   groupSeparator: ',',
-   *   groupSize: 3,
-   *   secondaryGroupSize: 0,
-   *   fractionGroupSeparator: ' ',
-   *   fractionGroupSize: 0
-   * }
-   *
    * x = new BigNumber('123456789.123456789')
    *
-   * // Set the global formatting options
-   * BigNumber.config({ FORMAT: fmt })
+   * BigNumber.config({
+   *   FORMAT: { groupSeparator: ',', groupSize: 3 }
+   * })
    *
    * x.toFormat()                              // '123,456,789.123456789'
-   * x.toFormat(3)                             // '123,456,789.123'
+   * x.toFormat(2)                             // '123,456,789.12'
+   * x.toFormat([2, 5])                        // '123,456,789.12346'
+   * x.toFormat([0, 3], { prefix: '$' })       // '$123,456,789.123'
    *
-   * // If a reference to the object assigned to FORMAT has been retained,
-   * // the format properties can be changed directly
-   * fmt.groupSeparator = ' '
-   * fmt.fractionGroupSize = 5
-   * x.toFormat()                              // '123 456 789.12345 6789'
-   *
-   * // Alternatively, pass the formatting options as an argument
-   * fmt = {
-   *   decimalSeparator: ',',
-   *   groupSeparator: '.',
-   *   groupSize: 3,
-   *   secondaryGroupSize: 2
-   * }
-   *
-   * x.toFormat()                              // '123 456 789.12345 6789'
-   * x.toFormat(fmt)                           // '12.34.56.789,123456789'
-   * x.toFormat(2, fmt)                        // '12.34.56.789,12'
-   * x.toFormat(3, BigNumber.ROUND_UP, fmt)    // '12.34.56.789,124'
+   * y = new BigNumber('100')
+   * y.toFormat([2, null])                     // '100.00'
    * ```
    *
-   * @param [decimalPlaces] Decimal places, integer, 0 to 1e+9.
+   * @param [decimalPlaces] Decimal places, integer, -1e+9 to 1e+9, or [minimum, maximum] where
+   * minimum and maximum are integers, 0 to 1e+9, null, or undefined.
    * @param [roundingMode] Rounding mode, integer, 0 to 8.
-   * @param [format] Formatting options object. See `BigNumber.Format`.
+   * @param [options] Formatting options object. See `BigNumber.Format`.
    */
-  toFormat(decimalPlaces: number, roundingMode: BigNumber.RoundingMode, format?: BigNumber.Format): string;
-  toFormat(decimalPlaces: number, roundingMode?: BigNumber.RoundingMode): string;
-  toFormat(decimalPlaces?: number): string;
-  toFormat(decimalPlaces: number, format: BigNumber.Format): string;
-  toFormat(format: BigNumber.Format): string;
+  toFormat(options?: BigNumber.Format): string;
+  toFormat(
+    decimalPlaces: number |
+                   [number | null | undefined] |
+                   [number | null | undefined, number | null | undefined],
+    options: BigNumber.Format
+  ): string;
+  toFormat(
+    decimalPlaces: number |
+                   [number | null | undefined] |
+                   [number | null | undefined, number | null | undefined],
+    roundingMode?: BigNumber.RoundingMode,
+    options?: BigNumber.Format
+  ): string;
 
   /**
    * Returns an array of two BigNumbers representing the value of this BigNumber as a
@@ -1523,7 +1532,7 @@ declare class BigNumber implements BigNumber.Instance {
 
   /**
    * Returns a string representing the value of this BigNumber rounded to `significantDigits`
-   * significant digits using rounding mode `roundingMode`.
+   * using `roundingMode`.
    *
    * If `significantDigits` is less than the number of digits necessary to represent the integer
    * part of the value in normal (fixed-point) notation, then exponential notation is used.
@@ -1697,6 +1706,39 @@ declare class BigNumber implements BigNumber.Instance {
    * @param object The configuration object.
    */
   static config(object?: BigNumber.Config): BigNumber.Config;
+
+  /**
+   * Returns a BigNumber whose value is parsed from a formatted string `str`.
+   *
+   * The formatting described in `options` is stripped from `str` and the
+   * result is passed to the BigNumber constructor.
+   *
+   * If `options` is omitted, `FORMAT` is used. Any property not provided
+   * falls back to the corresponding `FORMAT` property.
+   *
+   * Throws if `str` is not a string or `options` is not an object.
+   *
+   * ```ts
+   * BigNumber.fromFormat('$1,234,567.89', { prefix: '$' })
+   *   // '1234567.89'
+   *
+   * BigNumber.fromFormat('€-1.234.567,89', {
+   *   prefix: '€',
+   *   decimalSeparator: ',',
+   *   groupSeparator: '.'
+   * })  // '-1234567.89'
+   *
+   * x = new BigNumber('-1234567.891')
+   * opts = { prefix: '$' }
+   * x.toFormat(2, opts)                      // '$-1,234,567.89'
+   * BigNumber.fromFormat('$-1,234,567.89', opts)
+   *   // '-1234567.89'
+   * ```
+   *
+   * @param str A formatted numeric string.
+   * @param [options] Formatting options object. See `BigNumber.Format`.
+   */
+  static fromFormat(str: string, options?: BigNumber.Format): BigNumber;
 
   /**
    * Returns `true` if `value` is a BigNumber instance or  an object

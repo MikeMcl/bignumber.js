@@ -73,7 +73,7 @@ var
  * Create and return a BigNumber constructor.
  */
 function clone(configObject) {
-  var div, convertBase, parseValidString, parseBaseString,
+  var div, convertBase,
     basePrefix = /^(-?)0([xbo])(?=[^.])/i,
     isInfinityOrNaN = /^-?(Infinity|NaN)$/,
     whitespaceOrPlus = /^\s*\+(?!-)|^\s+|\s+$/g,
@@ -155,12 +155,14 @@ function clone(configObject) {
     // The format specification used by the BigNumber.prototype.toFormat method.
     FORMAT = {
       prefix: '',
+      negativeSign: '-',
+      positiveSign: '',
+      groupSeparator: ',',
       groupSize: 3,
       secondaryGroupSize: 0,
-      groupSeparator: ',',
       decimalSeparator: '.',
+      fractionGroupSeparator: '',
       fractionGroupSize: 0,
-      fractionGroupSeparator: '\xA0',        // non-breaking space
       suffix: ''
     },
 
@@ -349,12 +351,14 @@ function clone(configObject) {
    *                                       '+', '-', '.', or whitespace, and starts with '0123456789'.
    *   FORMAT           {object}           An object with some of the following properties:
    *     prefix                 {string}
+   *     negativeSign           {string}
+   *     positiveSign           {string}
+   *     groupSeparator         {string}
    *     groupSize              {number}
    *     secondaryGroupSize     {number}
-   *     groupSeparator         {string}
    *     decimalSeparator       {string}
-   *     fractionGroupSize      {number}
-   *     fractionGroupSeparator {string}
+   *     fractionGroupSeparator  {string}
+   *     fractionGroupSize       {number}
    *     suffix                 {string}
    *
    * (The values assigned to the above FORMAT object properties are not checked for validity.)
@@ -376,17 +380,13 @@ function clone(configObject) {
         // DECIMAL_PLACES {number} Integer, 0 to MAX inclusive.
         // '[BigNumber Error] DECIMAL_PLACES {not a primitive number|not an integer|out of range}: {v}'
         if (obj.hasOwnProperty(p = 'DECIMAL_PLACES')) {
-          v = obj[p];
-          intCheck(v, 0, MAX, p);
-          DECIMAL_PLACES = v;
+          DECIMAL_PLACES = intCheck(obj[p], 0, MAX, p);
         }
 
         // ROUNDING_MODE {number} Integer, 0 to 8 inclusive.
         // '[BigNumber Error] ROUNDING_MODE {not a primitive number|not an integer|out of range}: {v}'
         if (obj.hasOwnProperty(p = 'ROUNDING_MODE')) {
-          v = obj[p];
-          intCheck(v, 0, 8, p);
-          ROUNDING_MODE = v;
+          ROUNDING_MODE = intCheck(obj[p], 0, 8, p);
         }
 
         // EXPONENTIAL_AT {number|number[]}
@@ -395,14 +395,13 @@ function clone(configObject) {
         // '[BigNumber Error] EXPONENTIAL_AT {not a primitive number|not an integer|out of range}: {v}'
         if (obj.hasOwnProperty(p = 'EXPONENTIAL_AT')) {
           v = obj[p];
-          if (v && v.pop) {
+          if (isArray(v)) {
             intCheck(v[0], -MAX, 0, p);
             intCheck(v[1], 0, MAX, p);
             TO_EXP_NEG = v[0];
             TO_EXP_POS = v[1];
           } else {
-            intCheck(v, -MAX, MAX, p);
-            TO_EXP_NEG = -(TO_EXP_POS = v < 0 ? -v : v);
+            TO_EXP_NEG = -(TO_EXP_POS = intCheck(v, -MAX, MAX, p) < 0 ? -v : v);
           }
         }
 
@@ -411,19 +410,18 @@ function clone(configObject) {
         // '[BigNumber Error] RANGE {not a primitive number|not an integer|out of range|cannot be zero}: {v}'
         if (obj.hasOwnProperty(p = 'RANGE')) {
           v = obj[p];
-          if (v && v.pop) {
-            intCheck(v[0], -MAX, -1, p);
-            intCheck(v[1], 1, MAX, p);
-            MIN_EXP = v[0];
-            MAX_EXP = v[1];
-          } else {
-            intCheck(v, -MAX, MAX, p);
-            if (v) {
-              MIN_EXP = -(MAX_EXP = v < 0 ? -v : v);
+          if (v) {
+            if (isArray(v)) {
+              intCheck(v[0], -MAX, -1, p);
+              intCheck(v[1], 1, MAX, p);
+              MIN_EXP = v[0];
+              MAX_EXP = v[1];
             } else {
-              throw Error
-               (bignumberError + p + ' cannot be zero: ' + v);
+              MIN_EXP = -(MAX_EXP = intCheck(v, -MAX, MAX, p) < 0 ? -v : v);
             }
+          } else {
+            throw Error
+              (bignumberError + p + ' cannot be zero: ' + v);
           }
         }
 
@@ -466,26 +464,29 @@ function clone(configObject) {
         // MODULO_MODE {number} Integer, 0 to 9 inclusive.
         // '[BigNumber Error] MODULO_MODE {not a primitive number|not an integer|out of range}: {v}'
         if (obj.hasOwnProperty(p = 'MODULO_MODE')) {
-          v = obj[p];
-          intCheck(v, 0, 9, p);
-          MODULO_MODE = v;
+          MODULO_MODE = intCheck(obj[p], 0, 9, p);
         }
 
         // POW_PRECISION {number} Integer, 0 to MAX inclusive.
         // '[BigNumber Error] POW_PRECISION {not a primitive number|not an integer|out of range}: {v}'
         if (obj.hasOwnProperty(p = 'POW_PRECISION')) {
-          v = obj[p];
-          intCheck(v, 0, MAX, p);
-          POW_PRECISION = v;
+          POW_PRECISION = intCheck(obj[p], 0, MAX, p);
         }
 
         // FORMAT {object}
         // '[BigNumber Error] FORMAT not an object: {v}'
         if (obj.hasOwnProperty(p = 'FORMAT')) {
           v = obj[p];
-          if (typeof v == 'object') FORMAT = v;
-          else throw Error
-           (bignumberError + p + ' not an object: ' + v);
+          if (typeof v == 'object') {
+            for (p in v) {
+              if (v.hasOwnProperty(p) && FORMAT.hasOwnProperty(p)) {
+                FORMAT[p] = v[p];
+              }
+            }
+          } else {
+            throw Error
+             (bignumberError + p + ' not an object: ' + v);
+          }
         }
 
         // ALPHABET {string}
@@ -527,6 +528,86 @@ function clone(configObject) {
 
 
   /*
+   * Return a BigNumber whose value is parsed from a formatted string str.
+   *
+   * The formatting described in `options` is stripped from `str` and the result is passed
+   * to the BigNumber constructor.
+   *
+   * [options] {object} Formatting options. Omitted properties fall back to FORMAT.
+   *
+   * '[BigNumber Error] Not a string: {str}'
+   * '[BigNumber Error] Argument not an object: {options}'
+   */
+  BigNumber.fromFormat = function (str, options) {
+    if (typeof str !== 'string') {
+      throw Error
+        (bignumberError + 'Not a string: ' + str);
+    }
+
+    // Resolve options against FORMAT defaults.
+    if (options == null) {
+      options = FORMAT;
+    } else if (typeof options != 'object') {
+      throw Error
+        (bignumberError + 'Argument not an object: ' + options);
+    } else {
+      options = resolveFormatOptions(options);
+    }
+
+    var i, isNeg, integerPart, fractionPart,
+      negativeSign = options.negativeSign || '-',
+      positiveSign = options.positiveSign || '',
+      prefix = options.prefix || '',
+      suffix = options.suffix || '',
+      groupSeparator = options.groupSeparator || '',
+      decimalSeparator = options.decimalSeparator || '.',
+      fractionGroupSeparator = options.fractionGroupSeparator || '';
+
+    // Strip prefix.
+    if (prefix && str.indexOf(prefix) === 0) str = str.slice(prefix.length);
+
+    // Strip suffix.
+    if (suffix && str.lastIndexOf(suffix) === str.length - suffix.length) {
+      str = str.slice(0, -suffix.length);
+    }
+
+    // Strip sign.
+    if (negativeSign && str.indexOf(negativeSign) === 0) {
+      str = str.slice(negativeSign.length);
+      isNeg = true;
+    } else if (positiveSign && str.indexOf(positiveSign) === 0) {
+      str = str.slice(positiveSign.length);
+    }
+
+    // Split on decimal separator, strip group separators from each part, rejoin with '.'.
+    i = str.indexOf(decimalSeparator);
+    if (i < 0) {
+      if (groupSeparator) {
+        while (str.indexOf(groupSeparator) > -1) {
+          str = str.replace(groupSeparator, '');
+        }
+      }
+    } else {
+      integerPart = str.slice(0, i);
+      fractionPart = str.slice(i + decimalSeparator.length);
+      if (groupSeparator) {
+        while (integerPart.indexOf(groupSeparator) > -1) {
+          integerPart = integerPart.replace(groupSeparator, '');
+        }
+      }
+      if (fractionGroupSeparator) {
+        while (fractionPart.indexOf(fractionGroupSeparator) > -1) {
+          fractionPart = fractionPart.replace(fractionGroupSeparator, '');
+        }
+      }
+      str = integerPart + '.' + fractionPart;
+    }
+
+    return new BigNumber(isNeg ? '-' + str : str);
+  };
+
+
+  /*
    * Return true if v appears to be a BigNumber instance that has a valid coefficient (c),
    * exponent (e), and sign (s), otherwise return false.
    *
@@ -539,7 +620,7 @@ function clone(configObject) {
       e = v.e,
       s = v.s;
 
-    if ({}.toString.call(c) != '[object Array]') {
+    if (!isArray(c)) {
 
       // ±Infinity and NaN
       return c === null && e === null && (s === null || s === 1 || s === -1);
@@ -623,9 +704,7 @@ function clone(configObject) {
         c = [],
         rand = new BigNumber(ONE);
 
-      if (dp == null) dp = DECIMAL_PLACES;
-      else intCheck(dp, 0, MAX);
-
+      dp = dp == null ? DECIMAL_PLACES : intCheck(dp, 0, MAX);
       k = mathceil(dp / LOG_BASE);
 
       if (CRYPTO) {
@@ -760,7 +839,7 @@ function clone(configObject) {
    * Parse a known-valid decimal string str into BigNumber x.
    * str must already have its sign removed.
    */
-  parseValidString = function (x, str) {
+  function parseValidString(x, str) {
     var e, i, len;
 
     // Decimal point?
@@ -831,7 +910,7 @@ function clone(configObject) {
       // Zero.
       x.c = [x.e = 0];
     }
-  };
+  }
 
 
   /*
@@ -843,7 +922,7 @@ function clone(configObject) {
    * case flipping, character validation, then converts to base 10 via convertBase
    * and delegates to parseValidString.
    */
-  parseBaseString = function (x, str, b, v) {
+  function parseBaseString(x, str, b, v) {
     var c, len,
       alphabet = ALPHABET.slice(0, b),
       i = 0,
@@ -907,7 +986,7 @@ function clone(configObject) {
     }
 
     parseValidString(x, convertBase(clean, b, 10, x.s));
-  };
+  }
 
 
   // Called by BigNumber and BigNumber.prototype.toString.
@@ -1029,7 +1108,7 @@ function clone(configObject) {
       } else {
 
         // Truncate xc to the required number of decimal places.
-        xc.length = d;
+        if (d < xc.length) xc.length = d;
 
         // Round up?
         if (r) {
@@ -1333,8 +1412,7 @@ function clone(configObject) {
   function format(n, i, rm, id) {
     var c0, e, ne, len, str;
 
-    if (rm == null) rm = ROUNDING_MODE;
-    else intCheck(rm, 0, 8);
+    rm = rm == null ? ROUNDING_MODE : intCheck(rm, 0, 8);
 
     if (!n.c) return n.toString();
 
@@ -1445,7 +1523,15 @@ function clone(configObject) {
   }
 
 
-
+  function resolveFormatOptions(options) {
+    var key, resolved = {};
+    for (key in FORMAT) {
+      if (FORMAT.hasOwnProperty(key)) {
+        resolved[key] = options.hasOwnProperty(key) ? options[key] : FORMAT[key];
+      }
+    }
+    return resolved;
+  }
 
 
   /*
@@ -1669,11 +1755,10 @@ function clone(configObject) {
       x = this;
 
     if (dp != null) {
-      intCheck(dp, -MAX, MAX);
-      if (rm == null) rm = ROUNDING_MODE;
-      else intCheck(rm, 0, 8);
-
-      return round(new BigNumber(x), dp + x.e + 1, rm);
+      return round(new BigNumber(x),
+        intCheck(dp, -MAX, MAX) + x.e + 1,
+        rm == null ? ROUNDING_MODE : intCheck(rm, 0, 8)
+      );
     }
 
     if (!(c = x.c)) return null;
@@ -1866,9 +1951,7 @@ function clone(configObject) {
    */
   P.integerValue = function (rm) {
     var n = new BigNumber(this);
-    if (rm == null) rm = ROUNDING_MODE;
-    else intCheck(rm, 0, 8);
-    return round(n, n.e + 1, rm);
+    return round(n, n.e + 1, rm == null ? ROUNDING_MODE : intCheck(rm, 0, 8));
   };
 
 
@@ -2390,11 +2473,10 @@ function clone(configObject) {
       x = this;
 
     if (sd != null && sd !== !!sd) {
-      intCheck(sd, 1, MAX);
-      if (rm == null) rm = ROUNDING_MODE;
-      else intCheck(rm, 0, 8);
-
-      return round(new BigNumber(x), sd, rm);
+      return round(new BigNumber(x),
+        intCheck(sd, 1, MAX),
+        rm == null ? ROUNDING_MODE : intCheck(rm, 0, 8)
+      );
     }
 
     if (!(c = x.c)) return null;
@@ -2425,8 +2507,7 @@ function clone(configObject) {
    * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {k}'
    */
   P.shiftedBy = function (k) {
-    intCheck(k, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER);
-    return this.times('1e' + k);
+    return this.times('1e' + intCheck(k, -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER));
   };
 
 
@@ -2569,92 +2650,119 @@ function clone(configObject) {
    * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
    */
   P.toExponential = function (dp, rm) {
-    if (dp != null) {
-      intCheck(dp, 0, MAX);
-      dp++;
-    }
-    return format(this, dp, rm, 1);
+    return format(this, dp == null ? dp : intCheck(dp, 0, MAX) + 1, rm, 1);
   };
 
 
   /*
-   * Return a string representing the value of this BigNumber in fixed-point notation rounding
-   * to dp fixed decimal places using rounding mode rm, or ROUNDING_MODE if rm is omitted.
+   * Return a string representing the value of this BigNumber in fixed-point notation
+   * rounded to dp decimal places using rounding mode rm, or ROUNDING_MODE if rm is omitted.
+   *
+   * If dp is negative, round to the corresponding number of digits to the left of the
+   * decimal point.
    *
    * Note: as with JavaScript's number type, (-0).toFixed(0) is '0',
    * but e.g. (-0.00001).toFixed(0) is '-0'.
    *
-   * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
+   * [dp] {number} Decimal places. Integer, -MAX to MAX inclusive.
    * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
    *
    * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
    */
   P.toFixed = function (dp, rm) {
-    if (dp != null) {
-      intCheck(dp, 0, MAX);
-      dp = dp + this.e + 1;
-    }
-    return format(this, dp, rm);
+    return format(this, dp == null ? dp : intCheck(dp, -MAX, MAX) + this.e + 1, rm);
   };
 
 
   /*
-   * Return a string representing the value of this BigNumber in fixed-point notation rounded
-   * using rm or ROUNDING_MODE to dp decimal places, and formatted according to the properties
-   * of the format or FORMAT object (see BigNumber.set).
+   * Return a string representing the value of this BigNumber in fixed-point notation
+   * rounded to dp decimal places using rounding mode rm, or ROUNDING_MODE if rm is#
+   * omitted, and formatted according to the properties of the options and FORMAT objects.
    *
-   * The formatting object may contain some or all of the properties shown below.
+   * If dp is negative, round to the corresponding number of digits to the left of the
+   * decimal point.
+   *
+   * If dp is an array, it is [min, max], where min and max are integers, 0 to MAX
+   * inclusive, or null or undefined. max limits the number of decimal places and min
+   * preserves them or adds trailing zeros.
+   *
+   * The options object may contain some or all of the properties shown below.
    *
    * FORMAT = {
    *   prefix: '',
+   *   negativeSign: '-',          // TODO? if '()', wrap the value in braces?
+   *   positiveSign: '',
+   *   groupSeparator: ',',
    *   groupSize: 3,
    *   secondaryGroupSize: 0,
-   *   groupSeparator: ',',
    *   decimalSeparator: '.',
+   *   fractionGroupSeparator: '',
    *   fractionGroupSize: 0,
-   *   fractionGroupSeparator: '\xA0',      // non-breaking space
    *   suffix: ''
    * };
    *
-   * [dp] {number} Decimal places. Integer, 0 to MAX inclusive.
-   * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
-   * [format] {object} Formatting options. See FORMAT pbject above.
-   *
-   * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
-   * '[BigNumber Error] Argument not an object: {format}'
+    * [dp] {number|Array} Decimal places.
+    * [rm] {number} Rounding mode. Integer, 0 to 8 inclusive.
+    * [options] {object} Formatting options. See FORMAT object above.
+    *
+    * '[BigNumber Error] Minimum must not exceed maximum'
+    * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {dp|rm}'
+    * '[BigNumber Error] Argument not an object: {options}'
    */
-  P.toFormat = function (dp, rm, format) {
-    var str,
+  P.toFormat = function (dp, rm, options) {
+    var min, max, str,
       x = this;
 
-    if (format == null) {
-      if (dp != null && rm && typeof rm == 'object') {
-        format = rm;
-        rm = null;
-      } else if (dp && typeof dp == 'object') {
-        format = dp;
-        dp = rm = null;
-      } else {
-        format = FORMAT;
+    if (options == null) {
+      options = FORMAT;
+      if (dp != null) {
+        if (rm != null) {
+          if (typeof rm == 'object') {
+            options = resolveFormatOptions(rm);
+            rm = null;
+          }
+        } else if (typeof dp == 'object' && !isArray(dp)) {
+          options = resolveFormatOptions(dp);
+          dp = rm = null;
+        }
       }
-    } else if (typeof format != 'object') {
+    } else if (typeof options != 'object') {
       throw Error
-        (bignumberError + 'Argument not an object: ' + format);
+        (bignumberError + 'Argument not an object: ' + options);
+    } else {
+      options = resolveFormatOptions(options);
+    }
+
+    if (dp != null) {
+      if (isArray(dp) && dp.length <= 2) {
+        min = dp[0];
+        max = dp[1];
+        dp = x.dp();
+        if (max != null && dp > intCheck(max, 0, MAX)) dp = max;
+        if (min != null && intCheck(min, 0, MAX) !== 0) {
+          if (max != null && min > max) {
+            throw Error
+            (bignumberError + 'Minimum must not exceed maximum');
+          }
+          if (dp < min) dp = min;
+        }
+      } else {
+        intCheck(dp, -MAX, MAX);
+      }
     }
 
     str = x.toFixed(dp, rm);
+    if (x.s < 0) str = str.slice(1);
 
     if (x.c) {
       var i,
         arr = str.split('.'),
-        g1 = +format.groupSize,
-        g2 = +format.secondaryGroupSize,
-        groupSeparator = format.groupSeparator || '',
+        g1 = +options.groupSize,
+        g2 = +options.secondaryGroupSize,
+        groupSeparator = options.groupSeparator || '',
         intPart = arr[0],
         fractionPart = arr[1],
-        isNeg = x.s < 0,
-        intDigits = isNeg ? intPart.slice(1) : intPart,
-        len = intDigits.length;
+        len = intPart.length;
 
       if (g2) {
         i = g1;
@@ -2665,21 +2773,27 @@ function clone(configObject) {
 
       if (g1 > 0 && len > 0) {
         i = len % g1 || g1;
-        intPart = intDigits.substr(0, i);
-        for (; i < len; i += g1) intPart += groupSeparator + intDigits.substr(i, g1);
-        if (g2 > 0) intPart += groupSeparator + intDigits.slice(i);
-        if (isNeg) intPart = '-' + intPart;
+        str = intPart.substr(0, i);
+        for (; i < len; i += g1) {
+          str += groupSeparator + intPart.substr(i, g1);
+        }
+        if (g2 > 0) str += groupSeparator + intPart.slice(i);
       }
 
-      str = fractionPart
-       ? intPart + (format.decimalSeparator || '') + ((g2 = +format.fractionGroupSize)
-        ? fractionPart.replace(new RegExp('\\d{' + g2 + '}\\B', 'g'),
-         '$&' + (format.fractionGroupSeparator || ''))
-        : fractionPart)
-       : intPart;
+      if (fractionPart) {
+        i = +options.fractionGroupSize;
+        if (i) {
+          fractionPart = fractionPart.replace(
+            new RegExp('\\d{' + i + '}\\B', 'g'), '$&' + (options.fractionGroupSeparator || '')
+          );
+        }
+        str += (options.decimalSeparator || '') + fractionPart;
+      }
     }
 
-    return (format.prefix || '') + str + (format.suffix || '');
+    return (options.prefix || '') +
+      (x.s < 0 ? options.negativeSign || '' : x.s > 0 ? options.positiveSign || '' : '') +
+      str + (options.suffix || '');
   };
 
 
@@ -2793,8 +2907,7 @@ function clone(configObject) {
    * '[BigNumber Error] Argument {not a primitive number|not an integer|out of range}: {sd|rm}'
    */
   P.toPrecision = function (sd, rm) {
-    if (sd != null) intCheck(sd, 1, MAX);
-    return format(this, sd, rm, 2);
+    return format(this, sd == null ? sd : intCheck(sd, 1, MAX), rm, 2);
   };
 
 
@@ -2941,6 +3054,12 @@ function intCheck(n, min, max, name) {
        ? n < min || n > max ? ' out of range: ' : ' not an integer: '
        : ' not a primitive number: ') + String(n));
   }
+  return n;
+}
+
+
+function isArray(obj) {
+  return {}.toString.call(obj) == '[object Array]';
 }
 
 

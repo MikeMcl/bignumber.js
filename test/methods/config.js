@@ -2,6 +2,14 @@ if (typeof Test === 'undefined') require('../tester');
 
 Test('config', function () {
     var MAX = 1e9;
+    var original = BigNumber.config();
+    var originalFormat = {};
+
+    for (var property in original.FORMAT) {
+        if (original.FORMAT.hasOwnProperty(property)) {
+            originalFormat[property] = original.FORMAT[property];
+        }
+    }
 
     function t(expected, value){
         Test.areEqual(expected, value);
@@ -197,23 +205,84 @@ Test('config', function () {
 
     // FORMAT
 
+    var format;
+
     tx(function () {BigNumber.config({FORMAT: ''})}, "FORMAT: ''");
     tx(function () {BigNumber.config({FORMAT: 1})}, "FORMAT: 1");
 
-    obj = {
-        decimalSeparator: '.',
+    BigNumber.config({
+        RANGE: 1E9,
+        EXPONENTIAL_AT: [-7, 21],
+        FORMAT: {
+        prefix: '',
+        negativeSign: '-',
+        positiveSign: '',
         groupSeparator: ',',
         groupSize: 3,
         secondaryGroupSize: 0,
-        fractionGroupSeparator: '\xA0',
-        fractionGroupSize: 0
-    };
+        decimalSeparator: '.',
+        fractionGroupSeparator: '',
+        fractionGroupSize: 0,
+        suffix: ''
+    }});
 
-    t(obj, BigNumber.config({FORMAT: obj}).FORMAT);
+    var x = new BigNumber('1234567.89');
 
     t('.', BigNumber.config().FORMAT.decimalSeparator);
-    obj.decimalSeparator = ',';
+    BigNumber.config({FORMAT: { decimalSeparator: ',' }});
     t(',', BigNumber.config().FORMAT.decimalSeparator);
+
+    format = {
+        prefix: '£',
+        groupSeparator: '_',
+        groupSize: 2,
+        decimalSeparator: '|'
+    };
+
+    BigNumber.config({FORMAT: format});
+
+    Test.isTrue(BigNumber.config().FORMAT !== format);
+    t('£1_23_45_67|89', x.toFormat());
+    t('£', BigNumber.config().FORMAT.prefix);
+    t('_', BigNumber.config().FORMAT.groupSeparator);
+    t(2, BigNumber.config().FORMAT.groupSize);
+    t('|', BigNumber.config().FORMAT.decimalSeparator);
+    t('', BigNumber.config().FORMAT.suffix);
+
+    format.prefix = 'EUR ';
+    format.groupSeparator = '*';
+    format.groupSize = 1;
+    format.decimalSeparator = ':';
+
+    t('£1_23_45_67|89', x.toFormat());
+    t('£', BigNumber.config().FORMAT.prefix);
+    t('_', BigNumber.config().FORMAT.groupSeparator);
+    t(2, BigNumber.config().FORMAT.groupSize);
+    t('|', BigNumber.config().FORMAT.decimalSeparator);
+
+    BigNumber.config({FORMAT: { decimalSeparator: '~' }});
+
+    t('£1_23_45_67~89', x.toFormat());
+    t('£', BigNumber.config().FORMAT.prefix);
+    t('_', BigNumber.config().FORMAT.groupSeparator);
+    t(2, BigNumber.config().FORMAT.groupSize);
+    t('~', BigNumber.config().FORMAT.decimalSeparator);
+
+    function FormatParent() {}
+
+    FormatParent.prototype.groupSeparator = ' ';
+    format = new FormatParent();
+    format.fractionGroupSeparator = '^';
+    format.fractionGroupSize = 1;
+    format.unknown = '?';
+
+    BigNumber.config({FORMAT: format});
+
+    t('£1_23_45_67~8^9', x.toFormat());
+    t('_', BigNumber.config().FORMAT.groupSeparator);
+    t('^', BigNumber.config().FORMAT.fractionGroupSeparator);
+    t(1, BigNumber.config().FORMAT.fractionGroupSize);
+    t(undefined, BigNumber.config().FORMAT.unknown);
 
     // ALPHABET
 
@@ -238,5 +307,6 @@ Test('config', function () {
     BigNumber.config({ALPHABET: '9876543210'});
     t('9876543210', BigNumber.config().ALPHABET);
 
-    BigNumber.config({ALPHABET: '0123456789abcdefghijklmnopqrstuvwxyz'});
+    original.FORMAT = originalFormat;
+    BigNumber.config(original);
 });

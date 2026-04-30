@@ -226,7 +226,12 @@ There is a [`toFormat`](http://mikemcl.github.io/bignumber.js/#toFor) method whi
 
 ```javascript
 y = new BigNumber('1234567.898765')
-y.toFormat(2)                       // "1,234,567.90"
+y.toFormat({
+  prefix: '€',
+  decimalSeparator: ',',
+  groupSeparator: '.',
+  decimalPlaces: [0, 2]
+})                                  // "€1.234.567,90"
 ```
 
 The maximum number of decimal places of the result of an operation involving division (i.e. a division, square root, base conversion or negative power operation) is set using the `set` or `config` method of the `BigNumber` constructor.

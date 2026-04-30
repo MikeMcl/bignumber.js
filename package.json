@@ -52,7 +52,8 @@
     "typecheck:cjs": "tsc -p test/typescript/tsconfig.cjs.json",
     "typecheck:esm": "tsc -p test/typescript/tsconfig.esm.json",
     "typecheck:global": "tsc -p test/typescript/tsconfig.global.json",
-    "typecheck": "npm run typecheck:cjs && npm run typecheck:esm && npm run typecheck:global"
+    "typecheck:api": "tsc -p test/typescript/tsconfig.api.json",
+    "typecheck": "npm run typecheck:cjs && npm run typecheck:esm && npm run typecheck:global && npm run typecheck:api"
   },
   "devDependencies": {
     "typescript": "^5.1.6"
