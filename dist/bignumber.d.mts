@@ -1,4 +1,4 @@
-// Type definitions for bignumber.js v11.0
+// Type definitions for bignumber.js v11.1
 // Project: https://github.com/MikeMcl/bignumber.js
 // Definitions by: Michael Mclaughlin <https://github.com/MikeMcl>
 // Definitions: https://github.com/MikeMcl/bignumber.js
