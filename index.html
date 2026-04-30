@@ -58,7 +58,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
 
   <div class="nav">
 
-    <b>v11.0</b>
+    <b>v11.1</b>
 
 	<a class='nav-title' href="#">API</a>
 
@@ -85,6 +85,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
           <li><a href="#alphabet"      >ALPHABET</a></li>
         </ul>
       </li>
+      <li><a href="#fromFormat" >fromFormat</a></li>
       <li><a href="#isBigNumber">isBigNumber</a></li>
       <li><a href="#max"        >maximum</a><span>max</span></li>
       <li><a href="#min"        >minimum</a><span>min</span></li>
@@ -109,42 +110,43 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
 
     <a href="#prototype-methods">Methods</a>
     <ul>
-      <li><a href="#abs"    >absoluteValue         </a><span>abs</span>  </li>
-      <li><a href="#cmp"    >comparedTo            </a>                  </li>
-      <li><a href="#dp"     >decimalPlaces         </a><span>dp</span>   </li>
-      <li><a href="#div"    >dividedBy             </a><span>div</span>  </li>
-      <li><a href="#divInt" >dividedToIntegerBy    </a><span>idiv</span> </li>
-      <li><a href="#pow"    >exponentiatedBy       </a><span>pow</span>  </li>
-      <li><a href="#int"    >integerValue          </a>                  </li>
-      <li><a href="#eq"     >isEqualTo             </a><span>eq</span>   </li>
-      <li><a href="#isF"    >isFinite              </a>                  </li>
-      <li><a href="#gt"     >isGreaterThan         </a><span>gt</span>   </li>
-      <li><a href="#gte"    >isGreaterThanOrEqualTo</a><span>gte</span>  </li>
-      <li><a href="#isInt"  >isInteger             </a>                  </li>
-      <li><a href="#lt"     >isLessThan            </a><span>lt</span>   </li>
-      <li><a href="#lte"    >isLessThanOrEqualTo   </a><span>lte</span>  </li>
-      <li><a href="#isNaN"  >isNaN                 </a>                  </li>
-      <li><a href="#isNeg"  >isNegative            </a>                  </li>
-      <li><a href="#isPos"  >isPositive            </a>                  </li>
-      <li><a href="#isZ"    >isZero                </a>                  </li>
-      <li><a href="#minus"  >minus                 </a>                  </li>
-      <li><a href="#mod"    >modulo                </a><span>mod</span>  </li>
-      <li><a href="#times"  >multipliedBy          </a><span>times</span></li>
-      <li><a href="#neg"    >negated               </a>                  </li>
-      <li><a href="#plus"   >plus                  </a>                  </li>
-      <li><a href="#sd"     >precision             </a><span>sd</span>   </li>
-      <li><a href="#shift"  >shiftedBy             </a>                  </li>
-      <li><a href="#sqrt"   >squareRoot            </a><span>sqrt</span> </li>
-      <li><a href="#toE"    >toExponential         </a>                  </li>
-      <li><a href="#toFix"  >toFixed               </a>                  </li>
-      <li><a href="#toFor"  >toFormat              </a>                  </li>
-      <li><a href="#toFr"   >toFraction            </a>                  </li>
-      <li><a href="#toJSON" >toJSON                </a>                  </li>
-      <li><a href="#toN"    >toNumber              </a>                  </li>
-      <li><a href="#toObj"  >toObject              </a>                  </li>
-      <li><a href="#toP"    >toPrecision           </a>                  </li>
-      <li><a href="#toS"    >toString              </a>                  </li>
-      <li><a href="#valueOf">valueOf               </a>                  </li>
+      <li><a href="#abs"     >absoluteValue         </a><span>abs</span>  </li>
+      <li><a href="#cmp"     >comparedTo            </a>                  </li>
+      <li><a href="#dp"      >decimalPlaces         </a><span>dp</span>   </li>
+      <li><a href="#div"     >dividedBy             </a><span>div</span>  </li>
+      <li><a href="#divInt"  >dividedToIntegerBy    </a><span>idiv</span> </li>
+      <li><a href="#pow"     >exponentiatedBy       </a><span>pow</span>  </li>
+      <li><a href="#int"     >integerValue          </a>                  </li>
+      <li><a href="#eq"      >isEqualTo             </a><span>eq</span>   </li>
+      <li><a href="#isF"     >isFinite              </a>                  </li>
+      <li><a href="#gt"      >isGreaterThan         </a><span>gt</span>   </li>
+      <li><a href="#gte"     >isGreaterThanOrEqualTo</a><span>gte</span>  </li>
+      <li><a href="#isInt"   >isInteger             </a>                  </li>
+      <li><a href="#lt"      >isLessThan            </a><span>lt</span>   </li>
+      <li><a href="#lte"     >isLessThanOrEqualTo   </a><span>lte</span>  </li>
+      <li><a href="#isNaN"   >isNaN                 </a>                  </li>
+      <li><a href="#isNeg"   >isNegative            </a>                  </li>
+      <li><a href="#isPos"   >isPositive            </a>                  </li>
+      <li><a href="#isZ"     >isZero                </a>                  </li>
+      <li><a href="#minus"   >minus                 </a>                  </li>
+      <li><a href="#mod"     >modulo                </a><span>mod</span>  </li>
+      <li><a href="#times"   >multipliedBy          </a><span>times</span></li>
+      <li><a href="#neg"     >negated               </a>                  </li>
+      <li><a href="#plus"    >plus                  </a>                  </li>
+      <li><a href="#sd"      >precision             </a><span>sd</span>   </li>
+      <li><a href="#shift"   >shiftedBy             </a>                  </li>
+      <li><a href="#sqrt"    >squareRoot            </a><span>sqrt</span> </li>
+      <li><a href="#toBigInt">toBigInt              </a>                  </li>
+      <li><a href="#toE"     >toExponential         </a>                  </li>
+      <li><a href="#toFix"   >toFixed               </a>                  </li>
+      <li><a href="#toFor"   >toFormat              </a>                  </li>
+      <li><a href="#toFr"    >toFraction            </a>                  </li>
+      <li><a href="#toJSON"  >toJSON                </a>                  </li>
+      <li><a href="#toN"     >toNumber              </a>                  </li>
+      <li><a href="#toObj"   >toObject              </a>                  </li>
+      <li><a href="#toP"     >toPrecision           </a>                  </li>
+      <li><a href="#toS"     >toString              </a>                  </li>
+      <li><a href="#valueOf" >valueOf               </a>                  </li>
     </ul>
 
     <a href="#instance-properties">Properties</a>
@@ -167,7 +169,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
 
     <p>A JavaScript library for arbitrary-precision arithmetic.</p>
     <p><a href="https://github.com/MikeMcl/bignumber.js">Hosted on GitHub</a>. </p>
-    <p>
+	<p>
  	  <i>
         The library is incorporated into this page, so it should be available in the console now.
       </i>
@@ -205,7 +207,7 @@ li span{float:right;margin-right:10px;color:#c0c0c0}
       Note that the BigNumber constructor accepts an <code>n</code> of type <em>number</em> purely
       as a convenience so that string quotes don't have to be typed when entering literal values,
       and that it is the <code>toString</code> value of <code>n</code> that is used rather than its
-      underlying binary floating point value converted to decimal. 
+      underlying binary floating point value converted to decimal.
     </p>
     <pre>
 x = new BigNumber(0.1)                     // '0.1'
@@ -527,8 +529,8 @@ BigNumber.random()              // 0.54340758610486147524</pre>
         Types unsupported when <code>STRICT</code> is <code>true</code> are first
         converted to a string.
       </dd>
-      <dd>  
-        See <a href='#Errors'>Errors</a>.  
+      <dd>
+        See <a href='#Errors'>Errors</a>.
       </dd>
       <dd>
       <pre>BigNumber.config({ STRICT: false })
@@ -634,9 +636,9 @@ BigNumber.config({ MODULO_MODE: 9 })          // equivalent</pre>
       </dd>
       <dd>
          Unlike the other configuration properties, the values of the properties of the
-         <code>FORMAT</code> object will not be checked for validity. The existing
-         <code>FORMAT</code> object will simply be replaced by the object that is passed in.
-         The object can include any number of the properties shown below.
+        <code>FORMAT</code> object will not be checked for validity. Any recognised properties
+        of the object that is passed in are copied to the existing <code>FORMAT</code> object,
+        and omitted properties retain their current values.
       </dd>
       <dd>See <a href='#toFor'><code>toFormat</code></a> for examples of usage.</dd>
       <dd>
@@ -645,6 +647,10 @@ BigNumber.config({
   FORMAT: {
     // string to prepend
     prefix: '',
+    // the negative sign
+    negativeSign: '-',
+    // the positive sign
+    positiveSign: '',
     // decimal separator
     decimalSeparator: '.',
     // grouping separator of the integer part
@@ -654,7 +660,7 @@ BigNumber.config({
     // secondary grouping size of the integer part
     secondaryGroupSize: 0,
     // grouping separator of the fraction part
-    fractionGroupSeparator: ' ',
+    fractionGroupSeparator: '',
     // grouping size of the fraction part
     fractionGroupSize: 0,
     // string to append
@@ -719,6 +725,50 @@ BigNumber.config({
 obj = BigNumber.config();
 obj.DECIMAL_PLACES        // 40
 obj.RANGE                 // [-500, 500]</pre>
+
+
+
+    <h5 id="fromFormat">fromFormat<code class='inset'>.fromFormat(str [, options]) <i>&rArr; BigNumber</i></code></h5>
+    <p>
+      <code>str</code>: <i>string</i><br />
+      <code>options</code>: <i>object</i>: see <a href='#format'><code>FORMAT</code></a>
+    </p>
+    <p>
+      Returns a BigNumber whose value is parsed from the formatted string <code>str</code>.
+    </p>
+    <p>
+      The formatting described in <code>options</code> is stripped from <code>str</code> and the
+      result is passed to the BigNumber constructor.
+    </p>
+    <p>
+      If <code>options</code> is omitted, or is <code>null</code> or <code>undefined</code>, the
+      <a href='#format'><code>FORMAT</code></a> object is used for all properties.
+      Otherwise, any property not included in <code>options</code> falls back to the
+      corresponding value in <a href='#format'><code>FORMAT</code></a>.
+    </p>
+    <p>
+      Throws if <code>str</code> is not a string, or if <code>options</code> is not an object.
+      See <a href='#Errors'>Errors</a>.
+    </p>
+    <pre>
+BigNumber.fromFormat('$1,234,567.89', { prefix: '$' })
+                                // '1234567.89'
+
+BigNumber.fromFormat('$-1,234,567.89', { prefix: '$' })
+                                // '-1234567.89'
+
+BigNumber.fromFormat('&euro;-1.234.567,89', {
+  prefix: '&euro;',
+  decimalSeparator: ',',
+  groupSeparator: '.'
+})                              // '-1234567.89'
+
+// Round-trip with toFormat
+var opts = { prefix: '$' }
+x = new BigNumber('-1234567.891')
+x.toFormat(2, opts)             // '$-1,234,567.89'
+BigNumber.fromFormat('$-1,234,567.89', opts)
+                                // '-1234567.89'</pre>
 
 
 
@@ -828,7 +878,10 @@ BigNumber.random(20)            // '0.78193327636914089009'</pre>
       <code>n</code>: <i>number|string|BigNumber</i><br />
       <i>See <code><a href="#bignumber">BigNumber</a></code> for further parameter details.</i>
     </p>
-    <p>Returns a BigNumber whose value is the sum of the arguments.</p>
+    <p>
+      Returns a BigNumber whose value is the sum of the arguments,
+      or zero if there are none.
+    </p>
     <p>The return value is always exact and unrounded.</p>
     <pre>x = new BigNumber('3257869345.0378653')
 BigNumber.sum(4e9, x, '123456789.9')      // '7381326134.9378653'
@@ -1003,13 +1056,15 @@ y.comparedTo('110', 2)          // -1</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      Throws if <code>dp</code> or <code>rm</code> is invalid. See <a href='#Errors'>Errors</a>.
+      Throws if <code>dp</code> or <code>rm</code> is invalid, or if the minimum exceeds the
+      maximum in a <code>dp</code> array. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = new BigNumber(1234.56)
 x.decimalPlaces(1)                     // '1234.6'
 x.dp()                                 // 2
 x.decimalPlaces(2)                     // '1234.56'
+x.decimalPlaces(-2)                    // '1200'
 x.dp(10)                               // '1234.56'
 x.decimalPlaces(0, 1)                  // '1234'
 x.dp(0, 6)                             // '1235'
@@ -1533,6 +1588,45 @@ y.sqrt()                        // '1.73205080756887729353'</pre>
 
 
 
+    <h5 id="toBigInt">
+      toBigInt<code class='inset'>.toBigInt([rm]) <i>&rArr; bigint|null</i></code>
+    </h5>
+    <p>
+      <code>rm</code>: <i>number</i>: integer, <code>0</code> to <code>8</code> inclusive
+    </p>
+    <p>
+      Returns the value of this BigNumber as a JavaScript BigInt.
+      If the value is not an integer, it is rounded to an integer using rounding mode
+      <code>rm</code>, or
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> if <code>rm</code> is omitted or is
+      <code>null</code> or <code>undefined</code>.
+    </p>
+    <p>
+      If the value of this BigNumber is not finite (<code>Infinity</code>, <code>-Infinity</code>
+      or <code>NaN</code>), <code>null</code> is returned.
+    </p>
+    <p>
+      This method is only available if <code>BigInt</code> is supported in the environment.
+    </p>
+    <p>
+      Throws if <code>rm</code> is invalid. See <a href='#Errors'>Errors</a>.
+    </p>
+    <pre>
+x = new BigNumber(123)
+x.toBigInt()                    // 123n
+
+y = new BigNumber('9999999999999999999999999999999')
+y.toBigInt()                    // 9999999999999999999999999999999n
+
+z = new BigNumber(1.5)
+z.toBigInt()                    // 2n       (default ROUND_HALF_UP)
+z.toBigInt(1)                   // 1n       (ROUND_DOWN)
+
+new BigNumber(Infinity).toBigInt()   // null
+new BigNumber(NaN).toBigInt()        // null</pre>
+
+
+
     <h5 id="toE">
       toExponential<code class='inset'>.toExponential([dp [, rm]]) <i>&rArr; string</i></code>
     </h5>
@@ -1578,16 +1672,19 @@ y.toExponential(3)              // '4.560e+1'</pre>
       toFixed<code class='inset'>.toFixed([dp [, rm]]) <i>&rArr; string</i></code>
     </h5>
     <p>
-      <code>dp</code>: <i>number</i>: integer, <code>0</code> to <code>1e+9</code> inclusive<br />
+      <code>dp</code>: <i>number</i>: number: integer, <code>-1e+9</code> to <code>1e+9</code>
+      inclusive<br />
       <code>rm</code>: <i>number</i>: integer, <code>0</code> to <code>8</code> inclusive
     </p>
     <p>
       Returns a string representing the value of this BigNumber in normal (fixed-point) notation
-      rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>.
+      rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>. If the value
+      has fewer than <code>dp</code> decimal places, the return value will be appended with zeros
+      accordingly.
     </p>
     <p>
-      If the value of this BigNumber in normal notation has fewer than <code>dp</code> fraction
-      digits, the return value will be appended with zeros accordingly.
+      If <code>dp</code> is negative, the rounding is applied to the corresponding number of
+      digits to the left of the decimal point.
     </p>
    <p>
       Unlike <code>Number.prototype.toFixed</code>, which returns exponential notation if a number
@@ -1605,7 +1702,8 @@ y.toExponential(3)              // '4.560e+1'</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      Throws if <code>dp</code> or <code>rm</code> is invalid. See <a href='#Errors'>Errors</a>.
+      Throws if <code>dp</code> or <code>rm</code> is invalid.
+      See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = 3.456
@@ -1617,81 +1715,112 @@ x.toFixed(2)                    // '3.46'
 y.toFixed(2)                    // '3.46'
 y.toFixed(2, 1)                 // '3.45'  (ROUND_DOWN)
 x.toFixed(5)                    // '3.45600'
-y.toFixed(5)                    // '3.45600'</pre>
+
+z = new BigNumber(1234.5)
+z.toFixed(-1)                   // '1230'
+z.toFixed(-2)                   // '1200'
+z.toFixed(-3)                   // '1000'</pre>
 
 
 
     <h5 id="toFor">
-      toFormat<code class='inset'>.toFormat([dp [, rm[, format]]]) <i>&rArr; string</i></code>
+      toFormat<code class='inset'>.toFormat([dp [, rm [, options]]]) <i>&rArr; string</i></code>
     </h5>
     <p>
-      <code>dp</code>: <i>number</i>: integer, <code>0</code> to <code>1e+9</code> inclusive<br />
+     <code>dp</code>: <i>number|Array</i>: number: integer, <code>-1e+9</code> to <code>1e+9</code>
+      inclusive; array: 1 or 2 elements, each an integer, <code>0</code> to <code>1e+9</code>
+      inclusive, or <code>null</code> or <code>undefined</code><br />
       <code>rm</code>: <i>number</i>: integer, <code>0</code> to <code>8</code> inclusive<br />
-      <code>format</code>: <i>object</i>: see <a href='#format'><code>FORMAT</code></a>
+      <code>options</code>: <i>object</i>: see <a href='#format'><code>FORMAT</code></a>
     </p>
     <p>
-      <p>
-      Returns a string representing the value of this BigNumber in normal (fixed-point) notation
-      rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>, and formatted
-      according to the properties of the <code>format</code> object.
+      Returns a string representing the value of this BigNumber in normal (fixed-point)
+      notation rounded to <code>dp</code> decimal places using rounding mode <code>rm</code>,
+      and formatted according to the properties of the <code>options</code> object. If the value
+      has fewer than <code>dp</code> decimal, places, the return value will be appended with zeros
+      accordingly.
     </p>
     <p>
-      See <a href='#format'><code>FORMAT</code></a> and the examples below for the properties of the
-      <code>format</code> object, their types, and their usage. A formatting object may contain
-      some or all of the recognised properties.
+      See <a href='#format'><code>FORMAT</code></a> and the examples below for the properties
+      of the <code>options</code> object, their types, and their usage. The object may contain
+      some or all of the recognised properties. Any property not included in the
+      <code>options</code> object will fall back to the value in the
+      <a href='#format'><code>FORMAT</code></a> object.
     </p>
     <p>
-      If <code>dp</code> is omitted or is <code>null</code> or <code>undefined</code>, then the
-      return value is not rounded to a fixed number of decimal places.<br />
-      If <code>rm</code> is omitted or is <code>null</code> or <code>undefined</code>,
-      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.<br />
-      If <code>format</code> is omitted or is <code>null</code> or <code>undefined</code>, the
-      <a href='#format'><code>FORMAT</code></a> object is used.
+      If <code>dp</code> is omitted and the first argument is an object, it is interpreted as
+      <code>options</code>. If <code>rm</code> is omitted and the second argument is an object,
+      it is interpreted as <code>options</code>.
     </p>
     <p>
-      Throws if <code>dp</code>, <code>rm</code> or <code>format</code> is invalid. See
-      <a href='#Errors'>Errors</a>.
+      If <code>options</code> is omitted or is <code>null</code> or <code>undefined</code>,
+      the <a href='#format'><code>FORMAT</code></a> object is used.
+    </p>
+    <p>
+      If <code>dp</code> is a number and is negative, the rounding is applied to the
+      corresponding number of digits to the left of the decimal point.
+    </p>
+     <p>
+      If <code>dp</code> is an array, it is <code>[min, max]</code>, where <code>min</code> and
+      <code>max</code> are integers, <code>0</code> to <code>MAX</code> inclusive, or
+      <code>null</code> or <code>undefined</code>. <code>max</code> limits the number of decimal
+      places and <code>min</code> preserves them or adds trailing zeros.
+    </p>
+    <p>
+      If <code>rm</code> is omitted or is <code>null</code>,
+      <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
+    </p>
+    <p>
+      Throws if <code>options</code> is not an object, or if <code>dp</code>
+      or <code>rm</code> is invalid, including if a <code>dp</code> array has more than two
+      elements or if its minimum exceeds its maximum.
+      See <a href='#Errors'>Errors</a>.
+    </p>
+    <p>
+      Also see <a href='#fromFormat'>fromFormat</a>.
     </p>
     <pre>
-fmt = {
-  prefix: '',
-  decimalSeparator: '.',
-  groupSeparator: ',',
-  groupSize: 3,
-  secondaryGroupSize: 0,
-  fractionGroupSeparator: ' ',
-  fractionGroupSize: 0,
-  suffix: ''
-}
-
 x = new BigNumber('123456789.123456789')
 
 // Set the global formatting options
-BigNumber.config({ FORMAT: fmt })
+BigNumber.config({
+  FORMAT: {
+    decimalSeparator: '.',
+    groupSeparator: ',',
+    groupSize: 3,
+    fractionGroupSeparator: ' ',
+    fractionGroupSize: 5
+  }
+})
 
-x.toFormat()                              // '123,456,789.123456789'
-x.toFormat(3)                             // '123,456,789.123'
+x.toFormat()                              // '123,456,789.12345 6789'
+x.toFormat(2)                             // '123,456,789.12'
 
-// If a reference to the object assigned to FORMAT has been retained,
-// the format properties can be changed directly
-fmt.groupSeparator = ' '
-fmt.fractionGroupSize = 5
-x.toFormat()                              // '123 456 789.12345 6789'
+x.toFormat([2, 5])                        // '123,456,789.12346'
 
-// Alternatively, pass the formatting options as an argument
-fmt = {
+y = new BigNumber('100')
+y.toFormat([2, 5])                        // '100.00'
+
+z = new BigNumber('12.3')
+z.toFormat([2, null])                     // '12.30'
+
+// Override formatting properties in the options argument
+x.toFormat([0, 5], {
   prefix: '=> ',
   decimalSeparator: ',',
   groupSeparator: '.',
   groupSize: 3,
   secondaryGroupSize: 2
-}
+})                                        // '=> 12.34.56.789,12346'
 
-x.toFormat()                              // '123 456 789.12345 6789'
-x.toFormat(fmt)                           // '=> 12.34.56.789,123456789'
-x.toFormat(2, fmt)                        // '=> 12.34.56.789,12'
-x.toFormat(3, BigNumber.ROUND_UP, fmt)    // '=> 12.34.56.789,124'</pre>
+x = x.negated()
 
+// Currency symbol before sign
+x.toFormat(2, { prefix: '$' })            // '$-123,456,789.12'
+
+// Sign before currency symbol
+x.toFormat([0, 5], { negativeSign: '-$', positiveSign: '$' })
+                                          // '-$123,456,789.12346'</pre>
 
 
     <h5 id="toFr">
@@ -2123,11 +2252,9 @@ y.s                             // -1</pre>
         <td rowspan=3>
           <code>decimalPlaces</code><br />
           <code>precision</code><br />
-          <code>random</code><br />
           <code>shiftedBy</code><br />
           <code>toExponential</code><br />
           <code>toFixed</code><br />
-          <code>toFormat</code><br />
           <code>toPrecision</code>
         </td>
         <td>Argument not a primitive number</td>
@@ -2139,11 +2266,33 @@ y.s                             // -1</pre>
         <td>Argument out of range</td>
       </tr>
       <tr>
-        <td>
-          <code>decimalPlaces</code><br />
-          <code>precision</code>
-        </td>
-        <td>Argument not true or false</td>
+        <td rowspan=4><code>random</code></td>
+        <td>Argument not a primitive number</td>
+      </tr>
+      <tr>
+        <td>Argument not an integer</td>
+      </tr>
+      <tr>
+        <td>Argument out of range</td>
+      </tr>
+      <tr>
+        <td>crypto unavailable</td>
+      </tr>
+      <tr>
+        <td rowspan=5><code>toFormat</code></td>
+        <td>Argument not a primitive number</td>
+      </tr>
+      <tr>
+        <td>Argument not an integer</td>
+      </tr>
+      <tr>
+        <td>Argument out of range</td>
+      </tr>
+      <tr>
+        <td>Minimum must not exceed maximum</td>
+      </tr>
+      <tr>
+        <td>Argument not an object</td>
       </tr>
       <tr>
         <td><code>exponentiatedBy</code></td>
@@ -2156,18 +2305,6 @@ y.s                             // -1</pre>
           <code>maximum</code>
         </td>
         <td>Not a number</td>
-      </tr>
-      <tr>
-        <td>
-          <code>random</code>
-        </td>
-        <td>crypto unavailable</td>
-      </tr>
-      <tr>
-        <td>
-          <code>toFormat</code>
-        </td>
-        <td>Argument not an object</td>
       </tr>
       <tr>
         <td rowspan=2><code>toFraction</code></td>
@@ -2273,11 +2410,9 @@ z = x.multiply(y)                 // 4.1400000</pre>
       <code>toPrecision</code> methods enable trailing zeros to be added if and when required.<br />
     </p>
   </div>
-
   <script>
-/* bignumber.js v11.0.0 (licence: MIT) https://github.com/MikeMcl/bignumber.js (minification: terser v5.46.1) */
-!function(){var e=function e(v){var N,O,b,y,E=/^(-?)0([xbo])(?=[^.])/i,A=/^-?(Infinity|NaN)$/,S=/^\s*\+(?!-)|^\s+|\s+$/g,R=G.prototype={constructor:G,toString:null,valueOf:null},T=new G(1),_=20,P=4,C=-7,L=21,I=-1e7,x=1e7,D=!1,B=!0,U=1,M=0,F={prefix:"",groupSize:3,secondaryGroupSize:0,groupSeparator:",",decimalSeparator:".",fractionGroupSize:0,fractionGroupSeparator:" ",suffix:""},k="0123456789abcdefghijklmnopqrstuvwxyz";function G(e,n){var t,o,s,u,f=this;if(!(f instanceof G))return new G(e,n);if(u=typeof e,null==n){if(q(e))return f.s=e.s,void(!e.c||e.e>x?f.c=f.e=null:e.e<I?f.c=[f.e=0]:(f.e=e.e,f.c=e.c.slice()));if("number"==u){if(0*e!=0)return f.s=isNaN(e)?null:e<0?-1:1,void(f.c=f.e=null);if(f.s=1/e<0?(e=-e,-1):1,e===~~e){for(t=0,o=e;o>=10;o/=10,t++);return void(t>x?f.c=f.e=null:(f.e=t,f.c=[e]))}return b(f,String(e))}if("bigint"==u)return f.s=e<0?(e=-e,-1):1,b(f,String(e));if("string"==u)s=e;else{if(B)throw Error(i+"BigNumber, string, number, or BigInt expected: "+e);s=String(e)}if(r.test(s))return f.s=45==s.charCodeAt(0)?(s=s.slice(1),-1):1,b(f,s);if(s=s.replace(S,""),A.test(s))return f.s=isNaN(s)?null:s<0?-1:1,void(f.c=f.e=null);if(s=s.replace(E,function(e,r,t){return n="x"==(t=t.toLowerCase())?16:"b"==t?2:8,r}),n)return y(f,s,n,e);if(s=s.replace(/(\d)_(?=\d)/g,"$1"),r.test(s))return f.s=45==s.charCodeAt(0)?(s=s.slice(1),-1):1,b(f,s);if(B)throw Error(i+"Not a number: "+e);f.s=f.c=f.e=null}else{if("string"!=u){if(B)throw Error(i+"String expected: "+e);e=String(e)}p(n,2,k.length,"Base"),y(f,e.replace(S,""),n,e)}}function j(e,r,n,t){var i,o,s,u,f;if(null==n?n=P:p(n,0,8),!e.c)return e.toString();if(i=e.c[0],s=e.e,null==r)f=h(e.c),f=1==t||2==t&&(s<=C||s>=L)?d(f,s):m(f,s,"0");else if(o=(e=V(new G(e),r,n)).e,u=(f=h(e.c)).length,1==t||2==t&&(r<=o||o<=C)){for(;u<r;f+="0",u++);f=d(f,o)}else if(r-=s+(2===t&&o>s),f=m(f,o,"0"),o+1>u){if(--r>0)for(f+=".";r--;f+="0");}else if((r+=o-u)>0)for(o+1==u&&(f+=".");r--;f+="0");return e.s<0&&i?"-"+f:f}function q(e){return e instanceof G||!!e&&!0===e._isBigNumber}function z(e,r){for(var n,t,i=1,o=new G(e[0]);i<e.length;i++)(!(t=new G(e[i])).s||(n=g(o,t))===r||0===n&&o.s===r)&&(o=t);return o}function H(e,r,n){for(var t=1,i=r.length;!r[--i];r.pop());for(i=r[0];i>=10;i/=10,t++);return(n=t+n*s-1)>x?e.c=e.e=null:n<I?e.c=[e.e=0]:(e.e=n,e.c=r),e}function V(e,r,i,u){var c,l,a,h,g,p,w,d=e.c,m=f;if(d){e:{for(c=1,h=d[0];h>=10;h/=10,c++);if((l=r-c)<0)l+=s,a=r,g=d[p=0],w=t(g/m[c-a-1]%10);else if((p=n((l+1)/s))>=d.length){if(!u)break e;for(;d.length<=p;d.push(0));g=w=0,c=1,a=(l%=s)-s+1}else{for(g=h=d[p],c=1;h>=10;h/=10,c++);w=(a=(l%=s)-s+c)<0?0:t(g/m[c-a-1]%10)}if(u=u||r<0||null!=d[p+1]||(a<0?g:g%m[c-a-1]),u=i<4?(w||u)&&(0==i||i==(e.s<0?3:2)):w>5||5==w&&(4==i||u||6==i&&(l>0?a>0?g/m[c-a]:0:d[p-1])%10&1||i==(e.s<0?8:7)),r<1||!d[0])return d.length=0,u?(r-=e.e+1,d[0]=m[(s-r%s)%s],e.e=-r||0):d[0]=e.e=0,e;if(0==l?(d.length=p,h=1,p--):(d.length=p+1,h=m[s-l],d[p]=a>0?t(g/m[c-a]%m[a])*h:0),u)for(;;){if(0==p){for(l=1,a=d[0];a>=10;a/=10,l++);for(a=d[0]+=h,h=1;a>=10;a/=10,h++);l!=h&&(e.e++,d[0]==o&&(d[0]=1));break}if(d[p]+=h,d[p]!=o)break;d[p--]=0,h=1}for(l=d.length;0===d[--l];d.pop());}e.e>x?e.c=e.e=null:e.e<I&&(e.c=[e.e=0])}return e}function $(e){var r,n=e.e;return null===n?e.toString():(r=h(e.c),r=n<=C||n>=L?d(r,n):m(r,n,"0"),e.s<0?"-"+r:r)}G.clone=e,G.ROUND_UP=0,G.ROUND_DOWN=1,G.ROUND_CEIL=2,G.ROUND_FLOOR=3,G.ROUND_HALF_UP=4,G.ROUND_HALF_DOWN=5,G.ROUND_HALF_EVEN=6,G.ROUND_HALF_CEIL=7,G.ROUND_HALF_FLOOR=8,G.EUCLID=9,G.config=G.set=function(e){var r,n;if(null!=e){if("object"!=typeof e)throw Error(i+"Object expected: "+e);if(e.hasOwnProperty(r="DECIMAL_PLACES")&&(p(n=e[r],0,l,r),_=n),e.hasOwnProperty(r="ROUNDING_MODE")&&(p(n=e[r],0,8,r),P=n),e.hasOwnProperty(r="EXPONENTIAL_AT")&&((n=e[r])&&n.pop?(p(n[0],-l,0,r),p(n[1],0,l,r),C=n[0],L=n[1]):(p(n,-l,l,r),C=-(L=n<0?-n:n))),e.hasOwnProperty(r="RANGE"))if((n=e[r])&&n.pop)p(n[0],-l,-1,r),p(n[1],1,l,r),I=n[0],x=n[1];else{if(p(n,-l,l,r),!n)throw Error(i+r+" cannot be zero: "+n);I=-(x=n<0?-n:n)}if(e.hasOwnProperty(r="CRYPTO")){if((n=e[r])!==!!n)throw Error(i+r+" not true or false: "+n);if(n){if("undefined"==typeof crypto||!crypto||!crypto.getRandomValues&&!crypto.randomBytes)throw D=!n,Error(i+"crypto unavailable");D=n}else D=n}if(e.hasOwnProperty(r="STRICT")){if((n=e[r])!==!!n)throw Error(i+r+" not true or false: "+n);B=n}if(e.hasOwnProperty(r="MODULO_MODE")&&(p(n=e[r],0,9,r),U=n),e.hasOwnProperty(r="POW_PRECISION")&&(p(n=e[r],0,l,r),M=n),e.hasOwnProperty(r="FORMAT")){if("object"!=typeof(n=e[r]))throw Error(i+r+" not an object: "+n);F=n}if(e.hasOwnProperty(r="ALPHABET")){if("string"!=typeof(n=e[r])||/^.?$|[+\-.\s]|(.).*\1/.test(n))throw Error(i+r+" invalid: "+n);k=n}}return{DECIMAL_PLACES:_,ROUNDING_MODE:P,EXPONENTIAL_AT:[C,L],RANGE:[I,x],CRYPTO:D,STRICT:B,MODULO_MODE:U,POW_PRECISION:M,FORMAT:F,ALPHABET:k}},G.isBigNumber=function(e){if(!q(e))return!1;var r,n,i=e.c,u=e.e,f=e.s;if("[object Array]"!={}.toString.call(i))return null===i&&null===u&&(null===f||1===f||-1===f);if(1!==f&&-1!==f||u<-l||u>l||u!==t(u))return!1;if(0===i[0])return 0===u&&1===i.length;if((r=(u+1)%s)<1&&(r+=s),String(i[0]).length!==r)return!1;for(r=0;r<i.length;r++)if((n=i[r])<0||n>=o||n!==t(n))return!1;return 0!==n},G.maximum=G.max=function(){return z(arguments,-1)},G.minimum=G.min=function(){return z(arguments,1)},G.random=function(){var e=9007199254740992,r=Math.random()*e&2097151?function(){return t(Math.random()*e)}:function(){return 8388608*(1073741824*Math.random()|0)+(8388608*Math.random()|0)};return function(e){var o,u,c,a,h,g=0,w=[],d=new G(T);if(null==e?e=_:p(e,0,l),a=n(e/s),D)if(crypto.getRandomValues){for(o=crypto.getRandomValues(new Uint32Array(a*=2));g<a;)(h=131072*o[g]+(o[g+1]>>>11))>=9e15?(u=crypto.getRandomValues(new Uint32Array(2)),o[g]=u[0],o[g+1]=u[1]):(w.push(h%1e14),g+=2);g=a/2}else{if(!crypto.randomBytes)throw D=!1,Error(i+"crypto unavailable");for(o=crypto.randomBytes(a*=7);g<a;)(h=281474976710656*(31&o[g])+1099511627776*o[g+1]+4294967296*o[g+2]+16777216*o[g+3]+(o[g+4]<<16)+(o[g+5]<<8)+o[g+6])>=9e15?crypto.randomBytes(7).copy(o,g):(w.push(h%1e14),g+=7);g=a/7}if(!D)for(;g<a;)(h=r())<9e15&&(w[g++]=h%1e14);for(a=w[--g],e%=s,a&&e&&(h=f[s-e],w[g]=t(a/h)*h);0===w[g];w.pop(),g--);if(g<0)w=[c=0];else{for(c=-1;0===w[0];w.splice(0,1),c-=s);for(g=1,h=w[0];h>=10;h/=10,g++);g<s&&(c-=s-g)}return d.e=c,d.c=w,d}}(),G.sum=function(){for(var e=1,r=arguments,n=new G(r[0]);e<r.length;)n=n.plus(r[e++]);return n},b=function(e,r){var n,t,i;for((n=r.indexOf("."))>-1&&(r=r.replace(".","")),(t=r.search(/e/i))>0?(n<0&&(n=t),n+=+r.slice(t+1),r=r.substring(0,t)):n<0&&(n=r.length),t=0;48===r.charCodeAt(t);t++);for(i=r.length;48===r.charCodeAt(--i););if(r=r.slice(t,++i))if(i-=t,(n=n-t-1)>x)e.c=e.e=null;else if(n<I)e.c=[e.e=0];else{if(e.e=n,e.c=[],t=(n+1)%s,n<0&&(t+=s),t<i){for(t&&e.c.push(+r.slice(0,t)),i-=s;t<i;)e.c.push(+r.slice(t,t+=s));t=s-(r=r.slice(t)).length}else t-=i;for(;t--;r+="0");e.c.push(+r)}else e.c=[e.e=0]},y=function(e,r,n,t){var o,s,u=k.slice(0,n),f=0,c="",l=!1,a=!1,h=!1;for(e.s=45===r.charCodeAt(0)?(r=r.slice(1),-1):1,s=r.length;f<s;f++){if(o=r.charAt(f),!(u.indexOf(o)>=0)){if("_"==o){if(a&&f+1<s){a=!1;continue}}else if("."==o){if(0==f||!l&&a){if(f+1==s)break;0==f&&(c="0"),c+=o,l=!0,a=!1;continue}}else if(!h&&(r==r.toUpperCase()&&u==u.toLowerCase()&&(r=r.toLowerCase())||r==r.toLowerCase()&&u==u.toUpperCase()&&(r=r.toUpperCase()))){f=-1,c="",h=!0,l=a=!1;continue}if(B)throw Error(i+"Not a base "+n+" number: "+t);return void(e.s=e.c=e.e=null)}c+=o,a=!0}b(e,O(c,n,10,e.s))},O=function(){var e="0123456789";function r(e,r,n,t){for(var i,o,s=[0],u=0,f=e.length;u<f;){for(o=s.length;o--;s[o]*=r);for(s[0]+=t.indexOf(e.charAt(u++)),i=0;i<s.length;i++)s[i]>n-1&&(null==s[i+1]&&(s[i+1]=0),s[i+1]+=s[i]/n|0,s[i]%=n)}return s.reverse()}return function(n,t,i,o,s){var u,f,c,l,a,g,p,w,d=n.indexOf("."),v=_,O=P;for(d>=0&&(l=M,M=0,n=n.replace(".",""),g=(w=new G(t)).pow(n.length-d),M=l,w.c=r(m(h(g.c),g.e,"0"),10,i,e),w.e=w.c.length),c=l=(p=r(n,t,i,s?(u=k,e):(u=e,k))).length;0==p[--l];p.pop());if(!p[0])return u.charAt(0);if(d<0?--c:(g.c=p,g.e=c,g.s=o,p=(g=N(g,w,v,O,i)).c,a=g.r,c=g.e),d=p[f=c+v+1],l=i/2,a=a||f<0||null!=p[f+1],a=O<4?(null!=d||a)&&(0==O||O==(g.s<0?3:2)):d>l||d==l&&(4==O||a||6==O&&1&p[f-1]||O==(g.s<0?8:7)),f<1||!p[0])n=a?m(u.charAt(1),-v,u.charAt(0)):u.charAt(0);else{if(p.length=f,a)for(--i;++p[--f]>i;)p[f]=0,f||(++c,p=[1].concat(p));for(l=p.length;!p[--l];);for(d=0,n="";d<=l;n+=u.charAt(p[d++]));n=m(n,c,u.charAt(0))}return n}}(),N=function(){function e(e,r,n){var t,i,o,s,u=0,f=e.length,l=r%c,a=r/c|0;for(e=e.slice();f--;)u=((i=l*(o=e[f]%c)+(t=a*o+(s=e[f]/c|0)*l)%c*c+u)/n|0)+(t/c|0)+a*s,e[f]=i%n;return u&&(e=[u].concat(e)),e}function r(e,r,n,t){var i,o;if(n!=t)o=n>t?1:-1;else for(i=o=0;i<n;i++)if(e[i]!=r[i]){o=e[i]>r[i]?1:-1;break}return o}function n(e,r,n,t){for(var i=0;n--;)e[n]-=i,i=e[n]<r[n]?1:0,e[n]=i*t+e[n]-r[n];for(;!e[0]&&e.length>1;e.splice(0,1));}return function(i,u,f,c,l){var h,g,p,w,d,m,v,N,O,b,y,E,A,S,R,T,_,P=i.s==u.s?1:-1,C=i.c,L=u.c;if(!(C&&C[0]&&L&&L[0]))return new G(i.s&&u.s&&(C?!L||C[0]!=L[0]:L)?C&&0==C[0]||!L?0*P:P/0:NaN);for(O=(N=new G(P)).c=[],P=f+(g=i.e-u.e)+1,l||(l=o,g=a(i.e/s)-a(u.e/s),P=P/s|0),p=0;L[p]==(C[p]||0);p++);if(L[p]>(C[p]||0)&&g--,P<0)O.push(1),w=!0;else{for(S=C.length,T=L.length,p=0,P+=2,(d=t(l/(L[0]+1)))>1&&(L=e(L,d,l),C=e(C,d,l),T=L.length,S=C.length),A=T,y=(b=C.slice(0,T)).length;y<T;b[y++]=0);_=L.slice(),_=[0].concat(_),R=L[0],L[1]>=l/2&&R++;do{if(d=0,(h=r(L,b,T,y))<0){if(E=b[0],T!=y&&(E=E*l+(b[1]||0)),(d=t(E/R))>1)for(d>=l&&(d=l-1),v=(m=e(L,d,l)).length,y=b.length;1==r(m,b,v,y);)d--,n(m,T<v?_:L,v,l),v=m.length,h=1;else 0==d&&(h=d=1),v=(m=L.slice()).length;if(v<y&&(m=[0].concat(m)),n(b,m,y,l),y=b.length,-1==h)for(;r(L,b,T,y)<1;)d++,n(b,T<y?_:L,y,l),y=b.length}else 0===h&&(d++,b=[0]);O[p++]=d,b[0]?b[y++]=C[A]||0:(b=[C[A]],y=1)}while((A++<S||null!=b[0])&&P--);w=null!=b[0],O[0]||O.splice(0,1)}if(l==o){for(p=1,P=O[0];P>=10;P/=10,p++);V(N,f+(N.e=p+g*s-1)+1,c,w)}else N.e=g,N.r=+w;return N}}(),R.absoluteValue=R.abs=function(){var e=new G(this);return e.s<0&&(e.s=1),e},R.comparedTo=function(e,r){return g(this,new G(e,r))},R.decimalPlaces=R.dp=function(e,r){var n,t,i,o=this;if(null!=e)return p(e,0,l),null==r?r=P:p(r,0,8),V(new G(o),e+o.e+1,r);if(!(n=o.c))return null;if(t=((i=n.length-1)-a(this.e/s))*s,i=n[i])for(;i%10==0;i/=10,t--);return t<0&&(t=0),t},R.dividedBy=R.div=function(e,r){return N(this,new G(e,r),_,P)},R.dividedToIntegerBy=R.idiv=function(e,r){return N(this,new G(e,r),0,1)},R.exponentiatedBy=R.pow=function(e,r){var o,u,f,c,l,a,h,g,p=this;if((e=new G(e)).c&&!e.isInteger())throw Error(i+"Exponent not an integer: "+$(e));if(null!=r&&(r=new G(r)),l=e.e>14,!p.c||!p.c[0]||1==p.c[0]&&!p.e&&1==p.c.length||!e.c||!e.c[0])return g=new G(Math.pow(+$(p),l?e.s*(2-w(e)):+$(e))),r?g.mod(r):g;if(a=e.s<0,r){if(r.c?!r.c[0]:!r.s)return new G(NaN);(u=!a&&p.isInteger()&&r.isInteger())&&(p=p.mod(r))}else{if(e.e>9&&(p.e>0||p.e<-1||(0==p.e?p.c[0]>1||l&&p.c[1]>=24e7:p.c[0]<8e13||l&&p.c[0]<=9999975e7)))return c=p.s<0&&w(e)?-0:0,p.e>-1&&(c=1/c),new G(a?1/c:c);M&&(c=n(M/s+2))}for(l?(o=new G(.5),a&&(e.s=1),h=w(e)):h=(f=Math.abs(+$(e)))%2,g=new G(T);;){if(h){if(!(g=g.times(p)).c)break;c?g.c.length>c&&(g.c.length=c):u&&(g=g.mod(r))}if(f){if(0===(f=t(f/2)))break;h=f%2}else if(V(e=e.times(o),e.e+1,1),e.e>14)h=w(e);else{if(0===(f=+$(e)))break;h=f%2}p=p.times(p),c?p.c&&p.c.length>c&&(p.c.length=c):u&&(p=p.mod(r))}return u?g:(a&&(g=T.div(g)),r?g.mod(r):c?V(g,M,P,void 0):g)},R.integerValue=function(e){var r=new G(this);return null==e?e=P:p(e,0,8),V(r,r.e+1,e)},R.isEqualTo=R.eq=function(e,r){return 0===g(this,new G(e,r))},R.isFinite=function(){return!!this.c},R.isGreaterThan=R.gt=function(e,r){return g(this,new G(e,r))>0},R.isGreaterThanOrEqualTo=R.gte=function(e,r){return 1===(r=g(this,new G(e,r)))||0===r},R.isInteger=function(){return!!this.c&&a(this.e/s)>this.c.length-2},R.isLessThan=R.lt=function(e,r){return g(this,new G(e,r))<0},R.isLessThanOrEqualTo=R.lte=function(e,r){return-1===(r=g(this,new G(e,r)))||0===r},R.isNaN=function(){return!this.s},R.isNegative=function(){return this.s<0},R.isPositive=function(){return this.s>0},R.isZero=function(){return!!this.c&&0==this.c[0]},R.minus=function(e,r){var n,t,i,u,f=this,c=f.s;if(r=(e=new G(e,r)).s,!c||!r)return new G(NaN);if(c!=r)return e.s=-r,f.plus(e);var l=f.e/s,h=e.e/s,g=f.c,p=e.c;if(!l||!h){if(!g||!p)return g?(e.s=-r,e):new G(p?f:NaN);if(!g[0]||!p[0])return p[0]?(e.s=-r,e):new G(g[0]?f:3==P?-0:0)}if(l=a(l),h=a(h),g=g.slice(),c=l-h){for((u=c<0)?(c=-c,i=g):(h=l,i=p),i.reverse(),r=c;r--;i.push(0));i.reverse()}else for(t=(u=(c=g.length)<(r=p.length))?c:r,c=r=0;r<t;r++)if(g[r]!=p[r]){u=g[r]<p[r];break}if(u&&(i=g,g=p,p=i,e.s=-e.s),(r=(t=p.length)-(n=g.length))>0)for(;r--;g[n++]=0);for(r=o-1;t>c;){if(g[--t]<p[t]){for(n=t;n&&!g[--n];g[n]=r);--g[n],g[t]+=o}g[t]-=p[t]}for(;0==g[0];g.splice(0,1),--h);return g[0]?H(e,g,h):(e.s=3==P?-1:1,e.c=[e.e=0],e)},R.modulo=R.mod=function(e,r){var n,t,i=this;return e=new G(e,r),!i.c||!e.s||e.c&&!e.c[0]?new G(NaN):!e.c||i.c&&!i.c[0]?new G(i):(9==U?(t=e.s,e.s=1,n=N(i,e,0,3),e.s=t,n.s*=t):n=N(i,e,0,U),(e=i.minus(n.times(e))).c[0]||1!=U||(e.s=i.s),e)},R.multipliedBy=R.times=function(e,r){var n,t,i,u,f,l,h,g,p,w,d,m,v,N,O,b=this,y=b.c,E=(e=new G(e,r)).c;if(!(y&&E&&y[0]&&E[0]))return!b.s||!e.s||y&&!y[0]&&!E||E&&!E[0]&&!y?e.c=e.e=e.s=null:(e.s*=b.s,y&&E?(e.c=[0],e.e=0):e.c=e.e=null),e;for(t=a(b.e/s)+a(e.e/s),e.s*=b.s,(h=y.length)<(w=E.length)&&(v=y,y=E,E=v,i=h,h=w,w=i),i=h+w,v=[];i--;v.push(0));for(N=o,O=c,i=w;--i>=0;){for(n=0,d=E[i]%O,m=E[i]/O|0,u=i+(f=h);u>i;)n=((g=d*(g=y[--f]%O)+(l=m*g+(p=y[f]/O|0)*d)%O*O+v[u]+n)/N|0)+(l/O|0)+m*p,v[u--]=g%N;v[u]=n}return n?++t:v.splice(0,1),H(e,v,t)},R.negated=function(){var e=new G(this);return e.s=-e.s||null,e},R.plus=function(e,r){var n,t=this,i=t.s;if(r=(e=new G(e,r)).s,!i||!r)return new G(NaN);if(i!=r)return e.s=-r,t.minus(e);var u=t.e/s,f=e.e/s,c=t.c,l=e.c;if(!u||!f){if(!c||!l)return new G(i/0);if(!c[0]||!l[0])return l[0]?e:new G(c[0]?t:0*i)}if(u=a(u),f=a(f),c=c.slice(),i=u-f){for(i>0?(f=u,n=l):(i=-i,n=c),n.reverse();i--;n.push(0));n.reverse()}for((i=c.length)-(r=l.length)<0&&(n=l,l=c,c=n,r=i),i=0;r;)i=(c[--r]=c[r]+l[r]+i)/o|0,c[r]=o===c[r]?0:c[r]%o;return i&&(c=[i].concat(c),++f),H(e,c,f)},R.precision=R.sd=function(e,r){var n,t,i,o=this;if(null!=e&&e!==!!e)return p(e,1,l),null==r?r=P:p(r,0,8),V(new G(o),e,r);if(!(n=o.c))return null;if(t=(i=n.length-1)*s+1,i=n[i]){for(;i%10==0;i/=10,t--);for(i=n[0];i>=10;i/=10,t++);}return e&&o.e+1>t&&(t=o.e+1),t},R.shiftedBy=function(e){return p(e,-u,u),this.times("1e"+e)},R.squareRoot=R.sqrt=function(){var e,r,n,t,i,o=this,s=o.c,u=o.s,f=o.e,c=_+4,l=new G("0.5");if(1!==u||!s||!s[0])return new G(!u||u<0&&(!s||s[0])?NaN:s?o:1/0);if(0==(u=Math.sqrt(+$(o)))||u==1/0?(((r=h(s)).length+f)%2==0&&(r+="0"),u=Math.sqrt(+r),f=a((f+1)/2)-(f<0||f%2),n=new G(r=u==1/0?"5e"+f:(r=u.toExponential()).slice(0,r.indexOf("e")+1)+f)):n=new G(u+""),n.c[0])for((u=(f=n.e)+c)<3&&(u=0);;)if(i=n,n=l.times(i.plus(N(o,i,c,1))),h(i.c).slice(0,u)===(r=h(n.c)).slice(0,u)){if(n.e<f&&--u,"9999"!=(r=r.slice(u-3,u+1))&&(t||"4999"!=r)){+r&&(+r.slice(1)||"5"!=r.charAt(0))||(V(n,n.e+_+2,1),e=!n.times(n).eq(o));break}if(!t&&(V(i,i.e+_+2,0),i.times(i).eq(o))){n=i;break}c+=4,u+=4,t=1}return V(n,n.e+_+1,P,e)},R.toExponential=function(e,r){return null!=e&&(p(e,0,l),e++),j(this,e,r,1)},R.toFixed=function(e,r){return null!=e&&(p(e,0,l),e=e+this.e+1),j(this,e,r)},R.toFormat=function(e,r,n){var t,o=this;if(null==n)null!=e&&r&&"object"==typeof r?(n=r,r=null):e&&"object"==typeof e?(n=e,e=r=null):n=F;else if("object"!=typeof n)throw Error(i+"Argument not an object: "+n);if(t=o.toFixed(e,r),o.c){var s,u=t.split("."),f=+n.groupSize,c=+n.secondaryGroupSize,l=n.groupSeparator||"",a=u[0],h=u[1],g=o.s<0,p=g?a.slice(1):a,w=p.length;if(c&&(s=f,f=c,c=s,w-=s),f>0&&w>0){for(s=w%f||f,a=p.substr(0,s);s<w;s+=f)a+=l+p.substr(s,f);c>0&&(a+=l+p.slice(s)),g&&(a="-"+a)}t=h?a+(n.decimalSeparator||"")+((c=+n.fractionGroupSize)?h.replace(new RegExp("\\d{"+c+"}\\B","g"),"$&"+(n.fractionGroupSeparator||"")):h):a}return(n.prefix||"")+t+(n.suffix||"")},R.toFraction=function(e){var r,n,t,o,u,c,l,a,g,p,w,d,m=this,v=m.c;if(null!=e&&(!(l=new G(e)).isInteger()&&(l.c||1!==l.s)||l.lt(T)))throw Error(i+"Argument "+(l.isInteger()?"out of range: ":"not an integer: ")+$(l));if(!v)return[new G(m.s||0),new G(0)];for(r=new G(T),g=n=new G(T),t=a=new G(T),d=h(v),u=r.e=d.length-m.e-1,r.c[0]=f[(c=u%s)<0?s+c:c],e=!e||l.comparedTo(r)>0?u>0?r:g:l,c=x,x=1/0,l=new G(d),a.c[0]=0;p=N(l,r,0,1),1!=(o=n.plus(p.times(t))).comparedTo(e);)n=t,t=o,g=a.plus(p.times(o=g)),a=o,r=l.minus(p.times(o=r)),l=o;return o=N(e.minus(n),t,0,1),a=a.plus(o.times(g)),n=n.plus(o.times(t)),a.s=g.s=m.s,w=N(g,t,u*=2,P).minus(m).abs().comparedTo(N(a,n,u,P).minus(m).abs())<1?[g,t]:[a,n],x=c,w},R.toNumber=function(){return+$(this)},R.toObject=function(){var e=this;return{c:e.c?e.c.slice():null,e:e.e,s:e.s}},R.toPrecision=function(e,r){return null!=e&&p(e,1,l),j(this,e,r,2)},R.toString=function(e){var r,n=this,t=n.s,i=n.e;return null===i?t?(r="Infinity",t<0&&(r="-"+r)):r="NaN":(null==e?r=i<=C||i>=L?d(h(n.c),i):m(h(n.c),i,"0"):(p(e,2,k.length,"Base"),r=O(m(h(n.c),i,"0"),10,e,t,!0)),t<0&&n.c[0]&&(r="-"+r)),r},R.valueOf=R.toJSON=function(){return $(this)},R._isBigNumber=!0,null!=v&&G.set(v);return G}(),r=/^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i,n=Math.ceil,t=Math.floor,i="[BigNumber Error] ",o=1e14,s=14,u=9007199254740991,f=[1,10,100,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13],c=1e7,l=1e9;function a(e){var r=0|e;return e>0||e===r?r:r-1}function h(e){for(var r,n,t=1,i=e.length,o=e[0]+"";t<i;){for(r=e[t++]+"",n=s-r.length;n--;r="0"+r);o+=r}for(i=o.length;48===o.charCodeAt(--i););return o.slice(0,i+1||1)}function g(e,r){var n,t,i=e.c,o=r.c,s=e.s,u=r.s,f=e.e,c=r.e;if(!s||!u)return null;if(n=i&&!i[0],t=o&&!o[0],n||t)return n?t?0:-u:s;if(s!=u)return s;if(n=s<0,t=f==c,!i||!o)return t?0:!i^n?1:-1;if(!t)return f>c^n?1:-1;for(u=(f=i.length)<(c=o.length)?f:c,s=0;s<u;s++)if(i[s]!=o[s])return i[s]>o[s]^n?1:-1;return f==c?0:f>c^n?1:-1}function p(e,r,n,o){if(e<r||e>n||e!==t(e))throw Error(i+(o||"Argument")+("number"==typeof e?e<r||e>n?" out of range: ":" not an integer: ":" not a primitive number: ")+String(e))}function w(e){var r=e.c.length-1;return a(e.e/s)==r&&e.c[r]%2!=0}function d(e,r){return(e.length>1?e.charAt(0)+"."+e.slice(1):e)+(r<0?"e":"e+")+r}function m(e,r,n){var t,i;if(r<0){for(i=n+".";++r;i+=n);e=i+e}else if(++r>(t=e.length)){for(i=n,r-=t;--r;i+=n);e+=i}else r<t&&(e=e.slice(0,r)+"."+e.slice(r));return e}("undefined"!=typeof globalThis?globalThis:"undefined"!=typeof window?window:self).BigNumber=e}();  
+/* bignumber.js v11.1.0 (licence: MIT) https://github.com/MikeMcl/bignumber.js (minification: terser v5.46.1) */
+!function(){var e=function e(O){var N,y,b=/^(-?)0([xbo])(?=[^.])/i,E=/^-?(Infinity|NaN)$/,A=/^\s*\+(?!-)|^\s+|\s+$/g,S=j.prototype={constructor:j,toString:null,valueOf:null},x=new j(1),P=20,I=4,R=-7,T=21,_=-1e7,C=1e7,L=!1,B=!0,D=1,M=0,U={prefix:"",negativeSign:"-",positiveSign:"",groupSeparator:",",groupSize:3,secondaryGroupSize:0,decimalSeparator:".",fractionGroupSeparator:"",fractionGroupSize:0,suffix:""},F="0123456789abcdefghijklmnopqrstuvwxyz";function j(e,n){var t,o,f,s,u=this;if(!(u instanceof j))return new j(e,n);if(s=typeof e,null==n){if(z(e))return u.s=e.s,void(!e.c||e.e>C?u.c=u.e=null:e.e<_?u.c=[u.e=0]:(u.e=e.e,u.c=e.c.slice()));if("number"==s){if(0*e!=0)return u.s=isNaN(e)?null:e<0?-1:1,void(u.c=u.e=null);if(u.s=1/e<0?(e=-e,-1):1,e===~~e){for(t=0,o=e;o>=10;o/=10,t++);return void(t>C?u.c=u.e=null:(u.e=t,u.c=[e]))}return G(u,String(e))}if("bigint"==s)return u.s=e<0?(e=-e,-1):1,G(u,String(e));if("string"==s)f=e;else{if(B)throw Error(i+"BigNumber, string, number, or BigInt expected: "+e);f=String(e)}if(r.test(f))return u.s=45==f.charCodeAt(0)?(f=f.slice(1),-1):1,G(u,f);if(f=f.replace(A,""),E.test(f))return u.s=isNaN(f)?null:f<0?-1:1,void(u.c=u.e=null);if(f=f.replace(b,function(e,r,t){return n="x"==(t=t.toLowerCase())?16:"b"==t?2:8,r}),n)return k(u,f,n,e);if(f=f.replace(/(\d)_(?=\d)/g,"$1"),r.test(f))return u.s=45==f.charCodeAt(0)?(f=f.slice(1),-1):1,G(u,f);if(B)throw Error(i+"Not a number: "+e);u.s=u.c=u.e=null}else{if("string"!=s){if(B)throw Error(i+"String expected: "+e);e=String(e)}p(n,2,F.length,"Base"),k(u,e.replace(A,""),n,e)}}function G(e,r){var n,t,i;for((n=r.indexOf("."))>-1&&(r=r.replace(".","")),(t=r.search(/e/i))>0?(n<0&&(n=t),n+=+r.slice(t+1),r=r.substring(0,t)):n<0&&(n=r.length),t=0;48===r.charCodeAt(t);t++);for(i=r.length;48===r.charCodeAt(--i););if(r=r.slice(t,++i))if(i-=t,(n=n-t-1)>C)e.c=e.e=null;else if(n<_)e.c=[e.e=0];else{if(e.e=n,e.c=[],t=(n+1)%f,n<0&&(t+=f),t<i){for(t&&e.c.push(+r.slice(0,t)),i-=f;t<i;)e.c.push(+r.slice(t,t+=f));t=f-(r=r.slice(t)).length}else t-=i;for(;t--;r+="0");e.c.push(+r)}else e.c=[e.e=0]}function k(e,r,n,t){var o,f,s=F.slice(0,n),u=0,l="",c=!1,a=!1,h=!1;for(e.s=45===r.charCodeAt(0)?(r=r.slice(1),-1):1,f=r.length;u<f;u++){if(o=r.charAt(u),!(s.indexOf(o)>=0)){if("_"==o){if(a&&u+1<f){a=!1;continue}}else if("."==o){if(0==u||!c&&a){if(u+1==f)break;0==u&&(l="0"),l+=o,c=!0,a=!1;continue}}else if(!h&&(r==r.toUpperCase()&&s==s.toLowerCase()&&(r=r.toLowerCase())||r==r.toLowerCase()&&s==s.toUpperCase()&&(r=r.toUpperCase()))){u=-1,l="",h=!0,c=a=!1;continue}if(B)throw Error(i+"Not a base "+n+" number: "+t);return void(e.s=e.c=e.e=null)}l+=o,a=!0}G(e,y(l,n,10,e.s))}function q(e,r,n,t){var i,o,f,s,u;if(n=null==n?I:p(n,0,8),!e.c)return e.toString();if(i=e.c[0],f=e.e,null==r)u=h(e.c),u=1==t||2==t&&(f<=R||f>=T)?m(u,f):v(u,f,"0");else if(o=(e=W(new j(e),r,n)).e,s=(u=h(e.c)).length,1==t||2==t&&(r<=o||o<=R)){for(;s<r;u+="0",s++);u=m(u,o)}else if(r-=f+(2===t&&o>f),u=v(u,o,"0"),o+1>s){if(--r>0)for(u+=".";r--;u+="0");}else if((r+=o-s)>0)for(o+1==s&&(u+=".");r--;u+="0");return e.s<0&&i?"-"+u:u}function z(e){return e instanceof j||!!e&&!0===e._isBigNumber}function H(e,r){for(var n,t,i=1,o=new j(e[0]);i<e.length;i++)(!(t=new j(e[i])).s||(n=g(o,t))===r||0===n&&o.s===r)&&(o=t);return o}function V(e,r,n){for(var t=1,i=r.length;!r[--i];r.pop());for(i=r[0];i>=10;i/=10,t++);return(n=t+n*f-1)>C?e.c=e.e=null:n<_?e.c=[e.e=0]:(e.e=n,e.c=r),e}function $(e){var r,n={};for(r in U)U.hasOwnProperty(r)&&(n[r]=e.hasOwnProperty(r)?e[r]:U[r]);return n}function W(e,r,i,s){var l,c,a,h,g,p,w,d=e.c,m=u;if(d){e:{for(l=1,h=d[0];h>=10;h/=10,l++);if((c=r-l)<0)c+=f,a=r,g=d[p=0],w=t(g/m[l-a-1]%10);else if((p=n((c+1)/f))>=d.length){if(!s)break e;for(;d.length<=p;d.push(0));g=w=0,l=1,a=(c%=f)-f+1}else{for(g=h=d[p],l=1;h>=10;h/=10,l++);w=(a=(c%=f)-f+l)<0?0:t(g/m[l-a-1]%10)}if(s=s||r<0||null!=d[p+1]||(a<0?g:g%m[l-a-1]),s=i<4?(w||s)&&(0==i||i==(e.s<0?3:2)):w>5||5==w&&(4==i||s||6==i&&(c>0?a>0?g/m[l-a]:0:d[p-1])%10&1||i==(e.s<0?8:7)),r<1||!d[0])return d.length=0,s?(r-=e.e+1,d[0]=m[(f-r%f)%f],e.e=-r||0):d[0]=e.e=0,e;if(0==c?(d.length=p,h=1,p--):(d.length=p+1,h=m[f-c],d[p]=a>0?t(g/m[l-a]%m[a])*h:0),s)for(;;){if(0==p){for(c=1,a=d[0];a>=10;a/=10,c++);for(a=d[0]+=h,h=1;a>=10;a/=10,h++);c!=h&&(e.e++,d[0]==o&&(d[0]=1));break}if(d[p]+=h,d[p]!=o)break;d[p--]=0,h=1}for(c=d.length;0===d[--c];d.pop());}e.e>C?e.c=e.e=null:e.e<_&&(e.c=[e.e=0])}return e}function X(e){var r,n=e.e;return null===n?e.toString():(r=h(e.c),r=n<=R||n>=T?m(r,n):v(r,n,"0"),e.s<0?"-"+r:r)}j.clone=e,j.ROUND_UP=0,j.ROUND_DOWN=1,j.ROUND_CEIL=2,j.ROUND_FLOOR=3,j.ROUND_HALF_UP=4,j.ROUND_HALF_DOWN=5,j.ROUND_HALF_EVEN=6,j.ROUND_HALF_CEIL=7,j.ROUND_HALF_FLOOR=8,j.EUCLID=9,j.config=j.set=function(e){var r,n;if(null!=e){if("object"!=typeof e)throw Error(i+"Object expected: "+e);if(e.hasOwnProperty(r="DECIMAL_PLACES")&&(P=p(e[r],0,c,r)),e.hasOwnProperty(r="ROUNDING_MODE")&&(I=p(e[r],0,8,r)),e.hasOwnProperty(r="EXPONENTIAL_AT")&&(w(n=e[r])?(p(n[0],-c,0,r),p(n[1],0,c,r),R=n[0],T=n[1]):R=-(T=p(n,-c,c,r)<0?-n:n)),e.hasOwnProperty(r="RANGE")){if(!(n=e[r]))throw Error(i+r+" cannot be zero: "+n);w(n)?(p(n[0],-c,-1,r),p(n[1],1,c,r),_=n[0],C=n[1]):_=-(C=p(n,-c,c,r)<0?-n:n)}if(e.hasOwnProperty(r="CRYPTO")){if((n=e[r])!==!!n)throw Error(i+r+" not true or false: "+n);if(n){if("undefined"==typeof crypto||!crypto||!crypto.getRandomValues&&!crypto.randomBytes)throw L=!n,Error(i+"crypto unavailable");L=n}else L=n}if(e.hasOwnProperty(r="STRICT")){if((n=e[r])!==!!n)throw Error(i+r+" not true or false: "+n);B=n}if(e.hasOwnProperty(r="MODULO_MODE")&&(D=p(e[r],0,9,r)),e.hasOwnProperty(r="POW_PRECISION")&&(M=p(e[r],0,c,r)),e.hasOwnProperty(r="FORMAT")){if("object"!=typeof(n=e[r]))throw Error(i+r+" not an object: "+n);for(r in n)n.hasOwnProperty(r)&&U.hasOwnProperty(r)&&(U[r]=n[r])}if(e.hasOwnProperty(r="ALPHABET")){if("string"!=typeof(n=e[r])||/^.?$|[+\-.\s]|(.).*\1/.test(n))throw Error(i+r+" invalid: "+n);F=n}}return{DECIMAL_PLACES:P,ROUNDING_MODE:I,EXPONENTIAL_AT:[R,T],RANGE:[_,C],CRYPTO:L,STRICT:B,MODULO_MODE:D,POW_PRECISION:M,FORMAT:U,ALPHABET:F}},j.fromFormat=function(e,r){if("string"!=typeof e)throw Error(i+"Not a string: "+e);if(null==r)r=U;else{if("object"!=typeof r)throw Error(i+"Argument not an object: "+r);r=$(r)}var n,t,o,f,s=r.negativeSign||"-",u=r.positiveSign||"",l=r.prefix||"",c=r.suffix||"",a=r.groupSeparator||"",h=r.decimalSeparator||".",g=r.fractionGroupSeparator||"";if(l&&0===e.indexOf(l)&&(e=e.slice(l.length)),c&&e.lastIndexOf(c)===e.length-c.length&&(e=e.slice(0,-c.length)),s&&0===e.indexOf(s)?(e=e.slice(s.length),t=!0):u&&0===e.indexOf(u)&&(e=e.slice(u.length)),(n=e.indexOf(h))<0){if(a)for(;e.indexOf(a)>-1;)e=e.replace(a,"")}else{if(o=e.slice(0,n),f=e.slice(n+h.length),a)for(;o.indexOf(a)>-1;)o=o.replace(a,"");if(g)for(;f.indexOf(g)>-1;)f=f.replace(g,"");e=o+"."+f}return new j(t?"-"+e:e)},j.isBigNumber=function(e){if(!z(e))return!1;var r,n,i=e.c,s=e.e,u=e.s;if(!w(i))return null===i&&null===s&&(null===u||1===u||-1===u);if(1!==u&&-1!==u||s<-c||s>c||s!==t(s))return!1;if(0===i[0])return 0===s&&1===i.length;if((r=(s+1)%f)<1&&(r+=f),String(i[0]).length!==r)return!1;for(r=0;r<i.length;r++)if((n=i[r])<0||n>=o||n!==t(n))return!1;return 0!==n},j.maximum=j.max=function(){return H(arguments,-1)},j.minimum=j.min=function(){return H(arguments,1)},j.random=function(){var e=9007199254740992,r=Math.random()*e&2097151?function(){return t(Math.random()*e)}:function(){return 8388608*(1073741824*Math.random()|0)+(8388608*Math.random()|0)};return function(e){var o,s,l,a,h,g=0,w=[],d=new j(x);if(e=null==e?P:p(e,0,c),a=n(e/f),L)if(crypto.getRandomValues){for(o=crypto.getRandomValues(new Uint32Array(a*=2));g<a;)(h=131072*o[g]+(o[g+1]>>>11))>=9e15?(s=crypto.getRandomValues(new Uint32Array(2)),o[g]=s[0],o[g+1]=s[1]):(w.push(h%1e14),g+=2);g=a/2}else{if(!crypto.randomBytes)throw L=!1,Error(i+"crypto unavailable");for(o=crypto.randomBytes(a*=7);g<a;)(h=281474976710656*(31&o[g])+1099511627776*o[g+1]+4294967296*o[g+2]+16777216*o[g+3]+(o[g+4]<<16)+(o[g+5]<<8)+o[g+6])>=9e15?crypto.randomBytes(7).copy(o,g):(w.push(h%1e14),g+=7);g=a/7}if(!L)for(;g<a;)(h=r())<9e15&&(w[g++]=h%1e14);for(a=w[--g],e%=f,a&&e&&(h=u[f-e],w[g]=t(a/h)*h);0===w[g];w.pop(),g--);if(g<0)w=[l=0];else{for(l=-1;0===w[0];w.splice(0,1),l-=f);for(g=1,h=w[0];h>=10;h/=10,g++);g<f&&(l-=f-g)}return d.e=l,d.c=w,d}}(),j.sum=function(){for(var e=0,r=new j(0);e<arguments.length;)r=r.plus(arguments[e++]);return r},y=function(){var e="0123456789";function r(e,r,n,t){for(var i,o,f=[0],s=0,u=e.length;s<u;){for(o=f.length;o--;f[o]*=r);for(f[0]+=t.indexOf(e.charAt(s++)),i=0;i<f.length;i++)f[i]>n-1&&(null==f[i+1]&&(f[i+1]=0),f[i+1]+=f[i]/n|0,f[i]%=n)}return f.reverse()}return function(n,t,i,o,f){var s,u,l,c,a,g,p,w,d=n.indexOf("."),m=P,O=I;for(d>=0&&(c=M,M=0,n=n.replace(".",""),g=(w=new j(t)).pow(n.length-d),M=c,w.c=r(v(h(g.c),g.e,"0"),10,i,e),w.e=w.c.length),l=c=(p=r(n,t,i,f?(s=F,e):(s=e,F))).length;0==p[--c];p.pop());if(!p[0])return s.charAt(0);if(d<0?--l:(g.c=p,g.e=l,g.s=o,p=(g=N(g,w,m,O,i)).c,a=g.r,l=g.e),d=p[u=l+m+1],c=i/2,a=a||u<0||null!=p[u+1],a=O<4?(null!=d||a)&&(0==O||O==(g.s<0?3:2)):d>c||d==c&&(4==O||a||6==O&&1&p[u-1]||O==(g.s<0?8:7)),u<1||!p[0])n=a?v(s.charAt(1),-m,s.charAt(0)):s.charAt(0);else{if(u<p.length&&(p.length=u),a)for(--i;++p[--u]>i;)p[u]=0,u||(++l,p=[1].concat(p));for(c=p.length;!p[--c];);for(d=0,n="";d<=c;n+=s.charAt(p[d++]));n=v(n,l,s.charAt(0))}return n}}(),N=function(){function e(e,r,n){var t,i,o,f,s=0,u=e.length,c=r%l,a=r/l|0;for(e=e.slice();u--;)s=((i=c*(o=e[u]%l)+(t=a*o+(f=e[u]/l|0)*c)%l*l+s)/n|0)+(t/l|0)+a*f,e[u]=i%n;return s&&(e=[s].concat(e)),e}function r(e,r,n,t){var i,o;if(n!=t)o=n>t?1:-1;else for(i=o=0;i<n;i++)if(e[i]!=r[i]){o=e[i]>r[i]?1:-1;break}return o}function n(e,r,n,t){for(var i=0;n--;)e[n]-=i,i=e[n]<r[n]?1:0,e[n]=i*t+e[n]-r[n];for(;!e[0]&&e.length>1;e.splice(0,1));}return function(i,s,u,l,c){var h,g,p,w,d,m,v,O,N,y,b,E,A,S,x,P,I,R=i.s==s.s?1:-1,T=i.c,_=s.c;if(!(T&&T[0]&&_&&_[0]))return new j(i.s&&s.s&&(T?!_||T[0]!=_[0]:_)?T&&0==T[0]||!_?0*R:R/0:NaN);for(N=(O=new j(R)).c=[],R=u+(g=i.e-s.e)+1,c||(c=o,g=a(i.e/f)-a(s.e/f),R=R/f|0),p=0;_[p]==(T[p]||0);p++);if(_[p]>(T[p]||0)&&g--,R<0)N.push(1),w=!0;else{for(S=T.length,P=_.length,p=0,R+=2,(d=t(c/(_[0]+1)))>1&&(_=e(_,d,c),T=e(T,d,c),P=_.length,S=T.length),A=P,b=(y=T.slice(0,P)).length;b<P;y[b++]=0);I=_.slice(),I=[0].concat(I),x=_[0],_[1]>=c/2&&x++;do{if(d=0,(h=r(_,y,P,b))<0){if(E=y[0],P!=b&&(E=E*c+(y[1]||0)),(d=t(E/x))>1)for(d>=c&&(d=c-1),v=(m=e(_,d,c)).length,b=y.length;1==r(m,y,v,b);)d--,n(m,P<v?I:_,v,c),v=m.length,h=1;else 0==d&&(h=d=1),v=(m=_.slice()).length;if(v<b&&(m=[0].concat(m)),n(y,m,b,c),b=y.length,-1==h)for(;r(_,y,P,b)<1;)d++,n(y,P<b?I:_,b,c),b=y.length}else 0===h&&(d++,y=[0]);N[p++]=d,y[0]?y[b++]=T[A]||0:(y=[T[A]],b=1)}while((A++<S||null!=y[0])&&R--);w=null!=y[0],N[0]||N.splice(0,1)}if(c==o){for(p=1,R=N[0];R>=10;R/=10,p++);W(O,u+(O.e=p+g*f-1)+1,l,w)}else O.e=g,O.r=+w;return O}}(),S.absoluteValue=S.abs=function(){var e=new j(this);return e.s<0&&(e.s=1),e},S.comparedTo=function(e,r){return g(this,new j(e,r))},S.decimalPlaces=S.dp=function(e,r){var n,t,i,o=this;if(null!=e)return W(new j(o),p(e,-c,c)+o.e+1,null==r?I:p(r,0,8));if(!(n=o.c))return null;if(t=((i=n.length-1)-a(this.e/f))*f,i=n[i])for(;i%10==0;i/=10,t--);return t<0&&(t=0),t},S.dividedBy=S.div=function(e,r){return N(this,new j(e,r),P,I)},S.dividedToIntegerBy=S.idiv=function(e,r){return N(this,new j(e,r),0,1)},S.exponentiatedBy=S.pow=function(e,r){var o,s,u,l,c,a,h,g,p=this;if((e=new j(e)).c&&!e.isInteger())throw Error(i+"Exponent not an integer: "+X(e));if(null!=r&&(r=new j(r)),c=e.e>14,!p.c||!p.c[0]||1==p.c[0]&&!p.e&&1==p.c.length||!e.c||!e.c[0])return g=new j(Math.pow(+X(p),c?e.s*(2-d(e)):+X(e))),r?g.mod(r):g;if(a=e.s<0,r){if(r.c?!r.c[0]:!r.s)return new j(NaN);(s=!a&&p.isInteger()&&r.isInteger())&&(p=p.mod(r))}else{if(e.e>9&&(p.e>0||p.e<-1||(0==p.e?p.c[0]>1||c&&p.c[1]>=24e7:p.c[0]<8e13||c&&p.c[0]<=9999975e7)))return l=p.s<0&&d(e)?-0:0,p.e>-1&&(l=1/l),new j(a?1/l:l);M&&(l=n(M/f+2))}for(c?(o=new j(.5),a&&(e.s=1),h=d(e)):h=(u=Math.abs(+X(e)))%2,g=new j(x);;){if(h){if(!(g=g.times(p)).c)break;l?g.c.length>l&&(g.c.length=l):s&&(g=g.mod(r))}if(u){if(0===(u=t(u/2)))break;h=u%2}else if(W(e=e.times(o),e.e+1,1),e.e>14)h=d(e);else{if(0===(u=+X(e)))break;h=u%2}p=p.times(p),l?p.c&&p.c.length>l&&(p.c.length=l):s&&(p=p.mod(r))}return s?g:(a&&(g=x.div(g)),r?g.mod(r):l?W(g,M,I,void 0):g)},S.integerValue=function(e){var r=new j(this);return W(r,r.e+1,null==e?I:p(e,0,8))},S.isEqualTo=S.eq=function(e,r){return 0===g(this,new j(e,r))},S.isFinite=function(){return!!this.c},S.isGreaterThan=S.gt=function(e,r){return g(this,new j(e,r))>0},S.isGreaterThanOrEqualTo=S.gte=function(e,r){return 1===(r=g(this,new j(e,r)))||0===r},S.isInteger=function(){return!!this.c&&a(this.e/f)>this.c.length-2},S.isLessThan=S.lt=function(e,r){return g(this,new j(e,r))<0},S.isLessThanOrEqualTo=S.lte=function(e,r){return-1===(r=g(this,new j(e,r)))||0===r},S.isNaN=function(){return!this.s},S.isNegative=function(){return this.s<0},S.isPositive=function(){return this.s>0},S.isZero=function(){return!!this.c&&0==this.c[0]},S.minus=function(e,r){var n,t,i,s,u=this,l=u.s;if(r=(e=new j(e,r)).s,!l||!r)return new j(NaN);if(l!=r)return e.s=-r,u.plus(e);var c=u.e/f,h=e.e/f,g=u.c,p=e.c;if(!c||!h){if(!g||!p)return g?(e.s=-r,e):new j(p?u:NaN);if(!g[0]||!p[0])return p[0]?(e.s=-r,e):new j(g[0]?u:3==I?-0:0)}if(c=a(c),h=a(h),g=g.slice(),l=c-h){for((s=l<0)?(l=-l,i=g):(h=c,i=p),i.reverse(),r=l;r--;i.push(0));i.reverse()}else for(t=(s=(l=g.length)<(r=p.length))?l:r,l=r=0;r<t;r++)if(g[r]!=p[r]){s=g[r]<p[r];break}if(s&&(i=g,g=p,p=i,e.s=-e.s),(r=(t=p.length)-(n=g.length))>0)for(;r--;g[n++]=0);for(r=o-1;t>l;){if(g[--t]<p[t]){for(n=t;n&&!g[--n];g[n]=r);--g[n],g[t]+=o}g[t]-=p[t]}for(;0==g[0];g.splice(0,1),--h);return g[0]?V(e,g,h):(e.s=3==I?-1:1,e.c=[e.e=0],e)},S.modulo=S.mod=function(e,r){var n,t,i=this;return e=new j(e,r),!i.c||!e.s||e.c&&!e.c[0]?new j(NaN):!e.c||i.c&&!i.c[0]?new j(i):(9==D?(t=e.s,e.s=1,n=N(i,e,0,3),e.s=t,n.s*=t):n=N(i,e,0,D),(e=i.minus(n.times(e))).c[0]||1!=D||(e.s=i.s),e)},S.multipliedBy=S.times=function(e,r){var n,t,i,s,u,c,h,g,p,w,d,m,v,O,N,y=this,b=y.c,E=(e=new j(e,r)).c;if(!(b&&E&&b[0]&&E[0]))return!y.s||!e.s||b&&!b[0]&&!E||E&&!E[0]&&!b?e.c=e.e=e.s=null:(e.s*=y.s,b&&E?(e.c=[0],e.e=0):e.c=e.e=null),e;for(t=a(y.e/f)+a(e.e/f),e.s*=y.s,(h=b.length)<(w=E.length)&&(v=b,b=E,E=v,i=h,h=w,w=i),i=h+w,v=[];i--;v.push(0));for(O=o,N=l,i=w;--i>=0;){for(n=0,d=E[i]%N,m=E[i]/N|0,s=i+(u=h);s>i;)n=((g=d*(g=b[--u]%N)+(c=m*g+(p=b[u]/N|0)*d)%N*N+v[s]+n)/O|0)+(c/N|0)+m*p,v[s--]=g%O;v[s]=n}return n?++t:v.splice(0,1),V(e,v,t)},S.negated=function(){var e=new j(this);return e.s=-e.s||null,e},S.plus=function(e,r){var n,t=this,i=t.s;if(r=(e=new j(e,r)).s,!i||!r)return new j(NaN);if(i!=r)return e.s=-r,t.minus(e);var s=t.e/f,u=e.e/f,l=t.c,c=e.c;if(!s||!u){if(!l||!c)return new j(i/0);if(!l[0]||!c[0])return c[0]?e:new j(l[0]?t:0*i)}if(s=a(s),u=a(u),l=l.slice(),i=s-u){for(i>0?(u=s,n=c):(i=-i,n=l),n.reverse();i--;n.push(0));n.reverse()}for((i=l.length)-(r=c.length)<0&&(n=c,c=l,l=n,r=i),i=0;r;)i=(l[--r]=l[r]+c[r]+i)/o|0,l[r]=o===l[r]?0:l[r]%o;return i&&(l=[i].concat(l),++u),V(e,l,u)},S.precision=S.sd=function(e,r){var n,t,i,o=this;if(null!=e&&e!==!!e)return W(new j(o),p(e,1,c),null==r?I:p(r,0,8));if(!(n=o.c))return null;if(t=(i=n.length-1)*f+1,i=n[i]){for(;i%10==0;i/=10,t--);for(i=n[0];i>=10;i/=10,t++);}return e&&o.e+1>t&&(t=o.e+1),t},S.shiftedBy=function(e){return this.times("1e"+p(e,-s,s))},S.squareRoot=S.sqrt=function(){var e,r,n,t,i,o=this,f=o.c,s=o.s,u=o.e,l=P+4,c=new j("0.5");if(1!==s||!f||!f[0])return new j(!s||s<0&&(!f||f[0])?NaN:f?o:1/0);if(0==(s=Math.sqrt(+X(o)))||s==1/0?(((r=h(f)).length+u)%2==0&&(r+="0"),s=Math.sqrt(+r),u=a((u+1)/2)-(u<0||u%2),n=new j(r=s==1/0?"5e"+u:(r=s.toExponential()).slice(0,r.indexOf("e")+1)+u)):n=new j(s+""),n.c[0])for((s=(u=n.e)+l)<3&&(s=0);;)if(i=n,n=c.times(i.plus(N(o,i,l,1))),h(i.c).slice(0,s)===(r=h(n.c)).slice(0,s)){if(n.e<u&&--s,"9999"!=(r=r.slice(s-3,s+1))&&(t||"4999"!=r)){+r&&(+r.slice(1)||"5"!=r.charAt(0))||(W(n,n.e+P+2,1),e=!n.times(n).eq(o));break}if(!t&&(W(i,i.e+P+2,0),i.times(i).eq(o))){n=i;break}l+=4,s+=4,t=1}return W(n,n.e+P+1,I,e)},"function"==typeof BigInt&&(S.toBigInt=function(e){var r=this;return r.c?BigInt(q(r,r.e+1,e)):null});S.toExponential=function(e,r){return q(this,null==e?e:p(e,0,c)+1,r,1)},S.toFixed=function(e,r){return q(this,null==e?e:p(e,-c,c)+this.e+1,r)},S.toFormat=function(e,r,n){var t,o,f,s=this;if(null==n)n=U,null!=e&&(null!=r?"object"==typeof r&&(n=$(r),r=null):"object"!=typeof e||w(e)||(n=$(e),e=r=null));else{if("object"!=typeof n)throw Error(i+"Argument not an object: "+n);n=$(n)}if(null!=e)if(w(e)&&e.length<=2){if(t=e[0],o=e[1],e=s.dp(),null!=o&&e>p(o,0,c)&&(e=o),null!=t&&0!==p(t,0,c)){if(null!=o&&t>o)throw Error(i+"Minimum must not exceed maximum");e<t&&(e=t)}}else p(e,-c,c);if(f=s.toFixed(e,r),s.s<0&&(f=f.slice(1)),s.c){var u,l=f.split("."),a=+n.groupSize,h=+n.secondaryGroupSize,g=n.groupSeparator||"",d=l[0],m=l[1],v=d.length;if(h&&(u=a,a=h,h=u,v-=u),a>0&&v>0){for(u=v%a||a,f=d.substr(0,u);u<v;u+=a)f+=g+d.substr(u,a);h>0&&(f+=g+d.slice(u))}m&&((u=+n.fractionGroupSize)&&(m=m.replace(new RegExp("\\d{"+u+"}\\B","g"),"$&"+(n.fractionGroupSeparator||""))),f+=(n.decimalSeparator||"")+m)}return(n.prefix||"")+(s.s<0?n.negativeSign||"":s.s>0&&n.positiveSign||"")+f+(n.suffix||"")},S.toFraction=function(e){var r,n,t,o,s,l,c,a,g,p,w,d,m=this,v=m.c;if(null!=e&&(!(c=new j(e)).isInteger()&&(c.c||1!==c.s)||c.lt(x)))throw Error(i+"Argument "+(c.isInteger()?"out of range: ":"not an integer: ")+X(c));if(!v)return[new j(m.s||0),new j(0)];for(r=new j(x),g=n=new j(x),t=a=new j(x),d=h(v),s=r.e=d.length-m.e-1,r.c[0]=u[(l=s%f)<0?f+l:l],e=!e||c.comparedTo(r)>0?s>0?r:g:c,l=C,C=1/0,c=new j(d),a.c[0]=0;p=N(c,r,0,1),1!=(o=n.plus(p.times(t))).comparedTo(e);)n=t,t=o,g=a.plus(p.times(o=g)),a=o,r=c.minus(p.times(o=r)),c=o;return o=N(e.minus(n),t,0,1),a=a.plus(o.times(g)),n=n.plus(o.times(t)),a.s=g.s=m.s,w=N(g,t,s*=2,I).minus(m).abs().comparedTo(N(a,n,s,I).minus(m).abs())<1?[g,t]:[a,n],C=l,w},S.toNumber=function(){return+X(this)},S.toObject=function(){var e=this;return{c:e.c?e.c.slice():null,e:e.e,s:e.s}},S.toPrecision=function(e,r){return q(this,null==e?e:p(e,1,c),r,2)},S.toString=function(e){var r,n=this,t=n.s,i=n.e;return null===i?t?(r="Infinity",t<0&&(r="-"+r)):r="NaN":(null==e?r=i<=R||i>=T?m(h(n.c),i):v(h(n.c),i,"0"):(p(e,2,F.length,"Base"),r=y(v(h(n.c),i,"0"),10,e,t,!0)),t<0&&n.c[0]&&(r="-"+r)),r},S.valueOf=S.toJSON=function(){return X(this)},S._isBigNumber=!0,null!=O&&j.set(O);return j}(),r=/^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i,n=Math.ceil,t=Math.floor,i="[BigNumber Error] ",o=1e14,f=14,s=9007199254740991,u=[1,10,100,1e3,1e4,1e5,1e6,1e7,1e8,1e9,1e10,1e11,1e12,1e13],l=1e7,c=1e9;function a(e){var r=0|e;return e>0||e===r?r:r-1}function h(e){for(var r,n,t=1,i=e.length,o=e[0]+"";t<i;){for(r=e[t++]+"",n=f-r.length;n--;r="0"+r);o+=r}for(i=o.length;48===o.charCodeAt(--i););return o.slice(0,i+1||1)}function g(e,r){var n,t,i=e.c,o=r.c,f=e.s,s=r.s,u=e.e,l=r.e;if(!f||!s)return null;if(n=i&&!i[0],t=o&&!o[0],n||t)return n?t?0:-s:f;if(f!=s)return f;if(n=f<0,t=u==l,!i||!o)return t?0:!i^n?1:-1;if(!t)return u>l^n?1:-1;for(s=(u=i.length)<(l=o.length)?u:l,f=0;f<s;f++)if(i[f]!=o[f])return i[f]>o[f]^n?1:-1;return u==l?0:u>l^n?1:-1}function p(e,r,n,o){if(e<r||e>n||e!==t(e))throw Error(i+(o||"Argument")+("number"==typeof e?e<r||e>n?" out of range: ":" not an integer: ":" not a primitive number: ")+String(e));return e}function w(e){return"[object Array]"=={}.toString.call(e)}function d(e){var r=e.c.length-1;return a(e.e/f)==r&&e.c[r]%2!=0}function m(e,r){return(e.length>1?e.charAt(0)+"."+e.slice(1):e)+(r<0?"e":"e+")+r}function v(e,r,n){var t,i;if(r<0){for(i=n+".";++r;i+=n);e=i+e}else if(++r>(t=e.length)){for(i=n,r-=t;--r;i+=n);e+=i}else r<t&&(e=e.slice(0,r)+"."+e.slice(r));return e}("undefined"!=typeof globalThis?globalThis:"undefined"!=typeof window?window:self).BigNumber=e}();
  </script>
-  
 </body>
 </html>
