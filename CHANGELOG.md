@@ -1,3 +1,8 @@
+#### 11.1.1
+
+* 02/05/26
+* Docs: fix version number and `decimalPlaces` API description.
+
 #### 11.1.0
 
 * 30/04/26
