@@ -1034,12 +1034,13 @@ y.comparedTo('110', 2)          // -1</pre>
       decimalPlaces<code class='inset'>.dp([dp [, rm]]) <i>&rArr; BigNumber|number</i></code>
     </h5>
     <p>
-      <code>dp</code>: <i>number</i>: integer, <code>0</code> to <code>1e+9</code> inclusive<br />
+      <code>dp</code>: <i>number</i>: integer, <code>-1e+9</code> to <code>1e+9</code> inclusive<br />
       <code>rm</code>: <i>number</i>: integer, <code>0</code> to <code>8</code> inclusive
     </p>
     <p>
       If <code>dp</code> is a number, returns a BigNumber whose value is the value of this BigNumber
       rounded by rounding mode <code>rm</code> to a maximum of <code>dp</code> decimal places.
+      If <code>dp</code> is negative, digits to the left of the decimal point are rounded.
     </p>
     <p>
       If <code>dp</code> is omitted, or is <code>null</code> or <code>undefined</code>, the return
@@ -1051,8 +1052,7 @@ y.comparedTo('110', 2)          // -1</pre>
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
     <p>
-      Throws if <code>dp</code> or <code>rm</code> is invalid, or if the minimum exceeds the
-      maximum in a <code>dp</code> array. See <a href='#Errors'>Errors</a>.
+      Throws if <code>dp</code> or <code>rm</code> is invalid. See <a href='#Errors'>Errors</a>.
     </p>
     <pre>
 x = new BigNumber(1234.56)
@@ -1692,7 +1692,9 @@ y.toExponential(3)              // '4.560e+1'</pre>
       <code>Number.prototype.toFixed</code>, which returns the value to zero decimal places.<br />
       It is useful when fixed-point notation is required and the current
       <a href="#exponential-at"><code>EXPONENTIAL_AT</code></a> setting causes
-      <code><a href='#toS'>toString</a></code> to return exponential notation.<br />
+      <code><a href='#toS'>toString</a></code> to return exponential notation.
+    </p>
+    <p>  
       If <code>rm</code> is omitted or is <code>null</code> or <code>undefined</code>,
       <a href='#rounding-mode'><code>ROUNDING_MODE</code></a> is used.
     </p>
