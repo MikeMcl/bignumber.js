@@ -1,3 +1,8 @@
+#### 11.1.2
+
+* 30/05/26
+* [BUGFIX] #405 Fix invalid `toFormat` output for `-0`.
+
 #### 11.1.1
 
 * 02/05/26
