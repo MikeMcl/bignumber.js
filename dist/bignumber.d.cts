@@ -67,7 +67,7 @@ declare namespace BigNumber {
 
     /**
      * An integer, 0 to 1e+9, or an array, [-1e+9 to 0, 0 to 1e+9].
-     * Default value: `[-7, 20]`.
+     * Default value: `[-7, 21]`.
      *
      * The exponent value(s) at which `toString` returns exponential notation.
      *
@@ -78,7 +78,7 @@ declare namespace BigNumber {
      * value at and above which exponential notation is used.
      *
      * For example, to emulate JavaScript numbers in terms of the exponent values at which they begin
-     * to use exponential notation, use `[-7, 20]`.
+     * to use exponential notation, use `[-7, 21]`.
      *
      * ```ts
      * BigNumber.config({ EXPONENTIAL_AT: 2 })
@@ -87,7 +87,7 @@ declare namespace BigNumber {
      * new BigNumber(0.123)        // '0.123'       e is only -1
      * new BigNumber(0.0123)       // '1.23e-2'
      *
-     * BigNumber.config({ EXPONENTIAL_AT: [-7, 20] })
+     * BigNumber.config({ EXPONENTIAL_AT: [-7, 21] })
      * new BigNumber(123456789)    // '123456789'   e is only 8
      * new BigNumber(0.000000123)  // '1.23e-7'
      *

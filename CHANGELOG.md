@@ -1,3 +1,8 @@
+#### 11.1.3
+
+* 05/06/26
+* #406 Fix `EXPONENTIAL_AT` default value documentation.
+
 #### 11.1.2
 
 * 30/05/26
