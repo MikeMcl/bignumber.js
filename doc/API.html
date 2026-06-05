@@ -373,7 +373,7 @@ BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_UP })    // equivalent</pre>
         <br />
         <i>number</i>[]: [ integer <code>-1e+9</code> to <code>0</code> inclusive, integer
         <code>0</code> to <code>1e+9</code> inclusive ]<br />
-        Default value: <code>[-7, 20]</code>
+        Default value: <code>[-7, 21]</code>
       </dd>
       <dd>
         The exponent value(s) at which <code>toString</code> returns exponential notation.
@@ -386,7 +386,7 @@ BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_UP })    // equivalent</pre>
       </dd>
       <dd>
         For example, to emulate JavaScript numbers in terms of the exponent values at which they
-        begin to use exponential notation, use <code>[-7, 20]</code>.
+        begin to use exponential notation, use <code>[-7, 21]</code>.
       </dd>
       <dd>
       <pre>BigNumber.config({ EXPONENTIAL_AT: 2 })
@@ -395,7 +395,7 @@ new BigNumber(123)          // '1.23e+2'
 new BigNumber(0.123)        // '0.123'       e is only -1
 new BigNumber(0.0123)       // '1.23e-2'
 
-BigNumber.config({ EXPONENTIAL_AT: [-7, 20] })
+BigNumber.config({ EXPONENTIAL_AT: [-7, 21] })
 new BigNumber(123456789)    // '123456789'   e is only 8
 new BigNumber(0.000000123)  // '1.23e-7'
 
