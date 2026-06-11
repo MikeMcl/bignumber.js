@@ -2779,6 +2779,8 @@ function clone(configObject) {
           str += groupSeparator + intPart.substr(i, g1);
         }
         if (g2 > 0) str += groupSeparator + intPart.slice(i);
+      } else {
+        str = intPart;
       }
 
       if (fractionPart) {
