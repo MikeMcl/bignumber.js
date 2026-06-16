@@ -1,3 +1,8 @@
+#### 11.1.4
+
+* 16/06/26
+* [BUGFIX] #407 Fix `toFormat` duplicating the fraction when `groupSize` is `0`.
+
 #### 11.1.3
 
 * 05/06/26
