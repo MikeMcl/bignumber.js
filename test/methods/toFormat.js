@@ -2,11 +2,28 @@ if (typeof Test === 'undefined') require('../tester');
 
 Test('toFormat', function () {
 
+    var defaultFormat = {
+        prefix: '',
+        negativeSign: '-',
+        positiveSign: '',
+        groupSeparator: ',',
+        groupSize: 3,
+        secondaryGroupSize: 0,
+        decimalSeparator: '.',
+        fractionGroupSeparator: '',
+        fractionGroupSize: 0,
+        suffix: ''
+    };
+
     function t(expected, value) {
         var args = Array.prototype.slice.call(arguments, 2),
             x = new BigNumber(value);
 
         Test.areEqual(expected, x.toFormat.apply(x, args));
+    }
+
+    function restoreDefaultFormat() {
+        BigNumber.config({ FORMAT: defaultFormat });
     }
 
     var tx = Test.isException;
@@ -16,18 +33,7 @@ Test('toFormat', function () {
         ROUNDING_MODE: 4,
         RANGE: 1E9,
         EXPONENTIAL_AT: [-7, 21],
-        FORMAT: {
-            prefix: '',
-            negativeSign: '-',
-            positiveSign: '',
-            groupSeparator: ',',
-            groupSize: 3,
-            secondaryGroupSize: 0,
-            decimalSeparator: '.',
-            fractionGroupSeparator: '',
-            fractionGroupSize: 0,
-            suffix: ''
-        }
+        FORMAT: defaultFormat
     });
 
     // No arguments: default formatting, no rounding.
@@ -86,26 +92,18 @@ Test('toFormat', function () {
 
     // groupSeparator override.
 
-    BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
-        groupSeparator: ' ',
-        groupSize: 3,
-        secondaryGroupSize: 0,
-        fractionGroupSeparator: '',
-        fractionGroupSize: 0
-    }});
+    BigNumber.config({ FORMAT: { groupSeparator: ' ' }});
 
     t('76 852.34', '7.6852342091e+4', 2);
     t('76 852.342091', '7.6852342091e+4');
     t('76 852.3420910871', '7.6852342091087145832640897e+4', 10);
 
+    restoreDefaultFormat();
+
     // fractionGroupSize.
 
     BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
         groupSeparator: ' ',
-        groupSize: 3,
-        secondaryGroupSize: 0,
         fractionGroupSeparator: ' ',
         fractionGroupSize: 5
     }});
@@ -131,28 +129,23 @@ Test('toFormat', function () {
     t('99.00000 00000 000', 99, 13);
     t('9.00000 00000 0000', 9, 14);
 
+    restoreDefaultFormat();
+
     // fractionGroupSize = 0.
 
     BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
-        groupSeparator: ' ',
-        groupSize: 3,
-        secondaryGroupSize: 0,
-        fractionGroupSeparator: ' ',
+        groupSeparator: ' ', 
         fractionGroupSize: 0
-    }});
+     }});
 
     t('76 852.34209108714583264089', '7.685234209108714583264089e+4', 20);
     t('76 852.342091087145832640897', '7.6852342091087145832640897e+4', 21);
 
+    restoreDefaultFormat();
+
     // secondaryGroupSize (Indian-style grouping).
 
-    BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
-        groupSeparator: ',',
-        groupSize: 3,
-        secondaryGroupSize: 2
-    }});
+    BigNumber.config({ FORMAT: { secondaryGroupSize: 2 }});
 
     t('9,876.54321', 9876.54321);
     t('10,00,037.123', '1000037.123456789', 3);
@@ -163,14 +156,9 @@ Test('toFormat', function () {
     t('99,99,99,99,99,999', 9999999999999);
     t('9,99,99,99,99,999', 999999999999);
 
-    // dp [min, null]: minimum decimal places.
+    restoreDefaultFormat();
 
-    BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
-        groupSeparator: ',',
-        groupSize: 3,
-        secondaryGroupSize: 0
-    }});
+    // dp [min, null]: minimum decimal places.
 
     t('100.00', 100, [2, null]);
     t('12.30', 12.3, [2, null]);
@@ -263,13 +251,9 @@ Test('toFormat', function () {
         groupSize: 3
     });
 
-    // Per-call dp with FORMAT defaults.
+    restoreDefaultFormat();
 
-    BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
-        groupSeparator: ',',
-        groupSize: 3
-    }});
+    // Per-call dp with FORMAT defaults.
 
     t('100.00', 100, [2, 5]);
     t('12.30', 12.3, [2, 5]);
@@ -281,35 +265,19 @@ Test('toFormat', function () {
 
     // Null and undefined keep current formatting defaults and do not round.
 
-    BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
-        groupSeparator: ',',
-        groupSize: 3
-    }});
-
     t('123,456,789.123456789', '123456789.123456789');
     t('123,456,789.123456789', '123456789.123456789', null);
     t('123,456,789.123456789', '123456789.123456789', undefined);
 
-    // groupSize: 0 disables grouping; the fraction must not be duplicated. #407
+    // groupSize: 0 (#407)
 
-    BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
-        groupSeparator: '',
-        groupSize: 0
-    }});
+    BigNumber.config({ FORMAT: { groupSize: 0 }});
 
     t('100000.12', '100000.12');
     t('1234.56', '1234.56');
     t('-9.91', '-9.91');
 
-    // Restore default FORMAT for any tests that follow.
-
-    BigNumber.config({ FORMAT: {
-        decimalSeparator: '.',
-        groupSeparator: ',',
-        groupSize: 3
-    }});
+    restoreDefaultFormat();
 
     //if (typeof window == 'undefined') {
     //    var vm = require('vm');
