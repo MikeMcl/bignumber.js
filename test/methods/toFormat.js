@@ -291,6 +291,26 @@ Test('toFormat', function () {
     t('123,456,789.123456789', '123456789.123456789', null);
     t('123,456,789.123456789', '123456789.123456789', undefined);
 
+    // groupSize: 0 disables grouping; the fraction must not be duplicated. #407
+
+    BigNumber.config({ FORMAT: {
+        decimalSeparator: '.',
+        groupSeparator: '',
+        groupSize: 0
+    }});
+
+    t('100000.12', '100000.12');
+    t('1234.56', '1234.56');
+    t('-9.91', '-9.91');
+
+    // Restore default FORMAT for any tests that follow.
+
+    BigNumber.config({ FORMAT: {
+        decimalSeparator: '.',
+        groupSeparator: ',',
+        groupSize: 3
+    }});
+
     //if (typeof window == 'undefined') {
     //    var vm = require('vm');
     //    t('1,234.57', '1234.567', vm.runInNewContext('[2, 2]'));
