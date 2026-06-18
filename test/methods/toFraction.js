@@ -2940,6 +2940,19 @@ Test('toFraction', function () {
     t('1111,9',  '12.345e1', new BigNumber(10));
     t('2469,20', '12.345e1', new BigNumber('123e399'));
 
+    // The result must be the closest fraction with denominator <= maxDenominator.
+    // Expected values generated with Python's fractions module:
+    //   Fraction(value).limit_denominator(maxDenominator)
+    // Previously these returned a sub-optimal convergent (e.g. '24,7' for 3.43 with md 51)
+    // because the final closer-fraction comparison was rounded to too few decimal places.
+    t('175,51', '3.43', '51');                          // not 24,7   (24/7 ≈ 3.428571, 175/51 ≈ 3.431373)
+    t('-175,51', '-3.43', '51');                         // not -24,7
+    t('77,51', '1.51', '51');                            // not 74,49
+    t('-494534,587', '-842.477', '725');                 // not -347943,413
+    t('506662,523', '968.761', '597');                   // not 154033,159
+    t('-108109,254', '-425.6260', '297');                // not -52352,123
+    t('20090,523', '38.413', '524');                     // not 18323,477
+
     Test.isException(function () {new BigNumber('12.3e1').toFraction('')}, ".toFraction('')");
     Test.isException(function () {new BigNumber('12.3e1').toFraction(' ')}, ".toFraction(' ')");
     Test.isException(function () {new BigNumber('12.3e1').toFraction('\t')}, ".toFraction('\t')");
