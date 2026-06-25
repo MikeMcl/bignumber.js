@@ -2865,7 +2865,11 @@ function clone(configObject) {
     n0 = n0.plus(d2.times(n1));
     d0 = d0.plus(d2.times(d1));
     n0.s = n1.s = x.s;
-    e = e * 2;
+
+    // Compare the candidates at a precision that scales with the denominators, otherwise
+    // distances that differ only beyond 2 * the fractional digits of x round to a tie and
+    // the closer fraction can be missed.
+    e = e * 2 + d0.plus(d1).e + 10;
 
     // Determine which fraction is closer to x, n0/d0 or n1/d1
     r = div(n1, d1, e, ROUNDING_MODE).minus(x).abs().comparedTo(
