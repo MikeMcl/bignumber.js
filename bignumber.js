@@ -2812,7 +2812,7 @@ function clone(configObject) {
    * '[BigNumber Error] Argument {not an integer|out of range} : {md}'
    */
   P.toFraction = function (md) {
-    var d, d0, d1, d2, e, exp, n, n0, n1, q, r, s,
+    var d, d0, d1, d2, e, exp, n, n0, n1, q, r, s, xd, xn,
       x = this,
       xc = x.c;
 
@@ -2846,6 +2846,11 @@ function clone(configObject) {
     MAX_EXP = 1 / 0;
     n = new BigNumber(s);
 
+    // The exact value of abs(x) as the fraction xn / xd, where xd is a power of ten.
+    // Used below to determine which approximation is closer to x without loss of precision.
+    xn = n;
+    xd = d;
+
     // n0 = d1 = 0
     n0.c[0] = 0;
 
@@ -2864,12 +2869,16 @@ function clone(configObject) {
     d2 = div(md.minus(d0), d1, 0, 1);
     n0 = n0.plus(d2.times(n1));
     d0 = d0.plus(d2.times(d1));
-    n0.s = n1.s = x.s;
-    e = e * 2;
 
-    // Determine which fraction is closer to x, n0/d0 or n1/d1
-    r = div(n1, d1, e, ROUNDING_MODE).minus(x).abs().comparedTo(
-        div(n0, d0, e, ROUNDING_MODE).minus(x).abs()) < 1 ? [n1, d1] : [n0, d0];
+    // Determine which fraction is closer to abs(x), n1/d1 or n0/d0, by exact comparison
+    // of abs(n1/d1 - xn/xd) and abs(n0/d0 - xn/xd) using cross-multiplication. All of n1,
+    // d1, n0, d0, xn and xd are non-negative here, so no precision is lost.
+    //   abs(n1/d1 - xn/xd) <= abs(n0/d0 - xn/xd)
+    //   <=> abs(n1*xd - xn*d1) * d0 <= abs(n0*xd - xn*d0) * d1
+    r = n1.times(xd).minus(xn.times(d1)).abs().times(d0).comparedTo(
+        n0.times(xd).minus(xn.times(d0)).abs().times(d1)) < 1 ? [n1, d1] : [n0, d0];
+
+    r[0].s = x.s;
 
     MAX_EXP = exp;
 
