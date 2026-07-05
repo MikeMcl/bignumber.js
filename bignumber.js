@@ -1,5 +1,5 @@
 /*
- *      bignumber.js v11.1.4
+ *      bignumber.js v11.1.5
  *      A JavaScript library for arbitrary-precision arithmetic.
  *      https://github.com/MikeMcl/bignumber.js
  *      Copyright (c) 2026 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -2871,10 +2871,10 @@ function clone(configObject) {
     d0 = d0.plus(d2.times(d1));
 
     // Determine which fraction is closer to abs(x), n1/d1 or n0/d0, by exact comparison
-    // of abs(n1/d1 - xn/xd) and abs(n0/d0 - xn/xd) using cross-multiplication. All of n1,
-    // d1, n0, d0, xn and xd are non-negative here, so no precision is lost.
-    //   abs(n1/d1 - xn/xd) <= abs(n0/d0 - xn/xd)
-    //   <=> abs(n1*xd - xn*d1) * d0 <= abs(n0*xd - xn*d0) * d1
+    // using cross-multiplication rather than division:
+    // abs(n1/d1 - xn/xd) <= abs(n0/d0 - xn/xd) is equivalent to
+    // abs(n1*xd - xn*d1) * d0 <= abs(n0*xd - xn*d0) * d1
+    // On exact ties, for symmetry around 0, prefer the numerator with the smallest magnitude.
     r = n1.times(xd).minus(xn.times(d1)).abs().times(d0).comparedTo(
         n0.times(xd).minus(xn.times(d0)).abs().times(d1)) < 1 ? [n1, d1] : [n0, d0];
 

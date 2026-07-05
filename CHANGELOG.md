@@ -1,3 +1,8 @@
+#### 11.1.5
+
+* 05/07/26
+* #409 `toFraction` returning a sub-optimal rational approximation.
+
 #### 11.1.4
 
 * 16/06/26
