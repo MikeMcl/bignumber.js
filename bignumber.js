@@ -1027,9 +1027,10 @@ function clone(configObject) {
     // If the caller is toString, we are converting from base 10 to baseOut.
     // If the caller is BigNumber, we are converting from baseIn to base 10.
     return function (str, baseIn, baseOut, sign, callerIsToString) {
-      var alphabet, d, e, k, r, x, xc, y,
+      var alphabet, cmp, d, e, half, j, k, more, r, x, xc, y,
         i = str.indexOf('.'),
         dp = DECIMAL_PLACES,
+        dpd = dp,
         rm = ROUNDING_MODE;
 
       // Non-integer.
@@ -1075,9 +1076,22 @@ function clone(configObject) {
 
         // The sign is needed for correct rounding.
         x.s = sign;
-        x = div(x, y, dp, rm, baseOut);
+
+        // For an odd baseOut, half a unit in the last place is 0.mmm... (a
+        // non-terminating base-baseOut fraction with m = (baseOut - 1) / 2), so
+        // the discarded tail has to be compared against a repeating m rather than
+        // a single half-digit and a sticky bit. Compute enough extra digits that
+        // the first tail digit which differs from m is always available: the run
+        // of leading m digits before the tail is decided cannot exceed
+        // fracLen * log_baseOut(10), where fracLen (= str.length - i) is the
+        // number of base-10 fraction digits.
+        if (baseOut % 2 && callerIsToString) {
+          dpd = dp + mathceil((str.length - i) * Math.LN10 / Math.log(baseOut)) + 4;
+        }
+
+        x = div(x, y, dpd, rm, baseOut);
         xc = x.c;
-        r = x.r;
+        r = more = x.r;
         e = x.e;
       }
 
@@ -1094,9 +1108,47 @@ function clone(configObject) {
       k = baseOut / 2;
       r = r || d < 0 || xc[d + 1] != null;
 
-      r = rm < 4 ? (i != null || r) && (rm == 0 || rm == (x.s < 0 ? 3 : 2))
-            : i > k || i == k &&(rm == 4 || r || rm == 6 && xc[d - 1] & 1 ||
-             rm == (x.s < 0 ? 8 : 7));
+      if (rm < 4) {
+
+        // Directed rounding (UP, DOWN, CEIL, FLOOR) depends only on whether the
+        // discarded tail is non-zero, so it is unaffected by the base's parity.
+        r = (i != null || r) && (rm == 0 || rm == (x.s < 0 ? 3 : 2));
+      } else if (baseOut % 2 == 0) {
+
+        // Even baseOut: half a ULP is the single digit baseOut / 2 followed by
+        // zeros, so the leading tail digit i and the sticky flag r fully resolve
+        // the tail's position relative to half.
+        r = i > k || i == k && (rm == 4 || r || rm == 6 && xc[d - 1] & 1 ||
+          rm == (x.s < 0 ? 8 : 7));
+      } else {
+
+        // Odd baseOut: half a ULP is 0.mmm... with m = (baseOut - 1) / 2, so
+        // compare the discarded tail digit by digit against m. cmp becomes the
+        // sign of (tail - half): 1 above half, 0 exactly half (every tail digit
+        // equals m and the division does not terminate), -1 below half. The extra
+        // digits computed above guarantee the first tail digit that differs from m
+        // is present unless the tail is exactly half.
+        half = (baseOut - 1) / 2;
+        for (cmp = 0, j = d; ; j++) {
+          if (j < 0) { cmp = -1; break; }
+          if (j >= xc.length) { cmp = more ? 0 : -1; break; }
+          if (xc[j] != half) { cmp = xc[j] > half ? 1 : -1; break; }
+        }
+
+        if (cmp) {
+          r = cmp > 0;
+        } else if (rm == 6) {
+
+          // Exact half, round half to even: round up when the kept mantissa is
+          // odd. As baseOut is odd, every power of baseOut is odd, so the mantissa
+          // is odd iff the sum of the kept digits is odd (this generalises the
+          // even-base test xc[d - 1] & 1, which only inspects the last digit).
+          for (k = 0, j = 0; j < d; j++) k += xc[j];
+          r = (k & 1) == 1;
+        } else {
+          r = rm == 4 || rm == (x.s < 0 ? 8 : 7);
+        }
+      }
 
       // If the index of the rounding digit is not greater than zero, or xc represents
       // zero, then the result of the base conversion is zero or, if rounding up, a value
