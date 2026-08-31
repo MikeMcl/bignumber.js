@@ -11165,7 +11165,7 @@ Test('toString', function () {
     t('-0.0000000000020102033202303032333033113213', '-0.000000123456789', 4);
     t('-0.0000000001100323001142032114244204230204', '-0.000000123456789', 5);
     t('-0.00000000112442331005030241312503143243', '-0.000000123456789', 6);
-    t('-0.000000004660541461650644523626454412226', '-0.000000123456789', 7);
+    t('-0.0000000046605414616506445236264544122261', '-0.000000123456789', 7);
     t('-0.0000000204437054635763657165267673054542', '-0.000000123456789', 8);
     t('-0.0000000527417530418033652056622672708124', '-0.000000123456789', 9);
     t('-0.000000123456789', '-0.000000123456789', 10);
@@ -11173,7 +11173,7 @@ Test('toString', function () {
     t('-0.00000045101516b79ab1643486a1288795277265', '-0.000000123456789', 12);
     t('-0.000000799274a18803c248320ac075c404ba5975', '-0.000000123456789', 13);
     t('-0.000000d02a645405ac4b02291d9cbb648b47158c', '-0.000000123456789', 14);
-    t('-0.0000016161613d9213b1295d5d28b0123018bd3d', '-0.000000123456789', 15);
+    t('-0.0000016161613d9213b1295d5d28b0123018bd3e', '-0.000000123456789', 15);
     t('-0.000002123e2ccefcf5e755beec5961bda3d5a3b9', '-0.000000123456789', 16);
     t('-0.000002gb3824a5dgc3c94740391g0b68g0b0d3a6', '-0.000000123456789', 17);
     t('-0.0000043a8e79ddh532d9ah5e95b67f4fde164c7f', '-0.000000123456789', 18);
@@ -11475,7 +11475,7 @@ Test('toString', function () {
     t('cj55j1abk1.11a00dib00e885bkdhb71ea8hkdjhih7b6cic84710dihedh58efg803i563e6ae2k9270773geih', '10259507050423.0509665801731862583991348047581595376734117515727774395', 21);
 
     BigNumber.config({DECIMAL_PLACES: 88});
-    t('1120201122111211001102121220012202000221001011102210121000011121101210002.2100011212012221101021000112120122211010210001121201222110102100011212012221101021000112', '35651380254013249383472036570828775.78', 3);
+    t('1120201122111211001102121220012202000221001011102210121000011121101210002.210001121201222110102100011212012221101021000112120122211010210001121201222110102100012', '35651380254013249383472036570828775.78', 3);
 
     BigNumber.config({DECIMAL_PLACES: 61});
     t('nde8jl8filiabpp1ebiome1gng72ajlc05pcje.58k83pnpnnln1c250flhhe10i0aecl3kemo51i13ckj0ieji243nkh44bbafk', '531463579683815787587099214787456214450843210757585380.2052977699752', 26);
@@ -11675,7 +11675,7 @@ Test('toString', function () {
     t('bf8pijdqj7eaee8plp', '24913576091923713226797784', 27);
     t('92ede36', '221315101.4486109701151', 17);
     t('2tphhgbu3tfp', '201793843613197922.7289680244023879849892761206083518171246', 34);
-    t('334304414323442111042', '361019216753897.578090634736893396795045144615285524664717189351698468', 5);
+    t('334304414323442111043', '361019216753897.578090634736893396795045144615285524664717189351698468', 5);
     t('101111111100000110101111100000101000111011101010001100001110', '863594881689232141.62881568577668460977625904', 2);
     t('113aa38477', '2650149344.4439337077845022587667990', 11);
     t('16234a9a69395843a26073599', '15410678383317464407550663.2765', 11);
@@ -11749,6 +11749,95 @@ Test('toString', function () {
     t('-Infinity', '-Infinity', 10);
     t('101725686101180', '101725686101180', undefined);
     t('101725686101180', '101725686101180', 10);
+
+    // Issue #412: toString(base) under-rounded for odd bases. The round-up
+    // decision compared the single rounding digit against baseOut / 2, which is
+    // fractional for an odd baseOut, so a discarded tail whose leading digit is
+    // floor(baseOut / 2) was misclassified as below half even when the full tail
+    // was at least half a ULP. The two reported cases, DECIMAL_PLACES: 0 and
+    // ROUND_HALF_UP (base 10 rounds 0.6 to 1 and 2.6 to 3):
+
+    BigNumber.config({DECIMAL_PLACES: 0, ROUNDING_MODE: 4});
+    t('1', '0.6', 3);      // 0.6 is nearer to 1 than to 0
+    t('10', '2.6', 3);     // base 3 '10' === 3, up from 2
+    t('1', '0.5', 3);      // 0.5 === 0.111...(base 3), exact half, HALF_UP rounds up
+
+    // Cross-check the fix against an exact, base-independent BigInt oracle for odd
+    // bases {3, 5, 7, 9} (plus even controls {2, 4, 8, 16}) and every rounding
+    // mode {0..8}. Base 10 rounding is correct, so matching this oracle is
+    // equivalent to rounding in the same direction as the base 10 result.
+    (function () {
+      function ipow(b, e) { var r = 1n, i; b = BigInt(b); for (i = 0; i < e; i++) r *= b; return r; }
+      function parseDec(str) {
+        var s = 1n, dot, ip, fp, digits;
+        if (str.charAt(0) === '-') { s = -1n; str = str.slice(1); }
+        dot = str.indexOf('.');
+        if (dot < 0) { ip = str; fp = ''; } else { ip = str.slice(0, dot); fp = str.slice(dot + 1); }
+        digits = (ip + fp).replace(/^0+(?=\d)/, '');
+        return { s: s, N: BigInt(digits === '' ? '0' : digits), K: fp.length };
+      }
+      // Exact rounded mantissa M such that the rounded value is s * M / base^dp.
+      function oracle(str, base, dp, rm) {
+        var v = parseDec(str), bb = BigInt(base), P = v.N * ipow(bb, dp), Q = ipow(10n, v.K),
+          q0 = P / Q, rem = P % Q, twice = 2n * rem,
+          cmp = twice > Q ? 1 : twice < Q ? -1 : 0, pos = v.s > 0n, up;
+        if (rm === 0) up = rem > 0n;                                  // UP
+        else if (rm === 1) up = false;                               // DOWN
+        else if (rm === 2) up = pos && rem > 0n;                      // CEIL
+        else if (rm === 3) up = !pos && rem > 0n;                     // FLOOR
+        else if (rm === 4) up = cmp >= 0 && rem > 0n;                 // HALF_UP
+        else if (rm === 5) up = cmp > 0;                             // HALF_DOWN
+        else if (rm === 6) up = cmp > 0 || (cmp === 0 && (q0 & 1n) === 1n); // HALF_EVEN
+        else if (rm === 7) up = cmp > 0 || (cmp === 0 && pos);        // HALF_CEIL
+        else up = cmp > 0 || (cmp === 0 && !pos);                     // HALF_FLOOR
+        return { s: v.s, M: q0 + (up ? 1n : 0n), dp: dp };
+      }
+      function parseBaseB(str, base) {
+        var s = 1n, dot, ip, fp, all, bb = BigInt(base), M = 0n, i,
+          alpha = '0123456789abcdefghijklmnopqrstuvwxyz';
+        if (str.charAt(0) === '-') { s = -1n; str = str.slice(1); }
+        dot = str.indexOf('.');
+        if (dot < 0) { ip = str; fp = ''; } else { ip = str.slice(0, dot); fp = str.slice(dot + 1); }
+        all = ip + fp;
+        for (i = 0; i < all.length; i++) M = M * bb + BigInt(alpha.indexOf(all.charAt(i)));
+        return { s: s, M: M, dp: fp.length };
+      }
+      // Exact equality of the two values s*M / base^dp.
+      function sameValue(o, b, base) {
+        var bb = BigInt(base);
+        if (o.M === 0n && b.M === 0n) return true;
+        if (o.M !== 0n && b.M !== 0n && o.s !== b.s) return false;
+        return o.M * ipow(bb, b.dp) === b.M * ipow(bb, o.dp);
+      }
+
+      var bases = [3, 5, 7, 9, 2, 4, 8, 16],
+        modes = [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        values = ['0.6', '2.6', '1.5', '0.4', '0.5', '0.45', '0.55', '-0.6',
+          '-2.6', '-0.5', '12.5', '0.05', '0.123456789', '999.999', '0.9375'],
+        dps = [0, 1, 2, 3, 5],
+        bi, mi, vi, di, base, rm, dp, val, out, o, b;
+
+      for (bi = 0; bi < bases.length; bi++)
+        for (vi = 0; vi < values.length; vi++)
+          for (di = 0; di < dps.length; di++)
+            for (mi = 0; mi < modes.length; mi++) {
+              base = bases[bi]; val = values[vi]; dp = dps[di]; rm = modes[mi];
+              BigNumber.config({DECIMAL_PLACES: dp, ROUNDING_MODE: rm});
+              out = new BigNumber(val).toString(base);
+              o = oracle(val, base, dp, rm);
+              b = parseBaseB(out, base);
+              Test.isTrue(sameValue(o, b, base));
+            }
+    })();
+
+    // Even bases are unaffected by the fix: these exact conversions (no rounding)
+    // are byte-identical before and after.
+    BigNumber.config({DECIMAL_PLACES: 20, ROUNDING_MODE: 4});
+    t('8.8', '8.5', 16);
+    t('0.4', '0.25', 16);
+    t('1010.1', '10.5', 2);
+
+    BigNumber.config({DECIMAL_PLACES: 20, ROUNDING_MODE: 4});
 
     // Test ALPHABET
 
