@@ -1601,7 +1601,7 @@ function clone(configObject) {
           }
         }
 
-        r = r || sd < 0 ||
+        r = r || sd < 0 && xc[0] ||
 
         // Are there any non-zero digits after the rounding digit?
         // The expression  n % pows10[d - j - 1]  returns all digits of n to the right

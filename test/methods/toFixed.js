@@ -1378,6 +1378,9 @@ Test('toFixed', function () {
     t('-1240', -1234.5, -1);
     t('-1300', -1234.5, -2);
     t('-2000', -1234.5, -3);
+    t('0', 0, -1);
+    t('0', 0, -100);
+    t('0', '-0', -3);
 
     // With rounding mode 1 (ROUND_DOWN)
     BigNumber.config({ROUNDING_MODE: 1});
@@ -1387,6 +1390,19 @@ Test('toFixed', function () {
     t('-1230', -1234.5, -1);
     t('-1200', -1234.5, -2);
     t('-1000', -1234.5, -3);
+
+    // With rounding mode 2 (ROUND_CEIL)
+    BigNumber.config({ROUNDING_MODE: 2});
+    t('1300', 1234.5, -2);
+    t('0', 0, -2);
+    t('0', '-0', -5);
+
+    // With rounding mode 3 (ROUND_FLOOR)
+    BigNumber.config({ROUNDING_MODE: 3});
+    t('1000', 1234.5, -3);
+    t('-2000', -1234.5, -3);
+    t('0', 0, -3);
+    t('0', '-0', -2);
 
     BigNumber.config({ROUNDING_MODE: 4});
 
