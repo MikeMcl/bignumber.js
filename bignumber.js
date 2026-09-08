@@ -2765,7 +2765,8 @@ function clone(configObject) {
         fractionPart = arr[1],
         len = intPart.length;
 
-      if (g2) {
+      // A groupSize of 0 disables grouping, regardless of secondaryGroupSize.
+      if (g1 > 0 && g2) {
         i = g1;
         g1 = g2;
         g2 = i;

@@ -279,6 +279,18 @@ Test('toFormat', function () {
 
     restoreDefaultFormat();
 
+    // groupSize: 0 must disable grouping even when secondaryGroupSize is set,
+    // instead of falling back to grouping by secondaryGroupSize alone.
+
+    BigNumber.config({ FORMAT: { groupSize: 0, secondaryGroupSize: 2 }});
+
+    t('123456789', 123456789);
+    t('1234.56', '1234.56');
+    t('-9.91', '-9.91');
+    t('1000037.123', '1000037.123456789', 3);
+
+    restoreDefaultFormat();
+
     //if (typeof window == 'undefined') {
     //    var vm = require('vm');
     //    t('1,234.57', '1234.567', vm.runInNewContext('[2, 2]'));
