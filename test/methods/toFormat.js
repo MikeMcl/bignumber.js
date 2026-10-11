@@ -143,6 +143,17 @@ Test('toFormat', function () {
 
     restoreDefaultFormat();
 
+    // Fraction separators are literal text, not replacement-string patterns.
+
+    ['$&', '$$', "$'", '$`', '$1', '|', ''].forEach(function (separator) {
+        var options = { fractionGroupSize: 3, fractionGroupSeparator: separator };
+        t('1.123' + separator + '456' + separator + '789', '1.123456789', options);
+        t('-1.123' + separator + '456' + separator + '789', '-1.123456789', options);
+        BigNumber.config({ FORMAT: options });
+        t('1.123' + separator + '456' + separator + '789', '1.123456789');
+        restoreDefaultFormat();
+    });
+
     // secondaryGroupSize (Indian-style grouping).
 
     BigNumber.config({ FORMAT: { secondaryGroupSize: 2 }});

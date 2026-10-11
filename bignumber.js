@@ -2787,7 +2787,9 @@ function clone(configObject) {
         i = +options.fractionGroupSize;
         if (i) {
           fractionPart = fractionPart.replace(
-            new RegExp('\\d{' + i + '}\\B', 'g'), '$&' + (options.fractionGroupSeparator || '')
+            new RegExp('\\d{' + i + '}\\B', 'g'), function (group) {
+              return group + (options.fractionGroupSeparator || '');
+            }
           );
         }
         str += (options.decimalSeparator || '') + fractionPart;
