@@ -824,12 +824,16 @@ function clone(configObject) {
    *
    * arguments {number|string|BigNumber}
    */
-  BigNumber.sum = function () {
-    var i = 0,
-      sum = new BigNumber(0);
-    for (; i < arguments.length;) sum = sum.plus(arguments[i++]);
+    BigNumber.sum = function () {
+    var args = arguments;
+    if (args.length === 0) return new BigNumber(0);
+
+    var i = 1,
+      sum = new BigNumber(args[0]);
+    for (; i < args.length;) sum = sum.plus(args[i++]);
     return sum;
   };
+
 
 
   // PRIVATE FUNCTIONS
