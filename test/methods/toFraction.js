@@ -1,7 +1,7 @@
 if (typeof Test === 'undefined') require('../tester');
 
 Test('toFraction', function () {
-    var u;
+    var u, i, BN, value, maxDenominator, fraction;
 
     function t(expected, value, maxDenominator){
         Test.areEqual(expected, new BigNumber(value).toFraction(maxDenominator).toString());
@@ -2951,6 +2951,54 @@ Test('toFraction', function () {
     // Differs from Python's limit_denominator, which gives -1,1.
     // On ties, toFraction prefers the fraction with the lowest magnitude numerator.
     t('0,1', '-0.5', '1');
+
+    // An exact remainder can be -0 under ROUND_FLOOR. Conversion must still terminate.
+    for (i = 0; i <= 8; i++) {
+        BigNumber.config({ DECIMAL_PLACES: 0, ROUNDING_MODE: i });
+
+        t('1,2', '0.5', u);
+        t('-1,2', '-0.5', u);
+        t('1,2', '0.5', 2);
+        t('1,2', '0.5', 3);
+        t('1,2', '0.5', Infinity);
+        t('1,2', '0.5', null);
+        t('1,2', '0.5', new BigNumber(2));
+        t('0,1', '0', u);
+        t('0,1', '-0', u);
+        t('12,1', '12', u);
+        t('-12,1', '-12', 1);
+        t('1234567890123456789,100', '12345678901234567.89', u);
+        t('1,1000000000000000000000000000000', '1e-30', u);
+        t('1000000000000000000000000000000,1', '1e30', u);
+
+        // Denominator limits and the symmetric tie-break are unchanged.
+        t('0,1', '0.5', 1);
+        t('0,1', '-0.5', 1);
+        t('355,113', '3.1415926535', 113);
+        t('-355,113', '-3.1415926535', 113);
+        t('175,51', '3.43', 51);
+        t('1,0', Infinity, u);
+        t('-1,0', -Infinity, u);
+        t('0,0', NaN, u);
+
+        Test.areEqual(-1, new BigNumber('-0').toFraction()[0].s);
+        Test.areEqual(-1, new BigNumber('-0.5').toFraction(1)[0].s);
+    }
+
+    BN = BigNumber.clone({ DECIMAL_PLACES: 7, ROUNDING_MODE: 3, RANGE: [-100, 100] });
+    value = new BN('-123.45');
+    maxDenominator = new BN(100);
+    fraction = value.toFraction(maxDenominator);
+    Test.areEqual('-2469,20', fraction.toString());
+    Test.areEqual('-123.45', value.valueOf());
+    Test.areEqual('100', maxDenominator.valueOf());
+    Test.isTrue(fraction[0] instanceof BN && fraction[1] instanceof BN);
+    Test.areEqual(7, BN.config().DECIMAL_PLACES);
+    Test.areEqual(3, BN.config().ROUNDING_MODE);
+    Test.areEqual('-100,100', BN.config().RANGE.toString());
+    Test.isTrue(new BN('1e101').eq(Infinity));
+
+    BigNumber.config({ DECIMAL_PLACES: 20, ROUNDING_MODE: 4 });
 
     Test.isException(function () {new BigNumber('12.3e1').toFraction('')}, ".toFraction('')");
     Test.isException(function () {new BigNumber('12.3e1').toFraction(' ')}, ".toFraction(' ')");

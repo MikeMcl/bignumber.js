@@ -2854,7 +2854,8 @@ function clone(configObject) {
     // n0 = d1 = 0
     n0.c[0] = 0;
 
-    for (; ;)  {
+    // Stop at an exact fraction, including a negative zero remainder under ROUND_FLOOR.
+    for (; d.c[0];) {
       q = div(n, d, 0, 1);
       d2 = d0.plus(q.times(d1));
       if (d2.comparedTo(md) == 1) break;
