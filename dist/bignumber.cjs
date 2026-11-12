@@ -1733,7 +1733,7 @@ function clone(configObject) {
    *   or null if the value of either is NaN.
    */
   P.comparedTo = function (y, b) {
-    return compare(this, new BigNumber(y, b));
+    return compare(this, y instanceof BigNumber && b == null ? y : new BigNumber(y, b));
   };
 
 
@@ -1960,7 +1960,7 @@ function clone(configObject) {
    * otherwise return false.
    */
   P.isEqualTo = P.eq = function (y, b) {
-    return compare(this, new BigNumber(y, b)) === 0;
+    return compare(this, y instanceof BigNumber && b == null ? y : new BigNumber(y, b)) === 0;
   };
 
 
@@ -1977,7 +1977,7 @@ function clone(configObject) {
    * otherwise return false.
    */
   P.isGreaterThan = P.gt = function (y, b) {
-    return compare(this, new BigNumber(y, b)) > 0;
+    return compare(this, y instanceof BigNumber && b == null ? y : new BigNumber(y, b)) > 0;
   };
 
 
@@ -1986,7 +1986,7 @@ function clone(configObject) {
    * BigNumber(y, b), otherwise return false.
    */
   P.isGreaterThanOrEqualTo = P.gte = function (y, b) {
-    return (b = compare(this, new BigNumber(y, b))) === 1 || b === 0;
+    return (b = compare(this, y instanceof BigNumber && b == null ? y : new BigNumber(y, b))) === 1 || b === 0;
 
   };
 
@@ -2004,7 +2004,7 @@ function clone(configObject) {
    * otherwise return false.
    */
   P.isLessThan = P.lt = function (y, b) {
-    return compare(this, new BigNumber(y, b)) < 0;
+    return compare(this, y instanceof BigNumber && b == null ? y : new BigNumber(y, b)) < 0;
   };
 
 
@@ -2013,7 +2013,7 @@ function clone(configObject) {
    * BigNumber(y, b), otherwise return false.
    */
   P.isLessThanOrEqualTo = P.lte = function (y, b) {
-    return (b = compare(this, new BigNumber(y, b))) === -1 || b === 0;
+    return (b = compare(this, y instanceof BigNumber && b == null ? y : new BigNumber(y, b))) === -1 || b === 0;
   };
 
 
