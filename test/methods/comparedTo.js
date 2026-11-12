@@ -21,6 +21,23 @@ Test('comparedTo', function () {
         EXPONENTIAL_AT: 1E9
     });
 
+    var x = new BigNumber(2),
+        y = new BigNumber('1.5'),
+        sliceCalls = 0;
+
+    y.c.slice = function () {
+        sliceCalls++;
+        return Array.prototype.slice.call(this);
+    };
+
+    Test.areEqual(1, x.comparedTo(y));
+    Test.areEqual(false, x.eq(y));
+    Test.areEqual(true, x.gt(y));
+    Test.areEqual(true, x.gte(y));
+    Test.areEqual(false, x.lt(y));
+    Test.areEqual(false, x.lte(y));
+    Test.areEqual(0, sliceCalls);
+
     t(1, 0, 1);
     t(1, -0, 1);
     t(-1, 0, -1);
