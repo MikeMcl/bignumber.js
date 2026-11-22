@@ -3120,4 +3120,4 @@ function toFixedPoint(str, e, z) {
   }
 
   return str;
-         }
+}
