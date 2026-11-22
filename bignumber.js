@@ -951,8 +951,11 @@ function clone(configObject) {
         }
       } else if (c == '.') {
         if (i == 0 || !hasDot && prevIsNumeral) {
-          // Don't add trailing or lone dot.
-          if (i + 1 == len) break;
+          // Don't add a trailing dot. Count it as consumed input.
+          if (i + 1 == len) {
+            i++;
+            break;
+          }
           if (i == 0) clean = '0';
           clean += c;
           hasDot = true;
@@ -974,6 +977,11 @@ function clone(configObject) {
         }
       }
 
+      break;
+    }
+
+    // Reject invalid characters and inputs with no numerals.
+    if (i < len || !clean) {
       // '[BigNumber Error] Not a base {b} number: {v}'
       if (STRICT) {
         throw Error
